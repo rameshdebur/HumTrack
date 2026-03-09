@@ -1,0 +1,82 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:HumTrack.App.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="HumTrack.App.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="HumTrack: Biomechanical Analysis"
+        Background="#1E1E1E">
+
+    <Design.DataContext>
+        <vm:MainViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- TOP TOOLBAR -->
+        <Border Grid.Row="0" Background="#2D2D30" Padding="10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Content="Load Video..." Click="OnLoadVideoClick" />
+                <Button Content="{Binding IsPlaying, Converter={StaticResource BoolToPlayStr}}" 
+                        Command="{Binding PlayPauseCommand}" 
+                        Width="100" HorizontalContentAlignment="Center"/>
+                <Button Content="Stop / Reset" Command="{Binding StopCommand}" />
+                <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Foreground="#AAAAAA" Margin="15,0,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- VIDEO CANVAS (Center) -->
+        <Border Grid.Row="1" Background="Black" ClipToBounds="True">
+            <Viewbox Stretch="Uniform">
+                <!-- The Canvas size natively maps to the video source size -->
+                <Canvas x:Name="VideoRenderCanvas" PointerPressed="OnCanvasPointerPressed" Background="Transparent">
+                    
+                    <!-- Base Video Frame -->
+                    <Image Source="{Binding CurrentFrame}" 
+                           Stretch="None" 
+                           Canvas.Left="0" Canvas.Top="0" />
+
+                    <!-- Bounding Box Overlays -->
+                    <ItemsControl ItemsSource="{Binding TrackingBoxes}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.DataTemplates>
+                            <DataTemplate x:DataType="Rect">
+                                <Rectangle Width="{Binding Width}" Height="{Binding Height}"
+                                           Stroke="Cyan" StrokeThickness="2"
+                                           Fill="#3300FFFF" />
+                            </DataTemplate>
+                        </ItemsControl.DataTemplates>
+                        <ItemsControl.ItemContainerTheme>
+                            <ControlTheme TargetType="ContentPresenter" x:DataType="Rect">
+                                <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                                <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                            </ControlTheme>
+                        </ItemsControl.ItemContainerTheme>
+                    </ItemsControl>
+
+                </Canvas>
+            </Viewbox>
+        </Border>
+
+        <!-- BOTTOM TOOLBAR -->
+        <Border Grid.Row="2" Background="#2D2D30" Padding="10">
+            <Grid ColumnDefinitions="*,Auto">
+                <!-- Playhead Slider -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="Frame:" VerticalAlignment="Center" Foreground="White"/>
+                    <TextBlock Text="{Binding CurrentFrameIndex}" VerticalAlignment="Center" Foreground="Cyan" Width="40"/>
+                    <Slider Value="{Binding CurrentFrameIndex}" Maximum="{Binding MaximumFrameIndex}"
+                            Width="400" IsEnabled="False" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <!-- Engine Performance Metrics -->
+                <TextBlock Grid.Column="1" Text="{Binding MetricsText}" Foreground="#AAAAAA" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
