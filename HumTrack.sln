@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F39AE2DB-D6F6-460C-A930-7080C51BB179}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumTrack.Core", "src\HumTrack.Core\HumTrack.Core.csproj", "{7F05D273-F859-4403-A0E2-7EAEEEE4ADCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumTrack.Biomechanics", "src\HumTrack.Biomechanics\HumTrack.Biomechanics.csproj", "{E8BA7F18-B982-4AD8-8618-7F9F8B75DA21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{401F27BC-8791-43E3-A276-90D57F21A6AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumTrack.Core.Tests", "tests\HumTrack.Core.Tests\HumTrack.Core.Tests.csproj", "{9287ECBC-3CD6-4E47-90F8-5E80AE68D58A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumTrack.App", "src\HumTrack.App\HumTrack.App.csproj", "{EDB66403-AE76-44E8-9998-4445BC6BDCCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F05D273-F859-4403-A0E2-7EAEEEE4ADCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F05D273-F859-4403-A0E2-7EAEEEE4ADCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F05D273-F859-4403-A0E2-7EAEEEE4ADCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F05D273-F859-4403-A0E2-7EAEEEE4ADCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8BA7F18-B982-4AD8-8618-7F9F8B75DA21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8BA7F18-B982-4AD8-8618-7F9F8B75DA21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8BA7F18-B982-4AD8-8618-7F9F8B75DA21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8BA7F18-B982-4AD8-8618-7F9F8B75DA21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9287ECBC-3CD6-4E47-90F8-5E80AE68D58A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9287ECBC-3CD6-4E47-90F8-5E80AE68D58A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9287ECBC-3CD6-4E47-90F8-5E80AE68D58A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9287ECBC-3CD6-4E47-90F8-5E80AE68D58A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDB66403-AE76-44E8-9998-4445BC6BDCCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDB66403-AE76-44E8-9998-4445BC6BDCCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDB66403-AE76-44E8-9998-4445BC6BDCCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDB66403-AE76-44E8-9998-4445BC6BDCCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7F05D273-F859-4403-A0E2-7EAEEEE4ADCD} = {F39AE2DB-D6F6-460C-A930-7080C51BB179}
+		{E8BA7F18-B982-4AD8-8618-7F9F8B75DA21} = {F39AE2DB-D6F6-460C-A930-7080C51BB179}
+		{9287ECBC-3CD6-4E47-90F8-5E80AE68D58A} = {401F27BC-8791-43E3-A276-90D57F21A6AB}
+		{EDB66403-AE76-44E8-9998-4445BC6BDCCD} = {F39AE2DB-D6F6-460C-A930-7080C51BB179}
+	EndGlobalSection
+EndGlobal
