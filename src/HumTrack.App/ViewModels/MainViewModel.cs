@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
@@ -24,68 +23,76 @@ namespace HumTrack.App.ViewModels;
 public partial class MainViewModel : ObservableObject, IDisposable
 {
     private readonly ILogger _log = HumTrackLogger.ForContext<MainViewModel>();
-    private VideoCapture? _capture;
-#pragma warning disable CA1859 // Change type of field for improved performance
+
+#pragma warning disable CA1859
     private ITrackingEngine _trackingEngine;
 #pragma warning restore CA1859
+
     private readonly VideoPipeline _pipeline;
     private readonly EngineSettings _settings;
-    
+    private VideoCapture? _capture;
     private CancellationTokenSource? _playbackCts;
     private double _fps;
     private int _totalFrames;
 
-    public MainViewModel()
-    {
-        // Setup initial default tracking strategy (Hybrid handles motion blur & stops best)
-        _trackingEngine = new HybridEngine();
-        _settings = new EngineSettings {
-            BrightnessThreshold = 200,
-            MinMarkerArea = 20,
-            MaxMarkerArea = 5000,
-            MinCircularity = 0.4
-        };
+    // Scale factors from native video pixels → display pixels
+    private double _scaleX = 1.0;
+    private double _scaleY = 1.0;
 
-        // Initialize core video filter pipeline 
-        _pipeline = new VideoPipeline();
-        _pipeline.AddProcessor(new SharpeningFilter()); 
-        // Note: For lens undistortion we'd slot the UndistortionFilter in here
+    // Regions explicitly selected by the user on the canvas
+    private readonly System.Collections.Generic.List<RectangleF> _userRegions = new();
 
-        StatusText = "Ready to load video.";
-    }
+    // ── Observable state ─────────────────────────────────────────────────────
 
-    [ObservableProperty]
-    private WriteableBitmap? _currentFrame;
-
-    [ObservableProperty]
-    private string _statusText = string.Empty;
-
-    [ObservableProperty]
-    private string _metricsText = string.Empty;
+    [ObservableProperty] private WriteableBitmap? _currentFrame;
+    [ObservableProperty] private string _statusText = "Load a video file to begin.";
+    [ObservableProperty] private string _metricsText = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PlayPauseText))]
     private bool _isPlaying;
 
-    public string PlayPauseText => IsPlaying ? "Pause" : "Play";
-
     [ObservableProperty]
-    private int _currentFrameIndex;
+    [NotifyPropertyChangedFor(nameof(HasVideo))]
+    private bool _videoLoaded;
 
-    [ObservableProperty]
-    private double _maximumFrameIndex = 1;
+    [ObservableProperty] private int _currentFrameIndex;
+    [ObservableProperty] private double _maximumFrameIndex = 1;
+    [ObservableProperty] private int _markerCount;
 
-    // A collection of rectangles representing the tracking visualization
-    // We bind these mapped ROIs visually out onto the Avalonia canvas
-    public ObservableCollection<Avalonia.Rect> TrackingBoxes { get; } = new();
+    public bool HasVideo => VideoLoaded;
+    public string PlayPauseText => IsPlaying ? "⏸ Pause" : "▶  Play";
 
-    // Represents markers explicitly requested by user clicks in UI
-    private readonly System.Collections.Generic.List<RectangleF> _userInitializedRegions = new();
+    // Bounding boxes rendered on the overlay canvas
+    public ObservableCollection<TrackedRect> TrackingBoxes { get; } = new();
 
-    /// <summary>Open a video file and prepare it for reading.</summary>
+    // ── Constructor ───────────────────────────────────────────────────────────
+
+    public MainViewModel()
+    {
+        _trackingEngine = new HybridEngine();
+        _settings = new EngineSettings
+        {
+            BrightnessThreshold = 190,
+            MinMarkerArea = 20,
+            MaxMarkerArea = 6000,
+            MinCircularity = 0.35
+        };
+
+        _pipeline = new VideoPipeline();
+        _pipeline.AddProcessor(new SharpeningFilter());
+        _pipeline.AddProcessor(new ContrastEnhancementFilter());
+    }
+
+    // ── Commands ──────────────────────────────────────────────────────────────
+
+    /// <summary>Opens a video file and shows the first frame.</summary>
     public void LoadVideo(string filePath)
     {
         StopVideo();
+        TrackingBoxes.Clear();
+        _userRegions.Clear();
+        MarkerCount = 0;
 
         if (!File.Exists(filePath))
         {
@@ -95,39 +102,47 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
         try
         {
+            _capture?.Dispose();
             _capture = new VideoCapture(filePath);
+
+            if (!_capture.IsOpened)
+            {
+                StatusText = "Failed to open video.";
+                return;
+            }
+
             _fps = _capture.Get(CapProp.Fps);
+            if (_fps <= 0) _fps = 30;
+
             _totalFrames = (int)_capture.Get(CapProp.FrameCount);
-            MaximumFrameIndex = _totalFrames > 0 ? _totalFrames - 1 : 1;
+            MaximumFrameIndex = Math.Max(1, _totalFrames - 1);
             CurrentFrameIndex = 0;
+            VideoLoaded = true;
 
-            StatusText = $"Loaded: {Path.GetFileName(filePath)} ({_fps:F1} FPS, {_totalFrames} frames)";
-            _log.Information("Video loaded successfully: {FilePath}", filePath);
+            StatusText = $"Loaded: {Path.GetFileName(filePath)} | {_fps:F1} FPS · {_totalFrames} frames · Click to mark";
+            _log.Information("Video loaded: {File}, {Fps} fps, {Frames} frames", filePath, _fps, _totalFrames);
 
-            // Extract the first frame to display
-            SeekToStart();
+            ShowFirstFrame();
         }
         catch (Exception ex)
         {
-            _log.Error(ex, "Failed to load video: {Path}", filePath);
-            StatusText = $"Error Loading: {ex.Message}";
+            _log.Error(ex, "Load failed: {Path}", filePath);
+            StatusText = $"Error: {ex.Message}";
         }
     }
 
-    /// <summary>Grabs a specific frame, bypassing tracking.</summary>
-    private void SeekToStart()
+    private void ShowFirstFrame()
     {
         if (_capture == null || !_capture.IsOpened) return;
-        
+
         _capture.Set(CapProp.PosFrames, 0);
-        CurrentFrameIndex = 0;
-        using var previewMat = new Mat();
-        if (_capture.Read(previewMat))
+        using var mat = new Mat();
+        if (_capture.Read(mat) && !mat.IsEmpty)
         {
-            _pipeline.Process(previewMat);
-            UpdateCurrentFrame(previewMat);
+            _pipeline.Process(mat);
+            SetFrame(mat);
         }
-        _capture.Set(CapProp.PosFrames, 0); // Put the cursor back
+        _capture.Set(CapProp.PosFrames, 0);
     }
 
     [RelayCommand]
@@ -136,119 +151,96 @@ public partial class MainViewModel : ObservableObject, IDisposable
         if (_capture == null || !_capture.IsOpened) return;
 
         if (IsPlaying)
-        {
             StopVideo();
-        }
         else
-        {
-            await StartVideoAsync();
-        }
+            await RunPlaybackLoopAsync();
     }
 
     [RelayCommand]
     public void Stop()
     {
         StopVideo();
-        SeekToStart();
+        _userRegions.Clear();
+        MarkerCount = 0;
         TrackingBoxes.Clear();
-        _userInitializedRegions.Clear();
-        StatusText = "Stopped. Click markers to re-initialize.";
+        ShowFirstFrame();
+        StatusText = "Stopped. Click markers on the video to reinitialise.";
     }
 
-    /// <summary>Main playback and tracking loop.</summary>
-    private async Task StartVideoAsync()
+    // ── Playback loop ─────────────────────────────────────────────────────────
+
+    private async Task RunPlaybackLoopAsync()
     {
         if (_capture == null || !_capture.IsOpened || IsPlaying) return;
 
         _playbackCts = new CancellationTokenSource();
         var token = _playbackCts.Token;
         IsPlaying = true;
-        StatusText = $"Playing and Tracking with {_trackingEngine.Name}...";
 
-        var intervalMs = (int)(1000.0 / _fps);
+        var msPerFrame = 1000.0 / _fps;
         var sw = new Stopwatch();
+        bool engineSeeded = false;
 
-        // Read and process the video exactly like our VideoFileTestHarness 
-        // but piped into the UI threading model
         await Task.Run(async () =>
         {
-            using var frameMat = new Mat();
-            bool engineInitialized = false;
+            using var mat = new Mat();
 
-            while (IsPlaying && !token.IsCancellationRequested)
+            while (!token.IsCancellationRequested)
             {
                 sw.Restart();
 
-                if (!_capture.Read(frameMat) || frameMat.IsEmpty)
+                if (!_capture.Read(mat) || mat.IsEmpty)
+                    break; // EOF
+
+                // Pre-processing
+                _pipeline.Process(mat);
+
+                // Seed the engine once we have the first frame
+                if (!engineSeeded)
                 {
-                    // Reached EOF
-                    break;
+                    _trackingEngine.Initialize(mat, _userRegions, _settings);
+                    engineSeeded = true;
                 }
 
-                // Stage 1: Pre-process frame (Contrast, Sharpening, Undistortion)
-                _pipeline.Process(frameMat);
+                // Track
+                var results = _trackingEngine.Track(mat);
 
-                // Stage 2: Initialize engine if necessary (only once per play button press)
-                if (!engineInitialized)
-                {
-                    // If user manually clicked some ROI points on the canvas, force those
-                    _trackingEngine.Initialize(frameMat, _userInitializedRegions, _settings);
-                    engineInitialized = true;
-                }
+                // Convert to display-space TrackedRect objects
+                var boxes = BuildOverlays(results);
 
-                // Stage 3: Actually execute the tracking engine calculations 
-                var results = _trackingEngine.Track(frameMat);
+                // Render
+                var bmp = BitmapConverter.CreateWriteableBitmapFromMat(mat);
+                int frameIdx = (int)_capture.Get(CapProp.PosFrames);
+                int found = 0;
+                foreach (var r in results) if (r.IsFound) found++;
+                long elapsed = sw.ElapsedMilliseconds;
 
-                // Stage 4: Draw UI 
-                var bitmap = BitmapConverter.CreateWriteableBitmapFromMat(frameMat);
-                
-                // We dispatch the visual updates so we don't crash Avalonia reading off-thread
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
-                    // Render image surface
-                    var oldFrame = CurrentFrame;
-                    CurrentFrame = bitmap;
-                    oldFrame?.Dispose(); // Discard the old unmanaged buffer immediately
+                    var old = CurrentFrame;
+                    CurrentFrame = bmp;
+                    old?.Dispose();
 
-                    // Update Playhead slider
-                    CurrentFrameIndex = (int)_capture.Get(CapProp.PosFrames);
+                    CurrentFrameIndex = frameIdx;
 
-                    // Rebuild bounding boxes on the UI overlay mapped 1:1 on the pixel plane
                     TrackingBoxes.Clear();
-                    int foundCount = 0;
-                    foreach (var result in results)
-                    {
-                        if (result.IsFound)
-                        {
-                            foundCount++;
-                            // C# drawing rect to Avalonia rect mapper
-                            TrackingBoxes.Add(new Avalonia.Rect(
-                                result.BoundingBox.X, 
-                                result.BoundingBox.Y, 
-                                result.BoundingBox.Width, 
-                                result.BoundingBox.Height));
-                        }
-                    }
+                    foreach (var b in boxes) TrackingBoxes.Add(b);
 
-                    MetricsText = $"{foundCount}/{results.Length} Markers Tracked | CPU Frame: {sw.ElapsedMilliseconds}ms";
+                    MetricsText = $"{found}/{results.Length} markers  |  {elapsed} ms/frame  |  ~{(elapsed > 0 ? 1000 / elapsed : 0)} FPS";
                 });
 
-                // Frame-rate limiting (if the tracking runs at 250 FPS, we don't want to fast-forward the video 10x speed)
-                var timeRemaining = intervalMs - (int)sw.ElapsedMilliseconds;
-                if (timeRemaining > 0)
-                {
-                    await Task.Delay(timeRemaining, token);
-                }
+                // Frame-rate limiter
+                var wait = (int)(msPerFrame - sw.ElapsedMilliseconds);
+                if (wait > 0) await Task.Delay(wait, token).ConfigureAwait(false);
             }
 
-            // End of line
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
                 IsPlaying = false;
-                StatusText = "Playback finished.";
+                StatusText = "Playback complete.";
             });
 
-        }, token);
+        }, token).ConfigureAwait(false);
     }
 
     private void StopVideo()
@@ -259,28 +251,85 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _playbackCts = null;
     }
 
-    /// <summary>
-    /// Invoked directly by the View code-behind when the user clicks the Video Canvas 
-    /// dropping a new explicit marker. 
-    /// </summary>
-    public void AddManualMarker(float x, float y)
-    {
-        if (IsPlaying) return; // Disallow manual marking while video is playing
+    // ── Marker picking ────────────────────────────────────────────────────────
 
-        // Roughly a 20x20 window around the click
-        _userInitializedRegions.Add(new RectangleF(x - 10, y - 10, 20, 20));
-        
-        // Add it to the visual box representation immediately so the user sees it
-        TrackingBoxes.Add(new Avalonia.Rect(x - 10, y - 10, 20, 20));
-        
-        StatusText = $"Total Locked Markers: {_userInitializedRegions.Count}";
+    /// <summary>
+    /// Called by MainWindow when the user clicks the video image.
+    /// x/y are in display pixels; we must reverse-scale them back to native video pixels.
+    /// </summary>
+    public void AddMarkerAt(double displayX, double displayY)
+    {
+        if (IsPlaying || !VideoLoaded) return;
+
+        // Map display → native video pixel space
+        float vx = (float)(displayX / _scaleX);
+        float vy = (float)(displayY / _scaleY);
+        const float R = 12f; // half-size of the seed box
+
+        _userRegions.Add(new RectangleF(vx - R, vy - R, R * 2, R * 2));
+        MarkerCount = _userRegions.Count;
+
+        // Immediately show the click box so the user gets feedback before Play
+        TrackingBoxes.Add(new TrackedRect
+        {
+            X = displayX - R * _scaleX,
+            Y = displayY - R * _scaleY,
+            W = R * 2 * _scaleX,
+            H = R * 2 * _scaleY,
+            Label = $"M{_userRegions.Count}"
+        });
+
+        StatusText = $"{_userRegions.Count} marker(s) selected — click more or press Play";
+        _log.Information("Marker {N} placed at native ({X:F0},{Y:F0})", _userRegions.Count, vx, vy);
     }
 
-    private void UpdateCurrentFrame(Mat mat)
+    /// <summary>
+    /// Called by code-behind when the display Image has been measured,
+    /// so we can compute the scale between display pixels and native video pixels.
+    /// </summary>
+    public void UpdateScale(double displayW, double displayH)
     {
-        var bitmap = BitmapConverter.CreateWriteableBitmapFromMat(mat);
+        if (_capture == null || !_capture.IsOpened) return;
+
+        double nativeW = _capture.Get(CapProp.FrameWidth);
+        double nativeH = _capture.Get(CapProp.FrameHeight);
+
+        if (nativeW > 0 && nativeH > 0)
+        {
+            // Uniform scaling — whichever axis is the tighter constraint
+            double scale = Math.Min(displayW / nativeW, displayH / nativeH);
+            _scaleX = scale;
+            _scaleY = scale;
+        }
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private TrackedRect[] BuildOverlays(TrackingResult[] results)
+    {
+        var boxes = new TrackedRect[results.Length];
+        for (int i = 0; i < results.Length; i++)
+        {
+            var r = results[i];
+            if (!r.IsFound) continue;
+
+            boxes[i] = new TrackedRect
+            {
+                X = r.BoundingBox.X * _scaleX,
+                Y = r.BoundingBox.Y * _scaleY,
+                W = r.BoundingBox.Width * _scaleX,
+                H = r.BoundingBox.Height * _scaleY,
+                Label = $"M{i + 1}"
+            };
+        }
+        return boxes;
+    }
+
+    private void SetFrame(Mat mat)
+    {
+        var bmp = BitmapConverter.CreateWriteableBitmapFromMat(mat);
         var old = CurrentFrame;
-        CurrentFrame = bitmap;
+        CurrentFrame = bmp;
         old?.Dispose();
     }
 

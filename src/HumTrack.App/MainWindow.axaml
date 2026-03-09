@@ -3,79 +3,152 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:HumTrack.App.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        mc:Ignorable="d"
         x:Class="HumTrack.App.MainWindow"
         x:DataType="vm:MainViewModel"
-        Title="HumTrack: Biomechanical Analysis"
-        Background="#1E1E1E">
+        Title="HumTrack — Biomechanical Analysis"
+        Background="#1A1A2E"
+        Width="1280" Height="800"
+        MinWidth="900" MinHeight="600">
 
-    <Design.DataContext>
-        <vm:MainViewModel/>
-    </Design.DataContext>
+    <Grid RowDefinitions="48,*,44">
 
-    <Grid RowDefinitions="Auto,*,Auto">
-        <!-- TOP TOOLBAR -->
-        <Border Grid.Row="0" Background="#2D2D30" Padding="10">
-            <StackPanel Orientation="Horizontal" Spacing="10">
-                <Button Content="Load Video..." Click="OnLoadVideoClick" />
-                <Button Content="{Binding PlayPauseText}" 
-                        Command="{Binding PlayPauseCommand}" 
-                        Width="100" HorizontalContentAlignment="Center"/>
-                <Button Content="Stop / Reset" Command="{Binding StopCommand}" />
-                <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Foreground="#AAAAAA" Margin="15,0,0,0"/>
+        <!-- ═══════════════════════════════════════════
+             TOP TOOLBAR
+        ═══════════════════════════════════════════ -->
+        <Border Grid.Row="0" Background="#16213E" BorderBrush="#0F3460" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="12,0">
+                <Button x:Name="BtnLoad"
+                        Content="📂  Load Video"
+                        Click="OnLoadVideoClick"
+                        VerticalAlignment="Center"
+                        Padding="12,6"/>
+
+                <Button x:Name="BtnPlayPause"
+                        Content="{Binding PlayPauseText}"
+                        Command="{Binding PlayPauseCommand}"
+                        VerticalAlignment="Center"
+                        Width="90"
+                        HorizontalContentAlignment="Center"
+                        Padding="0,6"/>
+
+                <Button x:Name="BtnStop"
+                        Content="⏹ Stop"
+                        Command="{Binding StopCommand}"
+                        VerticalAlignment="Center"
+                        Padding="12,6"/>
+
+                <Separator Width="1" Background="#444" Margin="4,8"/>
+
+                <!-- Marker count -->
+                <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="Markers:" Foreground="#888" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding MarkerCount}" Foreground="#E94560" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Separator Width="1" Background="#444" Margin="4,8"/>
+
+                <TextBlock x:Name="TxtStatus"
+                           Text="{Binding StatusText}"
+                           VerticalAlignment="Center"
+                           Foreground="#AAAAAA"
+                           FontSize="12"
+                           Margin="4,0,0,0"/>
             </StackPanel>
         </Border>
 
-        <!-- VIDEO CANVAS (Center) -->
-        <Border Grid.Row="1" Background="Black" ClipToBounds="True">
-            <Viewbox Stretch="Uniform">
-                <!-- The Canvas size natively maps to the video source size -->
-                <Canvas x:Name="VideoRenderCanvas" PointerPressed="OnCanvasPointerPressed" Background="Transparent">
-                    
-                    <!-- Base Video Frame -->
-                    <Image Source="{Binding CurrentFrame}" 
-                           Stretch="None" 
-                           Canvas.Left="0" Canvas.Top="0" />
+        <!-- ═══════════════════════════════════════════
+             VIDEO CANVAS (fill middle row)
+             Image + overlays live in a Grid so both
+             fill the same cell without needing Canvas
+             absolute sizing.
+        ═══════════════════════════════════════════ -->
+        <Border Grid.Row="1" Background="#0D1117" ClipToBounds="True">
+            <Grid>
+                <!-- Video frame — fills available space, letterboxed -->
+                <Image x:Name="VideoImage"
+                       Source="{Binding CurrentFrame}"
+                       Stretch="Uniform"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       PointerPressed="OnVideoPointerPressed"/>
 
-                    <!-- Bounding Box Overlays -->
+                <!-- Bounding box overlay: uses an adorner canvas that
+                     is synced to the Image size in code-behind          -->
+                <Canvas x:Name="OverlayCanvas"
+                        IsHitTestVisible="False"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
                     <ItemsControl ItemsSource="{Binding TrackingBoxes}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <Canvas />
+                                <Canvas/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.DataTemplates>
-                            <DataTemplate x:DataType="Rect">
-                                <Rectangle Width="{Binding Width}" Height="{Binding Height}"
-                                           Stroke="Cyan" StrokeThickness="2"
-                                           Fill="#3300FFFF" />
+                            <DataTemplate x:DataType="vm:TrackedRect">
+                                <Canvas>
+                                    <!-- Outer detection box -->
+                                    <Rectangle Width="{Binding W}" Height="{Binding H}"
+                                               Stroke="#00FFCC" StrokeThickness="2"
+                                               Fill="#1A00FFCC"
+                                               Canvas.Left="{Binding X}"
+                                               Canvas.Top="{Binding Y}"/>
+                                    <!-- Centre crosshair dot -->
+                                    <Ellipse Width="6" Height="6"
+                                             Fill="#00FFCC"
+                                             Canvas.Left="{Binding CX}"
+                                             Canvas.Top="{Binding CY}"/>
+                                    <!-- Label: ID and confidence -->
+                                    <TextBlock Text="{Binding Label}"
+                                               Foreground="#00FFCC"
+                                               FontSize="10"
+                                               FontFamily="Consolas"
+                                               Canvas.Left="{Binding X}"
+                                               Canvas.Top="{Binding LabelY}"/>
+                                </Canvas>
                             </DataTemplate>
                         </ItemsControl.DataTemplates>
-                        <ItemsControl.ItemContainerTheme>
-                            <ControlTheme TargetType="ContentPresenter" x:DataType="Rect">
-                                <Setter Property="Canvas.Left" Value="{Binding X}"/>
-                                <Setter Property="Canvas.Top" Value="{Binding Y}"/>
-                            </ControlTheme>
-                        </ItemsControl.ItemContainerTheme>
                     </ItemsControl>
-
                 </Canvas>
-            </Viewbox>
+
+                <!-- Placeholder when no video is loaded -->
+                <TextBlock Text="Load a video file to begin.&#x0a;&#x0a;Then click on the markers you want to track."
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="#555" FontSize="18" TextAlignment="Center"
+                           IsVisible="{Binding !HasVideo}"/>
+            </Grid>
         </Border>
 
-        <!-- BOTTOM TOOLBAR -->
-        <Border Grid.Row="2" Background="#2D2D30" Padding="10">
-            <Grid ColumnDefinitions="*,Auto">
-                <!-- Playhead Slider -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
-                    <TextBlock Text="Frame:" VerticalAlignment="Center" Foreground="White"/>
-                    <TextBlock Text="{Binding CurrentFrameIndex}" VerticalAlignment="Center" Foreground="Cyan" Width="40"/>
-                    <Slider Value="{Binding CurrentFrameIndex}" Maximum="{Binding MaximumFrameIndex}"
-                            Width="400" IsEnabled="False" VerticalAlignment="Center" />
+        <!-- ═══════════════════════════════════════════
+             BOTTOM STATUS BAR
+        ═══════════════════════════════════════════ -->
+        <Border Grid.Row="2" Background="#16213E" BorderBrush="#0F3460" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
+                <!-- Frame counter + slider -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock Text="Frame" Foreground="#888" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding CurrentFrameIndex}" Foreground="#E94560"
+                               FontFamily="Consolas" Width="44" VerticalAlignment="Center"/>
+                    <TextBlock Text="/" Foreground="#555" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding MaximumFrameIndex}" Foreground="#888"
+                               FontFamily="Consolas" Width="44" VerticalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Engine Performance Metrics -->
-                <TextBlock Grid.Column="1" Text="{Binding MetricsText}" Foreground="#AAAAAA" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1"
+                        Value="{Binding CurrentFrameIndex}"
+                        Maximum="{Binding MaximumFrameIndex}"
+                        IsEnabled="False"
+                        VerticalAlignment="Center"
+                        Margin="12,0"/>
+
+                <!-- Performance metrics -->
+                <TextBlock Grid.Column="2"
+                           Text="{Binding MetricsText}"
+                           Foreground="#888888"
+                           FontFamily="Consolas"
+                           FontSize="11"
+                           VerticalAlignment="Center"/>
             </Grid>
         </Border>
     </Grid>
