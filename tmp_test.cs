@@ -1,0 +1,1 @@
+using System; using System.Reflection; using Emgu.CV; class Program { static void Main() { foreach (var m in typeof(CvInvoke).GetMethods()) { if (m.Name == "CalibrateCamera") { Console.WriteLine(m); foreach(var p in m.GetParameters()) Console.WriteLine("  " + p); } } } }

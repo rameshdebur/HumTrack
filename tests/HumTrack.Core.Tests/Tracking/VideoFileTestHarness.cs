@@ -19,7 +19,7 @@ public class VideoFileTestHarness : IDisposable
 {
     // ──── SET THIS TO YOUR VIDEO FILE PATH ────
     // Can also be a relative path in the TestData folder
-    private const string TestVideoPath = @"TestData\sample_with_markers.mp4";
+    private const string TestVideoPath = @"C:\Users\rams2\code projects\HumTrack\test videos\VID_20260307_150203282.mp4";
 
     private readonly ILogger _log;
 
@@ -29,7 +29,7 @@ public class VideoFileTestHarness : IDisposable
         _log = HumTrackLogger.ForContext<VideoFileTestHarness>();
     }
 
-    [Fact(Skip = "Enable when test video is provided")]
+    [Fact]
     public void RunBlobDetectionOnRealVideo()
     {
         RunEngineOnVideo(
@@ -41,10 +41,11 @@ public class VideoFileTestHarness : IDisposable
                 MaxMarkerArea = 5000,
                 MinCircularity = 0.4,
             },
-            maxFrames: 300);
+            maxFrames: 300,
+            requireManualInit: true);
     }
 
-    [Fact(Skip = "Enable when test video is provided")]
+    [Fact]
     public void RunHybridOnRealVideo()
     {
         RunEngineOnVideo(
@@ -57,10 +58,11 @@ public class VideoFileTestHarness : IDisposable
                 MinCircularity = 0.4,
                 RedetectIntervalFrames = 30,
             },
-            maxFrames: 300);
+            maxFrames: 300,
+            requireManualInit: true);
     }
 
-    [Fact(Skip = "Enable when test video is provided")]
+    [Fact]
     public void RunOpticalFlowOnRealVideo()
     {
         RunEngineOnVideo(
@@ -117,10 +119,13 @@ public class VideoFileTestHarness : IDisposable
                     var detected = detector.Detect(frame, settings);
                     var regions = detected
                         .Select(r => r.BoundingBox)
+                        .OrderBy(r => r.Y) // Sort top-to-bottom
+                        .Skip(2) // Skip overhead lights/noise if any
+                        .Take(3) // SIMULATE UI: User clicks exactly 3 markers
                         .ToList();
 
-                    _log.Information("Auto-detected {Count} markers in first frame for {Engine}",
-                        regions.Count, engine.Name);
+                    _log.Information("Simulating UI workflow: initialized {Engine} with exactly {Count} markers: {Positions}",
+                        engine.Name, regions.Count, string.Join(", ", regions.Select(r => $"({r.X:F1},{r.Y:F1})")));
 
                     engine.Initialize(frame, regions, settings);
                 }
