@@ -1,0 +1,33 @@
+<Project>
+  <PropertyGroup>
+    <!-- Code quality: treat all warnings as errors -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Enable C# nullable reference types -->
+    <Nullable>enable</Nullable>
+    <!-- Enable global usings -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Generate XML documentation from /// comments for all public APIs -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Enable all .NET platform analyzers -->
+    <AnalysisMode>All</AnalysisMode>
+    <!-- Target .NET 8 LTS -->
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- Language version -->
+    <LangVersion>12</LangVersion>
+    <!-- Enforce consistent newlines and UTF-8 -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- .NET platform analyzers -->
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <!-- SonarAnalyzer for deeper code quality checks -->
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

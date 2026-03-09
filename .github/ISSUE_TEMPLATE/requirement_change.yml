@@ -1,0 +1,39 @@
+name: Requirement Change
+description: Propose a change to an existing software requirement
+labels: [requirement-change, compliance]
+body:
+  - type: markdown
+    attributes:
+      value: "## Requirement Change Request — IEC 62304 §6 Change Control"
+  - type: input
+    id: req_id
+    attributes:
+      label: Requirement ID
+      placeholder: "e.g. REQ-CAL-003"
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current Requirement Text
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed Requirement Text
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale for Change
+    validations:
+      required: true
+  - type: textarea
+    id: risk
+    attributes:
+      label: Risk Impact Assessment
+      description: Does this change introduce or modify any risk in RISK_ANALYSIS.md?
+    validations:
+      required: true
