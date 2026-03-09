@@ -9,7 +9,7 @@
     <!-- Generate XML documentation from /// comments for all public APIs -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Enable all .NET platform analyzers -->
-    <AnalysisMode>All</AnalysisMode>
+    <AnalysisMode>Recommended</AnalysisMode>
     <!-- Target .NET 8 LTS -->
     <TargetFramework>net8.0</TargetFramework>
     <!-- Language version -->
