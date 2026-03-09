@@ -64,7 +64,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private string _metricsText = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PlayPauseText))]
     private bool _isPlaying;
+
+    public string PlayPauseText => IsPlaying ? "Pause" : "Play";
 
     [ObservableProperty]
     private int _currentFrameIndex;

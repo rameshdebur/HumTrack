@@ -12,14 +12,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        
-        // Setup simple value converter for Play/Pause text
-        var boolToPlayStr = new Avalonia.Data.Converters.FuncValueConverter<bool, string>(
-            isPlaying => isPlaying ? "Pause" : "Play");
-        
-        this.Resources.Add("BoolToPlayStr", boolToPlayStr);
-        
-        // Attach DataContext
         DataContext = new MainViewModel();
     }
 

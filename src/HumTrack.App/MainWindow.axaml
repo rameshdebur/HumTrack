@@ -18,7 +18,7 @@
         <Border Grid.Row="0" Background="#2D2D30" Padding="10">
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Content="Load Video..." Click="OnLoadVideoClick" />
-                <Button Content="{Binding IsPlaying, Converter={StaticResource BoolToPlayStr}}" 
+                <Button Content="{Binding PlayPauseText}" 
                         Command="{Binding PlayPauseCommand}" 
                         Width="100" HorizontalContentAlignment="Center"/>
                 <Button Content="Stop / Reset" Command="{Binding StopCommand}" />
