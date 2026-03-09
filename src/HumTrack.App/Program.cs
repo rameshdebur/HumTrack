@@ -9,22 +9,29 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        // Capture all unhandled exceptions (including XAML parse failures)
+        // and write them to a crash file so we can diagnose silent failures
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            var msg = e.ExceptionObject?.ToString() ?? "Unknown error";
+            var path = Path.Combine(AppContext.BaseDirectory, "humtrack-crash.log");
+            File.AppendAllText(path, $"[{DateTime.Now:u}] UNHANDLED:\n{msg}\n\n");
+        };
+
         try
         {
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
         catch (Exception ex)
         {
-            // Write crash to a log file next to the exe so we can diagnose launch failures
-            var logPath = Path.Combine(
-                AppContext.BaseDirectory, "humtrack-crash.log");
-            File.WriteAllText(logPath,
-                $"[{DateTime.Now:u}] Fatal startup crash:\n{ex}\n");
-            throw; // Re-throw so the OS shows the standard crash dialog
+            var path = Path.Combine(AppContext.BaseDirectory, "humtrack-crash.log");
+            File.AppendAllText(path, $"[{DateTime.Now:u}] STARTUP CRASH:\n{ex}\n\n");
+            // Also write to stderr so terminal runs can see it
+            Console.Error.WriteLine($"HumTrack startup crash: {ex.Message}");
+            Console.Error.WriteLine(ex.StackTrace);
         }
     }
 
-    // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()

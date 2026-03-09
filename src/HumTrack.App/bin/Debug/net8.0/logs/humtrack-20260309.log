@@ -1,0 +1,48 @@
+2026-03-09 23:28:28.542 +05:30 [INF] : HumTrack logging initialized. Log directory: C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\bin\Debug\net8.0\logs
+2026-03-09 23:28:28.834 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Sharpening (Motion Blur Compensation) to the video pipeline.
+2026-03-09 23:28:28.836 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Adaptive Contrast (CLAHE) to the video pipeline.
+2026-03-09 23:28:44.011 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Video loaded: C:\Users\rams2\Downloads\VID_20260307_150752827.mp4, 30.020013342228154 fps, 177 frames
+2026-03-09 23:28:44.099 +05:30 [ERR] HumTrack.App.ViewModels.MainViewModel: Load failed: C:\Users\rams2\Downloads\VID_20260307_150752827.mp4
+Emgu.CV.Util.CvException: OpenCV: src->size() == dst->size() && src->channels() == dst->channels()
+   at Emgu.CV.CvInvoke.CvErrorHandler(Int32 status, IntPtr funcName, IntPtr errMsg, IntPtr fileName, Int32 line, IntPtr userData)
+   at Emgu.CV.CvInvoke.cveFilter2D(IntPtr src, IntPtr dst, IntPtr kernel, Point& anchor, Double delta, BorderType borderType)
+   at Emgu.CV.CvInvoke.Filter2D(IInputArray src, IOutputArray dst, IInputArray kernel, Point anchor, Double delta, BorderType borderType)
+   at HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.Process(Mat frame) in C:\Users\rams2\code projects\HumTrack\src\HumTrack.Core\VideoProcessing\Filters\SharpeningFilter.cs:line 41
+   at HumTrack.Core.VideoProcessing.VideoPipeline.Process(Mat frame) in C:\Users\rams2\code projects\HumTrack\src\HumTrack.Core\VideoProcessing\VideoPipeline.cs:line 58
+   at HumTrack.App.ViewModels.MainViewModel.ShowFirstFrame() in C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\ViewModels\MainViewModel.cs:line 142
+   at HumTrack.App.ViewModels.MainViewModel.LoadVideo(String filePath) in C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\ViewModels\MainViewModel.cs:line 125
+2026-03-09 23:37:31.095 +05:30 [INF] : HumTrack logging initialized. Log directory: C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\bin\Debug\net8.0\logs
+2026-03-09 23:37:31.132 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Sharpening (Motion Blur Compensation) to the video pipeline.
+2026-03-09 23:37:31.134 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Adaptive Contrast (CLAHE) to the video pipeline.
+2026-03-09 23:37:41.016 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Video loaded: C:\Users\rams2\Downloads\VID_20260307_150752827.mp4, 30.020013342228154 fps, 177 frames
+2026-03-09 23:37:47.362 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 1 placed at native (256,514)
+2026-03-09 23:37:50.335 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 2 placed at native (448,693)
+2026-03-09 23:42:45.543 +05:30 [INF] : HumTrack logging initialized. Log directory: C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\bin\Debug\net8.0\logs
+2026-03-09 23:42:45.573 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Sharpening (Motion Blur Compensation) to the video pipeline.
+2026-03-09 23:42:45.576 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Adaptive Contrast (CLAHE) to the video pipeline.
+2026-03-09 23:43:02.370 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Video loaded: C:\Users\rams2\Downloads\VID_20260307_150752827.mp4, 30.020013342228154 fps, 177 frames
+2026-03-09 23:43:04.782 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 1 placed at native (262,516)
+2026-03-09 23:43:07.503 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 2 placed at native (450,693)
+2026-03-09 23:43:20.282 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Play pressed — 2 markers registered, starting playback
+2026-03-09 23:44:32.770 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 1 placed at native (451,694)
+2026-03-09 23:44:37.015 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 2 placed at native (266,520)
+2026-03-09 23:44:41.417 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Play pressed — 2 markers registered, starting playback
+2026-03-09 23:46:53.312 +05:30 [INF] : HumTrack logging initialized. Log directory: C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\bin\Debug\net8.0\logs
+2026-03-09 23:46:53.345 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Sharpening (Motion Blur Compensation) to the video pipeline.
+2026-03-09 23:46:53.348 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Adaptive Contrast (CLAHE) to the video pipeline.
+2026-03-09 23:46:59.718 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Video loaded: C:\Users\rams2\Downloads\VID_20260307_150752827.mp4, 30.020013342228154 fps, 177 frames
+2026-03-09 23:47:03.878 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 1 placed at native (452,694)
+2026-03-09 23:47:06.143 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 2 placed at native (267,510)
+2026-03-09 23:47:11.706 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Play pressed — 2 markers registered, starting playback
+2026-03-09 23:51:26.909 +05:30 [INF] : HumTrack logging initialized. Log directory: C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\bin\Debug\net8.0\logs
+2026-03-09 23:51:26.949 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Sharpening (Motion Blur Compensation) to the video pipeline.
+2026-03-09 23:51:26.951 +05:30 [INF] HumTrack.Core.VideoProcessing.VideoPipeline: Added Adaptive Contrast (CLAHE) to the video pipeline.
+2026-03-09 23:51:31.960 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Video loaded: C:\Users\rams2\Downloads\VID_20260307_150752827.mp4, 30.020013342228154 fps, 177 frames
+2026-03-09 23:51:40.251 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 1 placed at native (451,694)
+2026-03-09 23:51:43.618 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 2 placed at native (266,518)
+2026-03-09 23:51:46.825 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Play pressed — 2 markers registered, starting playback
+2026-03-09 23:51:46.888 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Engine initialized with 2 regions
+2026-03-09 23:54:45.388 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 1 placed at native (263,517)
+2026-03-09 23:54:46.979 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Marker 2 placed at native (448,695)
+2026-03-09 23:54:49.626 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Play pressed — 2 markers registered, starting playback
+2026-03-09 23:54:49.680 +05:30 [INF] HumTrack.App.ViewModels.MainViewModel: Engine initialized with 2 regions

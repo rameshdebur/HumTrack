@@ -1,0 +1,9 @@
+2026-03-09 23:28:44.099 +05:30 [ERR] HumTrack.App.ViewModels.MainViewModel: Load failed: C:\Users\rams2\Downloads\VID_20260307_150752827.mp4
+Emgu.CV.Util.CvException: OpenCV: src->size() == dst->size() && src->channels() == dst->channels()
+   at Emgu.CV.CvInvoke.CvErrorHandler(Int32 status, IntPtr funcName, IntPtr errMsg, IntPtr fileName, Int32 line, IntPtr userData)
+   at Emgu.CV.CvInvoke.cveFilter2D(IntPtr src, IntPtr dst, IntPtr kernel, Point& anchor, Double delta, BorderType borderType)
+   at Emgu.CV.CvInvoke.Filter2D(IInputArray src, IOutputArray dst, IInputArray kernel, Point anchor, Double delta, BorderType borderType)
+   at HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.Process(Mat frame) in C:\Users\rams2\code projects\HumTrack\src\HumTrack.Core\VideoProcessing\Filters\SharpeningFilter.cs:line 41
+   at HumTrack.Core.VideoProcessing.VideoPipeline.Process(Mat frame) in C:\Users\rams2\code projects\HumTrack\src\HumTrack.Core\VideoProcessing\VideoPipeline.cs:line 58
+   at HumTrack.App.ViewModels.MainViewModel.ShowFirstFrame() in C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\ViewModels\MainViewModel.cs:line 142
+   at HumTrack.App.ViewModels.MainViewModel.LoadVideo(String filePath) in C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\ViewModels\MainViewModel.cs:line 125

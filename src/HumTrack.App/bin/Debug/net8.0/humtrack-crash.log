@@ -1,0 +1,22 @@
+[2026-03-09 23:47:13Z] STARTUP CRASH:
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at HumTrack.App.MainWindow.RebuildOverlayCanvas() in C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\MainWindow.axaml.cs:line 54
+   at HumTrack.App.MainWindow.OnTrackingBoxesChanged(Object sender, NotifyCollectionChangedEventArgs e) in C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\MainWindow.axaml.cs:line 38
+   at System.Collections.ObjectModel.ObservableCollection`1.OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+   at HumTrack.App.ViewModels.MainViewModel.<>c__DisplayClass31_1.<RunPlaybackLoopAsync>b__2() in C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\ViewModels\MainViewModel.cs:line 237
+   at Avalonia.Threading.DispatcherOperation.InvokeCore()
+   at Avalonia.Threading.DispatcherOperation.Execute()
+   at Avalonia.Threading.Dispatcher.ExecuteJob(DispatcherOperation job)
+   at Avalonia.Threading.Dispatcher.ExecuteJobsCore(Boolean fromExplicitBackgroundProcessingCallback)
+   at Avalonia.Threading.Dispatcher.Signaled()
+   at Avalonia.Win32.Win32Platform.WndProc(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam)
+   at Avalonia.Win32.Interop.UnmanagedMethods.DispatchMessage(MSG& lpmsg)
+   at Avalonia.Win32.Win32DispatcherImpl.RunLoop(CancellationToken cancellationToken)
+   at Avalonia.Threading.DispatcherFrame.Run(IControlledDispatcherImpl impl)
+   at Avalonia.Threading.Dispatcher.PushFrame(DispatcherFrame frame)
+   at Avalonia.Threading.Dispatcher.MainLoop(CancellationToken cancellationToken)
+   at Avalonia.Controls.ApplicationLifetimes.ClassicDesktopStyleApplicationLifetime.StartCore(String[] args)
+   at Avalonia.Controls.ApplicationLifetimes.ClassicDesktopStyleApplicationLifetime.Start(String[] args)
+   at Avalonia.ClassicDesktopStyleApplicationLifetimeExtensions.StartWithClassicDesktopLifetime(AppBuilder builder, String[] args, Action`1 lifetimeBuilder)
+   at HumTrack.App.Program.Main(String[] args) in C:\Users\rams2\code projects\HumTrack\src\HumTrack.App\Program.cs:line 23
+

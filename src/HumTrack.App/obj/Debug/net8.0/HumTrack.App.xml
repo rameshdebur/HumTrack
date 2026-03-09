@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HumTrack.App</name>
+    </assembly>
+    <members>
+        <member name="M:HumTrack.App.MainWindow.RebuildOverlayCanvas">
+            <summary>
+            Clears and rebuilds all overlay shapes directly on OverlayCanvas.
+            This is 100% reliable compared to ItemsControl Canvas positioning.
+            </summary>
+        </member>
+        <member name="M:HumTrack.App.MainWindow.InitializeComponent(System.Boolean,System.Boolean)">
+            <summary>
+            Wires up the controls and optionally loads XAML markup and attaches dev tools (if Avalonia.Diagnostics package is referenced).
+            </summary>
+            <param name="loadXaml">Should the XAML be loaded into the component.</param>
+            <param name="attachDevTools">Should the dev tools be attached.</param>
+        </member>
+        <member name="T:HumTrack.App.Services.BitmapConverter">
+            <summary>
+            Converts pure EmguCV Mat structures into rendering-ready Avalonia Bitmap classes safely without
+            leaking unmanaged memory buffers. 
+            Extremely fast memory pointer copy.
+            </summary>
+        </member>
+        <member name="M:HumTrack.App.Services.BitmapConverter.CreateWriteableBitmapFromMat(Emgu.CV.Mat)">
+            <summary>
+            Creates an Avalonia Bitmap representing the provided BGR Mat image.
+            Caller is responsible for disposing the returning bitmap.
+            </summary>
+        </member>
+        <member name="T:HumTrack.App.ViewModels.MainViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="M:HumTrack.App.ViewModels.MainViewModel.LoadVideo(System.String)">
+            <summary>Opens a video file and shows the first frame.</summary>
+        </member>
+        <member name="M:HumTrack.App.ViewModels.MainViewModel.AddMarkerAt(System.Double,System.Double)">
+            <summary>
+            Called by MainWindow when the user clicks the video image.
+            x/y are in display pixels; we must reverse-scale them back to native video pixels.
+            </summary>
+        </member>
+        <member name="M:HumTrack.App.ViewModels.MainViewModel.UpdateScale(System.Double,System.Double)">
+            <summary>
+            Called by code-behind when the display Image has been measured,
+            so we can compute the scale between display pixels and native video pixels.
+            </summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.CurrentFrame">
+            <inheritdoc cref="F:HumTrack.App.ViewModels.MainViewModel._currentFrame"/>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.StatusText">
+            <inheritdoc cref="F:HumTrack.App.ViewModels.MainViewModel._statusText"/>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.MetricsText">
+            <inheritdoc cref="F:HumTrack.App.ViewModels.MainViewModel._metricsText"/>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.IsPlaying">
+            <inheritdoc cref="F:HumTrack.App.ViewModels.MainViewModel._isPlaying"/>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.VideoLoaded">
+            <inheritdoc cref="F:HumTrack.App.ViewModels.MainViewModel._videoLoaded"/>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.CurrentFrameIndex">
+            <inheritdoc cref="F:HumTrack.App.ViewModels.MainViewModel._currentFrameIndex"/>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.MaximumFrameIndex">
+            <inheritdoc cref="F:HumTrack.App.ViewModels.MainViewModel._maximumFrameIndex"/>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.MarkerCount">
+            <inheritdoc cref="F:HumTrack.App.ViewModels.MainViewModel._markerCount"/>
+        </member>
+        <member name="F:HumTrack.App.ViewModels.MainViewModel.playPauseCommand">
+            <summary>The backing field for <see cref="P:HumTrack.App.ViewModels.MainViewModel.PlayPauseCommand"/>.</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.PlayPauseCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="M:HumTrack.App.ViewModels.MainViewModel.PlayPause"/>.</summary>
+        </member>
+        <member name="F:HumTrack.App.ViewModels.MainViewModel.stopCommand">
+            <summary>The backing field for <see cref="P:HumTrack.App.ViewModels.MainViewModel.StopCommand"/>.</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.MainViewModel.StopCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="M:HumTrack.App.ViewModels.MainViewModel.Stop"/>.</summary>
+        </member>
+        <member name="T:HumTrack.App.ViewModels.TrackedRect">
+            <summary>
+            A UI-bindable representation of a tracked marker bounding box.
+            All coordinates are in the display-scaled pixel space.
+            </summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.TrackedRect.X">
+            <summary>Left edge of bounding box (display pixels).</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.TrackedRect.Y">
+            <summary>Top edge of bounding box (display pixels).</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.TrackedRect.W">
+            <summary>Width of bounding box (display pixels).</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.TrackedRect.H">
+            <summary>Height of bounding box (display pixels).</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.TrackedRect.CX">
+            <summary>Centre X, for the crosshair dot.</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.TrackedRect.CY">
+            <summary>Centre Y, for the crosshair dot.</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.TrackedRect.LabelY">
+            <summary>Y position for the text label, slightly above the box.</summary>
+        </member>
+        <member name="P:HumTrack.App.ViewModels.TrackedRect.Label">
+            <summary>Short label shown next to the box.</summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CurrentFrame">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CurrentFrame" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.StatusText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "StatusText" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.MetricsText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "MetricsText" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsPlaying">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsPlaying" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.VideoLoaded">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "VideoLoaded" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CurrentFrameIndex">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CurrentFrameIndex" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.MaximumFrameIndex">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "MaximumFrameIndex" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.MarkerCount">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "MarkerCount" generated properties.</summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CurrentFrame">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CurrentFrame" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.StatusText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "StatusText" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.MetricsText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "MetricsText" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsPlaying">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsPlaying" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.PlayPauseText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "PlayPauseText" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.VideoLoaded">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "VideoLoaded" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.HasVideo">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "HasVideo" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CurrentFrameIndex">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CurrentFrameIndex" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.MaximumFrameIndex">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "MaximumFrameIndex" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.MarkerCount">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "MarkerCount" generated properties.</summary>
+        </member>
+    </members>
+</doc>

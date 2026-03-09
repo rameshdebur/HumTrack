@@ -1,0 +1,886 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HumTrack.Core</name>
+    </assembly>
+    <members>
+        <member name="T:HumTrack.Core.Calibration.CalibrationEngine">
+            <summary>
+            Engine responsible for calculating intrinsic camera parameters using a physical checkerboard.
+            Essential for establishing a mathematically sound relationship between curved pixels and reality.
+            </summary>
+        </member>
+        <member name="M:HumTrack.Core.Calibration.CalibrationEngine.#ctor(System.Int32,System.Int32,System.Single)">
+            <param name="cellsX">Number of inner corners horizontally (squares X - 1)</param>
+            <param name="cellsY">Number of inner corners vertically (squares Y - 1)</param>
+            <param name="squareSizeMm">Exact physical size of a square in millimeters</param>
+        </member>
+        <member name="M:HumTrack.Core.Calibration.CalibrationEngine.Calibrate(System.Collections.Generic.IReadOnlyList{Emgu.CV.Mat})">
+            <summary>
+            Computes the complex camera matrix and geometry mapping out of diverse checkerboard images.
+            Needs at least 5 frames with varied angles (some close, some far, tilted, rotated).
+            </summary>
+            <param name="calibrationImages">A set of raw BGR capture frames containing the chessboard.</param>
+            <returns>A rigid mathematical camera mapping model, or null if it fails.</returns>
+        </member>
+        <member name="T:HumTrack.Core.Calibration.CameraIntrinsics">
+            <summary>
+            Holds the intrinsic camera parameters required to correct lens distortion and
+            map 2D image coordinates to 3D rays.
+            Includes the generated Camera Matrix and Lens Distortion Coefficients.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Calibration.CameraIntrinsics.CameraMatrix">
+            <summary>
+            The 3x3 camera matrix (fx, fy, cx, cy) mapping focal lengths and principal points.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Calibration.CameraIntrinsics.DistortionCoefficients">
+            <summary>
+            The distortion coefficients describing geometric lens distortion (k1, k2, p1, p2, k3).
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Calibration.CameraIntrinsics.ImageWidth">
+            <summary>Width of the image sensor pixel array used to calculate this.</summary>
+        </member>
+        <member name="P:HumTrack.Core.Calibration.CameraIntrinsics.ImageHeight">
+            <summary>Height of the image sensor pixel array used to calculate this.</summary>
+        </member>
+        <member name="M:HumTrack.Core.Calibration.CameraIntrinsics.#ctor(Emgu.CV.Mat,Emgu.CV.Mat,System.Int32,System.Int32)">
+            <summary>Creates a new intrinsic mapping model.</summary>
+        </member>
+        <member name="M:HumTrack.Core.Calibration.CameraIntrinsics.GenerateRectificationMaps(Emgu.CV.Mat@,Emgu.CV.Mat@)">
+            <summary>Calculates and caches the maps needed to unwarp frames in real-time.</summary>
+        </member>
+        <member name="M:HumTrack.Core.Calibration.CameraIntrinsics.Dispose">
+            <summary>Releases the unmanaged matrices.</summary>
+        </member>
+        <member name="T:HumTrack.Core.Calibration.UndistortionFilter">
+             <summary>
+             Automatically corrects both Barrel and Pincushion lens distortion in real-time.
+             Uses pre-calculated rectification maps mapping 2D curved pixels back to pure Euclidean planes
+             for scientifically-valid spatial measurements.
+            
+             MUST be added to the VideoPipeline BEFORE any Tracking engines run.
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Calibration.UndistortionFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:HumTrack.Core.Calibration.UndistortionFilter.IsEnabled">
+            <inheritdoc/>
+        </member>
+        <member name="M:HumTrack.Core.Calibration.UndistortionFilter.#ctor(HumTrack.Core.Calibration.CameraIntrinsics)">
+            <summary>Creates the filter utilizing pre-calculated mathematical constants from calibration.</summary>
+        </member>
+        <member name="M:HumTrack.Core.Calibration.UndistortionFilter.Process(Emgu.CV.Mat)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HumTrack.Core.Calibration.UndistortionFilter.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:HumTrack.Core.Diagnostics.HumTrackLogger">
+            <summary>
+            Centralized logging service for HumTrack.
+            Writes structured logs to both console and rolling log files.
+            All tracking engine errors, calibration events, and performance metrics
+            are routed through this service for debugging and audit trails.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Diagnostics.HumTrackLogger.Log">
+            <summary>
+            Gets the configured Serilog logger instance.
+            Auto-initializes with defaults if not explicitly configured.
+            </summary>
+        </member>
+        <member name="M:HumTrack.Core.Diagnostics.HumTrackLogger.Initialize(System.String,System.Nullable{Serilog.Events.LogEventLevel})">
+            <summary>
+            Initialize the logging system with file + console sinks.
+            Call once at application startup.
+            </summary>
+            <param name="logDirectory">
+            Directory for log files. Defaults to "logs" in the working directory.
+            </param>
+            <param name="minimumLevel">
+            Minimum severity to log. Default: Debug in debug builds, Information in release.
+            </param>
+        </member>
+        <member name="M:HumTrack.Core.Diagnostics.HumTrackLogger.ForContext``1">
+            <summary>
+            Creates a logger for a specific source context (class/module name).
+            Use this in each class to tag log entries with their origin.
+            </summary>
+            <typeparam name="T">The class requesting the logger.</typeparam>
+            <returns>A logger tagged with the class name.</returns>
+        </member>
+        <member name="M:HumTrack.Core.Diagnostics.HumTrackLogger.ForEngine(System.String)">
+            <summary>
+            Creates a logger for a tracking engine by name.
+            </summary>
+            <param name="engineName">The engine's display name.</param>
+            <returns>A logger tagged with the engine name.</returns>
+        </member>
+        <member name="M:HumTrack.Core.Diagnostics.HumTrackLogger.Shutdown">
+            <summary>
+            Flushes all buffered log entries and releases resources.
+            Call at application shutdown.
+            </summary>
+        </member>
+        <member name="T:HumTrack.Core.Diagnostics.PerformanceMonitor">
+            <summary>
+            Performance metrics tracker for tracking engine operations.
+            Logs per-frame timing, markers-per-second, and drift warnings.
+            </summary>
+        </member>
+        <member name="M:HumTrack.Core.Diagnostics.PerformanceMonitor.#ctor(System.String)">
+            <summary>
+            Initializes the performance monitor for a specific engine.
+            </summary>
+            <param name="engineName">Display name of the tracking engine.</param>
+        </member>
+        <member name="M:HumTrack.Core.Diagnostics.PerformanceMonitor.BeginFrame">
+            <summary>Call before processing each frame.</summary>
+        </member>
+        <member name="M:HumTrack.Core.Diagnostics.PerformanceMonitor.EndFrame(System.Int32,System.Int32)">
+            <summary>
+            Call after processing each frame. Logs timing and detects slowdowns.
+            </summary>
+            <param name="markersFound">Number of markers successfully tracked this frame.</param>
+            <param name="totalMarkers">Total number of markers being tracked.</param>
+        </member>
+        <member name="P:HumTrack.Core.Diagnostics.PerformanceMonitor.TotalFrames">
+            <summary>Gets the total number of frames processed.</summary>
+        </member>
+        <member name="P:HumTrack.Core.Diagnostics.PerformanceMonitor.TotalMarkersLost">
+            <summary>Gets the total number of marker-loss events.</summary>
+        </member>
+        <member name="T:HumTrack.Core.Tracking.EngineSettings">
+            <summary>
+            Configuration settings for tracking engines.
+            Each engine reads only the properties it cares about and ignores the rest.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.MarkerType">
+            <summary>
+            The type of physical marker being tracked.
+            Determines optimal detection strategy.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.ConfidenceThreshold">
+            <summary>
+            Confidence threshold below which a marker is considered "lost".
+            Range: 0.0 to 1.0. Default: 0.6.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.SearchWindow">
+            <summary>
+            Size of the search window around the predicted position (pixels).
+            Used by TemplateMatchingEngine and as fallback search area.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.TemplateEvolveRate">
+            <summary>
+            Rate at which the template evolves to match appearance changes.
+            0.0 = never update template, 1.0 = fully replace each frame.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.PyramidLevels">
+            <summary>
+            Number of pyramid levels for pyramidal Lucas-Kanade.
+            More levels handle larger frame-to-frame motion. Default: 3.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.LkWindowSize">
+            <summary>
+            Size of the search window at each pyramid level.
+            Default: 21x21 pixels.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.BrightnessThreshold">
+            <summary>
+            Brightness threshold for retroreflective marker detection.
+            Pixels above this value are candidate markers. Range: 0–255.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.ColorRange">
+            <summary>
+            HSV color range for colored sticker detection.
+            Null when using brightness-only (retroreflective) mode.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.MinMarkerArea">
+            <summary>
+            Minimum marker area in pixels². Blobs smaller than this are rejected.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.MaxMarkerArea">
+            <summary>
+            Maximum marker area in pixels². Blobs larger than this are rejected.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.MinCircularity">
+            <summary>
+            Minimum circularity (0.0–1.0) for blob shape filtering.
+            1.0 = perfect circle. Default: 0.5.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.ArucoDictionary">
+            <summary>
+            ArUco dictionary type (e.g., 4x4_50, 5x5_100, 6x6_250).
+            Determines which pattern set the detector recognizes.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.EngineSettings.RedetectIntervalFrames">
+            <summary>
+            Number of frames between full re-detection passes in the Hybrid engine.
+            Lower values reduce drift but cost more CPU. Default: 30.
+            </summary>
+        </member>
+        <member name="T:HumTrack.Core.Tracking.ArucoDictionaryType">
+            <summary>
+            Supported ArUco dictionary types matching OpenCV's predefined dictionaries.
+            </summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.ArucoDictionaryType.Dict4X4With50">
+            <summary>4×4 bit markers, 50 unique IDs. Smallest, fastest detection.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.ArucoDictionaryType.Dict4X4With100">
+            <summary>4×4 bit markers, 100 unique IDs.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.ArucoDictionaryType.Dict5X5With100">
+            <summary>5×5 bit markers, 100 unique IDs. Good balance.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.ArucoDictionaryType.Dict5X5With250">
+            <summary>5×5 bit markers, 250 unique IDs.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.ArucoDictionaryType.Dict6X6With250">
+            <summary>6×6 bit markers, 250 unique IDs. Most robust, largest markers.</summary>
+        </member>
+        <member name="T:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine">
+             <summary>
+             ArUco fiducial marker detection engine.
+             Detects printed ArUco/AprilTag markers with unique IDs — no templates needed.
+            
+             <para><b>Best for</b>: Printed paper markers glued to the body. Each marker has a
+             unique binary code, so identity is maintained automatically even during occlusion.</para>
+            
+             <para><b>Key advantage</b>: Zero marker swap confusion — impossible to mix up left/right
+             knee during gait crossover because each marker has a unique ID.</para>
+            
+             <para><b>Deterministic</b>: Yes — pattern detection is a pure binary classification.</para>
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine.Capabilities">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine.Initialize(Emgu.CV.Mat,System.Collections.Generic.IReadOnlyList{System.Drawing.RectangleF},HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine.Track(Emgu.CV.Mat)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine.Detect(Emgu.CV.Mat,HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine.Reinitialize(Emgu.CV.Mat,System.Int32,System.Drawing.RectangleF)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.ArucoDetectionEngine.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:HumTrack.Core.Tracking.Engines.BlobDetectionEngine">
+             <summary>
+             Blob detection engine for physical markers (retroreflective tape or colored stickers).
+             Detects ALL markers in a single frame pass — no templates or ROIs needed.
+            
+             <para><b>Modes</b>:<br/>
+             • Brightness mode (retroreflective): threshold grayscale → find contours<br/>
+             • Color mode (stickers): HSV threshold → find contours
+             </para>
+            
+             <para><b>Marker identity</b>: Maintained by nearest-neighbor association across frames.
+             For more robust identity, use colored stickers (color = ID) or ArUco markers.</para>
+            
+             <para><b>Deterministic</b>: Yes — thresholding and contour detection are purely deterministic.</para>
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.BlobDetectionEngine.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.BlobDetectionEngine.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.BlobDetectionEngine.Capabilities">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.BlobDetectionEngine.Initialize(Emgu.CV.Mat,System.Collections.Generic.IReadOnlyList{System.Drawing.RectangleF},HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.BlobDetectionEngine.Track(Emgu.CV.Mat)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.BlobDetectionEngine.Detect(Emgu.CV.Mat,HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.BlobDetectionEngine.Reinitialize(Emgu.CV.Mat,System.Int32,System.Drawing.RectangleF)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.BlobDetectionEngine.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:HumTrack.Core.Tracking.Engines.CsrtEngine">
+             <summary>
+             CSRT-inspired (Channel and Spatial Reliability) tracking engine.
+             Uses multi-channel template matching with spatial weighting for
+             improved robustness to partial occlusion and background clutter.
+            
+             <para><b>Best for</b>: Markers that get partially occluded (limb crossover in gait).</para>
+             <para><b>Deterministic</b>: Yes — all operations are pure arithmetic.</para>
+            
+             <para>This implementation uses multi-channel (BGR separate) correlation to
+             approximate CSRT's channel reliability weighting. Each channel is matched
+             independently and fused via weighted averaging.</para>
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.CsrtEngine.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.CsrtEngine.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.CsrtEngine.Capabilities">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.CsrtEngine.Initialize(Emgu.CV.Mat,System.Collections.Generic.IReadOnlyList{System.Drawing.RectangleF},HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.CsrtEngine.Track(Emgu.CV.Mat)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.CsrtEngine.Reinitialize(Emgu.CV.Mat,System.Int32,System.Drawing.RectangleF)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.CsrtEngine.Detect(Emgu.CV.Mat,HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.CsrtEngine.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:HumTrack.Core.Tracking.Engines.HybridEngine">
+             <summary>
+             Hybrid tracking engine — combines Blob Detection for initial marker discovery
+             and periodic re-detection with Optical Flow for fast frame-to-frame tracking.
+            
+             <para><b>Strategy</b>:<br/>
+             Frame 0: Blob detection finds all markers.<br/>
+             Frames 1..N-1: Optical flow tracks all markers in one call.<br/>
+             Frame N: Blob detection re-detects all markers to correct drift.<br/>
+             Repeat.
+             </para>
+            
+             <para><b>Best for</b>: Retroreflective tape markers in gait analysis.
+             Recommended default engine.</para>
+            
+             <para><b>Deterministic</b>: Yes — both sub-engines are deterministic.</para>
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.HybridEngine.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.HybridEngine.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.HybridEngine.Capabilities">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.HybridEngine.Initialize(Emgu.CV.Mat,System.Collections.Generic.IReadOnlyList{System.Drawing.RectangleF},HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.HybridEngine.Track(Emgu.CV.Mat)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.HybridEngine.Reinitialize(Emgu.CV.Mat,System.Int32,System.Drawing.RectangleF)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.HybridEngine.Detect(Emgu.CV.Mat,HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.HybridEngine.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:HumTrack.Core.Tracking.Engines.KcfEngine">
+             <summary>
+             KCF (Kernelized Correlation Filter) tracking engine.
+             Implemented using OpenCV's correlation-based approach via frequency-domain operations.
+            
+             <para><b>Best for</b>: Single high-contrast markers, natural features.</para>
+             <para><b>Speed</b>: Very fast — FFT-based correlation.</para>
+             <para><b>Deterministic</b>: Yes — uses deterministic FFT convolution.</para>
+            
+             <para>This is a lightweight implementation that uses template matching with
+             a cosine-window spatial mask to approximate KCF filter behavior without
+             requiring the contrib tracker module.</para>
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.KcfEngine.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.KcfEngine.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.KcfEngine.Capabilities">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.KcfEngine.Initialize(Emgu.CV.Mat,System.Collections.Generic.IReadOnlyList{System.Drawing.RectangleF},HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.KcfEngine.Track(Emgu.CV.Mat)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.KcfEngine.Reinitialize(Emgu.CV.Mat,System.Int32,System.Drawing.RectangleF)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.KcfEngine.Detect(Emgu.CV.Mat,HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.KcfEngine.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:HumTrack.Core.Tracking.Engines.OpticalFlowEngine">
+             <summary>
+             Lucas-Kanade pyramidal sparse optical flow tracking engine.
+             Tracks ALL markers simultaneously in a single OpenCV call.
+            
+             <para><b>Best for</b>: Multi-point gait analysis with retroreflective or sticker markers.</para>
+             <para><b>Key advantage</b>: O(1) calls regardless of marker count — all points tracked at once.</para>
+             <para><b>Deterministic</b>: Yes — pyramidal LK uses fixed-point gradient computation.</para>
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.OpticalFlowEngine.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.OpticalFlowEngine.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.OpticalFlowEngine.Capabilities">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.OpticalFlowEngine.Initialize(Emgu.CV.Mat,System.Collections.Generic.IReadOnlyList{System.Drawing.RectangleF},HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.OpticalFlowEngine.Track(Emgu.CV.Mat)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.OpticalFlowEngine.Reinitialize(Emgu.CV.Mat,System.Int32,System.Drawing.RectangleF)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.OpticalFlowEngine.Detect(Emgu.CV.Mat,HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.OpticalFlowEngine.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine">
+             <summary>
+             Normalized cross-correlation (NCC) template matching engine.
+             Slides a template image across a search window to find the best match.
+            
+             <para><b>Compatible with</b>: Legacy Tracker behavior.</para>
+             <para><b>Best for</b>: Natural features, any marker when no better engine is available.</para>
+             <para><b>Deterministic</b>: Yes — NCC is a pure arithmetic operation.</para>
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine.Description">
+            <inheritdoc />
+        </member>
+        <member name="P:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine.Capabilities">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine.Initialize(Emgu.CV.Mat,System.Collections.Generic.IReadOnlyList{System.Drawing.RectangleF},HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine.Track(Emgu.CV.Mat)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine.Reinitialize(Emgu.CV.Mat,System.Int32,System.Drawing.RectangleF)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine.Detect(Emgu.CV.Mat,HumTrack.Core.Tracking.EngineSettings)">
+            <inheritdoc />
+        </member>
+        <member name="M:HumTrack.Core.Tracking.Engines.TemplateMatchingEngine.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:HumTrack.Core.Tracking.HsvRange">
+            <summary>
+            Defines an HSV color range for color-based marker detection.
+            Used by <see cref="T:HumTrack.Core.Tracking.Engines.BlobDetectionEngine"/> with colored sticker markers.
+            </summary>
+            <param name="HueLow">Lower bound of Hue channel (0–180 in OpenCV convention).</param>
+            <param name="HueHigh">Upper bound of Hue channel.</param>
+            <param name="SaturationLow">Lower bound of Saturation (0–255).</param>
+            <param name="SaturationHigh">Upper bound of Saturation.</param>
+            <param name="ValueLow">Lower bound of Value/brightness (0–255).</param>
+            <param name="ValueHigh">Upper bound of Value/brightness.</param>
+        </member>
+        <member name="M:HumTrack.Core.Tracking.HsvRange.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Defines an HSV color range for color-based marker detection.
+            Used by <see cref="T:HumTrack.Core.Tracking.Engines.BlobDetectionEngine"/> with colored sticker markers.
+            </summary>
+            <param name="HueLow">Lower bound of Hue channel (0–180 in OpenCV convention).</param>
+            <param name="HueHigh">Upper bound of Hue channel.</param>
+            <param name="SaturationLow">Lower bound of Saturation (0–255).</param>
+            <param name="SaturationHigh">Upper bound of Saturation.</param>
+            <param name="ValueLow">Lower bound of Value/brightness (0–255).</param>
+            <param name="ValueHigh">Upper bound of Value/brightness.</param>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.HsvRange.HueLow">
+            <summary>Lower bound of Hue channel (0–180 in OpenCV convention).</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.HsvRange.HueHigh">
+            <summary>Upper bound of Hue channel.</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.HsvRange.SaturationLow">
+            <summary>Lower bound of Saturation (0–255).</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.HsvRange.SaturationHigh">
+            <summary>Upper bound of Saturation.</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.HsvRange.ValueLow">
+            <summary>Lower bound of Value/brightness (0–255).</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.HsvRange.ValueHigh">
+            <summary>Upper bound of Value/brightness.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.HsvRange.Red">
+            <summary>Predefined range for red markers (wraps around H=0/180).</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.HsvRange.Green">
+            <summary>Predefined range for green markers.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.HsvRange.Blue">
+            <summary>Predefined range for blue markers.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.HsvRange.Yellow">
+            <summary>Predefined range for yellow markers.</summary>
+        </member>
+        <member name="T:HumTrack.Core.Tracking.ITrackingEngine">
+             <summary>
+             Common interface for all tracking engines in HumTrack.
+             Implements the Strategy pattern: the application selects an engine at runtime
+             and all downstream pipelines (physics, export, UI) consume <see cref="T:HumTrack.Core.Tracking.TrackingResult"/>
+             identically regardless of which engine produced it.
+            
+             <para><b>Contract</b>: Every implementation must be fully deterministic —
+             identical inputs must always produce byte-identical outputs.</para>
+             </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.ITrackingEngine.Name">
+            <summary>
+            Display name shown in the UI engine dropdown (e.g., "Optical Flow (Lucas-Kanade)").
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.ITrackingEngine.Description">
+            <summary>
+            Short human-readable description for tooltips.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.ITrackingEngine.Capabilities">
+            <summary>
+            Declares what this engine can and cannot do.
+            Used by the UI to show/hide relevant settings.
+            </summary>
+        </member>
+        <member name="M:HumTrack.Core.Tracking.ITrackingEngine.Initialize(Emgu.CV.Mat,System.Collections.Generic.IReadOnlyList{System.Drawing.RectangleF},HumTrack.Core.Tracking.EngineSettings)">
+            <summary>
+            Initialize the engine for tracking on a reference frame.
+            Called once when the user defines key frames or initial marker positions.
+            </summary>
+            <param name="referenceFrame">
+            The video frame (BGR, 8-bit) on which markers are first defined.
+            </param>
+            <param name="markerRegions">
+            List of initial marker bounding rectangles in image coordinates.
+            For template-free engines (ArUco, Blob), this may be empty — the engine
+            will auto-detect markers in the reference frame.
+            </param>
+            <param name="settings">
+            Engine-specific configuration. Each engine reads only its relevant properties.
+            </param>
+        </member>
+        <member name="M:HumTrack.Core.Tracking.ITrackingEngine.Track(Emgu.CV.Mat)">
+            <summary>
+            Track all initialized markers in the given frame.
+            Returns one <see cref="T:HumTrack.Core.Tracking.TrackingResult"/> per marker.
+            </summary>
+            <param name="currentFrame">The current video frame (BGR, 8-bit).</param>
+            <returns>
+            Array of results, one per marker. Results with <c>IsFound = false</c>
+            indicate a lost marker. The array length must equal the number of
+            initialized markers (or the number of auto-detected markers for
+            template-free engines).
+            </returns>
+        </member>
+        <member name="M:HumTrack.Core.Tracking.ITrackingEngine.Reinitialize(Emgu.CV.Mat,System.Int32,System.Drawing.RectangleF)">
+            <summary>
+            Attempt to re-detect a specific marker that was lost.
+            Called by the pipeline when a marker's confidence drops below threshold.
+            </summary>
+            <param name="currentFrame">The current frame.</param>
+            <param name="markerIndex">Index of the lost marker.</param>
+            <param name="searchRegion">Region to search within (may be larger than the original ROI).</param>
+            <returns>True if the marker was successfully re-acquired.</returns>
+        </member>
+        <member name="M:HumTrack.Core.Tracking.ITrackingEngine.Detect(Emgu.CV.Mat,HumTrack.Core.Tracking.EngineSettings)">
+            <summary>
+            Auto-detect all markers in a frame without prior initialization.
+            Only supported by engines with <see cref="F:HumTrack.Core.Tracking.TrackingCapabilities.TemplateFreee"/>.
+            </summary>
+            <param name="frame">The frame to scan.</param>
+            <param name="settings">Detection settings (brightness threshold, color range, ArUco dictionary).</param>
+            <returns>
+            Detected markers with positions and optional IDs.
+            Returns an empty array if no markers are found.
+            </returns>
+        </member>
+        <member name="T:HumTrack.Core.Tracking.MarkerType">
+            <summary>
+            Defines the type of physical marker being tracked.
+            Determines which detection strategy is optimal.
+            </summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.MarkerType.NaturalFeature">
+            <summary>No physical marker — tracking a natural visual feature via template/ROI.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.MarkerType.Retroreflective">
+            <summary>Retroreflective tape marker — detected by brightness thresholding.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.MarkerType.ColoredSticker">
+            <summary>Colored sticker marker — detected by HSV color thresholding.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.MarkerType.ArUco">
+            <summary>Printed ArUco/AprilTag fiducial marker — detected by pattern recognition.</summary>
+        </member>
+        <member name="T:HumTrack.Core.Tracking.TrackingCapabilities">
+            <summary>
+            Defines the capabilities of a tracking engine.
+            Used to determine UI options and pipeline compatibility.
+            </summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.None">
+            <summary>No specific capabilities.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.SinglePoint">
+            <summary>Can track a single point per instance.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.MultiPoint">
+            <summary>Can track multiple points simultaneously in a single call.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.ScaleInvariant">
+            <summary>Handles changes in marker apparent size.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.RotationInvariant">
+            <summary>Handles marker rotation.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.OcclusionRobust">
+            <summary>Robust to partial marker occlusion.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.SubPixelAccuracy">
+            <summary>Returns positions with sub-pixel precision.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.ColorBased">
+            <summary>Uses color information for detection.</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.SelfIdentifying">
+            <summary>Each marker is uniquely identified by its pattern (e.g., ArUco).</summary>
+        </member>
+        <member name="F:HumTrack.Core.Tracking.TrackingCapabilities.TemplateFreee">
+            <summary>No template or ROI definition needed — detects markers by physical properties.</summary>
+        </member>
+        <member name="T:HumTrack.Core.Tracking.TrackingEngineRegistry">
+            <summary>
+            Central registry of all available tracking engines.
+            The UI queries this to populate the engine selection dropdown.
+            Engines are registered in priority order (recommended engines first).
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.TrackingEngineRegistry.AvailableEngines">
+            <summary>
+            Gets the display names of all available engines, in recommended order.
+            </summary>
+        </member>
+        <member name="M:HumTrack.Core.Tracking.TrackingEngineRegistry.Create(System.String)">
+            <summary>
+            Creates a new instance of the tracking engine with the given display name.
+            </summary>
+            <param name="name">The display name (must match <see cref="P:HumTrack.Core.Tracking.ITrackingEngine.Name"/>).</param>
+            <returns>A new engine instance. Caller is responsible for disposal.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if no engine matches the given name.</exception>
+        </member>
+        <member name="M:HumTrack.Core.Tracking.TrackingEngineRegistry.CreateForMarkerType(HumTrack.Core.Tracking.MarkerType)">
+            <summary>
+            Returns the recommended engine for the given marker type.
+            </summary>
+            <param name="markerType">The physical marker type being used.</param>
+            <returns>A new engine instance optimized for the marker type.</returns>
+        </member>
+        <member name="T:HumTrack.Core.Tracking.TrackingResult">
+            <summary>
+            Result of tracking a single marker in one frame.
+            Immutable record — all physics and data pipelines consume this directly.
+            </summary>
+            <param name="MarkerIndex">Zero-based index of the marker in the track's marker list.</param>
+            <param name="Position">Sub-pixel center position in image coordinates (pixels).</param>
+            <param name="Confidence">Tracking confidence, 0.0 (lost) to 1.0 (perfect match).</param>
+            <param name="IsFound">False if the marker was not detected in this frame.</param>
+            <param name="BoundingBox">Updated bounding rectangle around the marker.</param>
+            <param name="MarkerId">
+            Optional unique marker identifier (e.g., ArUco ID).
+            Null for engines that do not provide self-identification.
+            </param>
+        </member>
+        <member name="M:HumTrack.Core.Tracking.TrackingResult.#ctor(System.Int32,System.Drawing.PointF,System.Single,System.Boolean,System.Drawing.RectangleF,System.Nullable{System.Int32})">
+            <summary>
+            Result of tracking a single marker in one frame.
+            Immutable record — all physics and data pipelines consume this directly.
+            </summary>
+            <param name="MarkerIndex">Zero-based index of the marker in the track's marker list.</param>
+            <param name="Position">Sub-pixel center position in image coordinates (pixels).</param>
+            <param name="Confidence">Tracking confidence, 0.0 (lost) to 1.0 (perfect match).</param>
+            <param name="IsFound">False if the marker was not detected in this frame.</param>
+            <param name="BoundingBox">Updated bounding rectangle around the marker.</param>
+            <param name="MarkerId">
+            Optional unique marker identifier (e.g., ArUco ID).
+            Null for engines that do not provide self-identification.
+            </param>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.TrackingResult.MarkerIndex">
+            <summary>Zero-based index of the marker in the track's marker list.</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.TrackingResult.Position">
+            <summary>Sub-pixel center position in image coordinates (pixels).</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.TrackingResult.Confidence">
+            <summary>Tracking confidence, 0.0 (lost) to 1.0 (perfect match).</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.TrackingResult.IsFound">
+            <summary>False if the marker was not detected in this frame.</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.TrackingResult.BoundingBox">
+            <summary>Updated bounding rectangle around the marker.</summary>
+        </member>
+        <member name="P:HumTrack.Core.Tracking.TrackingResult.MarkerId">
+            <summary>
+            Optional unique marker identifier (e.g., ArUco ID).
+            Null for engines that do not provide self-identification.
+            </summary>
+        </member>
+        <member name="T:HumTrack.Core.VideoProcessing.Filters.ContrastEnhancementFilter">
+            <summary>
+            Applies Contrast Limited Adaptive Histogram Equalization (CLAHE) on the luminance
+            channel. Substantially improves tracking in poorly-lit or highly variable lighting environments
+            without destroying the color data (which Blob/HSV tracking needs).
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.Filters.ContrastEnhancementFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.Filters.ContrastEnhancementFilter.IsEnabled">
+            <inheritdoc/>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.Filters.ContrastEnhancementFilter.#ctor(System.UInt32,System.Int32)">
+            <param name="clipLimit">Higher values = more contrast. (Usually 2 to 4)</param>
+            <param name="gridSize">Tile size for adaptive histogram (usually 8x8)</param>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.Filters.ContrastEnhancementFilter.Process(Emgu.CV.Mat)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.Filters.ContrastEnhancementFilter.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:HumTrack.Core.VideoProcessing.Filters.SharpeningFilter">
+            <summary>
+            Applies an unsharp mask to mitigate minor motion blur.
+            Uses a safe two-pass approach: blur → subtract → blend.
+            Useful for fast-moving subjects on lower-framerate cameras.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.IsEnabled">
+            <inheritdoc/>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.BlurSigma">
+            <summary>Sigma for the Gaussian blur step (higher = stronger sharpening effect).</summary>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.Intensity">
+            <summary>How much sharpening to blend in (0=none, 1=full, 1.5=aggressive).</summary>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.#ctor">
+            <summary>Creates a new sharpening filter using an unsharp mask approximation.</summary>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.Process(Emgu.CV.Mat)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.Filters.SharpeningFilter.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:HumTrack.Core.VideoProcessing.IFrameProcessor">
+            <summary>
+            Represents a stage in the video processing pipeline that modifies a frame in-place.
+            Allows modular, pluggable filters to be applied dynamically before tracking.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.IFrameProcessor.Name">
+            <summary>Display name of the processor for UI selection.</summary>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.IFrameProcessor.IsEnabled">
+            <summary>Whether this filter should be actively applied to frames.</summary>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.IFrameProcessor.Process(Emgu.CV.Mat)">
+            <summary>
+            Processes and modifies the given frame in-place.
+            </summary>
+            <param name="frame">The BGR frame to be modified.</param>
+        </member>
+        <member name="T:HumTrack.Core.VideoProcessing.VideoPipeline">
+            <summary>
+            A modular processing pipeline that executes multiple frame processors sequentially.
+            Used to chain together lens undistortion, motion blur Sharpening, contrast adjustment, etc.
+            </summary>
+        </member>
+        <member name="P:HumTrack.Core.VideoProcessing.VideoPipeline.Processors">
+            <summary>Gets the ordered list of currently active processors.</summary>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.VideoPipeline.AddProcessor(HumTrack.Core.VideoProcessing.IFrameProcessor)">
+            <summary>Adds a processor to the end of the pipeline.</summary>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.VideoPipeline.RemoveProcessor(HumTrack.Core.VideoProcessing.IFrameProcessor)">
+            <summary>Removes a specific processor from the pipeline.</summary>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.VideoPipeline.Clear">
+            <summary>Clears and disposes all processors.</summary>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.VideoPipeline.Process(Emgu.CV.Mat)">
+            <summary>
+            Passes the frame through all enabled processors sequentially.
+            Frame is modified in-place to minimize allocations.
+            </summary>
+            <param name="frame">The unmanaged EmguCV Mat frame.</param>
+        </member>
+        <member name="M:HumTrack.Core.VideoProcessing.VideoPipeline.Dispose">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

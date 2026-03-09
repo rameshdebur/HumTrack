@@ -70,13 +70,25 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     public MainViewModel()
     {
-        _trackingEngine = new HybridEngine();
+        // TemplateMatchingEngine: extracts an NCC patch from whatever the user clicked.
+        // Works on ANY video appearance (body landmarks, markers, joints etc).
+        // HybridEngine is better when physical bright-white blob markers are used.
+        _trackingEngine = new TemplateMatchingEngine();
         _settings = new EngineSettings
         {
+            // Blob detection params (used if switching to HybridEngine)
             BrightnessThreshold = 190,
             MinMarkerArea = 20,
-            MaxMarkerArea = 6000,
-            MinCircularity = 0.35
+            MaxMarkerArea = 8000,
+            MinCircularity = 0.3,
+
+            // TemplateMatchingEngine params:
+            // Large search window for walking person motion (up to ~150px/frame at 30fps)
+            SearchWindow      = new System.Drawing.Size(200, 200),
+            // Lower confidence threshold: body landmarks are less distinctive than markers
+            ConfidenceThreshold = 0.45,
+            // Moderate template evolution: handles appearance changes (lighting, pose)
+            TemplateEvolveRate  = 0.25
         };
 
         _pipeline = new VideoPipeline();
@@ -146,14 +158,24 @@ public partial class MainViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
-    public async Task PlayPause()
+    public void PlayPause()
     {
-        if (_capture == null || !_capture.IsOpened) return;
+        if (_capture == null || !_capture.IsOpened)
+        {
+            StatusText = "Load a video first.";
+            return;
+        }
 
         if (IsPlaying)
+        {
             StopVideo();
+        }
         else
-            await RunPlaybackLoopAsync();
+        {
+            _log.Information("Play pressed — {MarkerCount} markers registered, starting playback", _userRegions.Count);
+            // Fire-and-forget: necessary because RelayCommand doesn't properly await async Tasks
+            _ = RunPlaybackLoopAsync();
+        }
     }
 
     [RelayCommand]
@@ -185,59 +207,72 @@ public partial class MainViewModel : ObservableObject, IDisposable
         {
             using var mat = new Mat();
 
-            while (!token.IsCancellationRequested)
+            try
             {
-                sw.Restart();
-
-                if (!_capture.Read(mat) || mat.IsEmpty)
-                    break; // EOF
-
-                // Pre-processing
-                _pipeline.Process(mat);
-
-                // Seed the engine once we have the first frame
-                if (!engineSeeded)
+                while (!token.IsCancellationRequested)
                 {
-                    _trackingEngine.Initialize(mat, _userRegions, _settings);
-                    engineSeeded = true;
+                    sw.Restart();
+
+                    if (!_capture.Read(mat) || mat.IsEmpty)
+                        break; // EOF
+
+                    // Pre-processing
+                    _pipeline.Process(mat);
+
+                    // Seed the engine once we have the first frame
+                    if (!engineSeeded)
+                    {
+                        _trackingEngine.Initialize(mat, _userRegions, _settings);
+                        engineSeeded = true;
+                        _log.Information("Engine initialized with {N} regions", _userRegions.Count);
+                    }
+
+                    // Track
+                    var results = _trackingEngine.Track(mat);
+
+                    // Convert to display-space TrackedRect objects (no nulls)
+                    var boxes = BuildOverlays(results);
+
+                    // Render — create new bitmap before UI dispatch
+                    var bmp = BitmapConverter.CreateWriteableBitmapFromMat(mat);
+                    int frameIdx = (int)_capture.Get(CapProp.PosFrames);
+                    int found = boxes.Length;
+                    long elapsed = sw.ElapsedMilliseconds;
+
+                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    {
+                        // Swap frame — don't dispose old one immediately; let GC handle it
+                        // to avoid disposing a bitmap Avalonia's renderer is still using
+                        CurrentFrame = bmp;
+
+                        CurrentFrameIndex = frameIdx;
+
+                        TrackingBoxes.Clear();
+                        foreach (var b in boxes) TrackingBoxes.Add(b);
+
+                        MetricsText = $"{found} markers  |  {elapsed} ms/frame";
+                    });
+
+                    // Frame-rate limiter
+                    var wait = (int)(msPerFrame - sw.ElapsedMilliseconds);
+                    if (wait > 0) await Task.Delay(wait, token).ConfigureAwait(false);
                 }
-
-                // Track
-                var results = _trackingEngine.Track(mat);
-
-                // Convert to display-space TrackedRect objects
-                var boxes = BuildOverlays(results);
-
-                // Render
-                var bmp = BitmapConverter.CreateWriteableBitmapFromMat(mat);
-                int frameIdx = (int)_capture.Get(CapProp.PosFrames);
-                int found = 0;
-                foreach (var r in results) if (r.IsFound) found++;
-                long elapsed = sw.ElapsedMilliseconds;
-
+            }
+            catch (OperationCanceledException)
+            {
+                // Normal stop — ignore
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex, "Playback loop crashed");
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-                {
-                    var old = CurrentFrame;
-                    CurrentFrame = bmp;
-                    old?.Dispose();
-
-                    CurrentFrameIndex = frameIdx;
-
-                    TrackingBoxes.Clear();
-                    foreach (var b in boxes) TrackingBoxes.Add(b);
-
-                    MetricsText = $"{found}/{results.Length} markers  |  {elapsed} ms/frame  |  ~{(elapsed > 0 ? 1000 / elapsed : 0)} FPS";
-                });
-
-                // Frame-rate limiter
-                var wait = (int)(msPerFrame - sw.ElapsedMilliseconds);
-                if (wait > 0) await Task.Delay(wait, token).ConfigureAwait(false);
+                    StatusText = $"Playback error: {ex.Message}");
             }
 
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
                 IsPlaying = false;
-                StatusText = "Playback complete.";
+                StatusText = IsPlaying ? StatusText : "Playback complete — press Stop to reset markers.";
             });
 
         }, token).ConfigureAwait(false);
@@ -264,7 +299,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         // Map display → native video pixel space
         float vx = (float)(displayX / _scaleX);
         float vy = (float)(displayY / _scaleY);
-        const float R = 12f; // half-size of the seed box
+        // Larger seed box captures more texture context for template matching
+        const float R = 40f;
 
         _userRegions.Add(new RectangleF(vx - R, vy - R, R * 2, R * 2));
         MarkerCount = _userRegions.Count;
@@ -307,22 +343,24 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     private TrackedRect[] BuildOverlays(TrackingResult[] results)
     {
-        var boxes = new TrackedRect[results.Length];
+        // Use a list — skip lost markers entirely (no null entries)
+        var boxes = new System.Collections.Generic.List<TrackedRect>(results.Length);
         for (int i = 0; i < results.Length; i++)
         {
             var r = results[i];
             if (!r.IsFound) continue;
+            if (r.BoundingBox.Width <= 0 || r.BoundingBox.Height <= 0) continue;
 
-            boxes[i] = new TrackedRect
+            boxes.Add(new TrackedRect
             {
                 X = r.BoundingBox.X * _scaleX,
                 Y = r.BoundingBox.Y * _scaleY,
-                W = r.BoundingBox.Width * _scaleX,
+                W = r.BoundingBox.Width  * _scaleX,
                 H = r.BoundingBox.Height * _scaleY,
                 Label = $"M{i + 1}"
-            };
+            });
         }
-        return boxes;
+        return boxes.ToArray();
     }
 
     private void SetFrame(Mat mat)
