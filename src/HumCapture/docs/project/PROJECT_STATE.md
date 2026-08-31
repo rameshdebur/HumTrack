@@ -1,6 +1,6 @@
 # HumCapture Project State
 
-**Status:** Initial HumCapture Git baseline in progress; Phase 0 P0.2 recovery probe remains incomplete and controlled release remains blocked  
+**Status:** Initial HumCapture Git baseline committed; Phase 0 P0.2 recovery probe remains incomplete and controlled release remains blocked  
 **Tags:** GOV.1N | SCM | INITIAL-BASELINE | TRACEABILITY | P0.2J | EVIDENCE | SBOM  
 **Last meaningful update:** 2026-08-31
 
@@ -104,9 +104,13 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   and verification. Twelve automated control tests pass. The surviving P0.2J run is
   retained as `HC-EV-5becff40f4271131c8b43641` and verifies. This is controlled
   engineering evidence, not a validated eQMS or regulatory dossier.
-- HumCapture remains untracked in the parent Git repository. Snapshot
-  `HC-ENG-20260831T163246Z-7d17f5afce36` is explicitly engineering-only;
-  controlled release and regulatory use remain prohibited.
+- HumCapture is tracked on the isolated `codex/humcapture-baseline` review
+  branch from initial engineering baseline commit
+  `fc3dbd02aa6b73e7ca42bb084229c627b859d006`, based directly on
+  `origin/master` at `67c47f4ba5c29c46c3bdbcfc72133a0492a8ac12`. Earlier snapshot
+  `HC-ENG-20260831T163246Z-7d17f5afce36` remains explicitly engineering-only;
+  the new source baseline does not retroactively make it a controlled release
+  or permit regulatory use.
 - ADR-0008 and SBOM policy HC-GOV-SBOM-001 are accepted. The deterministic
   CycloneDX 1.7 generator covers current Node.js, .NET and native Windows probe
   manifests plus framework/build dependencies; four project tests, including
@@ -119,28 +123,28 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   controls. It rejects generic coverage/tolerance/CVE gates and vendor-specific
   tooling as regulatory mandates. It is a governance control, not evidence of
   IEC 62304, ISO 14971, CDSCO, QMS, or certification conformity.
-- HC-GOV-003 / HC-CHG-20260831-001 is preparing the first bounded Git baseline.
-  It excludes unrelated HumTrack changes, generated build/runtime output and raw
-  evidence. Until its commit and closure checks pass, HumCapture remains
-  untracked and limited to engineering use.
+- HC-GOV-003 / HC-CHG-20260831-001 accepted the first bounded Git baseline at
+  `fc3dbd02aa6b73e7ca42bb084229c627b859d006`. Its 142 staged files were all
+  under `src/HumCapture`; unrelated HumTrack changes, generated build/runtime
+  output and raw evidence were excluded. The baseline remains engineering-only.
 - Laptop-hotspot discovery, timing, and throughput require named-hardware validation.
 - Exact binary formats, schema compatibility window, and offline USB completion-receipt mechanism remain open.
 - Evidence backup/restore, retention approval, independent signing/review,
   access audit, and any required WORM/eQMS integration remain open.
 - SBOM binary/runtime completeness, vulnerability/VEX, licence approval and
   supplier/maintainer review remain open.
-- The software lifecycle/AI-assistance procedure is documented but not yet
-  operationally demonstrated through a tracked change, protected review,
-  independent approval, CI record, or controlled release.
+- The software lifecycle/AI-assistance procedure has now been used for one
+  tracked change and attributed review record. Remote branch protection,
+  independent approval, CI evidence and a controlled release remain open.
 - Detailed UI design is intentionally deferred.
 
 ## Immediate next priorities
 
 1. Review and formally baseline the consolidated ARD, PRD, user stories, preliminary requirements, risks, and compliance applicability.
 2. Obtain qualified India/CDSCO applicability and classification review before medically positioned claims or release.
-3. Decide whether to place the bounded HumCapture subtree under version control;
-   a controlled release cannot exist while it is untracked. Define and verify
-   evidence backup/restore and independent review before dossier use.
+3. Configure the approved remote protected-branch/review workflow and CI without
+   disturbing unrelated HumTrack work. Define and verify evidence backup/restore
+   and independent review before dossier use.
 4. Preserve the reconciled exact topology/profile as conditional and test
    exposure policy across representative lighting, restart, and reconnect.
 5. Run the disconnect/reconnect campaign; compare a genuinely

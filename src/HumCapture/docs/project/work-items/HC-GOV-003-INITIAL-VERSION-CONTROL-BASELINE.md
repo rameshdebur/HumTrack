@@ -2,7 +2,7 @@
 
 **Change ID:** HC-CHG-20260831-001  
 **Tags:** GOV.1N | SCM | INITIAL-BASELINE | TRACEABILITY  
-**State:** In review; staged-baseline inspection and commit pending  
+**State:** Accepted as an engineering source-control baseline  
 **Change owner:** Signed-in Windows account operator, assisted by Codex Orchestrator  
 **Component owner:** Orchestrator / Release owner  
 **Verification owner:** Codex QA role; not independent of implementation  
@@ -72,7 +72,13 @@ hardware evidence is intended for the baseline.
 - HumCapture-local Git attributes enforce LF for deterministic text, schemas,
   fixtures, reports, and hash-bound artifacts; common future media formats are
   explicitly binary.
-- Baseline commit identity: pending.
+- Remote-review branch base: `origin/master` at
+  `67c47f4ba5c29c46c3bdbcfc72133a0492a8ac12`.
+- Baseline commit identity:
+  `fc3dbd02aa6b73e7ca42bb084229c627b859d006`.
+- Source-equivalent local preparation commit
+  `6c47f6a3e9f54696c220f3eae67c5724ffe10622` was not used as the review-branch
+  parent because it inherited four unrelated local HumTrack commits.
 - Closure commit identity: the commit containing the final accepted version of
   this record; report externally after commit.
 
@@ -97,6 +103,7 @@ Before the baseline commit:
 | Check | Result |
 |---|---|
 | Candidate path boundary | Only `src/HumCapture` selected; unrelated parent changes excluded |
+| Exact staged baseline | 142 files, 12,086 inserted lines; boundary and generated-output checks passed |
 | Large candidate files | No non-ignored candidate exceeded 1 MiB |
 | Generated/runtime output | Managed/native build output, `node_modules`, raw video and ordinary logs ignored |
 | Checkout byte stability | Subtree-local Git attributes enforce LF and mark common media formats binary |
@@ -115,8 +122,8 @@ been removed during cache cleanup. `npm ci --ignore-scripts --no-audit
 --no-fund` restored the exact lockfile dependencies in ignored `node_modules`
 directories; the complete rerun then passed.
 
-Current decision: suitable for an initial **engineering source-control
-baseline**, subject to exact staged-diff inspection and successful commit. This
-is not a controlled release. Independent review, a protected hosted branch,
-CI records, vulnerability/VEX, licence/supplier approval, and qualified
-regulatory review remain open.
+Final decision: accepted as the initial **engineering source-control baseline**
+at commit `fc3dbd02aa6b73e7ca42bb084229c627b859d006`. The HumCapture scoped working
+tree was clean immediately after that commit. This is not a controlled release.
+Independent review, remote branch protection, CI records, vulnerability/VEX,
+licence/supplier approval, and qualified regulatory review remain open.
