@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** Initial HumCapture Git baseline committed; Phase 0 P0.2 recovery probe remains incomplete and controlled release remains blocked  
-**Tags:** GOV.1N | SCM | INITIAL-BASELINE | TRACEABILITY | P0.2J | EVIDENCE | SBOM  
+**Status:** HumCapture pull request open for governed review; CI, independent approval, P0.2 recovery and controlled release remain blocked  
+**Tags:** GOV.1P | SCM | GITHUB | PULL-REQUEST | TRACEABILITY | P0.2J | EVIDENCE | SBOM  
 **Last meaningful update:** 2026-08-31
 
 ## Objective
@@ -127,6 +127,12 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `fc3dbd02aa6b73e7ca42bb084229c627b859d006`. Its 142 staged files were all
   under `src/HumCapture`; unrelated HumTrack changes, generated build/runtime
   output and raw evidence were excluded. The baseline remains engineering-only.
+- HC-GOV-004 / HC-CHG-20260831-002 published the isolated branch
+  `codex/humcapture-baseline` and opened
+  `https://github.com/rameshdebur/HumTrack/pull/1` against `master`. The PR is
+  open, non-draft and mergeable. GitHub currently reports no workflows, status
+  checks, `master` protection or repository rulesets; independent review is
+  also open. No repo-wide setting or path outside `src/HumCapture` was changed.
 - Laptop-hotspot discovery, timing, and throughput require named-hardware validation.
 - Exact binary formats, schema compatibility window, and offline USB completion-receipt mechanism remain open.
 - Evidence backup/restore, retention approval, independent signing/review,
@@ -142,9 +148,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 1. Review and formally baseline the consolidated ARD, PRD, user stories, preliminary requirements, risks, and compliance applicability.
 2. Obtain qualified India/CDSCO applicability and classification review before medically positioned claims or release.
-3. Configure the approved remote protected-branch/review workflow and CI without
-   disturbing unrelated HumTrack work. Define and verify evidence backup/restore
-   and independent review before dossier use.
+3. Review PR #1. With explicit authorization for repository-root
+   `.github/workflows/` and repo-wide settings, add scoped HumCapture CI and
+   protect `master` without disrupting unrelated HumTrack work. Define and
+   verify evidence backup/restore and independent review before dossier use.
 4. Preserve the reconciled exact topology/profile as conditional and test
    exposure policy across representative lighting, restart, and reconnect.
 5. Run the disconnect/reconnect campaign; compare a genuinely
