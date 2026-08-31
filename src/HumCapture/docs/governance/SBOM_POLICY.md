@@ -35,7 +35,8 @@ reviewed for change before a medically positioned release.
 The SBOM shall be regenerated whenever any of the following changes:
 
 1. A package lock, project file, native linker dependency, target framework,
-   toolchain/runtime requirement, or vendored component.
+   toolchain/runtime requirement, CI workflow/action dependency, or vendored
+   component.
 2. The included HumCapture component set or release version.
 3. Dependency resolution, even if the declared version range did not change.
 4. A release candidate or released build is created.
@@ -47,6 +48,9 @@ product version, and timestamp.
 Manifest discovery is fail-closed: a newly detected npm, .NET, native, Gradle,
 Python, Rust, Go, CocoaPods or equivalent supported manifest must be added to
 the generator contract before SBOM generation can pass.
+Repository CI actions shall be pinned to immutable commit SHAs. Their source
+workflow, commit identities, build-only scope and unresolved licence/package
+hash review shall be represented explicitly.
 
 ## Verification and release control
 

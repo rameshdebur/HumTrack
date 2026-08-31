@@ -19,6 +19,7 @@ unsupported security, licence, regulatory or clinical claim.
 
 - [x] CycloneDX JSON 1.7 selected and documented against current official sources.
 - [x] Both npm lockfiles, managed project and both native projects are inventoried.
+- [x] Scoped repository CI workflow and immutable GitHub Action commit pins are inventoried.
 - [x] Direct/transitive npm packages, frameworks, runtime APIs and build SDK are represented.
 - [x] Identifiers, hashes, declared licences, dependency graph, generator,
       timestamp, context, coverage and known unknowns are recorded.
@@ -37,8 +38,15 @@ vulnerability clearance, CDSCO evidence sufficiency, or a controlled release.
 
 ## Current result
 
-CycloneDX 1.7 SBOM SHA-256
+Current source-control CycloneDX 1.7 SBOM SHA-256
+`b8a3bbb1fb58a67be0077b29e32f19e442095952e45e9e2b88903c42476473df`
+contains 19 components and a complete 20-node dependency graph. Five project
+tests pass, including rejection of floating GitHub Action tags. Official
+CycloneDX CLI 0.33.1 validation is recorded in `HC-SBOM-VR-001`.
+
+The earlier 15-component SBOM SHA-256
 `2f34a8112c2c2ea274c4be7fd4d15443368feb4baa06c3e364dd7fae736f94e5`
-contains 15 components and a complete 16-node dependency graph. Four project
-tests and official CycloneDX CLI 0.33.1 validation pass. It is retained and
-bound to engineering snapshot `HC-ENG-20260831T163246Z-7d17f5afce36`.
+remains immutable in and bound to engineering snapshot
+`HC-ENG-20260831T163246Z-7d17f5afce36`. The updated CI-aware SBOM does not
+retroactively alter that snapshot and requires a future release/snapshot record
+before it can be described as release-bound.

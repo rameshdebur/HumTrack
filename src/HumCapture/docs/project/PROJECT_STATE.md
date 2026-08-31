@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** HumCapture pull request open for governed review; CI, independent approval, P0.2 recovery and controlled release remain blocked  
-**Tags:** GOV.1P | SCM | GITHUB | PULL-REQUEST | TRACEABILITY | P0.2J | EVIDENCE | SBOM  
+**Status:** HumCapture pull request open; scoped CI/master-protection governance is in progress; independent approval, P0.2 recovery and controlled release remain blocked  
+**Tags:** GOV.1Q | CI | MASTER-PROTECTION | SCM | P0.2J | EVIDENCE | SBOM  
 **Last meaningful update:** 2026-08-31
 
 ## Objective
@@ -133,6 +133,16 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   open, non-draft and mergeable. GitHub currently reports no workflows, status
   checks, `master` protection or repository rulesets; independent review is
   also open. No repo-wide setting or path outside `src/HumCapture` was changed.
+- HC-GOV-005 is in progress under explicit authorization for the root
+  `.github/workflows/humcapture-ci.yml` path and `master` protection. The scoped
+  check is named `HumCapture validation`; it covers existing automated tests,
+  SBOM/hash/audit controls and managed/native non-hardware builds/self-tests.
+  It does not perform camera acquisition and cannot supply HIL evidence.
+- The current SBOM now includes the CI workflow and three commit-pinned GitHub
+  Actions. It contains 19 components/20 dependency nodes; five project tests
+  and project validation pass. The prior 15-component SBOM remains immutable
+  in the existing snapshot/evidence vault; the CI-aware SBOM is not
+  retroactively release-bound.
 - Laptop-hotspot discovery, timing, and throughput require named-hardware validation.
 - Exact binary formats, schema compatibility window, and offline USB completion-receipt mechanism remain open.
 - Evidence backup/restore, retention approval, independent signing/review,
@@ -149,14 +159,17 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 1. Review and formally baseline the consolidated ARD, PRD, user stories, preliminary requirements, risks, and compliance applicability.
 2. Obtain qualified India/CDSCO applicability and classification review before medically positioned claims or release.
 3. Review PR #1. With explicit authorization for repository-root
-   `.github/workflows/` and repo-wide settings, add scoped HumCapture CI and
-   protect `master` without disrupting unrelated HumTrack work. Define and
+   `.github/workflows/` and repo-wide settings, complete scoped HumCapture CI and
+   protect `master` using the proven check without disrupting unrelated HumTrack work. Define and
    verify evidence backup/restore and independent review before dossier use.
 4. Preserve the reconciled exact topology/profile as conditional and test
    exposure policy across representative lighting, restart, and reconnect.
 5. Run the disconnect/reconnect campaign; compare a genuinely
    different host controller if available. Do not reinstate the rejected path-2
    combination without fresh evidence.
+   Resume specifically from `P0.2J | UVC | DEVICE LOSS | DETECTED + FINALIZED |
+   HIL`: reconnect/rediscover the same identity, then create and fully decode a
+   separate post-reconnect artifact.
 6. Complete P0.2 evidence-package integration. Obtain 1080p60 UVC hardware for normative qualification before concurrent-camera qualification.
 7. Complete the normative interface specifications required by the first application implementation phase.
 8. Do not begin production application features until the governance gate explicitly permits the named phase.

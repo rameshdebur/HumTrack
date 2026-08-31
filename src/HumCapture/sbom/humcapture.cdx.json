@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:b3917ddc-a541-5205-842c-807807d33f0e",
+  "serialNumber": "urn:uuid:5b018ba5-cf6a-5ae4-9df7-532511603d3f",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-31T16:20:01.849Z",
+    "timestamp": "2026-08-31T17:30:00.000Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -62,7 +62,7 @@
       },
       {
         "name": "humcapture:coverage",
-        "value": "all package locks and project files present under src/HumCapture at generation"
+        "value": "all package locks and project files present under src/HumCapture plus the scoped repository CI workflow at generation"
       },
       {
         "name": "humcapture:known-unknowns",
@@ -71,6 +71,39 @@
     ]
   },
   "components": [
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "HumCapture CI",
+      "version": "0.1.0-p0.2j",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
+      "scope": "excluded",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "52b536b76c0fdace4c389962a976aae121eaba63a6a7f9ecb88d26ea33bfba3f"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": ".github/workflows/humcapture-ci.yml"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party-build-workflow"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:not-distributed",
+          "value": "true"
+        }
+      ]
+    },
     {
       "type": "application",
       "group": "HumCapture",
@@ -286,6 +319,111 @@
         {
           "name": "humcapture:linked-import-libraries",
           "value": "mf.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;ole32.lib;shlwapi.lib"
+        },
+        {
+          "name": "humcapture:not-distributed",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "actions",
+      "name": "checkout",
+      "version": "v6.0.2",
+      "bom-ref": "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+      "purl": "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+      "scope": "excluded",
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party-build-action"
+        },
+        {
+          "name": "humcapture:source-manifest",
+          "value": ".github/workflows/humcapture-ci.yml"
+        },
+        {
+          "name": "humcapture:commit-pin",
+          "value": "de0fac2e4500dabe0009e67214ff5f5447ce83dd"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "git-commit-pin-recorded; action-package-not-hashed"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "build-action-licence-review-required"
+        },
+        {
+          "name": "humcapture:not-distributed",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "actions",
+      "name": "setup-dotnet",
+      "version": "v5.2.0",
+      "bom-ref": "pkg:github/actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7",
+      "purl": "pkg:github/actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7",
+      "scope": "excluded",
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party-build-action"
+        },
+        {
+          "name": "humcapture:source-manifest",
+          "value": ".github/workflows/humcapture-ci.yml"
+        },
+        {
+          "name": "humcapture:commit-pin",
+          "value": "c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "git-commit-pin-recorded; action-package-not-hashed"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "build-action-licence-review-required"
+        },
+        {
+          "name": "humcapture:not-distributed",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "actions",
+      "name": "setup-node",
+      "version": "v7.0.0",
+      "bom-ref": "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "purl": "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "scope": "excluded",
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party-build-action"
+        },
+        {
+          "name": "humcapture:source-manifest",
+          "value": ".github/workflows/humcapture-ci.yml"
+        },
+        {
+          "name": "humcapture:commit-pin",
+          "value": "820762786026740c76f36085b0efc47a31fe5020"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "git-commit-pin-recorded; action-package-not-hashed"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "build-action-licence-review-required"
         },
         {
           "name": "humcapture:not-distributed",
@@ -546,6 +684,14 @@
   ],
   "dependencies": [
     {
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
+      "dependsOn": [
+        "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+        "pkg:github/actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7",
+        "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020"
+      ]
+    },
+    {
       "ref": "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
       "dependsOn": [
         "pkg:generic/microsoft/Microsoft.NETCore.App@8.0.0"
@@ -569,6 +715,7 @@
       "ref": "pkg:generic/humcapture/HumCapture@0.1.0-p0.2j",
       "dependsOn": [
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
         "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
         "pkg:generic/humcapture/HumCapture.MfCapture@0.1.0-p0",
         "pkg:generic/humcapture/HumCapture.MfEnumerator@0.1.0-p0",
@@ -590,6 +737,18 @@
     },
     {
       "ref": "pkg:generic/microsoft/Windows-SDK@10.0.19041.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
       "dependsOn": []
     },
     {
@@ -645,7 +804,7 @@
     },
     {
       "name": "humcapture:declared-manifests",
-      "value": "tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json"
+      "value": "tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
     }
   ]
 }

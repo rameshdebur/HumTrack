@@ -56,6 +56,40 @@ function componentHash(content) {
   return [{ alg: "SHA-256", content: sha256(content) }];
 }
 
+export function parsePinnedGitHubActions(workflowText, sourceManifest = ".github/workflows/humcapture-ci.yml") {
+  const actions = [];
+  for (const [index, line] of workflowText.split(/\r?\n/).entries()) {
+    const uses = /^\s*-?\s*uses:\s*(\S+)(?:\s+#\s*(\S+))?\s*$/.exec(line);
+    if (!uses) continue;
+    const reference = /^([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)@([0-9a-f]{40})$/.exec(uses[1]);
+    if (!reference) throw new SbomError(`GitHub Action must be pinned to a 40-character commit SHA at ${sourceManifest}:${index + 1}: ${uses[1]}`);
+    const [, owner, repository, commit] = reference;
+    const version = uses[2] ?? commit;
+    const purl = `pkg:github/${owner}/${repository}@${commit}`;
+    actions.push({
+      type: "application",
+      group: owner,
+      name: repository,
+      version,
+      "bom-ref": purl,
+      purl,
+      scope: "excluded",
+      properties: [
+        { name: "humcapture:component-origin", value: "third-party-build-action" },
+        { name: "humcapture:source-manifest", value: sourceManifest },
+        { name: "humcapture:commit-pin", value: commit },
+        { name: "humcapture:hash-status", value: "git-commit-pin-recorded; action-package-not-hashed" },
+        { name: "humcapture:license-status", value: "build-action-licence-review-required" },
+        { name: "humcapture:not-distributed", value: "true" }
+      ]
+    });
+  }
+  if (actions.length === 0) throw new SbomError(`No GitHub Actions were found in ${sourceManifest}.`);
+  const refs = new Set(actions.map((action) => action["bom-ref"]));
+  if (refs.size !== actions.length) throw new SbomError(`Duplicate GitHub Action commit references found in ${sourceManifest}.`);
+  return actions;
+}
+
 function licenseChoice(license) {
   return license ? [{ license: { id: license } }] : [];
 }
@@ -204,6 +238,27 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   const sbomTool = await projectComponent(absoluteRoot, "tools/sbom/package.json", "HumCapture SBOM Tool", "application", "0.1.0", [
     { name: "humcapture:execution-context", value: "build" }
   ]);
+  const workflowManifestPath = ".github/workflows/humcapture-ci.yml";
+  const workflowAbsolutePath = path.resolve(absoluteRoot, "..", "..", ...workflowManifestPath.split("/"));
+  const workflowText = await readFile(workflowAbsolutePath, "utf8");
+  const githubActions = parsePinnedGitHubActions(workflowText, workflowManifestPath);
+  const workflowRef = `pkg:generic/humcapture/HumCapture-CI@${encodeURIComponent(productVersion)}`;
+  const workflowComponent = {
+    type: "application",
+    group: "HumCapture",
+    name: "HumCapture CI",
+    version: productVersion,
+    "bom-ref": workflowRef,
+    purl: workflowRef,
+    scope: "excluded",
+    hashes: componentHash(workflowText),
+    properties: [
+      { name: "humcapture:source-manifest", value: workflowManifestPath },
+      { name: "humcapture:component-origin", value: "first-party-build-workflow" },
+      { name: "humcapture:license-status", value: "first-party-licence-not-yet-baselined" },
+      { name: "humcapture:not-distributed", value: "true" }
+    ]
+  };
 
   const netRuntimeRef = "pkg:generic/microsoft/Microsoft.NETCore.App@8.0.0";
   const windowsRuntimeRef = "pkg:generic/microsoft/Windows-Media-Foundation-COM-Shell@host-provided";
@@ -239,9 +294,9 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     }
   ];
 
-  const firstParty = [...npmSurfaces.map((surface) => surface.firstParty), managed.component, nativeCapture.component, nativeEnumerator.component, sbomTool.component];
+  const firstParty = [...npmSurfaces.map((surface) => surface.firstParty), managed.component, nativeCapture.component, nativeEnumerator.component, sbomTool.component, workflowComponent];
   const thirdPartyByRef = new Map();
-  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...platformComponents]) thirdPartyByRef.set(component["bom-ref"], component);
+  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...platformComponents, ...githubActions]) thirdPartyByRef.set(component["bom-ref"], component);
   const rootRef = `pkg:generic/humcapture/HumCapture@${encodeURIComponent(productVersion)}`;
   const rootComponent = {
     type: "application",
@@ -264,10 +319,11 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     { ref: managed.component["bom-ref"], dependsOn: [netRuntimeRef] },
     { ref: nativeCapture.component["bom-ref"], dependsOn: [windowsRuntimeRef, windowsSdkRef] },
     { ref: nativeEnumerator.component["bom-ref"], dependsOn: [windowsRuntimeRef, windowsSdkRef] },
-    { ref: sbomTool.component["bom-ref"], dependsOn: [] }
+    { ref: sbomTool.component["bom-ref"], dependsOn: [] },
+    { ref: workflowRef, dependsOn: githubActions.map((action) => action["bom-ref"]).sort() }
   ];
   for (const component of thirdPartyByRef.values()) if (!dependencies.some((item) => item.ref === component["bom-ref"])) dependencies.push({ ref: component["bom-ref"], dependsOn: [] });
-  const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, sbomTool.manifestHash, productVersion, generatedAt.toISOString() ].join("\n"));
+  const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, sbomTool.manifestHash, sha256(workflowText), productVersion, generatedAt.toISOString() ].join("\n"));
   const bom = {
     "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
     bomFormat: "CycloneDX",
@@ -284,7 +340,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
       component: rootComponent,
       properties: [
         { name: "humcapture:generation-context", value: "source-manifest and build-context inventory" },
-        { name: "humcapture:coverage", value: "all package locks and project files present under src/HumCapture at generation" },
+        { name: "humcapture:coverage", value: "all package locks and project files present under src/HumCapture plus the scoped repository CI workflow at generation" },
         { name: "humcapture:known-unknowns", value: "host runtime patches; dynamic modules; future Android dependencies; legal producer identity; binary composition" }
       ]
     },
@@ -292,7 +348,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     dependencies: mergeDependencies(dependencies),
     properties: [
       { name: "humcapture:sbom-policy", value: "HC-GOV-SBOM-001 revision 1.0" },
-      { name: "humcapture:declared-manifests", value: [...handledDependencyManifests, "tools/sbom/package.json"].join(";") }
+      { name: "humcapture:declared-manifests", value: [...handledDependencyManifests, "tools/sbom/package.json", workflowManifestPath].join(";") }
     ]
   };
   await validateSbom(bom);
@@ -330,7 +386,7 @@ export async function validateSbom(bom) {
     for (const dependency of item.dependsOn ?? []) if (!refs.has(dependency)) errors.push(`Dependency graph points to unknown ref: ${dependency}`);
   }
   const declared = bom.properties?.find((item) => item.name === "humcapture:declared-manifests")?.value ?? "";
-  for (const required of ["tools/capability-probes/shared/package-lock.json", "tools/evidence-control/package-lock.json", "HumCapture.ManagedCameraProbe.csproj", "HumCapture.MfCapture.vcxproj", "HumCapture.MfEnumerator.vcxproj", "tools/sbom/package.json"]) if (!declared.includes(required)) errors.push(`Declared manifest coverage missing: ${required}`);
+  for (const required of ["tools/capability-probes/shared/package-lock.json", "tools/evidence-control/package-lock.json", "HumCapture.ManagedCameraProbe.csproj", "HumCapture.MfCapture.vcxproj", "HumCapture.MfEnumerator.vcxproj", "tools/sbom/package.json", ".github/workflows/humcapture-ci.yml"]) if (!declared.includes(required)) errors.push(`Declared manifest coverage missing: ${required}`);
   if (errors.length) throw new SbomError(`SBOM validation failed:\n${errors.join("\n")}`);
   return { componentCount: components.length, dependencyNodeCount: bom.dependencies.length };
 }

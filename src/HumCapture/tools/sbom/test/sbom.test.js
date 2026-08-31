@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { discoverDependencyManifests, generateSbom, validateSbomFile } from "../src/sbom.js";
+import { discoverDependencyManifests, generateSbom, parsePinnedGitHubActions, validateSbomFile } from "../src/sbom.js";
 
 const toolRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = path.resolve(toolRoot, "..", "..");
@@ -18,13 +18,16 @@ async function outputFixture(t, name) {
 test("generates a valid CycloneDX 1.7 inventory with all declared surfaces", async (t) => {
   const output = await outputFixture(t, "humcapture.cdx.json");
   const generated = await generateSbom({ repoRoot, outputPath: output, productVersion: "0.1.0-test", timestamp: "2026-08-31T00:00:00.000Z" });
-  assert.ok(generated.componentCount >= 14);
+  assert.ok(generated.componentCount >= 18);
   const validated = await validateSbomFile(output);
   assert.equal(validated.componentCount, generated.componentCount);
   const bom = JSON.parse(await readFile(output, "utf8"));
   assert.ok(bom.components.some((item) => item.name === "ajv" && item.version === "8.20.0"));
   assert.ok(bom.components.some((item) => item.name === "Microsoft.NETCore.App"));
   assert.ok(bom.components.some((item) => item.name.includes("Windows Media Foundation")));
+  assert.ok(bom.components.some((item) => item.name === "checkout" && item.group === "actions"));
+  assert.ok(bom.components.some((item) => item.name === "setup-node" && item.group === "actions"));
+  assert.ok(bom.components.some((item) => item.name === "setup-dotnet" && item.group === "actions"));
 });
 
 test("generation is deterministic for fixed inputs version and timestamp", async (t) => {
@@ -50,4 +53,14 @@ test("manifest discovery detects a future Android dependency surface", async (t)
   await mkdir(path.join(root, "apps", "android"), { recursive: true });
   await writeFile(path.join(root, "apps", "android", "build.gradle.kts"), "plugins {}\n");
   assert.deepEqual(await discoverDependencyManifests(root), ["apps/android/build.gradle.kts"]);
+});
+
+test("GitHub Actions must use immutable commit pins", () => {
+  assert.throws(
+    () => parsePinnedGitHubActions("steps:\n  - uses: actions/checkout@v6\n"),
+    /40-character commit SHA/
+  );
+  const actions = parsePinnedGitHubActions("steps:\n  - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2\n");
+  assert.equal(actions[0].version, "v6.0.2");
+  assert.equal(actions[0].properties.find((item) => item.name === "humcapture:commit-pin").value, "de0fac2e4500dabe0009e67214ff5f5447ce83dd");
 });

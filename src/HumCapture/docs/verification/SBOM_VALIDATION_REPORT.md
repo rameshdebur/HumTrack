@@ -1,7 +1,7 @@
 # HumCapture SBOM Validation Report
 
 **Report ID:** HC-SBOM-VR-001  
-**Revision:** 1.0  
+**Revision:** 1.1  
 **Date:** 2026-08-31  
 **Disposition:** `PASS` for engineering SBOM generation and format validation  
 **Regulatory/release disposition:** Not a controlled release or conformity claim
@@ -18,6 +18,8 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 - Managed probe `.csproj`
 - Native capture and enumerator `.vcxproj` files
 - SBOM generator package manifest
+- Scoped `.github/workflows/humcapture-ci.yml` workflow and its three immutable
+  GitHub Action commit pins
 - Derived .NET target framework, Windows target/toolset, native import libraries,
   host runtime APIs, generation context and known unknowns
 
@@ -27,11 +29,11 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 |---|---|
 | Format | CycloneDX JSON 1.7 |
 | Primary component | HumCapture `0.1.0-p0.2j` engineering/unreleased |
-| Components | 15 |
-| Dependency graph nodes | 16, complete closure including primary component |
-| SBOM SHA-256 | `2f34a8112c2c2ea274c4be7fd4d15443368feb4baa06c3e364dd7fae736f94e5` |
-| Generated UTC | `2026-08-31T16:20:01.849Z` |
-| Project tests | 4/4 passed, including future-manifest drift detection |
+| Components | 19 |
+| Dependency graph nodes | 20, complete closure including primary component |
+| SBOM SHA-256 | `b8a3bbb1fb58a67be0077b29e32f19e442095952e45e9e2b88903c42476473df` |
+| Generated UTC | `2026-08-31T17:30:00.000Z` |
+| Project tests | 5/5 passed, including future-manifest drift and floating-action rejection |
 | Project validator | Passed |
 | Deterministic regeneration | Passed for fixed manifests, version and timestamp |
 
@@ -48,15 +50,17 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 
 ## Release/evidence binding
 
-The validated SBOM is retained in the evidence vault and referenced by
-engineering snapshot `HC-ENG-20260831T163246Z-7d17f5afce36`. The snapshot
-records the exact SBOM byte length, SHA-256, generation timestamp, project
-validation and official validation. The P0.2J controlled run also retains a copy
-of the release SBOM and verifies it against the release record.
+The earlier validated 15-component SBOM remains retained in the evidence vault
+and referenced by engineering snapshot `HC-ENG-20260831T163246Z-7d17f5afce36`.
+The snapshot and P0.2J evidence retain its exact bytes and SHA-256; accepted
+evidence is not edited. The current 19-component CI-aware SBOM is a new
+source-control engineering inventory. It is not retroactively bound to that
+snapshot and requires a new release/snapshot record for release binding.
 
 ## Limitations and open review
 
-- The snapshot and SBOM are retrospective; HumCapture remains untracked/dirty.
+- The current CI-aware SBOM remains engineering/unreleased and is not yet bound
+  to a new controlled release/snapshot.
 - No binary composition or runtime-loaded-module collection was performed.
 - Host Windows/.NET patch versions remain runtime-resolved known unknowns.
 - No vulnerability/VEX, licence approval, maintainer/supplier-risk, independent
@@ -67,7 +71,7 @@ of the release SBOM and verifies it against the release record.
 ## Evidence levels
 
 - Source implemented: yes.
-- Automated behavior: 4 SBOM tests and 12 evidence-control tests pass.
+- Automated behavior: 5 SBOM tests and 12 evidence-control tests pass.
 - Official format validation: passed.
 - Release integration: engineering snapshot and vault binding passed.
 - Binary/runtime composition: not verified.
