@@ -1,0 +1,20 @@
+{
+  "format_name": "humcapture-phase0-campaign-index",
+  "evidence_format_version": "1.0.0",
+  "campaign_id": "synthetic-campaign-001",
+  "title": "Synthetic Phase 0 contract fixture",
+  "created_utc": "2026-08-27T08:00:00Z",
+  "probe_source_revisions": {
+    "shared-evidence-tool": "synthetic-fixture"
+  },
+  "runs": [
+    {
+      "run_id": "018f6f5e-6b1a-7c23-8d45-0123456789ab",
+      "procedure_id": "HC-P0-SYN-001",
+      "hardware_qualification": false,
+      "evidence_reference": "android-run",
+      "manifest_sha256": "b1a72523641043999936c307a782526dae3040ede48d9e747c5cf7fd22ac359f",
+      "disposition": "INCONCLUSIVE"
+    }
+  ]
+}

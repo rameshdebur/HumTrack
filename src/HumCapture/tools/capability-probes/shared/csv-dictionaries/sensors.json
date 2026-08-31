@@ -1,0 +1,21 @@
+{
+  "dictionary_name": "sensors",
+  "evidence_format_version": "1.0.0",
+  "columns": [
+    { "name": "run_id", "type": "uuid", "required": true, "unit": null, "description": "Owning probe run." },
+    { "name": "sensor_id", "type": "string", "required": true, "unit": null, "description": "Platform sensor identifier." },
+    { "name": "sensor_type", "type": "enum:rotation_vector|gravity|gyroscope|accelerometer|linear_acceleration|magnetometer|other", "required": true, "unit": null, "description": "Sensor measurement family." },
+    { "name": "sequence", "type": "uint64", "required": true, "unit": "count", "description": "Probe-assigned sensor sequence." },
+    { "name": "timestamp", "type": "int64", "required": true, "unit": "declared", "description": "Unmodified sensor timestamp." },
+    { "name": "timestamp_domain", "type": "enum:sensor_monotonic|device_monotonic|android_elapsed_realtime|host_qpc|host_arrival|synthesized|unknown", "required": true, "unit": null, "description": "Sensor clock domain." },
+    { "name": "timestamp_unit", "type": "enum:ns|us|ms|s|ticks_100ns", "required": true, "unit": null, "description": "Unit of timestamp." },
+    { "name": "accuracy", "type": "int32", "required": false, "unit": "platform_code", "description": "Platform-reported accuracy." },
+    { "name": "x", "type": "float64", "required": false, "unit": "sensor_native", "description": "First component." },
+    { "name": "y", "type": "float64", "required": false, "unit": "sensor_native", "description": "Second component." },
+    { "name": "z", "type": "float64", "required": false, "unit": "sensor_native", "description": "Third component." },
+    { "name": "w", "type": "float64", "required": false, "unit": "sensor_native", "description": "Quaternion scalar where applicable." },
+    { "name": "coordinate_frame", "type": "string", "required": true, "unit": null, "description": "Declared coordinate-frame identifier." },
+    { "name": "discontinuity", "type": "enum:none|gap|duplicate|regression|source_change|unknown", "required": true, "unit": null, "description": "Detected discontinuity." },
+    { "name": "notes", "type": "string", "required": false, "unit": null, "description": "Synthetic-test annotation." }
+  ]
+}

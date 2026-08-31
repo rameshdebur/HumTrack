@@ -1,0 +1,651 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:b3917ddc-a541-5205-842c-807807d33f0e",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-31T16:20:01.849Z",
+    "lifecycles": [
+      {
+        "phase": "build"
+      }
+    ],
+    "authors": [
+      {
+        "name": "HumCapture project"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "HumCapture SBOM Tool",
+          "version": "0.1.0",
+          "bom-ref": "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "group": "HumTrack",
+      "name": "HumCapture",
+      "version": "0.1.0-p0.2j",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-p0.2j",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-p0.2j",
+      "supplier": {
+        "name": "HumCapture project; legal producer identity pending governance baseline"
+      },
+      "properties": [
+        {
+          "name": "humcapture:release-status",
+          "value": "engineering-unreleased"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "primary-source-package-not-released"
+        },
+        {
+          "name": "humcapture:scope",
+          "value": "src/HumCapture only"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "humcapture:generation-context",
+        "value": "source-manifest and build-context inventory"
+      },
+      {
+        "name": "humcapture:coverage",
+        "value": "all package locks and project files present under src/HumCapture at generation"
+      },
+      {
+        "name": "humcapture:known-unknowns",
+        "value": "host runtime patches; dynamic modules; future Android dependencies; legal producer identity; binary composition"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "HumCapture.ManagedCameraProbe",
+      "version": "0.1.0-p0",
+      "bom-ref": "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
+      "purl": "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f94c9a87f6db6bab948ab9a7a892cf847a8f6eb1a7e2be8cd3d86928806d6b42"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net8.0-windows10.0.19041.0"
+        },
+        {
+          "name": "humcapture:version-provenance",
+          "value": "project-version-not-declared; engineering-version-assigned"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "HumCapture.MfCapture",
+      "version": "0.1.0-p0",
+      "bom-ref": "pkg:generic/humcapture/HumCapture.MfCapture@0.1.0-p0",
+      "purl": "pkg:generic/humcapture/HumCapture.MfCapture@0.1.0-p0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "66883aa3295d9cfb521aee3743d2c30dae377eabdbd6d1ddb8bfae422d5eb8e6"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:platform-toolset",
+          "value": "v145"
+        },
+        {
+          "name": "humcapture:windows-target-platform",
+          "value": "10.0.19041.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "HumCapture.MfEnumerator",
+      "version": "0.1.0-p0",
+      "bom-ref": "pkg:generic/humcapture/HumCapture.MfEnumerator@0.1.0-p0",
+      "purl": "pkg:generic/humcapture/HumCapture.MfEnumerator@0.1.0-p0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3011ab6ecb3739c59c31ad9bfb0dab6765c74302597f57bfc41e382c1bcf8025"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:platform-toolset",
+          "value": "v145"
+        },
+        {
+          "name": "humcapture:windows-target-platform",
+          "value": "10.0.19041.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "HumCapture SBOM Tool",
+      "version": "0.1.0",
+      "bom-ref": "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
+      "purl": "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f18d7c6e6726cfe0ae858ae0779ba052ea7ab5219b0bb3482020d97f72c2bc05"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "tools/sbom/package.json"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:execution-context",
+          "value": "build"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "name": "Microsoft.NETCore.App",
+      "version": "8.0.0",
+      "bom-ref": "pkg:generic/microsoft/Microsoft.NETCore.App@8.0.0",
+      "purl": "pkg:generic/microsoft/Microsoft.NETCore.App@8.0.0",
+      "scope": "required",
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party-platform"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "host-framework-licence-review-required"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "host-resolved-framework-not-hashed"
+        },
+        {
+          "name": "humcapture:resolution",
+          "value": "minimum framework from runtimeconfig; installed patch resolves at runtime"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "name": "Microsoft Windows Media Foundation, COM/OLE and Shell runtime APIs",
+      "version": "host-provided",
+      "bom-ref": "pkg:generic/microsoft/Windows-Media-Foundation-COM-Shell@host-provided",
+      "purl": "pkg:generic/microsoft/Windows-Media-Foundation-COM-Shell@host-provided",
+      "scope": "required",
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "operating-system"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "operating-system-licence-review-required"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "host-provided-runtime-not-hashed"
+        },
+        {
+          "name": "humcapture:known-unknown",
+          "value": "runtime patch version follows the host Windows servicing level"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "name": "Microsoft Windows SDK",
+      "version": "10.0.19041.0",
+      "bom-ref": "pkg:generic/microsoft/Windows-SDK@10.0.19041.0",
+      "purl": "pkg:generic/microsoft/Windows-SDK@10.0.19041.0",
+      "scope": "excluded",
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "build-toolchain"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "build-toolchain-licence-review-required"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "sdk-component-hash-not-collected"
+        },
+        {
+          "name": "humcapture:linked-import-libraries",
+          "value": "mf.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;ole32.lib;shlwapi.lib"
+        },
+        {
+          "name": "humcapture:not-distributed",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "@humcapture/evidence-control",
+      "version": "0.1.0",
+      "bom-ref": "pkg:npm/%40humcapture/evidence-control@0.1.0",
+      "purl": "pkg:npm/%40humcapture/evidence-control@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4e04ac40ccfd50fe513b93bc157b57d6b67cad221abeefc966d47a8b8c54af46"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "tools/evidence-control/package-lock.json"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:distribution-status",
+          "value": "engineering-tool-not-released"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "@humcapture/phase0-evidence",
+      "version": "0.1.0",
+      "bom-ref": "pkg:npm/%40humcapture/phase0-evidence@0.1.0",
+      "purl": "pkg:npm/%40humcapture/phase0-evidence@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2ec8f98b938e2cc878bb0f522b3d3eea16b97c36c3d9f190efbaefcacfc76ae2"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "tools/capability-probes/shared/package-lock.json"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:distribution-status",
+          "value": "engineering-tool-not-released"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ajv-formats",
+      "version": "3.0.1",
+      "bom-ref": "pkg:npm/ajv-formats@3.0.1",
+      "purl": "pkg:npm/ajv-formats@3.0.1",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "f2252a979d04511fae51c7514371c3a9ae84572a3776870bf20e5627714d7169aeeb621b90652e7bfa44c8b056f1518a2ae7133e0a9e92ce1f214d43038ca8c1"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "tools/evidence-control/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ajv",
+      "version": "8.20.0",
+      "bom-ref": "pkg:npm/ajv@8.20.0",
+      "purl": "pkg:npm/ajv@8.20.0",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "4e16e58be3a53a3fa230f60505505f2773a60809da4b2367e0cd6fcfd4fa1a46b926df5b6bf1c8479ea3a32eb9b58ea4c7f142179557341f35f58eff194ac118"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "tools/evidence-control/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fast-deep-equal",
+      "version": "3.1.3",
+      "bom-ref": "pkg:npm/fast-deep-equal@3.1.3",
+      "purl": "pkg:npm/fast-deep-equal@3.1.3",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "7f7a90f68432f63d808417bf1fd542f75c0b98a042094fe00ce9ca340606e61b303bb04b2a3d3d1dce4760dcfd70623efb19690c22200da8ad56cd3701347ce1"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "tools/evidence-control/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fast-uri",
+      "version": "3.1.6",
+      "bom-ref": "pkg:npm/fast-uri@3.1.6",
+      "purl": "pkg:npm/fast-uri@3.1.6",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "ec871a975bc510caf4a276d5cc40c8ade336d88e24856f9fcf240fc2f005581a758b076c852651b0be238d1bcf1bd24fd6e8aa30746da3e614e91dbf0b30f3e5"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "tools/evidence-control/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "json-schema-traverse",
+      "version": "1.0.0",
+      "bom-ref": "pkg:npm/json-schema-traverse@1.0.0",
+      "purl": "pkg:npm/json-schema-traverse@1.0.0",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "34cf3f3fd9f75e35e12199f594b86415a0024ce5114178d6855e0103f4673aff31be0aadaa9017f483b89914314b1d51968e2dab37aa6f4b0e96bb9a3b2dddba"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "tools/evidence-control/package-lock.json"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "require-from-string",
+      "version": "2.0.2",
+      "bom-ref": "pkg:npm/require-from-string@2.0.2",
+      "purl": "pkg:npm/require-from-string@2.0.2",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "5dfd2759ee91b1ece214cbbe029f5b8a251b9a996ae92f7fa7eef0ed85cffc904786b5030d48706bebc0372b9bbaa7d9593bde53ffc36151ac0c6ed128bfef13"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "tools/evidence-control/package-lock.json"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
+      "dependsOn": [
+        "pkg:generic/microsoft/Microsoft.NETCore.App@8.0.0"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.MfCapture@0.1.0-p0",
+      "dependsOn": [
+        "pkg:generic/microsoft/Windows-Media-Foundation-COM-Shell@host-provided",
+        "pkg:generic/microsoft/Windows-SDK@10.0.19041.0"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.MfEnumerator@0.1.0-p0",
+      "dependsOn": [
+        "pkg:generic/microsoft/Windows-Media-Foundation-COM-Shell@host-provided",
+        "pkg:generic/microsoft/Windows-SDK@10.0.19041.0"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-p0.2j",
+      "dependsOn": [
+        "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
+        "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
+        "pkg:generic/humcapture/HumCapture.MfCapture@0.1.0-p0",
+        "pkg:generic/humcapture/HumCapture.MfEnumerator@0.1.0-p0",
+        "pkg:npm/%40humcapture/evidence-control@0.1.0",
+        "pkg:npm/%40humcapture/phase0-evidence@0.1.0"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:generic/microsoft/Microsoft.NETCore.App@8.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:generic/microsoft/Windows-Media-Foundation-COM-Shell@host-provided",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:generic/microsoft/Windows-SDK@10.0.19041.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/%40humcapture/evidence-control@0.1.0",
+      "dependsOn": [
+        "pkg:npm/ajv-formats@3.0.1",
+        "pkg:npm/ajv@8.20.0"
+      ]
+    },
+    {
+      "ref": "pkg:npm/%40humcapture/phase0-evidence@0.1.0",
+      "dependsOn": [
+        "pkg:npm/ajv-formats@3.0.1",
+        "pkg:npm/ajv@8.20.0"
+      ]
+    },
+    {
+      "ref": "pkg:npm/ajv-formats@3.0.1",
+      "dependsOn": [
+        "pkg:npm/ajv@8.20.0"
+      ]
+    },
+    {
+      "ref": "pkg:npm/ajv@8.20.0",
+      "dependsOn": [
+        "pkg:npm/fast-deep-equal@3.1.3",
+        "pkg:npm/fast-uri@3.1.6",
+        "pkg:npm/json-schema-traverse@1.0.0",
+        "pkg:npm/require-from-string@2.0.2"
+      ]
+    },
+    {
+      "ref": "pkg:npm/fast-deep-equal@3.1.3",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/fast-uri@3.1.6",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/json-schema-traverse@1.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:npm/require-from-string@2.0.2",
+      "dependsOn": []
+    }
+  ],
+  "properties": [
+    {
+      "name": "humcapture:sbom-policy",
+      "value": "HC-GOV-SBOM-001 revision 1.0"
+    },
+    {
+      "name": "humcapture:declared-manifests",
+      "value": "tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json"
+    }
+  ]
+}

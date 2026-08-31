@@ -1,0 +1,2 @@
+run_id,sequence,timestamp,timestamp_domain,timestamp_unit,thermal_status,temperature_c,battery_percent,battery_charging,available_storage_bytes,write_latency_ms,notes
+018f6f5e-6b1a-7c23-8d45-0123456789ab,0,1000000000,device_monotonic,ns,synthetic_nominal,30.0,90.0,false,10000000000,1.2,synthetic
