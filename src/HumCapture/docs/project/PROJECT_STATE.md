@@ -1,6 +1,6 @@
 # HumCapture Project State
 
-**Status:** HumCapture pull request open; scoped CI/master-protection governance is in progress; independent approval, P0.2 recovery and controlled release remain blocked  
+**Status:** Scoped CI and `master` protection are remotely verified; PR, independent approval, P0.2 reconnect recovery and controlled release remain open  
 **Tags:** GOV.1Q | CI | MASTER-PROTECTION | SCM | P0.2J | EVIDENCE | SBOM  
 **Last meaningful update:** 2026-08-31
 
@@ -133,11 +133,18 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   open, non-draft and mergeable. GitHub currently reports no workflows, status
   checks, `master` protection or repository rulesets; independent review is
   also open. No repo-wide setting or path outside `src/HumCapture` was changed.
-- HC-GOV-005 is in progress under explicit authorization for the root
+- HC-GOV-005 passed its engineering governance gate under explicit authorization for the root
   `.github/workflows/humcapture-ci.yml` path and `master` protection. The scoped
   check is named `HumCapture validation`; it covers existing automated tests,
   SBOM/hash/audit controls and managed/native non-hardware builds/self-tests.
   It does not perform camera acquisition and cannot supply HIL evidence.
+- GitHub PR run `33421222644` passed on commit
+  `8ff67d8b6104b729428f6866de75660f388b09c5`. `master` now requires the strict
+  `HumCapture validation` check and pull-request flow, applies protection to
+  administrators, requires conversation resolution and linear history, and
+  blocks force pushes/deletion. Required approvals remain zero for the
+  solo-maintainer engineering flow; independent human review remains an open
+  controlled-release blocker.
 - The current SBOM now includes the CI workflow, three commit-pinned GitHub
   Actions and the exact Windows SDK Chocolatey build package. It contains 20
   components/21 dependency nodes; six project tests and project validation
@@ -159,10 +166,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 1. Review and formally baseline the consolidated ARD, PRD, user stories, preliminary requirements, risks, and compliance applicability.
 2. Obtain qualified India/CDSCO applicability and classification review before medically positioned claims or release.
-3. Review PR #1. With explicit authorization for repository-root
-   `.github/workflows/` and repo-wide settings, complete scoped HumCapture CI and
-   protect `master` using the proven check without disrupting unrelated HumTrack work. Define and
-   verify evidence backup/restore and independent review before dossier use.
+3. Review PR #1 and obtain independent human approval before controlled release.
+   Define and verify evidence backup/restore before dossier use.
 4. Preserve the reconciled exact topology/profile as conditional and test
    exposure policy across representative lighting, restart, and reconnect.
 5. Run the disconnect/reconnect campaign; compare a genuinely

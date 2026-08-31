@@ -2,6 +2,9 @@
 
 **Tags:** GOV.1Q | CI | GITHUB | MASTER-PROTECTION | SBOM | TRACEABILITY
 
+**Engineering disposition:** `PASS` — CI and protection implemented and remotely verified  
+**Controlled-release disposition:** `BLOCKED` — independent human review remains open
+
 ## Goal
 
 Establish a reproducible, scoped HumCapture status check and use its proven
@@ -46,10 +49,10 @@ field-workflow evidence.
 - [x] CI workflow/actions are included in the CycloneDX SBOM contract.
 - [x] Floating Action references fail an automated SBOM test.
 - [x] Chocolatey build packages require exact versions in the SBOM contract.
-- [ ] Pull-request check `HumCapture validation` completes successfully on GitHub.
-- [ ] `master` requires the proven check and an up-to-date branch.
-- [ ] Force pushes and deletion of `master` are blocked; administrators are included.
-- [ ] Remote settings are read back and recorded.
+- [x] Pull-request check `HumCapture validation` completes successfully on GitHub.
+- [x] `master` requires the proven check and an up-to-date branch.
+- [x] Force pushes and deletion of `master` are blocked; administrators are included.
+- [x] Remote settings are read back and recorded.
 - [ ] Independent human approval is completed before controlled release.
 
 ## Solo-maintainer review boundary
@@ -70,6 +73,18 @@ preinstall Windows SDK `10.0.19041.0`. The remediation preserves the project
 target and installs exact Chocolatey package
 `windows-sdk-10-version-2004-all@10.0.19041.685`; it does not retarget the
 native projects or waive native verification.
+
+## Verified remote result
+
+- Verified commit: `8ff67d8b6104b729428f6866de75660f388b09c5`.
+- PR run: `https://github.com/rameshdebur/HumTrack/actions/runs/33421222644` — `SUCCESS`.
+- Required check: `HumCapture validation`, bound to GitHub Actions app ID `15368`.
+- `master` read-back: strict/up-to-date status check enabled; pull request
+  required with zero mandatory approvals; stale reviews dismissed; conversation
+  resolution and linear history required; administrators included; force pushes
+  and branch deletion disabled.
+- The zero-approval setting supports a solo-maintainer engineering flow. It does
+  not satisfy the independent-review blocker for controlled release.
 
 ## Post-governance resumption point
 
