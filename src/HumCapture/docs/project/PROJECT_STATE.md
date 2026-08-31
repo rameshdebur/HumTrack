@@ -138,9 +138,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   check is named `HumCapture validation`; it covers existing automated tests,
   SBOM/hash/audit controls and managed/native non-hardware builds/self-tests.
   It does not perform camera acquisition and cannot supply HIL evidence.
-- The current SBOM now includes the CI workflow and three commit-pinned GitHub
-  Actions. It contains 19 components/20 dependency nodes; five project tests
-  and project validation pass. The prior 15-component SBOM remains immutable
+- The current SBOM now includes the CI workflow, three commit-pinned GitHub
+  Actions and the exact Windows SDK Chocolatey build package. It contains 20
+  components/21 dependency nodes; six project tests and project validation
+  pass. The prior 15-component SBOM remains immutable
   in the existing snapshot/evidence vault; the CI-aware SBOM is not
   retroactively release-bound.
 - Laptop-hotspot discovery, timing, and throughput require named-hardware validation.

@@ -51,6 +51,8 @@ the generator contract before SBOM generation can pass.
 Repository CI actions shall be pinned to immutable commit SHAs. Their source
 workflow, commit identities, build-only scope and unresolved licence/package
 hash review shall be represented explicitly.
+Package-manager tools installed by CI shall use exact versions and be represented
+as build-only components with explicit hash and licence-review status.
 
 ## Verification and release control
 

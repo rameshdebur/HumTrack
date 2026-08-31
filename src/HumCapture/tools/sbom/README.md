@@ -2,9 +2,9 @@
 
 Generates a deterministic CycloneDX 1.7 SBOM from every current HumCapture
 package lock and Windows probe project file, plus the scoped repository CI
-workflow and its immutable GitHub Action commit pins. It uses only Node.js
-built-ins so the SBOM generator does not introduce another third-party
-dependency surface.
+workflow, its immutable GitHub Action commit pins, and exact Chocolatey packages
+installed by that workflow. It uses only Node.js built-ins so the SBOM generator
+does not introduce another third-party dependency surface.
 
 ```powershell
 npm.cmd test

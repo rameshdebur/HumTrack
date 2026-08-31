@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:5b018ba5-cf6a-5ae4-9df7-532511603d3f",
+  "serialNumber": "urn:uuid:3ebc385c-4a98-52cd-b2a5-0842da3aeaef",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-31T17:30:00.000Z",
+    "timestamp": "2026-08-31T17:45:00.000Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -72,6 +72,36 @@
   },
   "components": [
     {
+      "type": "framework",
+      "name": "windows-sdk-10-version-2004-all",
+      "version": "10.0.19041.685",
+      "bom-ref": "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
+      "purl": "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
+      "scope": "excluded",
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party-build-package"
+        },
+        {
+          "name": "humcapture:source-manifest",
+          "value": ".github/workflows/humcapture-ci.yml"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "package-manager-verification; package-artifact-hash-not-collected"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "build-package-licence-review-required"
+        },
+        {
+          "name": "humcapture:not-distributed",
+          "value": "true"
+        }
+      ]
+    },
+    {
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
@@ -82,7 +112,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "52b536b76c0fdace4c389962a976aae121eaba63a6a7f9ecb88d26ea33bfba3f"
+          "content": "39bf03be250b6bd39457cb8a78ff84b8be3a761f19542446789f6b85a731e87d"
         }
       ],
       "properties": [
@@ -684,8 +714,13 @@
   ],
   "dependencies": [
     {
+      "ref": "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
+      "dependsOn": []
+    },
+    {
       "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
       "dependsOn": [
+        "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
         "pkg:github/actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7",
         "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020"

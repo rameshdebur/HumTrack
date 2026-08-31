@@ -50,6 +50,11 @@ jobs:
         with:
           dotnet-version: 10.0.303
 
+      - name: Install pinned Windows SDK
+        run: |
+          choco install windows-sdk-10-version-2004-all --version 10.0.19041.685 --yes --no-progress --limit-output
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Install locked Node.js dependencies
         run: |
           npm.cmd ci --ignore-scripts --no-audit --no-fund --prefix tools/capability-probes/shared

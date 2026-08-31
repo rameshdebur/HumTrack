@@ -20,6 +20,7 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 - SBOM generator package manifest
 - Scoped `.github/workflows/humcapture-ci.yml` workflow and its three immutable
   GitHub Action commit pins
+- Exact Chocolatey package for Windows SDK 10.0.19041 build compatibility
 - Derived .NET target framework, Windows target/toolset, native import libraries,
   host runtime APIs, generation context and known unknowns
 
@@ -29,11 +30,11 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 |---|---|
 | Format | CycloneDX JSON 1.7 |
 | Primary component | HumCapture `0.1.0-p0.2j` engineering/unreleased |
-| Components | 19 |
-| Dependency graph nodes | 20, complete closure including primary component |
-| SBOM SHA-256 | `b8a3bbb1fb58a67be0077b29e32f19e442095952e45e9e2b88903c42476473df` |
-| Generated UTC | `2026-08-31T17:30:00.000Z` |
-| Project tests | 5/5 passed, including future-manifest drift and floating-action rejection |
+| Components | 20 |
+| Dependency graph nodes | 21, complete closure including primary component |
+| SBOM SHA-256 | `605734f0667a18b76f446c2a86a8aeb3c2d6beecddfcfef8907e3d57242fee57` |
+| Generated UTC | `2026-08-31T17:45:00.000Z` |
+| Project tests | 6/6 passed, including future-manifest drift, floating-action rejection and exact CI package versions |
 | Project validator | Passed |
 | Deterministic regeneration | Passed for fixed manifests, version and timestamp |
 
@@ -53,7 +54,7 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 The earlier validated 15-component SBOM remains retained in the evidence vault
 and referenced by engineering snapshot `HC-ENG-20260831T163246Z-7d17f5afce36`.
 The snapshot and P0.2J evidence retain its exact bytes and SHA-256; accepted
-evidence is not edited. The current 19-component CI-aware SBOM is a new
+evidence is not edited. The current 20-component CI-aware SBOM is a new
 source-control engineering inventory. It is not retroactively bound to that
 snapshot and requires a new release/snapshot record for release binding.
 
@@ -71,7 +72,7 @@ snapshot and requires a new release/snapshot record for release binding.
 ## Evidence levels
 
 - Source implemented: yes.
-- Automated behavior: 5 SBOM tests and 12 evidence-control tests pass.
+- Automated behavior: 6 SBOM tests and 12 evidence-control tests pass.
 - Official format validation: passed.
 - Release integration: engineering snapshot and vault binding passed.
 - Binary/runtime composition: not verified.

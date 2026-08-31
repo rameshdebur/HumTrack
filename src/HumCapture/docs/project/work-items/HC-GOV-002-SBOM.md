@@ -39,9 +39,10 @@ vulnerability clearance, CDSCO evidence sufficiency, or a controlled release.
 ## Current result
 
 Current source-control CycloneDX 1.7 SBOM SHA-256
-`b8a3bbb1fb58a67be0077b29e32f19e442095952e45e9e2b88903c42476473df`
-contains 19 components and a complete 20-node dependency graph. Five project
-tests pass, including rejection of floating GitHub Action tags. Official
+`605734f0667a18b76f446c2a86a8aeb3c2d6beecddfcfef8907e3d57242fee57`
+contains 20 components and a complete 21-node dependency graph. Six project
+tests pass, including rejection of floating GitHub Action tags and unversioned
+Chocolatey build packages. Official
 CycloneDX CLI 0.33.1 validation is recorded in `HC-SBOM-VR-001`.
 
 The earlier 15-component SBOM SHA-256

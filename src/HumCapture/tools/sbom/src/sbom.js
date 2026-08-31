@@ -90,6 +90,34 @@ export function parsePinnedGitHubActions(workflowText, sourceManifest = ".github
   return actions;
 }
 
+export function parsePinnedChocolateyPackages(workflowText, sourceManifest = ".github/workflows/humcapture-ci.yml") {
+  const packages = [];
+  for (const [index, line] of workflowText.split(/\r?\n/).entries()) {
+    const install = /(?:^|\s)choco(?:\.exe)?\s+install\s+(\S+)(.*)$/i.exec(line);
+    if (!install) continue;
+    const version = /(?:^|\s)--version(?:=|\s+)([^\s]+)/i.exec(install[2])?.[1];
+    if (!version) throw new SbomError(`Chocolatey package must use an exact --version at ${sourceManifest}:${index + 1}: ${install[1]}`);
+    const name = install[1].toLowerCase();
+    const purl = `pkg:chocolatey/${name}@${encodeURIComponent(version)}`;
+    packages.push({
+      type: "framework",
+      name,
+      version,
+      "bom-ref": purl,
+      purl,
+      scope: "excluded",
+      properties: [
+        { name: "humcapture:component-origin", value: "third-party-build-package" },
+        { name: "humcapture:source-manifest", value: sourceManifest },
+        { name: "humcapture:hash-status", value: "package-manager-verification; package-artifact-hash-not-collected" },
+        { name: "humcapture:license-status", value: "build-package-licence-review-required" },
+        { name: "humcapture:not-distributed", value: "true" }
+      ]
+    });
+  }
+  return packages;
+}
+
 function licenseChoice(license) {
   return license ? [{ license: { id: license } }] : [];
 }
@@ -242,6 +270,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   const workflowAbsolutePath = path.resolve(absoluteRoot, "..", "..", ...workflowManifestPath.split("/"));
   const workflowText = await readFile(workflowAbsolutePath, "utf8");
   const githubActions = parsePinnedGitHubActions(workflowText, workflowManifestPath);
+  const chocolateyPackages = parsePinnedChocolateyPackages(workflowText, workflowManifestPath);
   const workflowRef = `pkg:generic/humcapture/HumCapture-CI@${encodeURIComponent(productVersion)}`;
   const workflowComponent = {
     type: "application",
@@ -296,7 +325,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
 
   const firstParty = [...npmSurfaces.map((surface) => surface.firstParty), managed.component, nativeCapture.component, nativeEnumerator.component, sbomTool.component, workflowComponent];
   const thirdPartyByRef = new Map();
-  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...platformComponents, ...githubActions]) thirdPartyByRef.set(component["bom-ref"], component);
+  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...platformComponents, ...githubActions, ...chocolateyPackages]) thirdPartyByRef.set(component["bom-ref"], component);
   const rootRef = `pkg:generic/humcapture/HumCapture@${encodeURIComponent(productVersion)}`;
   const rootComponent = {
     type: "application",
@@ -320,7 +349,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     { ref: nativeCapture.component["bom-ref"], dependsOn: [windowsRuntimeRef, windowsSdkRef] },
     { ref: nativeEnumerator.component["bom-ref"], dependsOn: [windowsRuntimeRef, windowsSdkRef] },
     { ref: sbomTool.component["bom-ref"], dependsOn: [] },
-    { ref: workflowRef, dependsOn: githubActions.map((action) => action["bom-ref"]).sort() }
+    { ref: workflowRef, dependsOn: [...githubActions, ...chocolateyPackages].map((component) => component["bom-ref"]).sort() }
   ];
   for (const component of thirdPartyByRef.values()) if (!dependencies.some((item) => item.ref === component["bom-ref"])) dependencies.push({ ref: component["bom-ref"], dependsOn: [] });
   const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, sbomTool.manifestHash, sha256(workflowText), productVersion, generatedAt.toISOString() ].join("\n"));
