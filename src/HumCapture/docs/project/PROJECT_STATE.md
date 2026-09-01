@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** Scoped CI/master protection and P0.2J technical execution are verified; PR, independent approval, production recovery and controlled release remain open  
-**Tags:** GOV.1Q | CI | MASTER-PROTECTION | SCM | P0.2J | EVIDENCE | SBOM  
+**Status:** P0.2K evidence integration is complete; hardware qualification, interfaces, independent approval and controlled release remain open  
+**Tags:** P0.2K | UVC | EVIDENCE | INTEGRATION | TRACEABILITY | RETENTION | GAP-ASSESSMENT  
 **Last meaningful update:** 2026-09-01
 
 ## Objective
@@ -26,6 +26,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - ADR-0006 is accepted. The isolated P0.2B native Media Foundation diagnostic builds with zero warnings/errors, passes eight selection self-tests, rejects unavailable 1080p60 and ambiguous profiles without output, preserves presentation/QPC timing evidence, and finalizes readable H.264 MP4 files.
 - Hardware probe execution: C920 B passed the short exact 1080p30 H.264 diagnostic at measured 29.92 fps. C920 A finalized readable media but delivered approximately 25.98 fps and then 24.00 fps in two runs; P0.2B acceptance is therefore blocked pending focused camera/control/profile/topology diagnosis. This is diagnostic evidence, not qualification.
 - Application source implementation: not started and not yet authorized.
+- P0.2K evidence integration: completed. Nine pre-integration P0.2A-J report files are hashed;
+  both retained P0.2J runs verify in the controlled vault. Earlier P0.2 primary
+  artifacts and complete normative P0.2J measurement/lifecycle records are not
+  available and will not be reconstructed. P0.2 qualification remains open.
 
 ## Architecture summary
 
@@ -160,6 +164,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - Exact binary formats, schema compatibility window, and offline USB completion-receipt mechanism remain open.
 - Evidence backup/restore, retention approval, independent signing/review,
   access audit, and any required WORM/eQMS integration remain open.
+- P0.2K confirms that P0.2A-I primary artifacts are unavailable. Only the two
+  draft-review P0.2J runs remain independently machine-verifiable, and they do
+  not form a complete normative 1080p60 evidence package.
 - SBOM binary/runtime completeness, vulnerability/VEX, licence approval and
   supplier/maintainer review remain open.
 - The software lifecycle/AI-assistance procedure has now been used for tracked
@@ -178,6 +185,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 5. Obtain independent review of the completed P0.2J bounded diagnostic. Compare
    a genuinely different host controller if available, and do not reinstate the
    rejected path-2 combination without fresh evidence.
-6. Complete P0.2 evidence-package integration. Obtain 1080p60 UVC hardware for normative qualification before concurrent-camera qualification.
+6. Obtain 1080p60 UVC hardware and capture a complete prospective evidence
+   package before normative or concurrent-camera qualification.
 7. Complete the normative interface specifications required by the first application implementation phase.
 8. Do not begin production application features until the governance gate explicitly permits the named phase.

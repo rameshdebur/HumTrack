@@ -1,7 +1,7 @@
 # HumCapture Verification Plan
 
 **Document ID:** HC-VP-001  
-**Status:** Preliminary; P0.1 schema/component evidence and bounded P0.2 hardware diagnostics exist; qualification remains open
+**Status:** Preliminary; P0.1 schema/component evidence and P0.2K-integrated bounded hardware diagnostics exist; qualification remains open
 
 The accepted Phase 0 probe procedures and evidence boundary are defined in
 `PHASE_0_HARDWARE_CAPABILITY_PROBE_SPEC.md`, with the gated execution sequence in
@@ -16,6 +16,8 @@ P0.2A enumeration and P0.2B native short-capture evidence are recorded in their
 respective reports under `phase-0-results/`. The P0.2B evidence is mixed: one
 C920 passed the measured short-capture cadence check and one failed twice. It
 does not establish sustained, generic UVC, field, or qualification evidence.
+P0.2A-J integration and the retained-primary-evidence gap assessment are recorded
+in `phase-0-results/P0_2K_EVIDENCE_INTEGRATION_REPORT.md`.
 
 ## Evidence layers
 

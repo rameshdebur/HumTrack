@@ -78,6 +78,13 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   Residual risk remains high enough to block a
   dossier claim because backup/restore, access audit, independent approval,
   signature/WORM/eQMS controls, and an approved clean release are open.
+- **HC-RISK-017 P0.2K integration, 2026-09-01:** The P0.2A-J reports were
+  consolidated and hashed. Only the two P0.2J primary runs remain in the
+  controlled vault and both verify; P0.2A-I primary artifacts are unavailable.
+  The retained P0.2J runs also lack the complete normative measurement/lifecycle
+  set and used diagnostic 1080p30 rather than required 1080p60. The historical
+  reports remain engineering records, but a complete qualification package must
+  be captured prospectively and independently reviewed.
 - **HC-RISK-018 initial control, 2026-08-31:** ADR-0008, SBOM policy
   HC-GOV-SBOM-001 and a deterministic CycloneDX 1.7 generator now cover both
   npm lockfiles, the managed and native probes, target frameworks, Windows

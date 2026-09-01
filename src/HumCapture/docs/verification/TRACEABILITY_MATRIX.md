@@ -1,6 +1,6 @@
 # HumCapture Traceability Matrix
 
-**Status:** Preliminary; P0.1 source-contract gate passed; P0.2B source exists but named-hardware acceptance is blocked
+**Status:** Preliminary; P0.1 source-contract gate passed; P0.2K integration complete and hardware qualification remains open
 
 | User need/story | Requirement | Risk | Planned verification | Current status |
 |---|---|---|---|---|
@@ -20,6 +20,6 @@
 | HC-US-DEV-013 | HC-UVC-REQ-004, HC-USE-REQ-002/004 | HC-RISK-015 | HC-P0-UVC-003: classify applicability; when available, perform two exact-identity baseline/active/released observations correlated to fresh frames and source release | Passed for both named C920 configurations: two consistent off/on/off observations each; absence remains `NOT_APPLICABLE`, not failure |
 | HC-US-DEV-014 | HC-SYS-REQ-003, HC-UVC-REQ-005, HC-TIME-REQ-005 | HC-RISK-003/008/013/016 | P0.2D–I exact concurrent capture, reverse order, physical port swap, alternate root-port branch, exposure control, per-stream full decode, repeat and stability on named topology | Original path-2 combination rejected. Reconciled topology plus temporary Camera B manual exposure `-5` passed short runs and a 10-minute concurrent run with 18,002 fully decoded frames per camera at approximately 30.0002 fps; automatic exposure restored. Conditional MVP evidence only; normative soak/recovery remain open |
 | Phase 0 evidence integrity | HC-DATA-REQ-001/003, HC-TIME-REQ-001/002/005, HC-COMPAT-REQ-002–004 | HC-RISK-002–004/010/013 | 55 automated cases: schemas, registry-bound normative procedures, exact one-to-one per-stream profile/measurement binding, procedure-family evidence, exact UVC lifecycle, CSV/timestamp validation, path/link safety, completeness, SHA-256, and full campaign validation | Source implemented; 55 automated tests and final independent adversarial review pass; no hardware qualification claim |
-| Phase 0 named-hardware qualification | HC-SYS-REQ-002/004, HC-TIME-REQ-001–005, HC-COMPAT-REQ-001/002 | HC-RISK-003/004/006/008/013/015/016 | HC-P0-AND-001–003, HC-P0-UVC-001–003, HC-P0-NET-001–002, HC-P0-COMP-001 | P0.2A enumeration and P0.2C indicator behavior passed for both named C920s. P0.2D–F rejected the original concurrent USB path. P0.2G–H found a conditional short-run pass on a reconciled topology with controlled exposure, but automatic-exposure cadence remains variable. No tested device reports 1080p60; soak, recovery, P0.1 integration, and normative qualification remain open |
+| Phase 0 named-hardware qualification | HC-SYS-REQ-002/004, HC-TIME-REQ-001–005, HC-COMPAT-REQ-001/002 | HC-RISK-003/004/006/008/013/015/016/017 | HC-P0-AND-001–003, HC-P0-UVC-001–003, HC-P0-NET-001–002, HC-P0-COMP-001; P0.2K evidence integration | P0.2K consolidates P0.2A-J and hashes every report. Two P0.2J primary runs verify in the controlled vault; P0.2A-I primary artifacts and complete normative P0.2J measurements are unavailable. No tested device reports 1080p60. Engineering integration is complete; normative qualification remains open and must use prospective complete evidence |
 
 Expand this matrix with atomic test IDs before each implementation phase.

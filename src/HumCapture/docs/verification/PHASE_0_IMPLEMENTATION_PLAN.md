@@ -1,7 +1,7 @@
 # Phase 0 Capability-Probe Implementation Plan
 
 **Document ID:** HC-P0-PLAN-001  
-**Status:** Accepted plan; P0.1 gate passed; P0.2A passed and P0.2B hardware acceptance is blocked  
+**Status:** Accepted plan; P0.1 gate passed; P0.2K integration complete and P0.2 qualification remains open  
 **Date:** 2026-08-28
 
 ## 1. Outcome
@@ -117,6 +117,14 @@ a short architecture review before expanding the probe.
   inconclusive; the indicator is never used as timing evidence.
 - A 30-minute run is possible from the tool, but completing it is campaign evidence rather than source implementation evidence.
 - Automated tests cover evidence generation and failure reporting; hardware behavior is reported separately.
+
+**Current disposition (2026-09-01):** P0.2K completed the engineering evidence
+integration and identified two machine-verifiable P0.2J runs. P0.2 remains open:
+earlier primary artifacts are unavailable, the retained runs do not contain the
+complete normative measurement set, independent review is open, and no tested
+camera reports the required 1080p60 profile. Future qualification evidence must
+be captured prospectively; see
+`phase-0-results/P0_2K_EVIDENCE_INTEGRATION_REPORT.md`.
 
 ## 6. Increment P0.3 — Android local probe
 
