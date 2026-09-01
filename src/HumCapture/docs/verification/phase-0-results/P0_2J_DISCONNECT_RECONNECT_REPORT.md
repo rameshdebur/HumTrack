@@ -2,9 +2,9 @@
 
 **Report ID:** HC-P0-VR-002J  
 **Test case ID:** HC-P0-UVC-002-DIAG-01  
-**Revision:** 0.1 — in progress  
-**Date:** 2026-08-31  
-**Disposition:** `INCONCLUSIVE` until post-reconnect capture completes  
+**Revision:** 1.0 — technical execution complete  
+**Date:** 2026-08-31 to 2026-09-01  
+**Disposition:** `PASS` for the bounded 1080p30 diagnostic; independent review remains `DRAFT`  
 **Operator:** `LAPTOP-RARRB8C4\rams2`  
 **Tags:** P0.2J | UVC | RECOVERY | DEVICE-LOSS | FINALIZATION | RECONNECT | MEDIA-INTEGRITY | HARDWARE
 
@@ -62,6 +62,9 @@ evidence; it is not a claim of ISO, IEC, CDSCO, or medical-device conformity.
   duration, finalized, decoded 91/91 frames, and passed ordinary verification.
 - Ordinary verification was changed to reject any recovery-mode artifact whose
   requested duration was not reached.
+- Before the post-reconnect run, the native probes rebuilt with zero warnings
+  or errors and the capture probe passed 8/8 self-tests. Current source and
+  executable SHA-256 values matched the retained engineering snapshot.
 
 ## 5. Procedure and actual observations
 
@@ -74,8 +77,24 @@ evidence; it is not a claim of ISO, IEC, CDSCO, or medical-device conformity.
 | Decode entire partial artifact | No hidden H.264 corruption | 265/265 frames decoded; FFprobe and FFmpeg reported no errors | PASS |
 | Prevent false normal completion | Ordinary verifier rejects interrupted attempt | Expected rejection: `Capture ended before its requested duration: read_error` | PASS |
 | Confirm disappearance | Exact interface no longer present | Camera A count `0`; only Camera B remained enumerated | PASS |
-| Reconnect same physical camera | Same exact identity returns | Awaiting operator action | OPEN |
-| Start new artifact after reconnect | New run ID; normal finalization and full decode | Not yet executed | OPEN |
+| Reconnect same physical camera | Same exact identity returns | Parent serial `0E1A0C0F` and exact interface `6&DBA5B52&2&0000` returned; Camera B remained separately identifiable | PASS |
+| Start new artifact after reconnect | New run ID; normal finalization and full decode | Separate run `2D358446-A581-4DDA-92FA-92B5F71606A9` reached 30 seconds, finalized, and decoded 898/898 frames | PASS |
+| Verify post-reconnect timing/media | Measured cadence in diagnostic band; no regressions or hidden corruption | 30.0334 s, 29.9000 measured fps, zero decode errors and timestamp regressions | PASS |
+
+The recorded lifecycle is an ordered sequence, not one continuous file:
+
+| Order | Lifecycle event | Identity/artifact |
+|---:|---|---|
+| 1 | Pre-disconnect acquisition active | Run `1858C775-7907-43B3-9A3C-59104285E826` on Camera A exact interface |
+| 2 | Terminal device-loss read event | Same run; `read_error`, HRESULT `0xC00D3EA2`, requested duration false |
+| 3 | Partial sink finalization and complete decode | 265/265 frames; controlled evidence `HC-EV-5becff40f4271131c8b43641` |
+| 4 | Exact device absent | Camera A interface count zero; Camera B remained present |
+| 5 | Same physical/Windows identity rediscovered | Parent serial `0E1A0C0F`; exact Camera A interface restored |
+| 6 | New post-reconnect acquisition and normal completion | Run `2D358446-A581-4DDA-92FA-92B5F71606A9`; controlled evidence `HC-EV-16e6576bbcf4f1896d64aac6` |
+
+The physical USB reattachment time was operator-observed but not independently
+timestamped by a hardware event recorder; no exposure-synchronization or
+hardware-timing claim is made from this sequence.
 
 ## 6. Error, deviation, and disposition
 
@@ -85,15 +104,17 @@ mapping and corroboration. The interrupted recording is a finalized partial
 attempt, not a complete capture and not a successful protocol trial.
 
 The test deviates from normative HC-P0-UVC-002 because the available C920 does
-not report the required 1080p60 profile; this diagnostic used 1080p30. Until
-reconnection, identity recovery, and a distinct post-reconnect artifact pass,
-the overall disposition remains `INCONCLUSIVE`.
+not report the required 1080p60 profile; this diagnostic used 1080p30. The
+post-reconnect MP4 reported a nominal stream rate of 60 fps while measured
+average cadence was 29.9000 fps. The nominal header is not substituted for
+measured source evidence. The complete bounded diagnostic therefore passes,
+but it does not qualify HC-P0-UVC-002 or establish production recovery behavior.
 
 ## 7. Evidence artifacts
 
-The authoritative retained copy is outside source control in the local
-controlled evidence vault:
-`C:\Users\rams2\HumCapture Evidence Vault\runs\HC-EV-5becff40f4271131c8b43641`.
+The authoritative retained copies are outside source control in the local
+controlled evidence vault. The original interrupted evidence is immutable; the
+post-reconnect result is a second receipt rather than an edit to the first.
 
 | Control record | Value |
 |---|---|
@@ -106,7 +127,7 @@ controlled evidence vault:
 | CycloneDX 1.7 SBOM SHA-256 | `2f34a8112c2c2ea274c4be7fd4d15443368feb4baa06c3e364dd7fae736f94e5` |
 | SBOM validation | Project validator and official CycloneDX CLI 0.33.1 passed |
 | Review state | `DRAFT` |
-| Vault verification | Passed for one retained run on 2026-08-31 |
+| Vault verification | Passed for both retained runs on 2026-09-01 |
 
 The original `%TEMP%` directory is source provenance only and is no longer the
 authoritative retention location.
@@ -117,24 +138,42 @@ authoritative retention location.
 | `capture.mp4` | 3,441,691 | `36982B4B6A38D1997BBE3B7BAAA997A73F452CEC381EFEF50102564ACD77C1E5` |
 | `frames.csv` | 47,895 | `EA6A715ABCBEC483F1965D1018105CB4C4499EE665706ADA87A7025F652EF3AC` |
 
+Post-reconnect controlled record:
+
+| Control record | Value |
+|---|---|
+| Controlled evidence ID | `HC-EV-16e6576bbcf4f1896d64aac6` |
+| Source run ID | `2D358446-A581-4DDA-92FA-92B5F71606A9` |
+| Test case ID | `HC-P0-UVC-002-DIAG-01-POST-RECONNECT` |
+| Artifact-set SHA-256 | `16e6576bbcf4f1896d64aac64fca1d5482a92a762fb59e5e1b44e5b9d4d1d3ca` |
+| Receipt SHA-256 | `5a42b4f1d7c2af42bf83f6a06d53ee6d833b22789d67b5afbf40f661cbd43964` |
+| Review state | `DRAFT` |
+
+| Artifact | Bytes | SHA-256 |
+|---|---:|---|
+| `capture-result.json` | 983 | `8617A75A74F4404FCFB8E648E61731118D089356ABD37E52CABA77A4B4BB7F04` |
+| `capture.mp4` | 11,384,849 | `1DE430DF49F95A3D030C5FE230845F709CB3A93EC484D42037B941BF2FAE6C9E` |
+| `frames.csv` | 164,528 | `BF1C89DF97A7F4BBCB95D714A8D8A5CBCA024F6247EB0E9C6CCB596D0AEF02F2` |
+
 ## 8. Evidence level and limitations
 
 - Source implemented: yes, isolated recovery diagnostic only.
 - Build/static checks: passed.
 - Automated/component behavior: control path and false-completion rejection passed.
 - Hardware-in-the-loop: live disconnect, device disappearance, partial
-  finalization, and full decode passed.
-- Runtime recovery integration: incomplete until reconnect/post-capture.
+  finalization/full decode, same-identity rediscovery, and separate normal
+  post-reconnect capture/full decode passed.
+- Runtime recovery integration: bounded diagnostic path passed; production
+  coordinator recovery is not implemented or verified.
 - Field workflow: not verified.
 - Regulatory/clinical review: not performed.
 
 ## 9. Open actions and review
 
-1. Reconnect the same physical camera and verify exact identity/topology.
-2. Create a separate post-reconnect artifact and prove normal full decode.
-3. Record exact lifecycle events and distinct run/artifact identities.
-4. Update risks, traceability, project state, and final disposition.
-5. Obtain independent QA review before treating P0.2J as closed.
+1. Obtain independent QA review before treating P0.2J as independently closed.
+2. Retain this diagnostic in P0.2 evidence-package integration without
+   representing it as normative 1080p60 qualification.
+3. Verify production coordinator recovery separately when that implementation exists.
 
 **Prepared by:** Agent-generated engineering evidence record  
 **Independent reviewer:** Open  

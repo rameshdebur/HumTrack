@@ -57,20 +57,25 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   and no timestamp regressions. All sampled power states were on AC and Camera B
   automatic exposure was independently confirmed after cleanup. The duration
   was deliberately proportionate to the MVP diagnostic; it is not the normative
-  30-minute 1080p60 qualification soak, and recovery remains open.
+  30-minute 1080p60 qualification soak; recovery remained open at that stage.
 - **HC-RISK-002 / HC-RISK-003 / HC-RISK-008 / HC-RISK-012 recovery follow-up:**
   P0.2J live-disconnected exact Camera A during acquisition. Media Foundation
   returned raw HRESULT `0xC00D3EA2`; the probe finalized and fully decoded all
   265 received frames while marking requested duration false/read error. The
   ordinary verifier rejected false normal completion and Windows confirmed the
-  exact interface absent. Overall recovery remains `INCONCLUSIVE` until the same
-  identity is reconnected and a separate post-reconnect artifact passes.
+  exact interface absent. On 2026-09-01, the same parent serial and exact
+  interface returned. A distinct 30-second run finalized and fully decoded
+  898/898 frames at 29.9000 measured fps with zero timestamp regressions. This
+  passes the bounded 1080p30 diagnostic but does not verify production recovery
+  or normative 1080p60 qualification; independent review remains open.
 - **HC-RISK-017 initial control, 2026-08-31:** ADR-0007 and evidence-control
   evidence receipt 1.0.0 and SBOM-aware release record 1.1.0 are implemented.
   Twelve automated tests cover successful
   import, idempotency, conflicting run identity, artifact/release tampering, and
-  malformed/unexpected records, and vault-boundary rejection. P0.2J raw evidence is retained and verifies as
-  `HC-EV-5becff40f4271131c8b43641`. Residual risk remains high enough to block a
+  malformed/unexpected records, and vault-boundary rejection. P0.2J interrupted
+  and post-reconnect evidence is retained and verifies as
+  `HC-EV-5becff40f4271131c8b43641` and `HC-EV-16e6576bbcf4f1896d64aac6`.
+  Residual risk remains high enough to block a
   dossier claim because backup/restore, access audit, independent approval,
   signature/WORM/eQMS controls, and an approved clean release are open.
 - **HC-RISK-018 initial control, 2026-08-31:** ADR-0008, SBOM policy

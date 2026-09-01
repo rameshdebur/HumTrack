@@ -1,8 +1,8 @@
 # HumCapture Project State
 
-**Status:** Scoped CI and `master` protection are remotely verified; PR, independent approval, P0.2 reconnect recovery and controlled release remain open  
+**Status:** Scoped CI/master protection and P0.2J technical execution are verified; PR, independent approval, production recovery and controlled release remain open  
 **Tags:** GOV.1Q | CI | MASTER-PROTECTION | SCM | P0.2J | EVIDENCE | SBOM  
-**Last meaningful update:** 2026-08-31
+**Last meaningful update:** 2026-09-01
 
 ## Objective
 
@@ -95,14 +95,19 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   approximately 30.0002 fps with zero decode errors and timestamp regressions.
   Camera B automatic exposure was restored and independently confirmed. This is
   not the normative 30-minute 1080p60 qualification soak.
-- P0.2J is in progress. A live disconnect of exact Camera A produced raw HRESULT
+- P0.2J technical execution passed. A live disconnect of exact Camera A produced raw HRESULT
   `0xC00D3EA2`; 265/265 received frames finalized and fully decoded, the ordinary
   verifier rejected false completion, and Windows confirmed the exact interface
-  absent. Same-identity reconnect and a separate post-reconnect capture remain open.
+  absent. On reconnect, parent serial `0E1A0C0F` and exact interface
+  `6&DBA5B52&2&0000` returned. Separate run
+  `2D358446-A581-4DDA-92FA-92B5F71606A9` reached 30 seconds, finalized and fully
+  decoded 898/898 frames at 29.9000 measured fps with zero decode errors and
+  timestamp regressions. Independent review and production recovery remain open.
 - ADR-0007 is accepted. A local, non-temporary, non-cloud evidence vault now
   uses versioned release/receipt schemas, conflict-safe import, SHA-256 inventories,
-  and verification. Twelve automated control tests pass. The surviving P0.2J run is
-  retained as `HC-EV-5becff40f4271131c8b43641` and verifies. This is controlled
+  and verification. Twelve automated control tests pass. The interrupted P0.2J
+  run is retained as `HC-EV-5becff40f4271131c8b43641`; the separate successful
+  post-reconnect run is `HC-EV-16e6576bbcf4f1896d64aac6`. Both verify. This is controlled
   engineering evidence, not a validated eQMS or regulatory dossier.
 - HumCapture is tracked on the isolated `codex/humcapture-baseline` review
   branch from initial engineering baseline commit
@@ -157,9 +162,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   access audit, and any required WORM/eQMS integration remain open.
 - SBOM binary/runtime completeness, vulnerability/VEX, licence approval and
   supplier/maintainer review remain open.
-- The software lifecycle/AI-assistance procedure has now been used for one
-  tracked change and attributed review record. Remote branch protection,
-  independent approval, CI evidence and a controlled release remain open.
+- The software lifecycle/AI-assistance procedure has now been used for tracked
+  changes and attributed review records. CI evidence and remote branch
+  protection are verified; independent approval and a controlled release remain open.
 - Detailed UI design is intentionally deferred.
 
 ## Immediate next priorities
@@ -170,12 +175,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
    Define and verify evidence backup/restore before dossier use.
 4. Preserve the reconciled exact topology/profile as conditional and test
    exposure policy across representative lighting, restart, and reconnect.
-5. Run the disconnect/reconnect campaign; compare a genuinely
-   different host controller if available. Do not reinstate the rejected path-2
-   combination without fresh evidence.
-   Resume specifically from `P0.2J | UVC | DEVICE LOSS | DETECTED + FINALIZED |
-   HIL`: reconnect/rediscover the same identity, then create and fully decode a
-   separate post-reconnect artifact.
+5. Obtain independent review of the completed P0.2J bounded diagnostic. Compare
+   a genuinely different host controller if available, and do not reinstate the
+   rejected path-2 combination without fresh evidence.
 6. Complete P0.2 evidence-package integration. Obtain 1080p60 UVC hardware for normative qualification before concurrent-camera qualification.
 7. Complete the normative interface specifications required by the first application implementation phase.
 8. Do not begin production application features until the governance gate explicitly permits the named phase.

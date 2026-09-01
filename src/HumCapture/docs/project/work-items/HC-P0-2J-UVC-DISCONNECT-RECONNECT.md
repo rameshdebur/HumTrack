@@ -28,19 +28,24 @@ create a separate clean post-reconnect artifact.
 - [x] Already-received samples finalize and fully decode, or failure is recorded truthfully.
 - [x] Pre-disconnect raw artifacts are imported into the controlled evidence
       vault and pass full hash verification.
-- [ ] The same physical camera/identity is reconnected and rediscovered.
-- [ ] A new post-reconnect capture fully finalizes and decodes.
-- [ ] Exact lifecycle events and separate artifact identities are recorded.
+- [x] The same physical camera/identity is reconnected and rediscovered.
+- [x] A new post-reconnect capture fully finalizes and decodes.
+- [x] Exact lifecycle events and separate artifact identities are recorded.
 
 ## Status
 
-hardware execution in progress — Camera A live disconnect produced recorded
-HRESULT `0xC00D3EA2`; 265/265 partial frames finalized and fully decoded, and
-ordinary verification rejected false completion. Reconnect/post-capture remains open.
+technical execution passed — Camera A live disconnect produced recorded HRESULT
+`0xC00D3EA2`; 265/265 partial frames finalized and fully decoded, and ordinary
+verification rejected false completion. The same parent serial `0E1A0C0F` and
+exact interface returned. Separate run `2D358446-A581-4DDA-92FA-92B5F71606A9`
+then reached its requested duration, finalized, and fully decoded 898/898 frames
+at measured 29.90 fps with zero decode errors or timestamp regressions.
 
-Controlled evidence ID: `HC-EV-5becff40f4271131c8b43641`; engineering
-snapshot: `HC-ENG-20260831T163246Z-7d17f5afce36`. Its CycloneDX 1.7 SBOM is
-retained and hash-verified. Review remains `DRAFT`.
+Controlled evidence IDs: interrupted run `HC-EV-5becff40f4271131c8b43641`
+(`INCONCLUSIVE`) and post-reconnect run `HC-EV-16e6576bbcf4f1896d64aac6`
+(`PASS`). Both bind to engineering snapshot
+`HC-ENG-20260831T163246Z-7d17f5afce36`; the two-run vault verifies. Review
+remains `DRAFT`, so independent closure remains open.
 
 ## Evidence boundary
 
