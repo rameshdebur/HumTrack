@@ -14,3 +14,4 @@ Current records:
 - ADR-0006 — Native Media Foundation Windows/UVC acquisition boundary.
 - ADR-0007 — Controlled evidence vault and release identity.
 - ADR-0008 — CycloneDX SBOM as a controlled release artifact.
+- ADR-0009 — Separate workflow, acquisition, custody, and health state authorities.

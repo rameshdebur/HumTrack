@@ -1,5 +1,12 @@
 # HumCapture Interface Specifications
 
+## Current interface work
+
+`CONTROL_STATE_MACHINE.md` is controlled draft `HC-IF-CTRL-001` version
+`0.1-draft`. It consolidates explicitly accepted I0.1A-H decisions. The
+session/protocol execution lifecycle remains an explicit approval gate, so no
+executable control schema or application implementation is yet authorized.
+
 No runtime interface implementation is authorized yet. Before cross-component feature work, create and review:
 
 | Contract | Planned representation | Required evidence |
@@ -21,4 +28,3 @@ No runtime interface implementation is authorized yet. Before cross-component fe
 - Historical finalized packages are never silently rewritten.
 - Implementations consume shared conformance fixtures.
 - Timestamp source, units, coordinate frames, uncertainty, and unavailable values are explicit.
-

@@ -1,8 +1,8 @@
 # HumCapture Project State
 
-**Status:** P0.2K evidence integration is complete; hardware qualification, interfaces, independent approval and controlled release remain open  
-**Tags:** P0.2K | UVC | EVIDENCE | INTEGRATION | TRACEABILITY | RETENTION | GAP-ASSESSMENT  
-**Last meaningful update:** 2026-09-01
+**Status:** I0.1A-H control/state decisions are consolidated in a controlled draft; session/protocol lifecycle approval remains open  
+**Tags:** I0.1 | INTERFACES | COORDINATOR-CONTROL | STATE-MACHINE | IDEMPOTENCY | RECOVERY | QUALITY  
+**Last meaningful update:** 2026-09-05
 
 ## Objective
 
@@ -30,6 +30,11 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   both retained P0.2J runs verify in the controlled vault. Earlier P0.2 primary
   artifacts and complete normative P0.2J measurement/lifecycle records are not
   available and will not be reconstructed. P0.2 qualification remains open.
+- I0.1 coordinator control/state contract: decisions A-H were explicitly
+  accepted and are consolidated in `HC-IF-CTRL-001` version `0.1-draft`.
+  ADR-0009 accepts separate workflow, source-attempt, package-custody, and health
+  authorities. Session/protocol execution remains the next explicit approval
+  boundary; executable schemas and application implementation remain blocked.
 
 ## Architecture summary
 
@@ -187,5 +192,6 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
    rejected path-2 combination without fresh evidence.
 6. Obtain 1080p60 UVC hardware and capture a complete prospective evidence
    package before normative or concurrent-camera qualification.
-7. Complete the normative interface specifications required by the first application implementation phase.
+7. Approve the I0.1I session/protocol execution lifecycle, review the combined
+   control contract, then create its AsyncAPI/JSON Schemas and conformance fixtures.
 8. Do not begin production application features until the governance gate explicitly permits the named phase.

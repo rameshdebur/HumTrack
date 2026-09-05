@@ -110,7 +110,17 @@ MVP control uses versioned JSON over authenticated encrypted WebSocket. Large da
 
 ## 11. Session state and failure behavior
 
-Session progression is draft/configure/ready/armed/recording/finalizing/collecting/verifying/complete, with recovery-required, closed-incomplete, failed, and aborted outcomes. Per-source states preserve discovery through safe-to-delete.
+ADR-0009 separates coordinator workflow, source capture-attempt, package custody,
+and observed health authorities. Commands request transitions; authoritative
+events prove physical acquisition and durable commit. The UI is an observer.
+
+The accepted trial progression is draft/configuring/preflight/ready/arming/armed/
+start-scheduled/recording/stopping/finalizing/collecting/verifying/review-required/
+complete, with cancelled, recovery-required, and closed-incomplete outcomes.
+Source attempts and packages have separate lifecycles through finalization,
+commit receipt, and safe-to-delete. The detailed combined contract remains draft
+in `docs/interfaces/CONTROL_STATE_MACHINE.md` until the session/protocol
+execution lifecycle is explicitly approved.
 
 All protocol-required sources must be ready before standard start. Once recording begins, one source failure does not stop surviving sources. Android network/coordinator/preview loss does not stop local master recording. Maximum duration and local emergency stop provide fallback.
 
@@ -163,4 +173,3 @@ Governance precedes features. Capability probes precede permanent hardware assum
 ## 20. Open decisions
 
 See `docs/project/KNOWN_ISSUES.md`. No implementation may silently resolve evidence-dependent timing, device, UVC, hotspot, binary-format, compatibility, or CDSCO-classification questions.
-
