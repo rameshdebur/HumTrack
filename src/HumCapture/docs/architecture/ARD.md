@@ -114,13 +114,21 @@ ADR-0009 separates coordinator workflow, source capture-attempt, package custody
 and observed health authorities. Commands request transitions; authoritative
 events prove physical acquisition and durable commit. The UI is an observer.
 
+ADR-0010 binds each planned session to an immutable content-hashed protocol
+snapshot. The session progression is draft/planned/in-progress/completion-review/
+complete, with recovery-required, cancelled-before-capture, and
+closed-incomplete outcomes. Pre-capture plan changes create superseding snapshot
+revisions; after any master sample, material protocol change requires incomplete
+closure and a new session.
+
 The accepted trial progression is draft/configuring/preflight/ready/arming/armed/
 start-scheduled/recording/stopping/finalizing/collecting/verifying/review-required/
 complete, with cancelled, recovery-required, and closed-incomplete outcomes.
 Source attempts and packages have separate lifecycles through finalization,
-commit receipt, and safe-to-delete. The detailed combined contract remains draft
-in `docs/interfaces/CONTROL_STATE_MACHINE.md` until the session/protocol
-execution lifecycle is explicitly approved.
+commit receipt, and safe-to-delete. `docs/interfaces/CONTROL_STATE_MACHINE.md`
+version 1.0.0 and its executable session/protocol schema slice are the accepted
+engineering interface baseline; application implementation remains separately
+gated.
 
 All protocol-required sources must be ready before standard start. Once recording begins, one source failure does not stop surviving sources. Android network/coordinator/preview loss does not stop local master recording. Maximum duration and local emergency stop provide fallback.
 

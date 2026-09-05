@@ -2,16 +2,25 @@
 
 ## Current interface work
 
-`CONTROL_STATE_MACHINE.md` is controlled draft `HC-IF-CTRL-001` version
-`0.1-draft`. It consolidates explicitly accepted I0.1A-H decisions. The
-session/protocol execution lifecycle remains an explicit approval gate, so no
-executable control schema or application implementation is yet authorized.
+`CONTROL_STATE_MACHINE.md` is accepted engineering interface baseline
+`HC-IF-CTRL-001` version `1.0.0`. It consolidates explicitly accepted I0.1A-I
+decisions. ADR-0010 records immutable session protocol snapshots.
 
-No runtime interface implementation is authorized yet. Before cross-component feature work, create and review:
+The executable session/protocol slice is:
+
+- `asyncapi/control-v1.asyncapi.json` — logical AsyncAPI 3.1.0 channels and
+  operations, without transport/authentication bindings;
+- `schemas/control/v1/` — JSON Schema 2020-12 protocol, session, command,
+  acknowledgement, event, completion, and handoff records; and
+- `tools/evidence-control/fixtures/control/` plus HC-CTRL-TEST-001–006 — valid,
+  invalid, cross-record, and exhaustive forbidden-transition conformance.
+
+No runtime interface implementation is authorized yet. Before cross-component
+feature work, complete and review the remaining contracts:
 
 | Contract | Planned representation | Required evidence |
 |---|---|---|
-| Control commands/events | AsyncAPI plus JSON Schema | State/idempotency/malformed-message tests |
+| Remaining source/readiness/custody/quality control messages | AsyncAPI plus JSON Schema | State/idempotency/reconciliation/malformed-message tests |
 | Transfer API | OpenAPI | Range/resume/authentication/restart tests |
 | Capture manifest | JSON Schema | Valid/invalid and compatibility fixtures |
 | Timing stream | Binary specification and test vectors | Ordering/discontinuity/round-trip parser tests |

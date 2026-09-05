@@ -1,8 +1,8 @@
 # HumCapture Coordinator Control and State Contract
 
 **Document ID:** HC-IF-CTRL-001  
-**Version:** 0.1-draft  
-**Status:** Controlled draft of accepted I0.1A-H decisions; session/protocol lifecycle pending explicit approval  
+**Version:** 1.0.0  
+**Status:** Accepted engineering interface baseline; independent review and application implementation remain open  
 **Date:** 2026-09-05
 
 ## 1. Scope
@@ -10,11 +10,13 @@
 This contract defines coordinator control semantics shared by Android capture
 nodes and coordinator-local UVC workers. It covers authority, trial and source
 states, command acknowledgement/idempotency, coordinated start/stop, readiness,
-package custody, quality, retakes, and trial completion.
+package custody, quality, retakes, trial completion, and session/protocol
+execution.
 
-It does not yet baseline the session/protocol execution lifecycle, wire-format
-schemas, transport security details, transfer endpoints, timing/IMU binary
-formats, repository layout, or application implementation.
+Versioned JSON Schemas, AsyncAPI operations, and conformance fixtures accompany
+this baseline. Transport security details, transfer endpoints, timing/IMU binary
+formats, complete repository layout, and application implementation remain
+separate controlled work.
 
 ## 2. Normative language and invariants
 
@@ -35,7 +37,7 @@ formats, repository layout, or application implementation.
 
 | Domain | Authority | Examples |
 |---|---|---|
-| Session/trial workflow | Coordinator host | Draft, ready, recording, recovery required, complete, closed incomplete |
+| Session/trial workflow | Coordinator host | Planned, in progress, completion review, recovery required, complete, closed incomplete |
 | Source capture attempt | Android capture service or UVC worker | Configuring, armed, recording, finalizing, finalized |
 | Package custody | Transfer/verifier/repository services | Local, collecting, staged, verified, committed, quarantined |
 | Connection and health | Observed component status | Online, disconnected, preview degraded, storage warning |
@@ -50,14 +52,85 @@ Control records SHALL carry applicable stable UUIDs explicitly:
 
 - session, trial, source, capture-attempt, package, command, message, start-plan,
   stop-plan, readiness-snapshot, assessment, commit, and receipt IDs;
-- immutable protocol snapshot and contract versions; and
+- immutable protocol snapshot ID, revision, content hash, and contract versions;
+- session-completion and handoff-manifest IDs and revisions; and
 - coordinator/device identity and source boot epoch where applicable.
 
 Identity SHALL NOT be inferred from the active UI screen, friendly name, socket,
 or arrival order. A reconnect after interrupted capture creates a new attempt;
 a retake creates a new trial.
 
-## 5. Coordinator trial workflow
+## 5. Session and protocol execution lifecycle
+
+Protocols are reusable approved versioned definitions. Creating a session
+selects one approved protocol version and creates a session-owned protocol
+snapshot containing the complete rules and the operator's protocol-permitted
+choices. The normal session lifecycle is:
+
+```text
+DRAFT -> PLANNED -> IN_PROGRESS -> COMPLETION_REVIEW -> COMPLETE
+```
+
+| State | Entry fact |
+|---|---|
+| `DRAFT` | Session identity exists; protocol/source/trial planning remains editable and no plan claims to be frozen. |
+| `PLANNED` | A complete content-hashed protocol snapshot and trial-slot plan are durably recorded. |
+| `IN_PROGRESS` | At least one planned trial is active or has acquired a scientific-master sample. |
+| `COMPLETION_REVIEW` | Acquisition is not active and the coordinator is evaluating all required slots, packages, quality, deviations, and supersession decisions. |
+| `COMPLETE` | Every session completion predicate below is true and immutable completion/handoff records exist. |
+
+Exceptional outcomes are:
+
+- `RECOVERY_REQUIRED`: non-terminal unresolved acquisition, reconciliation,
+  transfer, verification, custody, or review work;
+- `CLOSED_INCOMPLETE`: terminal deliberate closure with a reason and explicit
+  list of unsatisfied requirements, without a successful protocol claim; and
+- `CANCELLED`: terminal cancellation before any scientific-master sample, with
+  operator and reason.
+
+The session protocol snapshot SHALL include approved protocol identity/version
+and content hash, snapshot ID/revision/content hash, fixed or flexible source
+count policy, selected source count and roles, trial-slot definitions,
+additional-trial and retake rules, duration limits, override rules, and
+completion predicates.
+
+Before any master sample exists, a trained operator MAY revise planning by
+creating a new immutable snapshot revision that explicitly supersedes the prior
+revision. Once any session trial has accepted a master sample, protocol snapshot
+identity and content SHALL NOT change. A material change then requires
+`CLOSED_INCOMPLETE` followed by creation of a new session.
+
+Each planned trial slot is `UNFILLED`, `IN_PROGRESS`, `SATISFIED`, or
+`UNSATISFIED`. Exactly one accepted `COMPLETE` trial satisfies a required slot.
+Retakes create new trials; superseded and excluded trials remain immutable.
+Additional trials do not satisfy a required slot unless explicitly assigned
+under the snapshot's rules.
+
+A session may enter `COMPLETE` only when:
+
+1. every required trial slot is `SATISFIED` by exactly one accepted complete
+   trial;
+2. every accepted required package is durably `COMMITTED`;
+3. no required acquisition, package, custody, recovery, or result is active,
+   pending, conflicting, quarantined, or unknown;
+4. retake, exclusion, deviation, override, and supersession decisions are
+   resolved and retained;
+5. required session-level quality review is complete;
+6. the signed-in trained operator explicitly finalizes the session; and
+7. immutable versioned session-completion and handoff-manifest records are
+   durably persisted and mutually reference the same session/snapshot/content.
+
+Network transfer failure alone never creates terminal failure. Automatic HTTPS
+or manual USB/MTP collection moves the same finalized package through the same
+verification/commit predicates; the session remains `IN_PROGRESS` or
+`RECOVERY_REQUIRED` until custody is resolved.
+
+Deliberate reopening of `COMPLETE` requires an idempotent command, reason,
+operator, and reference to the prior completion/handoff versions. It returns the
+session to `COMPLETION_REVIEW`; prior records remain immutable and a subsequent
+completion creates higher record revisions.
+
+## 6. Coordinator trial workflow
 
 The accepted trial workflow is:
 
@@ -82,7 +155,7 @@ DRAFT -> CONFIGURING -> PREFLIGHT -> READY -> ARMING -> ARMED
 | `COLLECTING` | Required finalized packages have not all reached coordinator staging. |
 | `VERIFYING` | Required packages are under verification/transactional commit. |
 | `REVIEW_REQUIRED` | Package custody is resolved and quality/deviation review is required. |
-| `COMPLETE` | Every trial completion predicate in section 13 is true. |
+| `COMPLETE` | Every trial completion predicate in section 14 is true. |
 
 Exceptional workflow outcomes are:
 
@@ -97,7 +170,7 @@ A generic trial-level `FAILED` SHALL NOT erase the specific source, custody,
 health, or quality failure. A retake is a new trial rather than a reset of the
 existing trial.
 
-## 6. Source capture-attempt lifecycle
+## 7. Source capture-attempt lifecycle
 
 Android and UVC implementations share this logical model:
 
@@ -128,13 +201,21 @@ Camera/lens/profile/control/orientation/IMU configuration is locked from
 `ARMING`. A material configuration change after any master sample requires a new
 attempt ID.
 
-## 7. Commands, acknowledgements, and idempotency
+## 8. Commands, acknowledgements, and idempotency
 
-Minimum commands are:
+Minimum source commands are:
 
 ```text
 CONFIGURE, CHECK_READINESS, ARM, DISARM, PREPARE_START, COMMIT_START,
 CANCEL_START_PLAN, STOP_AT, EMERGENCY_STOP, RECONCILE_STATE, GET_STATE
+```
+
+Minimum session commands are:
+
+```text
+PLAN_SESSION, REVISE_SESSION_PLAN, BEGIN_SESSION, ENTER_COMPLETION_REVIEW,
+COMPLETE_SESSION, CLOSE_SESSION_INCOMPLETE, CANCEL_SESSION,
+REOPEN_SESSION_FOR_REVIEW, RECONCILE_SESSION
 ```
 
 An applicable command envelope contains contract/message/command identity,
@@ -164,7 +245,7 @@ Error responses contain stable code, safe summary, actual state, expected
 states, related IDs, and retry class: `DO_NOT_RETRY`, `RETRY_SAME_COMMAND`,
 `RECONCILE_FIRST`, or `OPERATOR_ACTION_REQUIRED`.
 
-## 8. Events and restart reconciliation
+## 9. Events and restart reconciliation
 
 Source events contain event ID/type, source boot ID, monotonically increasing
 per-boot event sequence, source monotonic timestamp, prior/resulting state, and
@@ -189,7 +270,7 @@ Coordinator authority expiration prevents takeover but SHALL NOT automatically
 stop an active Android master. Maximum duration and local emergency stop bound
 disconnected capture.
 
-## 9. Coordinated start and stop
+## 10. Coordinated start and stop
 
 All protocol-required sources SHALL be `ARMED` before standard multi-source
 start. The coordinator creates an immutable start plan with source attempts,
@@ -218,7 +299,7 @@ produces an incomplete attempt; it does not wait for synchronized stop.
 Required sources block prepare/start. Supplementary sources do not block unless
 the immutable protocol snapshot explicitly requires otherwise.
 
-## 10. Readiness and invalidation
+## 11. Readiness and invalidation
 
 Each versioned check returns `PASS`, `WARNING`, `OVERRIDE_REQUIRED`,
 `BLOCKING_FAILURE`, or `NOT_ASSESSED`. Aggregate dispositions are `BLOCKED`,
@@ -253,7 +334,7 @@ Before recording, invalidation blocks start until rechecked. After recording
 begins, it becomes visible health/quality evidence unless continuing is unsafe
 or cannot preserve valid evidence.
 
-## 11. Package custody
+## 12. Package custody
 
 Package custody is:
 
@@ -291,7 +372,7 @@ made through the coordinator; Android revalidates the receipt before deletion.
 If remote deletion is unavailable, Android guides local deletion and clearly
 separates safe, incomplete, pending, and unknown packages.
 
-## 12. Quality, retakes, and supersession
+## 13. Quality, retakes, and supersession
 
 Quality assessments are immutable/versioned interpretations over committed
 artifact hashes. Per-package outcomes are `NOT_ASSESSED`, `ASSESSING`, `PASS`,
@@ -314,7 +395,7 @@ and source attempts. Exclusion never deletes data; a required source cannot be
 excluded merely to create completion. Supersession links immutable old/new
 trials without cycles or overwrite.
 
-## 13. Trial completion and closure
+## 14. Trial completion and closure
 
 A trial may become `COMPLETE` only when:
 
@@ -341,9 +422,9 @@ workflow is not silently changed; deliberate reopening records reason/operator,
 prior completion, affected records, and produces a newly versioned handoff when
 applicable.
 
-## 14. Compatibility and evidence requirements
+## 15. Compatibility and evidence requirements
 
-- The eventual AsyncAPI/JSON Schemas SHALL use stable IDs and versions.
+- AsyncAPI and JSON Schemas SHALL use stable IDs and versions.
 - Unknown required features fail safely; optional fields follow explicit rules.
 - Historical finalized packages and events are never silently migrated.
 - Conformance fixtures SHALL cover valid lifecycles, every forbidden transition,
@@ -354,15 +435,16 @@ applicable.
 - Simulator/source-contract acceptance is not runtime, HIL, field, clinical, or
   regulatory evidence.
 
-## 15. Open approval boundary
+## 16. Baseline and deferred implementation boundary
 
-The session-level protocol execution lifecycle remains intentionally undefined
-in this draft. It must decide how immutable protocol snapshots instantiate trial
-slots/repetitions, how additional and retake trials fill those slots, how
-sessions close incomplete or reopen, and when a versioned session-completion
-record and handoff may be created.
+I0.1A-I are approved as the engineering control baseline. JSON Schema 2020-12
+artifacts and an AsyncAPI 3.1.0 document define the executable session/protocol
+message slice, while conformance fixtures provide an implementation-independent
+transition oracle.
 
-Executable control schemas and transition fixtures SHALL NOT be baselined until
-that decision is explicitly approved and this combined contract is reviewed for
-coherence.
-
+This baseline does not authorize production coordinator, Android, UVC,
+repository, transfer, or UI feature implementation. Transport bindings,
+authentication payloads, transfer and media formats, repository transactions,
+and the remaining control-message schemas require their named work items and
+reviews. Passing schema/conformance tests is software evidence only, not runtime,
+hardware, field, clinical, regulatory, or release evidence.

@@ -1,0 +1,114 @@
+{
+  "asyncapi": "3.1.0",
+  "id": "urn:humtrack:humcapture:control:v1",
+  "info": {
+    "title": "HumCapture coordinator session control",
+    "version": "1.0.0",
+    "description": "Logical message contract for coordinator-authoritative session and protocol execution. Transport and authentication bindings are intentionally deferred."
+  },
+  "defaultContentType": "application/json",
+  "channels": {
+    "sessionCommands": {
+      "address": "humcapture/control/v1/sessions/{sessionId}/commands",
+      "parameters": {
+        "sessionId": { "description": "Stable session UUID." }
+      },
+      "messages": {
+        "sessionCommand": { "$ref": "#/components/messages/sessionCommand" }
+      }
+    },
+    "commandAcknowledgements": {
+      "address": "humcapture/control/v1/sessions/{sessionId}/acknowledgements",
+      "parameters": {
+        "sessionId": { "description": "Stable session UUID." }
+      },
+      "messages": {
+        "commandAcknowledgement": { "$ref": "#/components/messages/commandAcknowledgement" }
+      }
+    },
+    "sessionStateEvents": {
+      "address": "humcapture/control/v1/sessions/{sessionId}/events",
+      "parameters": {
+        "sessionId": { "description": "Stable session UUID." }
+      },
+      "messages": {
+        "sessionStateEvent": { "$ref": "#/components/messages/sessionStateEvent" }
+      }
+    },
+    "sessionStateSnapshots": {
+      "address": "humcapture/control/v1/sessions/{sessionId}/snapshots",
+      "parameters": {
+        "sessionId": { "description": "Stable session UUID." }
+      },
+      "messages": {
+        "sessionStateSnapshot": { "$ref": "#/components/messages/sessionStateSnapshot" }
+      }
+    }
+  },
+  "operations": {
+    "sendSessionCommand": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/sessionCommands" },
+      "messages": [{ "$ref": "#/channels/sessionCommands/messages/sessionCommand" }]
+    },
+    "receiveCommandAcknowledgement": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/commandAcknowledgements" },
+      "messages": [{ "$ref": "#/channels/commandAcknowledgements/messages/commandAcknowledgement" }]
+    },
+    "receiveSessionStateEvent": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sessionStateEvents" },
+      "messages": [{ "$ref": "#/channels/sessionStateEvents/messages/sessionStateEvent" }]
+    },
+    "receiveSessionStateSnapshot": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sessionStateSnapshots" },
+      "messages": [{ "$ref": "#/channels/sessionStateSnapshots/messages/sessionStateSnapshot" }]
+    }
+  },
+  "components": {
+    "messages": {
+      "sessionCommand": {
+        "name": "SessionCommand",
+        "title": "Idempotent coordinator session command",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/command_id" },
+        "payload": {
+          "schemaFormat": "application/schema+json;version=draft-2020-12",
+          "schema": { "$ref": "../schemas/control/v1/session-command.schema.json" }
+        }
+      },
+      "commandAcknowledgement": {
+        "name": "CommandAcknowledgement",
+        "title": "Persisted command acceptance disposition",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/command_id" },
+        "payload": {
+          "schemaFormat": "application/schema+json;version=draft-2020-12",
+          "schema": { "$ref": "../schemas/control/v1/command-acknowledgement.schema.json" }
+        }
+      },
+      "sessionStateEvent": {
+        "name": "SessionStateEvent",
+        "title": "Authoritative persisted session transition",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/related_command_id" },
+        "payload": {
+          "schemaFormat": "application/schema+json;version=draft-2020-12",
+          "schema": { "$ref": "../schemas/control/v1/session-state-event.schema.json" }
+        }
+      },
+      "sessionStateSnapshot": {
+        "name": "SessionStateSnapshot",
+        "title": "Authoritative session reconciliation snapshot",
+        "contentType": "application/json",
+        "payload": {
+          "schemaFormat": "application/schema+json;version=draft-2020-12",
+          "schema": { "$ref": "../schemas/control/v1/session-state.schema.json" }
+        }
+      }
+    }
+  },
+  "x-humcapture-evidence-scope": "Schema and conformance evidence only; no transport, runtime, HIL, field, clinical, regulatory, or release claim."
+}

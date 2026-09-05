@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-H control/state decisions are consolidated in a controlled draft; session/protocol lifecycle approval remains open  
-**Tags:** I0.1 | INTERFACES | COORDINATOR-CONTROL | STATE-MACHINE | IDEMPOTENCY | RECOVERY | QUALITY  
+**Status:** I0.1A-I are accepted; the executable session/protocol contract slice passes source-level conformance and remaining control slices are open  
+**Tags:** I0.1 | INTERFACES | SESSION-PROTOCOL | SCHEMA | STATE-MACHINE | IDEMPOTENCY | RECOVERY | QUALITY  
 **Last meaningful update:** 2026-09-05
 
 ## Objective
@@ -30,11 +30,19 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   both retained P0.2J runs verify in the controlled vault. Earlier P0.2 primary
   artifacts and complete normative P0.2J measurement/lifecycle records are not
   available and will not be reconstructed. P0.2 qualification remains open.
-- I0.1 coordinator control/state contract: decisions A-H were explicitly
-  accepted and are consolidated in `HC-IF-CTRL-001` version `0.1-draft`.
-  ADR-0009 accepts separate workflow, source-attempt, package-custody, and health
-  authorities. Session/protocol execution remains the next explicit approval
-  boundary; executable schemas and application implementation remain blocked.
+- I0.1 coordinator control/state contract: decisions A-I were explicitly
+  accepted and are consolidated in `HC-IF-CTRL-001` version `1.0.0`.
+  ADR-0009 separates workflow, source-attempt, package-custody, and health
+  authorities; ADR-0010 fixes immutable session protocol snapshots. The
+  executable session/protocol slice contains eight JSON Schema 2020-12 files,
+  an AsyncAPI 3.1.0 logical interface, valid/invalid fixtures, and six named
+  conformance tests. All 18 tests in the existing evidence-control harness pass,
+  including rejection of 553 forbidden state/command/result combinations.
+  Published AsyncAPI CLI 6.0.2 also accepts the document and referenced schemas
+  in a one-off local check; it declares Node 24 and is therefore not added to the
+  Node 22.12 CI dependency baseline.
+  Remaining source/readiness/custody/quality message schemas and all application
+  implementation remain open.
 
 ## Architecture summary
 
@@ -166,7 +174,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   in the existing snapshot/evidence vault; the CI-aware SBOM is not
   retroactively release-bound.
 - Laptop-hotspot discovery, timing, and throughput require named-hardware validation.
-- Exact binary formats, schema compatibility window, and offline USB completion-receipt mechanism remain open.
+- Exact binary formats, remaining control schemas, schema compatibility window,
+  and offline USB completion-receipt mechanism remain open.
 - Evidence backup/restore, retention approval, independent signing/review,
   access audit, and any required WORM/eQMS integration remain open.
 - P0.2K confirms that P0.2A-I primary artifacts are unavailable. Only the two
@@ -192,6 +201,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
    rejected path-2 combination without fresh evidence.
 6. Obtain 1080p60 UVC hardware and capture a complete prospective evidence
    package before normative or concurrent-camera qualification.
-7. Approve the I0.1I session/protocol execution lifecycle, review the combined
-   control contract, then create its AsyncAPI/JSON Schemas and conformance fixtures.
+7. Independently review I0.1A-I and the verified session/protocol schema slice;
+   then specify remaining source-command, reconciliation, readiness, custody,
+   and quality message schemas without beginning application features.
 8. Do not begin production application features until the governance gate explicitly permits the named phase.

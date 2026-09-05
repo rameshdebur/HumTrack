@@ -28,3 +28,16 @@ subtree is tracked and clean. The current untracked subsystem can create only an
 
 The JSON Schemas under `schemas/` are versioned executable persistence contracts.
 Release creation, import, and verification validate records against them.
+
+## Session-control conformance harness
+
+This package also hosts the non-production conformance oracle used by the
+existing scoped CI job for `HC-IF-CTRL-001`. The interface artifacts themselves
+remain under `docs/interfaces/`; synthetic valid/invalid fixtures are under
+`fixtures/control/`, and HC-CTRL-TEST-001–006 exercise JSON Schema compilation,
+AsyncAPI reference closure, lifecycle/completion/handoff behavior, every
+forbidden transition in the accepted matrix, fail-closed invalid cases, and
+fixed/flexible source-count rules.
+
+This placement reuses the already locked Ajv validation surface and does not
+couple production coordinator or capture code to the evidence-vault runtime.

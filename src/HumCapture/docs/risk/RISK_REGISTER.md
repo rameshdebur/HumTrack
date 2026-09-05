@@ -23,6 +23,7 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
 | HC-RISK-017 | Primary verification evidence is lost, altered, selectively retained, or cannot be bound to the tested source/build | Controlled non-temporary vault, complete hash inventory, conflict rejection, release identity, retention/backup, independent review and future signature/eQMS control | HC-DATA-REQ-001/003, HC-REG-REQ-003/004 |
 | HC-RISK-018 | A vulnerable, malicious, unmaintained, unlicensed, substituted, or unidentified software component enters a build or remains undiscoverable during response | Locked dependencies, CycloneDX SBOM per release, component hashes/identifiers, dependency review, ecosystem audit, supplier/licence review, vulnerability monitoring and VEX/patch process | HC-SEC-REQ-006, HC-COMPAT-REQ-002/003, HC-REG-REQ-003/004 |
 | HC-RISK-019 | Incorrect, insecure, fabricated, or insufficiently verified AI/automated output enters a controlled baseline or creates misleading evidence | Treat generated output as untrusted draft, material-use declaration, requirement/risk traceability, independent test oracle, human review, proportionate independent review, privacy/secret restrictions, exact release identity | HC-SEC-REQ-004/006, HC-REG-REQ-003/004; HC-SOP-SW-004 |
+| HC-RISK-020 | An in-progress or historical session is silently reinterpreted under a changed protocol, source count, trial plan, or completion rule | Immutable content-hashed session snapshot, audited pre-capture supersession, post-capture change rejection, new session for material change, immutable completion/handoff revisions | HC-COORD-REQ-005–011, HC-DATA-REQ-006 |
 
 ## Current Phase 0 evidence notes
 
@@ -101,3 +102,10 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   The control is documented but not operationally verified: HumCapture remains
   untracked, no protected review workflow or CI is approved, and no independent
   release review exists. The risk remains open.
+- **HC-RISK-020 initial contract control, 2026-09-05:** ADR-0010 and
+  `HC-IF-CTRL-001` version 1.0.0 define immutable session protocol snapshots.
+  HC-CTRL-TEST-001–006 validate schema compilation/reference closure, a complete
+  fixed-source lifecycle and handoff, 553 forbidden transition combinations,
+  named invalid fixtures, post-capture snapshot-change rejection, false
+  completion rejection, and flexible source-count bounds. Application/runtime,
+  persistence, restart, independent-review, and field evidence remain open.

@@ -1,7 +1,7 @@
 # HumCapture Regulatory Evidence Readiness Matrix
 
 **Document ID:** HC-VER-READINESS-001  
-**Revision:** 1.1  
+**Revision:** 1.2  
 **Date:** 2026-09-01  
 **Status:** Gap assessment; not a conformity or certification statement
 
@@ -13,9 +13,10 @@ Indian regulatory professional and the applicable licence/submission route.
 | Evidence/control area | Current retained evidence | Readiness | Required before dossier or release claim |
 |---|---|---|---|
 | Intended use and claims | Controlled draft and explicit claim prohibitions | Partial | Qualified applicability/classification and claims approval |
-| Architecture and design decisions | ARD plus accepted ADRs 0001–0009; I0.1A-H control decisions consolidated in draft interface | Partial | Session/protocol lifecycle approval, whole-contract review, formal baseline approval and design-review records |
-| Product requirements and user stories | PRD, SRS, stories, interfaces-to-create list | Partial | Approved versions, complete interface specifications, change control |
-| Bidirectional traceability | Preliminary requirement/risk/test links | Partial | Atomic test IDs and complete requirement → risk/control → implementation → result linkage |
+| Architecture and design decisions | ARD plus accepted ADRs 0001–0010; I0.1A-I control decisions consolidated as engineering interface baseline 1.0.0 | Partial | Independent whole-contract/design review, remaining interface decisions, and formal release baseline approval |
+| Product requirements and user stories | PRD, SRS 0.3, stories, HC-IF-CTRL-001 1.0.0 and executable session/protocol slice | Partial | Approved complete interface set, implementation, and change control evidence |
+| Bidirectional traceability | Preliminary links plus HC-CTRL-TEST-001–006 from session stories/atomic requirements/risk 020 to executable contract tests | Partial | Complete requirement → risk/control → implementation → result linkage and independent review |
+| Automated session/protocol contract V&V | Eight JSON Schemas, AsyncAPI reference closure and one-off CLI 6.0.2 validation, valid lifecycle/completion/handoff fixture, 553 forbidden combinations and named invalid cases pass | Engineering only | Pin a compatible validator if made a release/CI dependency; complete remaining control slices, application/runtime/restart verification, independent QA approval and retained released-build results |
 | Risk management | Preliminary plan/register with UVC findings | Partial | Approved method, ratings, benefit-risk/residual-risk review, production/post-market linkage |
 | Verification protocols | Phase 0 specification and work items | Partial | Approved pre-execution protocols, acceptance criteria, deviations and independent approval |
 | Automated evidence-contract V&V | P0.1 schemas/validator with 55 passing tests | Engineering only | Released-build execution, independent QA approval and controlled retained outputs |

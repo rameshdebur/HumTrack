@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/command-acknowledgement.schema.json",
+  "title": "HumCapture command acknowledgement",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "message_id",
+    "acknowledgement_id",
+    "command_id",
+    "session_id",
+    "disposition",
+    "actual_session_state",
+    "actual_session_revision",
+    "recorded_utc"
+  ],
+  "properties": {
+    "contract_version": { "$ref": "common.schema.json#/$defs/contractVersion" },
+    "message_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "acknowledgement_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "command_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "disposition": { "enum": ["ACCEPTED", "REJECTED", "ALREADY_APPLIED"] },
+    "actual_session_state": { "$ref": "common.schema.json#/$defs/sessionState" },
+    "actual_session_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "summary", "retry_class"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "retry_class": { "enum": ["DO_NOT_RETRY", "RETRY_SAME_COMMAND", "RECONCILE_FIRST", "OPERATOR_ACTION_REQUIRED"] }
+      }
+    },
+    "recorded_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "disposition": { "const": "REJECTED" } } },
+      "then": { "properties": { "error": {} }, "required": ["error"] }
+    }
+  ]
+}

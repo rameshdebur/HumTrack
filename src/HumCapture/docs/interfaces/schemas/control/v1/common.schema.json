@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/common.schema.json",
+  "title": "HumCapture control common types",
+  "$defs": {
+    "contractVersion": { "const": "1.0.0" },
+    "schemaVersion": { "const": "1.0.0" },
+    "uuid": { "type": "string", "format": "uuid" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "utcTimestamp": { "type": "string", "format": "date-time" },
+    "windowsAccount": { "type": "string", "minLength": 3, "maxLength": 256 },
+    "reason": { "type": "string", "minLength": 3, "maxLength": 2000 },
+    "positiveRevision": { "type": "integer", "minimum": 1 },
+    "sessionState": {
+      "enum": [
+        "DRAFT",
+        "PLANNED",
+        "IN_PROGRESS",
+        "COMPLETION_REVIEW",
+        "RECOVERY_REQUIRED",
+        "COMPLETE",
+        "CLOSED_INCOMPLETE",
+        "CANCELLED"
+      ]
+    },
+    "slotState": {
+      "enum": ["UNFILLED", "IN_PROGRESS", "SATISFIED", "UNSATISFIED"]
+    },
+    "sessionCommandType": {
+      "enum": [
+        "PLAN_SESSION",
+        "REVISE_SESSION_PLAN",
+        "BEGIN_SESSION",
+        "ENTER_COMPLETION_REVIEW",
+        "COMPLETE_SESSION",
+        "CLOSE_SESSION_INCOMPLETE",
+        "CANCEL_SESSION",
+        "REOPEN_SESSION_FOR_REVIEW",
+        "RECONCILE_SESSION"
+      ]
+    }
+  }
+}

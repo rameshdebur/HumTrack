@@ -1,6 +1,6 @@
 # HumCapture Traceability Matrix
 
-**Status:** Preliminary; P0.1 source-contract gate passed; P0.2K integration complete and hardware qualification remains open
+**Status:** Preliminary; I0.1 session/protocol contract-source verification, P0.1 source-contract gate, and P0.2K integration complete; implementation and hardware qualification remain open
 
 | User need/story | Requirement | Risk | Planned verification | Current status |
 |---|---|---|---|---|
@@ -11,7 +11,8 @@
 | HC-US-SUB-001–006 | HC-SEC-REQ-002/005 | HC-RISK-001/011 | Identity, duplicate, audit, data-flow tests | Not implemented |
 | HC-US-DEV-001–012 | HC-SEC-REQ-001/003/004, HC-COMPAT-REQ-002 | HC-RISK-009/013 | Discovery/pairing/replay/takeover/version tests | Not implemented |
 | HC-US-QA-001–012 | HC-DATA-REQ-004, HC-TIME-REQ-005 | HC-RISK-002–005/012 | Protocol threshold and immutable reassessment tests | Not implemented |
-| HC-US-DEV-001–005/009/012, HC-US-RDY-001–011, HC-US-CAP-001–014, HC-US-XFR-001–014, HC-US-QA-001–012 | HC-SYS-REQ-002–005, HC-AND-REQ-002/004/005, HC-COORD-REQ-002–004, HC-UVC-REQ-001–005, HC-DATA-REQ-001–004, HC-TIME-REQ-001–005, HC-SEC-REQ-001/003/005, HC-USE-REQ-002–004, HC-COMPAT-REQ-002–004 | HC-RISK-001–013/015–017 | HC-IF-CTRL-001 state/command/reconciliation/readiness/custody/quality conformance fixtures after session-lifecycle approval | I0.1A-H accepted and consolidated in controlled draft 0.1; session/protocol lifecycle, executable schemas, atomic tests, independent review, and implementation remain open |
+| HC-US-SES-001–009, HC-US-QA-007–010 | HC-SYS-REQ-003/005, HC-COORD-REQ-005–012, HC-DATA-REQ-004/006, HC-COMPAT-REQ-002–004 | HC-RISK-001/002/007/010/012/013/020 | HC-CTRL-TEST-001–006: schema/reference closure, valid lifecycle/completion/handoff, exhaustive transition matrix, invalid fixtures, immutable snapshot and source-count rules | Contract source verified: 8 JSON Schemas compile; AsyncAPI references resolve; one complete fixed lifecycle/bundle passes; all 553 forbidden state/command/result combinations reject; named false-completion, protocol-change, identity, path and unknown-field fixtures reject. Application/runtime/restart/HIL/field/independent review remain open |
+| HC-US-DEV-001–005/009/012, HC-US-RDY-001–011, HC-US-CAP-001–014, HC-US-XFR-001–014, HC-US-QA-001–012 | HC-SYS-REQ-002–005, HC-AND-REQ-002/004/005, HC-COORD-REQ-002–012, HC-UVC-REQ-001–005, HC-DATA-REQ-001–004/006, HC-TIME-REQ-001–005, HC-SEC-REQ-001/003/005, HC-USE-REQ-002–004, HC-COMPAT-REQ-002–004 | HC-RISK-001–013/015–017/020 | Remaining HC-IF-CTRL-001 source-command/reconciliation/readiness/custody/quality message schemas and integration fixtures | I0.1A-I semantics accepted in baseline 1.0.0; session/protocol schema slice verified. Remaining message slices, independent review, and application implementation remain open |
 | HC-US-MVP-001 | HC-SYS-REQ-004, HC-TIME-REQ-002/003 | HC-RISK-004/013 | Laptop hotspot two-Android field acceptance | Not implemented |
 | HC-US-MVP-002 | HC-AND-REQ-005, HC-DATA-REQ-002 | HC-RISK-007 | Receipt loss/replay and informed cleanup | Not implemented |
 | HC-US-MVP-003 | HC-DATA-REQ-005, HC-SEC-REQ-002/005 | HC-RISK-001/011/014 | Pseudonymized/identified export validation | Not implemented |

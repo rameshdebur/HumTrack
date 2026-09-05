@@ -14,7 +14,9 @@ UVC, repository, or simulator feature implementation.
 - Affected owners: coordinator, Android, UVC, transfer/repository, simulator/QA,
   security, risk/regulatory, and UI.
 - Verification owner: QA/simulator owner after executable schema baseline.
-- Paths: `docs/interfaces/`, `docs/adr/`, and linked project/traceability records.
+- Paths: `docs/interfaces/`, `docs/adr/`, linked requirements/risk/project/
+  traceability records, and the non-production conformance harness under
+  `tools/evidence-control/`.
 - Application implementation: not authorized by this work item.
 
 ## Accepted discussion decisions
@@ -27,15 +29,16 @@ UVC, repository, or simulator feature implementation.
 - [x] I0.1F: readiness, invalidation, and protocol-scoped overrides.
 - [x] I0.1G: package custody, verification, commit, receipt, and safe cleanup.
 - [x] I0.1H: quality, retake, exclusion, supersession, and trial completion.
-- [ ] I0.1I: session/protocol execution lifecycle — explicit approval required.
+- [x] I0.1I: session/protocol execution lifecycle, immutable snapshot binding,
+  completion/handoff, incomplete closure, and controlled reopening.
 
 ## Current status
 
-ADR-0009 records the accepted state-authority decision. The accepted I0.1A-H
-content is consolidated as controlled draft `HC-IF-CTRL-001` version
-`0.1-draft`. It is not yet a baselined executable interface.
+ADR-0009 records the accepted state-authority decision. ADR-0010 records the
+accepted immutable session/protocol snapshot decision. I0.1A-I are consolidated
+as engineering interface baseline `HC-IF-CTRL-001` version `1.0.0`.
 
-The next gate is explicit approval of I0.1I followed by whole-contract coherence
-review. Only then may the AsyncAPI, JSON Schemas, conformance fixtures, atomic
-requirements, and implementation delegation be baselined.
-
+The executable session/protocol slice consists of AsyncAPI 3.1.0, JSON Schema
+2020-12 artifacts, and conformance fixtures/tests. This work item does not
+authorize application feature implementation or constitute independent design,
+quality, regulatory, or release approval.

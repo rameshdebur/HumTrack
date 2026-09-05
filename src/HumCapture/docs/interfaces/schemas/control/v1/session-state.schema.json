@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/session-state.schema.json",
+  "title": "HumCapture authoritative session state",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_id",
+    "subject_id",
+    "operator_windows_account",
+    "state",
+    "revision",
+    "has_acquired_master_sample",
+    "slot_progress",
+    "active_trial_ids",
+    "unresolved_required_work",
+    "updated_utc"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "subject_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "operator_windows_account": { "$ref": "common.schema.json#/$defs/windowsAccount" },
+    "state": { "$ref": "common.schema.json#/$defs/sessionState" },
+    "revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "protocol_snapshot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "protocol_snapshot_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "protocol_snapshot_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "has_acquired_master_sample": { "type": "boolean" },
+    "slot_progress": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot_id", "required", "state", "candidate_trial_ids"],
+        "properties": {
+          "slot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "required": { "type": "boolean" },
+          "state": { "$ref": "common.schema.json#/$defs/slotState" },
+          "candidate_trial_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "$ref": "common.schema.json#/$defs/uuid" }
+          },
+          "accepted_trial_id": { "$ref": "common.schema.json#/$defs/uuid" }
+        }
+      }
+    },
+    "active_trial_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "common.schema.json#/$defs/uuid" }
+    },
+    "unresolved_required_work": { "type": "boolean" },
+    "completion_record_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "completion_record_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "handoff_manifest_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "handoff_manifest_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "prior_completion_record_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "common.schema.json#/$defs/uuid" }
+    },
+    "closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason", "operator_windows_account", "recorded_utc"],
+      "properties": {
+        "outcome": { "enum": ["CANCELLED", "CLOSED_INCOMPLETE"] },
+        "reason": { "$ref": "common.schema.json#/$defs/reason" },
+        "operator_windows_account": { "$ref": "common.schema.json#/$defs/windowsAccount" },
+        "recorded_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" },
+        "unsatisfied_slot_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "common.schema.json#/$defs/uuid" }
+        }
+      }
+    },
+    "updated_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "state": { "enum": ["PLANNED", "IN_PROGRESS", "COMPLETION_REVIEW", "RECOVERY_REQUIRED", "COMPLETE", "CLOSED_INCOMPLETE"] } } },
+      "then": {
+        "properties": {
+          "protocol_snapshot_id": {},
+          "protocol_snapshot_revision": {},
+          "protocol_snapshot_content_sha256": {}
+        },
+        "required": ["protocol_snapshot_id", "protocol_snapshot_revision", "protocol_snapshot_content_sha256"]
+      }
+    },
+    {
+      "if": { "properties": { "state": { "const": "COMPLETE" } } },
+      "then": {
+        "properties": {
+          "completion_record_id": {},
+          "completion_record_revision": {},
+          "handoff_manifest_id": {},
+          "handoff_manifest_revision": {}
+        },
+        "required": ["completion_record_id", "completion_record_revision", "handoff_manifest_id", "handoff_manifest_revision"]
+      }
+    },
+    {
+      "if": { "properties": { "state": { "enum": ["CANCELLED", "CLOSED_INCOMPLETE"] } } },
+      "then": { "properties": { "closure": {} }, "required": ["closure"] }
+    }
+  ]
+}

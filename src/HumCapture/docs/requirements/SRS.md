@@ -1,8 +1,8 @@
 # HumCapture Software Requirements Baseline
 
 **Document ID:** HC-SRS-001  
-**Version:** 0.2  
-**Status:** Preliminary; interface-level requirements remain blocked pending specifications
+**Version:** 0.3  
+**Status:** Preliminary; session/protocol control requirements are baselined and remaining interfaces are open
 
 This document establishes requirement families and mandatory system constraints. Detailed atomic requirements and verification IDs are completed before each implementation phase.
 
@@ -39,6 +39,31 @@ This document establishes requirement families and mandatory system constraints.
 - **HC-COORD-REQ-002:** The coordinator SHALL guide subject/protocol/session/trial/source/readiness/capture/recovery/quality workflows without command-line prerequisites.
 - **HC-COORD-REQ-003:** The coordinator SHALL reconcile persisted, filesystem, device, transfer, and worker state after restart.
 - **HC-COORD-REQ-004:** The coordinator SHALL distinguish master health, preview health, transfer state, completion, and quality.
+- **HC-COORD-REQ-005:** Planning a session SHALL create a versioned,
+  content-hashed, session-owned snapshot of the selected approved protocol,
+  including source-count selection, source roles, trial slots, duration,
+  override, retake, and completion rules.
+- **HC-COORD-REQ-006:** Before any scientific-master sample exists, a plan
+  change SHALL create an audited new snapshot revision that supersedes rather
+  than overwrites the prior revision.
+- **HC-COORD-REQ-007:** After any session trial accepts a scientific-master
+  sample, the protocol snapshot identity and content SHALL NOT change; a
+  material protocol change SHALL require incomplete closure and a new session.
+- **HC-COORD-REQ-008:** The coordinator SHALL enforce the versioned session
+  lifecycle and terminal/non-terminal outcomes defined by `HC-IF-CTRL-001`.
+- **HC-COORD-REQ-009:** Each required trial slot SHALL be satisfied by exactly
+  one accepted complete trial, while retaken, superseded, excluded, and
+  additional trials remain immutable and traceable.
+- **HC-COORD-REQ-010:** Session completion SHALL require all required slots and
+  packages resolved, no active/unknown required work, completed quality review,
+  explicit trained-operator finalization, and mutually consistent immutable
+  completion and handoff records.
+- **HC-COORD-REQ-011:** Reopening a complete session SHALL preserve prior
+  completion/handoff records, require an attributed reason, return to completion
+  review, and produce higher record revisions if completed again.
+- **HC-COORD-REQ-012:** Network transfer failure alone SHALL NOT create terminal
+  session failure; automatic and USB/MTP collection SHALL use the same package
+  verification and commit predicates.
 
 - **HC-UVC-REQ-001:** Each active UVC source SHALL be isolated so worker failure does not terminate unrelated sources.
 - **HC-UVC-REQ-002:** UVC timestamps SHALL identify sensor/device/host-sample/host-arrival provenance truthfully.
@@ -62,6 +87,10 @@ This document establishes requirement families and mandatory system constraints.
 - **HC-DATA-REQ-003:** Identical reimport SHALL be idempotent; conflicting identity/hash SHALL quarantine without overwrite.
 - **HC-DATA-REQ-004:** Workflow completion SHALL require all protocol-required packages/trials committed.
 - **HC-DATA-REQ-005:** Default handoff SHALL be pseudonymized and SHALL preserve original authoritative data.
+- **HC-DATA-REQ-006:** Session completion and handoff records SHALL mutually
+  reference the same session, subject, protocol snapshot identity/content hash,
+  and record revisions; handoff artifact paths SHALL be relative and SHALL NOT
+  escape the controlled repository destination.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.
@@ -98,4 +127,8 @@ This document establishes requirement families and mandatory system constraints.
 
 ## Verification status
 
-All requirements are currently `Not implemented / Not verified`. Phase-specific atomic requirements, interface definitions, and verification cases must be approved before feature implementation.
+HC-COORD-REQ-005–012 and HC-DATA-REQ-006 have executable schema/conformance
+verification in HC-CTRL-TEST-001–006. This is contract-source verification, not
+application implementation, runtime integration, HIL, field, clinical,
+regulatory, independent-review, or release evidence. All other implementation
+statuses remain `Not implemented / Not verified` unless separately recorded.
