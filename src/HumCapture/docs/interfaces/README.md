@@ -5,7 +5,8 @@
 `CONTROL_STATE_MACHINE.md` is accepted engineering interface baseline
 `HC-IF-CTRL-001` version `1.1.0`. It consolidates explicitly accepted I0.1A-I
 and I0.2A decisions. ADR-0010 records immutable session protocol snapshots;
-ADR-0011 records exact JSON monotonic-time representation.
+ADR-0011 records exact JSON monotonic-time representation. ADR-0012 and
+`TRANSFER_AND_PACKAGE_CONTRACT.md` baseline `HC-IF-XFR-001` version `1.0.0`.
 
 The executable transport-neutral control slice is:
 
@@ -18,13 +19,21 @@ The executable transport-neutral control slice is:
   invalid, cross-record, precision, replay/restart, and exhaustive
   forbidden-transition conformance.
 
+The executable transfer/package slice adds:
+
+- `openapi/transfer-v1.openapi.json` — coordinator-pulled HTTPS manifest and
+  artifact GET/HEAD with range, validator, and digest semantics;
+- `schemas/transfer/v1/` — immutable package manifest, coordinator collection
+  checkpoint, and common verification record; and
+- HC-XFR-TEST-001–011 — schema/API, identity, path, range/restart, USB/MTP,
+  false-verification, idempotency/quarantine, receipt, and digest conformance.
+
 No runtime interface implementation is authorized yet. Before cross-component
 feature work, complete and review the remaining contracts:
 
 | Contract | Planned representation | Required evidence |
 |---|---|---|
-| Transfer API | OpenAPI | Range/resume/authentication/restart tests |
-| Capture manifest | JSON Schema | Valid/invalid and compatibility fixtures |
+| Transfer security binding | OpenAPI/security profile | Pairing/authentication/TLS/replay tests |
 | Timing stream | Binary specification and test vectors | Ordering/discontinuity/round-trip parser tests |
 | IMU stream | Binary specification and test vectors | Timestamp/coordinate/provenance tests |
 | Completion receipt signing and offline conveyance | Signing/security rules | Replay/idempotency/identity and USB recovery tests |

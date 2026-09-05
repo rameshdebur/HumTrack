@@ -107,6 +107,19 @@ This document establishes requirement families and mandatory system constraints.
 - **HC-DATA-REQ-008:** A JSON record's `*_content_sha256` identity SHALL be the
   lowercase SHA-256 of its RFC 8785 canonical UTF-8 JSON with that record's own
   content-hash property omitted; referenced record hashes SHALL remain included.
+- **HC-DATA-REQ-009:** Every finalized source package SHALL use the versioned
+  `HC-IF-XFR-001` manifest and the same verifier for HTTPS, USB/MTP, and
+  coordinator-local collection; the manifest SHALL be published only after all
+  artifacts are closed, sized, and hashed.
+- **HC-DATA-REQ-010:** HTTPS resume SHALL combine partial bytes only under an
+  unchanged strong representation validator and matching byte range; a full
+  response, changed validator, invalid digest, or unsatisfied range SHALL cause
+  safe artifact reconciliation without appending incompatible bytes.
+- **HC-DATA-REQ-011:** Partial collection SHALL remain outside the subject
+  repository; only a complete passing verification followed by durable commit
+  SHALL create a receipt.
+- **HC-DATA-REQ-012:** USB/MTP recovery SHALL skip only completely verified
+  artifacts and SHALL restart each incomplete artifact from byte zero.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.

@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I and I0.2A are accepted; session/protocol and transport-neutral source control contracts pass source-level conformance  
-**Tags:** I0.2A | CONTROL | SOURCE-MESSAGES | WIRE-CONTRACT | MONOTONIC-TIME | RECONCILIATION | CUSTODY | QUALITY  
+**Status:** I0.1A-I, I0.2A and I0.3A are accepted; control and transfer/package contracts pass source-level conformance  
+**Tags:** I0.3A | TRANSFER | PACKAGE-MANIFEST | RANGE-RESUME | USB-MTP | COMMON-VERIFIER | COMMIT-RECEIPT | CONTRACT  
 **Last meaningful update:** 2026-09-05
 
 ## Objective
@@ -45,9 +45,16 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Published AsyncAPI CLI 6.0.2 also accepts the document and referenced schemas
   in a one-off local check; it declares Node 24 and is therefore not added to the
   Node 22.12 CI dependency baseline.
-  Transport/authentication binding, transfer endpoints, media/package
-  manifests, timing/IMU binary streams, receipt signing, repository transaction
-  implementation, and all application implementation remain open.
+  Transport/authentication binding, timing/IMU binary streams, receipt signing,
+  repository transaction implementation, and all application implementation
+  remain open.
+- I0.3A is accepted as `HC-IF-XFR-001` version `1.0.0`. ADR-0012 records
+  coordinator pull, immutable directory publication, HTTPS ranges/strong
+  validators, USB/MTP artifact-boundary recovery, staging, common verification,
+  idempotency/quarantine, and commit/receipt linkage. Three JSON Schemas,
+  OpenAPI 3.1.2, and HC-XFR-TEST-001–011 pass locally. Authentication/TLS
+  binding, receipt signing, repository implementation, runtime, HIL, field,
+  and independent review remain open.
 
 ## Architecture summary
 
@@ -63,8 +70,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 ## Important contracts to create before feature implementation
 
 - Independent review of the control/state-machine AsyncAPI and message schemas.
-- Transfer OpenAPI and resumable range behavior.
-- Capture/package manifest and receipt-signing/offline-conveyance rules.
+- Transfer authentication/TLS/pairing binding (I0.3B).
+- Receipt-signing/offline-conveyance rules.
 - Timing and IMU binary formats with test vectors.
 - Repository transaction and compatibility rules.
 
@@ -207,7 +214,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
    rejected path-2 combination without fresh evidence.
 6. Obtain 1080p60 UVC hardware and capture a complete prospective evidence
    package before normative or concurrent-camera qualification.
-7. Independently review HC-IF-CTRL-001 version 1.1.0 and its verified
-   session/source wire contracts; then baseline the transfer/resume boundary
-   without beginning application features.
+7. Independently review HC-IF-CTRL-001 version 1.1.0 and HC-IF-XFR-001 version
+   1.0.0; then refine I0.3B authentication/TLS/pairing binding without beginning
+   application features.
 8. Do not begin production application features until the governance gate explicitly permits the named phase.

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/transfer/v1/package-manifest.schema.json",
+  "title": "HumCapture immutable finalized package manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "package_id", "package_content_sha256", "artifact_set_sha256",
+    "subject_id", "session_id", "trial_id", "source_id", "capture_attempt_id",
+    "source_kind", "source_boot_id", "protocol_snapshot_id",
+    "protocol_snapshot_content_sha256", "configuration_id",
+    "configuration_content_sha256", "finalization_outcome", "finalized_utc",
+    "artifact_count", "package_byte_length", "artifacts"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "package_content_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "artifact_set_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "subject_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "trial_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "capture_attempt_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "source_kind": { "$ref": "../../control/v1/common.schema.json#/$defs/sourceKind" },
+    "source_boot_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "protocol_snapshot_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "protocol_snapshot_content_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "configuration_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "configuration_content_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "finalization_outcome": { "enum": ["FINALIZED_COMPLETE", "FINALIZED_INCOMPLETE"] },
+    "finalization_reason": { "type": "string", "minLength": 3, "maxLength": 2000 },
+    "finalized_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "artifact_count": { "type": "integer", "minimum": 1 },
+    "package_byte_length": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+    "artifacts": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["artifact_id", "relative_path", "role", "media_type", "byte_length", "sha256", "required", "session_id", "trial_id", "source_id", "capture_attempt_id"],
+        "properties": {
+          "artifact_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+          "relative_path": { "type": "string", "minLength": 1, "maxLength": 1024 },
+          "role": { "enum": ["SCIENTIFIC_MASTER_VIDEO", "FRAME_TIMESTAMPS", "CAMERA_METADATA", "CAPTURE_EVENTS", "FINALIZATION_RECORD", "IMU_SAMPLES", "IMU_METADATA", "CALIBRATION", "AUXILIARY_EVIDENCE"] },
+          "media_type": { "type": "string", "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+$", "maxLength": 127 },
+          "byte_length": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+          "sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+          "required": { "type": "boolean" },
+          "session_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+          "trial_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+          "source_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+          "capture_attempt_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+          "timing_coverage": {
+            "type": "object", "additionalProperties": false,
+            "required": ["clock_id", "ticks_per_second", "first_ticks", "last_ticks", "record_count", "discontinuity_count"],
+            "properties": {
+              "clock_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+              "ticks_per_second": { "type": "integer", "minimum": 1, "maximum": 1000000000000 },
+              "first_ticks": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+              "last_ticks": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+              "first_sequence": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+              "last_sequence": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+              "record_count": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+              "discontinuity_count": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "finalization_outcome": { "const": "FINALIZED_INCOMPLETE" } } },
+      "then": { "properties": { "finalization_reason": {} }, "required": ["finalization_reason"] },
+      "else": { "not": { "properties": { "finalization_reason": {} }, "required": ["finalization_reason"] } }
+    }
+  ]
+}

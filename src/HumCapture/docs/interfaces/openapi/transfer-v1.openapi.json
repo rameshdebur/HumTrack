@@ -1,0 +1,129 @@
+{
+  "openapi": "3.1.2",
+  "info": {
+    "title": "HumCapture finalized package transfer API",
+    "version": "1.0.0",
+    "description": "Coordinator-pulled transfer of immutable finalized packages. Authentication and trust binding are mandatory but are defined by I0.3B, not this document."
+  },
+  "servers": [{ "url": "https://{captureNode}/v1", "variables": { "captureNode": { "default": "capture-node.invalid" } } }],
+  "x-humcapture-contract-id": "HC-IF-XFR-001",
+  "x-humcapture-security-binding": "REQUIRED_DEFERRED_TO_I0.3B; this contract does not permit unauthenticated deployment",
+  "paths": {
+    "/packages/{packageId}/manifest": {
+      "get": {
+        "summary": "Retrieve an immutable finalized-package manifest",
+        "operationId": "getFinalizedPackageManifest",
+        "parameters": [{ "$ref": "#/components/parameters/packageId" }],
+        "responses": {
+          "200": {
+            "description": "Canonical immutable manifest",
+            "headers": {
+              "ETag": { "$ref": "#/components/headers/StrongETag" },
+              "Repr-Digest": { "$ref": "#/components/headers/ReprDigest" },
+              "Content-Digest": { "$ref": "#/components/headers/ContentDigest" },
+              "Cache-Control": { "schema": { "const": "no-store" } }
+            },
+            "content": { "application/json": { "schema": { "$ref": "../schemas/transfer/v1/package-manifest.schema.json" } } }
+          },
+          "404": { "$ref": "#/components/responses/Problem" },
+          "409": { "$ref": "#/components/responses/Problem" },
+          "426": { "$ref": "#/components/responses/Problem" }
+        }
+      }
+    },
+    "/packages/{packageId}/artifacts/{artifactId}": {
+      "head": {
+        "summary": "Inspect an immutable finalized artifact",
+        "operationId": "inspectFinalizedArtifact",
+        "parameters": [{ "$ref": "#/components/parameters/packageId" }, { "$ref": "#/components/parameters/artifactId" }],
+        "responses": {
+          "200": {
+            "description": "Artifact metadata",
+            "headers": {
+              "ETag": { "$ref": "#/components/headers/StrongETag" },
+              "Content-Length": { "$ref": "#/components/headers/ContentLength" },
+              "Repr-Digest": { "$ref": "#/components/headers/ReprDigest" },
+              "Accept-Ranges": { "$ref": "#/components/headers/AcceptRanges" }
+            }
+          },
+          "404": { "$ref": "#/components/responses/Problem" },
+          "409": { "$ref": "#/components/responses/Problem" }
+        }
+      },
+      "get": {
+        "summary": "Retrieve all or a byte range of an immutable finalized artifact",
+        "operationId": "getFinalizedArtifactBytes",
+        "parameters": [
+          { "$ref": "#/components/parameters/packageId" },
+          { "$ref": "#/components/parameters/artifactId" },
+          { "name": "Range", "in": "header", "required": false, "schema": { "type": "string", "pattern": "^bytes=[0-9]+-$" } },
+          { "name": "If-Range", "in": "header", "required": false, "schema": { "type": "string", "pattern": "^\"sha256-[a-f0-9]{64}\"$" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full artifact; a resumptive client discards any prior partial bytes before using this response",
+            "headers": {
+              "ETag": { "$ref": "#/components/headers/StrongETag" },
+              "Content-Length": { "$ref": "#/components/headers/ContentLength" },
+              "Repr-Digest": { "$ref": "#/components/headers/ReprDigest" },
+              "Content-Digest": { "$ref": "#/components/headers/ContentDigest" },
+              "Accept-Ranges": { "$ref": "#/components/headers/AcceptRanges" }
+            },
+            "content": { "application/octet-stream": { "schema": { "type": "string", "format": "binary" } } }
+          },
+          "206": {
+            "description": "Partial artifact bytes carrying the same strong validator",
+            "headers": {
+              "ETag": { "$ref": "#/components/headers/StrongETag" },
+              "Content-Range": { "$ref": "#/components/headers/ContentRange" },
+              "Content-Length": { "$ref": "#/components/headers/ContentLength" },
+              "Repr-Digest": { "$ref": "#/components/headers/ReprDigest" },
+              "Content-Digest": { "$ref": "#/components/headers/ContentDigest" },
+              "Accept-Ranges": { "$ref": "#/components/headers/AcceptRanges" }
+            },
+            "content": { "application/octet-stream": { "schema": { "type": "string", "format": "binary" } } }
+          },
+          "404": { "$ref": "#/components/responses/Problem" },
+          "409": { "$ref": "#/components/responses/Problem" },
+          "416": { "$ref": "#/components/responses/Problem" },
+          "426": { "$ref": "#/components/responses/Problem" }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "packageId": { "name": "packageId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
+      "artifactId": { "name": "artifactId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+    },
+    "headers": {
+      "StrongETag": { "required": true, "schema": { "type": "string", "pattern": "^\"sha256-[a-f0-9]{64}\"$" } },
+      "ContentLength": { "required": true, "schema": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" } },
+      "ContentRange": { "required": true, "schema": { "type": "string", "pattern": "^bytes [0-9]+-[0-9]+/[0-9]+$" } },
+      "ReprDigest": { "required": true, "schema": { "type": "string", "pattern": "^sha-256=:[A-Za-z0-9+/]{43}=:$" } },
+      "ContentDigest": { "required": true, "schema": { "type": "string", "pattern": "^sha-256=:[A-Za-z0-9+/]{43}=:$" } },
+      "AcceptRanges": { "required": true, "schema": { "const": "bytes" } }
+    },
+    "responses": {
+      "Problem": {
+        "description": "Stable machine-readable transfer problem",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "type": "object", "additionalProperties": false,
+              "required": ["type", "title", "status", "code", "retry_class"],
+              "properties": {
+                "type": { "type": "string", "format": "uri" },
+                "title": { "type": "string" },
+                "status": { "type": "integer", "minimum": 400, "maximum": 599 },
+                "detail": { "type": "string" },
+                "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
+                "retry_class": { "enum": ["DO_NOT_RETRY", "RETRY_SAME_REQUEST", "RECONCILE_MANIFEST", "OPERATOR_ACTION_REQUIRED"] }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

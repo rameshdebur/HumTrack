@@ -7,6 +7,8 @@
 | Full name, DOB, demographics | Coordinator subject registry | Identity and demographic context | Excluded from pseudonymized handoff | Never advertised or sent to Android by default |
 | Subject UUID/code | Coordinator and source packages | Association and recovery | Included | UUID is authoritative folder key |
 | Master video | Android until committed; coordinator repository | Motion acquisition | Included when selected | Potentially directly identifiable |
+| Partial package artifacts/checkpoints | Coordinator staging until verification, retry, quarantine, or controlled disposal | Interrupted-transfer recovery | Never | Not a committed subject record; inherits source-artifact sensitivity |
+| Package manifest/verification/receipt | Source package and coordinator custody/audit records | Integrity, traceability, recovery and cleanup status | Included as appropriate | Uses subject UUID; no name/DOB; receipt created only after durable commit |
 | Timing/IMU/camera data | Source package/repository | Scientific context and quality | Included | Preserve provenance/units |
 | Operator Windows identity | Audit records | Accountability | Excluded by default unless required | No app password database in MVP |
 | Pairing keys/tokens | Protected platform credential storage | Authentication | Never | No ordinary logs |
@@ -24,4 +26,3 @@
 - Organization/data-fiduciary/processor roles under current law.
 
 No legal conclusion is made in this preliminary map.
-

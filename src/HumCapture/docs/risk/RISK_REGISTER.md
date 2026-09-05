@@ -25,6 +25,7 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
 | HC-RISK-019 | Incorrect, insecure, fabricated, or insufficiently verified AI/automated output enters a controlled baseline or creates misleading evidence | Treat generated output as untrusted draft, material-use declaration, requirement/risk traceability, independent test oracle, human review, proportionate independent review, privacy/secret restrictions, exact release identity | HC-SEC-REQ-004/006, HC-REG-REQ-003/004; HC-SOP-SW-004 |
 | HC-RISK-020 | An in-progress or historical session is silently reinterpreted under a changed protocol, source count, trial plan, or completion rule | Immutable content-hashed session snapshot, audited pre-capture supersession, post-capture change rejection, new session for material change, immutable completion/handoff revisions | HC-COORD-REQ-005–011, HC-DATA-REQ-006 |
 | HC-RISK-021 | Monotonic timestamps lose integer precision, cross boot/clock epochs, regress, or are replaced by UTC/arrival time, causing incorrect source state or temporal interpretation | Canonical decimal-string uint64 ticks, explicit clock identity/frequency/model/uncertainty, boot-scoped sequence, first-sample authority, range/continuity/restart rejection | HC-TIME-REQ-001–007, HC-COORD-REQ-013–015 |
+| HC-RISK-022 | Interrupted, stale, or method-divergent transfer combines incompatible bytes, falsely verifies a package, or commits partial data | Immutable manifest, strong validator/If-Range, transport and stored-artifact digests, exact ranges, staging boundary, common verifier, artifact-boundary USB restart, identity-conflict quarantine, receipt only after durable commit | HC-COORD-REQ-012, HC-DATA-REQ-001–004/007–012, HC-SEC-REQ-003/005 |
 
 ## Current Phase 0 evidence notes
 
@@ -119,3 +120,10 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   identity stability and tamper rejection. Timing implementation, binary
   stream format, runtime clock fitting, HIL synchronization, and field evidence
   remain open.
+- **HC-RISK-022 initial contract control, 2026-09-05:** ADR-0012 and
+  `HC-IF-XFR-001` version 1.0.0 define immutable manifest publication,
+  coordinator-pulled HTTPS byte ranges under a stable strong validator,
+  artifact-boundary USB/MTP recovery, staging isolation, common verification,
+  idempotency/quarantine, and commit/receipt linkage. HC-XFR-TEST-001–011 pass
+  source-level conformance. Runtime transport, storage durability, device loss,
+  hostile-network, HIL, field, and independent review evidence remain open.

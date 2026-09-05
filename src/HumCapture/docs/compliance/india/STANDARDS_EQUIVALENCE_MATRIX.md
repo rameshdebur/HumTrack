@@ -1,6 +1,6 @@
 # Standards and India Equivalence Matrix
 
-**Status:** Candidate baseline; BIS editions/adoptions require controlled verification
+**Status:** Candidate baseline refreshed against CDSCO 2026 guidance; controlled copies, editions, BIS adoptions and applicability require qualified verification
 
 | International standard | Purpose | India/BIS equivalent | Applicability status |
 |---|---|---|---|
@@ -15,5 +15,9 @@
 | ISO/IEC 25010 | Product quality model | Verify current adoption | Supporting baseline |
 | ISO/IEC 27001/27701 | Information security/privacy management | Verify current adoption | Organizational applicability to assess |
 
-For every applicable standard, record controlled copy, edition, clauses in scope, derived requirement IDs, evidence, gaps, reviewer, and review date. Do not copy or invent licensed clause text from memory.
+The CDSCO 2026 MDSW guidance identifies IS/ISO 13485, IS/ISO 14971,
+IS/ISO/IEC 62304, IS/IEC 82304-1, IEC 81001-5-1 and IEC 62366-1 among possible
+standards. This confirms candidate identifiers only; it does not establish the
+applicable edition, clause set, conformity, or HumCapture classification.
 
+For every applicable standard, record controlled copy, edition, clauses in scope, derived requirement IDs, evidence, gaps, reviewer, and review date. Do not copy or invent licensed clause text from memory.

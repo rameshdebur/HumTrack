@@ -2,7 +2,7 @@
 
 **Document ID:** HC-REG-BASE-IND-001  
 **Status:** Preliminary applicability baseline; qualified review required  
-**Reviewed:** 2026-08-26
+**Reviewed:** 2026-09-05
 
 ## Primary jurisdiction
 
@@ -14,6 +14,12 @@ Primary source entry points:
 - CDSCO Acts and Rules: https://cdsco.gov.in/opencms/opencms/en/Acts-Rules/
 - MeitY data-protection framework: https://www.meity.gov.in/data-protection-framework
 - BIS standards portal: https://www.bis.gov.in/
+- CDSCO Guidance Document on Medical Device Software under MDR 2017,
+  CDSCO/MD/GD/MDSW/01/2026, final dated 2026-07-21:
+  https://www.cdsco.gov.in/opencms/export/sites/CDSCO_WEB/Pdf-documents/Guidance-document-on-Medical-Device-Software-under-MDR-2017.pdf
+- Digital Personal Data Protection Rules, 2025, notified 2025-11-13 with
+  staged commencement:
+  https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf
 
 ## Applicable framework to assess
 
@@ -41,6 +47,15 @@ Document intended purpose, user, population, environment, information produced, 
 - It produces verified video/timing/IMU packages and acquisition-conformance information.
 - It does not currently claim diagnosis, treatment recommendation, clinical accuracy, hardware synchronization, CDSCO approval, certification, or a medical-device class.
 - Final applicability, class, licensing path, QMS obligations, evidence, and labeling require qualified Indian regulatory review.
+- The 2026 CDSCO guidance illustrates that software solely performing transfer,
+  storage, archive, format, or communication may fall outside MDSW when it has
+  no additional medical purpose or system impact. HumCapture also performs
+  acquisition, timing, verification, and conformance functions, so that
+  illustration is not used here as a classification conclusion.
+- I0.3A adds engineering controls for data integrity, traceability, recoverable
+  connectivity loss, verification, and audit linkage. Authentication/TLS trust,
+  access control, encryption at rest, retention, consent/notice, and incident
+  controls remain open or deferred; no conformity claim follows from this work.
 
 ## Implementation gate
 
@@ -55,4 +70,3 @@ Before work that affects intended use, claims, subject data, timing/quality, sec
 ## Release gate
 
 No medically positioned release is authorized until intended use, applicability/classification, standards matrix, risk management, privacy, usability, security, verification, claims, and qualified approvals are complete and recorded.
-
