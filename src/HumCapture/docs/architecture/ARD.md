@@ -121,14 +121,22 @@ closed-incomplete outcomes. Pre-capture plan changes create superseding snapshot
 revisions; after any master sample, material protocol change requires incomplete
 closure and a new session.
 
+ADR-0011 preserves JSON monotonic instants as canonical unsigned 64-bit decimal
+ticks with explicit clock identity and frequency. Mapped session time also
+identifies its clock model and uncertainty. A new boot/clock epoch requires a
+new capture attempt; UTC remains audit/display evidence rather than the
+scientific ordering clock. Content-addressed JSON records hash their RFC 8785
+canonical UTF-8 representation with their own content-hash property omitted,
+so equivalent serialization order does not change identity.
+
 The accepted trial progression is draft/configuring/preflight/ready/arming/armed/
 start-scheduled/recording/stopping/finalizing/collecting/verifying/review-required/
 complete, with cancelled, recovery-required, and closed-incomplete outcomes.
 Source attempts and packages have separate lifecycles through finalization,
 commit receipt, and safe-to-delete. `docs/interfaces/CONTROL_STATE_MACHINE.md`
-version 1.0.0 and its executable session/protocol schema slice are the accepted
-engineering interface baseline; application implementation remains separately
-gated.
+version 1.1.0 and its executable session/source schema slices are the accepted
+engineering interface baseline; transport/security binding, binary timing/IMU
+formats, and application implementation remain separately gated.
 
 All protocol-required sources must be ready before standard start. Once recording begins, one source failure does not stop surviving sources. Android network/coordinator/preview loss does not stop local master recording. Maximum duration and local emergency stop provide fallback.
 

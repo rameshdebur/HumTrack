@@ -16,3 +16,4 @@ Current records:
 - ADR-0008 — CycloneDX SBOM as a controlled release artifact.
 - ADR-0009 — Separate workflow, acquisition, custody, and health state authorities.
 - ADR-0010 — Immutable session protocol snapshots.
+- ADR-0011 — Exact monotonic time wire representation.

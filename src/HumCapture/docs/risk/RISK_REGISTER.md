@@ -24,6 +24,7 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
 | HC-RISK-018 | A vulnerable, malicious, unmaintained, unlicensed, substituted, or unidentified software component enters a build or remains undiscoverable during response | Locked dependencies, CycloneDX SBOM per release, component hashes/identifiers, dependency review, ecosystem audit, supplier/licence review, vulnerability monitoring and VEX/patch process | HC-SEC-REQ-006, HC-COMPAT-REQ-002/003, HC-REG-REQ-003/004 |
 | HC-RISK-019 | Incorrect, insecure, fabricated, or insufficiently verified AI/automated output enters a controlled baseline or creates misleading evidence | Treat generated output as untrusted draft, material-use declaration, requirement/risk traceability, independent test oracle, human review, proportionate independent review, privacy/secret restrictions, exact release identity | HC-SEC-REQ-004/006, HC-REG-REQ-003/004; HC-SOP-SW-004 |
 | HC-RISK-020 | An in-progress or historical session is silently reinterpreted under a changed protocol, source count, trial plan, or completion rule | Immutable content-hashed session snapshot, audited pre-capture supersession, post-capture change rejection, new session for material change, immutable completion/handoff revisions | HC-COORD-REQ-005–011, HC-DATA-REQ-006 |
+| HC-RISK-021 | Monotonic timestamps lose integer precision, cross boot/clock epochs, regress, or are replaced by UTC/arrival time, causing incorrect source state or temporal interpretation | Canonical decimal-string uint64 ticks, explicit clock identity/frequency/model/uncertainty, boot-scoped sequence, first-sample authority, range/continuity/restart rejection | HC-TIME-REQ-001–007, HC-COORD-REQ-013–015 |
 
 ## Current Phase 0 evidence notes
 
@@ -109,3 +110,12 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   named invalid fixtures, post-capture snapshot-change rejection, false
   completion rejection, and flexible source-count bounds. Application/runtime,
   persistence, restart, independent-review, and field evidence remain open.
+- **HC-RISK-021 initial contract control, 2026-09-05:** ADR-0011 and
+  HC-IF-CTRL-001 version 1.1.0 define exact JSON monotonic instants and explicit
+  mapped-time uncertainty. HC-CTRL-TEST-007–019 cover exact uint64 maximum and
+  overflow/lexical rejection, clock identity, boot-epoch attempt replacement,
+  event order, first-master-sample proof, command replay/conflict, and
+  fail-closed source/event transition matrices, plus RFC 8785/SHA-256 content
+  identity stability and tamper rejection. Timing implementation, binary
+  stream format, runtime clock fitting, HIL synchronization, and field evidence
+  remain open.

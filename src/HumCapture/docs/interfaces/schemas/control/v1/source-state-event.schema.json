@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/source-state-event.schema.json",
+  "title": "HumCapture authoritative source state event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version", "message_id", "event_id", "event_type", "source_boot_id",
+    "event_sequence", "event_source_time", "session_id", "trial_id", "source_id",
+    "capture_attempt_id", "prior_state", "resulting_state", "resulting_source_revision",
+    "authoritative_state", "recorded_utc"
+  ],
+  "properties": {
+    "contract_version": { "$ref": "common.schema.json#/$defs/contractVersion" },
+    "message_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "event_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "event_type": { "enum": ["STATE_TRANSITION", "FIRST_MASTER_SAMPLE", "READINESS_INVALIDATED", "DEVICE_LOST", "FINALIZATION_RESULT", "HEALTH_CHANGED", "COMMAND_RESULT"] },
+    "source_boot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "event_sequence": { "type": "integer", "minimum": 1 },
+    "event_source_time": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "trial_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "capture_attempt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "prior_state": { "$ref": "common.schema.json#/$defs/sourceState" },
+    "resulting_state": { "$ref": "common.schema.json#/$defs/sourceState" },
+    "resulting_source_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "related_command_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "first_master_sample": { "$ref": "source-state.schema.json#/properties/first_master_sample" },
+    "reason": { "$ref": "common.schema.json#/$defs/reason" },
+    "authoritative_state": { "$ref": "source-state.schema.json" },
+    "recorded_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "event_type": { "const": "FIRST_MASTER_SAMPLE" } } },
+      "then": { "properties": { "first_master_sample": {}, "resulting_state": { "const": "RECORDING" } }, "required": ["first_master_sample"] }
+    },
+    {
+      "if": { "properties": { "event_type": { "enum": ["READINESS_INVALIDATED", "DEVICE_LOST", "FINALIZATION_RESULT"] } } },
+      "then": { "properties": { "reason": {} }, "required": ["reason"] }
+    }
+  ]
+}

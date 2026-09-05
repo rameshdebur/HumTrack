@@ -3,8 +3,8 @@
   "id": "urn:humtrack:humcapture:control:v1",
   "info": {
     "title": "HumCapture coordinator session control",
-    "version": "1.0.0",
-    "description": "Logical message contract for coordinator-authoritative session and protocol execution. Transport and authentication bindings are intentionally deferred."
+    "version": "1.1.0",
+    "description": "Logical message contract for coordinator-authoritative session execution and authority-scoped source, readiness, custody, receipt, and quality records. Transport and authentication bindings are intentionally deferred."
   },
   "defaultContentType": "application/json",
   "channels": {
@@ -43,6 +43,56 @@
       "messages": {
         "sessionStateSnapshot": { "$ref": "#/components/messages/sessionStateSnapshot" }
       }
+    },
+    "sourceCommands": {
+      "address": "humcapture/control/v1/sources/{sourceId}/commands",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceCommand": { "$ref": "#/components/messages/sourceCommand" } }
+    },
+    "sourceConfigurations": {
+      "address": "humcapture/control/v1/sources/{sourceId}/configurations",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceConfiguration": { "$ref": "#/components/messages/sourceConfiguration" } }
+    },
+    "sourceCommandAcknowledgements": {
+      "address": "humcapture/control/v1/sources/{sourceId}/acknowledgements",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceCommandAcknowledgement": { "$ref": "#/components/messages/sourceCommandAcknowledgement" } }
+    },
+    "sourceStateEvents": {
+      "address": "humcapture/control/v1/sources/{sourceId}/events",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceStateEvent": { "$ref": "#/components/messages/sourceStateEvent" } }
+    },
+    "sourceStateSnapshots": {
+      "address": "humcapture/control/v1/sources/{sourceId}/snapshots",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceStateSnapshot": { "$ref": "#/components/messages/sourceStateSnapshot" } }
+    },
+    "startPlans": {
+      "address": "humcapture/control/v1/trials/{trialId}/start-plans",
+      "parameters": { "trialId": { "description": "Stable trial UUID." } },
+      "messages": { "startPlan": { "$ref": "#/components/messages/startPlan" } }
+    },
+    "readinessSnapshots": {
+      "address": "humcapture/control/v1/sources/{sourceId}/readiness",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "readinessSnapshot": { "$ref": "#/components/messages/readinessSnapshot" } }
+    },
+    "packageCustodyRecords": {
+      "address": "humcapture/control/v1/packages/{packageId}/custody",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "packageCustodyRecord": { "$ref": "#/components/messages/packageCustodyRecord" } }
+    },
+    "packageCommitReceipts": {
+      "address": "humcapture/control/v1/packages/{packageId}/receipts",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "packageCommitReceipt": { "$ref": "#/components/messages/packageCommitReceipt" } }
+    },
+    "qualityAssessments": {
+      "address": "humcapture/control/v1/packages/{packageId}/quality",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "qualityAssessment": { "$ref": "#/components/messages/qualityAssessment" } }
     }
   },
   "operations": {
@@ -65,6 +115,56 @@
       "action": "receive",
       "channel": { "$ref": "#/channels/sessionStateSnapshots" },
       "messages": [{ "$ref": "#/channels/sessionStateSnapshots/messages/sessionStateSnapshot" }]
+    },
+    "sendSourceCommand": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/sourceCommands" },
+      "messages": [{ "$ref": "#/channels/sourceCommands/messages/sourceCommand" }]
+    },
+    "sendSourceConfiguration": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/sourceConfigurations" },
+      "messages": [{ "$ref": "#/channels/sourceConfigurations/messages/sourceConfiguration" }]
+    },
+    "receiveSourceCommandAcknowledgement": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sourceCommandAcknowledgements" },
+      "messages": [{ "$ref": "#/channels/sourceCommandAcknowledgements/messages/sourceCommandAcknowledgement" }]
+    },
+    "receiveSourceStateEvent": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sourceStateEvents" },
+      "messages": [{ "$ref": "#/channels/sourceStateEvents/messages/sourceStateEvent" }]
+    },
+    "receiveSourceStateSnapshot": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sourceStateSnapshots" },
+      "messages": [{ "$ref": "#/channels/sourceStateSnapshots/messages/sourceStateSnapshot" }]
+    },
+    "sendStartPlan": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/startPlans" },
+      "messages": [{ "$ref": "#/channels/startPlans/messages/startPlan" }]
+    },
+    "receiveReadinessSnapshot": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/readinessSnapshots" },
+      "messages": [{ "$ref": "#/channels/readinessSnapshots/messages/readinessSnapshot" }]
+    },
+    "receivePackageCustodyRecord": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/packageCustodyRecords" },
+      "messages": [{ "$ref": "#/channels/packageCustodyRecords/messages/packageCustodyRecord" }]
+    },
+    "sendPackageCommitReceipt": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/packageCommitReceipts" },
+      "messages": [{ "$ref": "#/channels/packageCommitReceipts/messages/packageCommitReceipt" }]
+    },
+    "receiveQualityAssessment": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/qualityAssessments" },
+      "messages": [{ "$ref": "#/channels/qualityAssessments/messages/qualityAssessment" }]
     }
   },
   "components": {
@@ -107,6 +207,69 @@
           "schemaFormat": "application/schema+json;version=draft-2020-12",
           "schema": { "$ref": "../schemas/control/v1/session-state.schema.json" }
         }
+      },
+      "sourceCommand": {
+        "name": "SourceCommand",
+        "title": "Idempotent coordinator command to one exact source attempt",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/command_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-command.schema.json" } }
+      },
+      "sourceConfiguration": {
+        "name": "SourceConfiguration",
+        "title": "Immutable configuration content bound by CONFIGURE and ARM",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-configuration.schema.json" } }
+      },
+      "sourceCommandAcknowledgement": {
+        "name": "SourceCommandAcknowledgement",
+        "title": "Persisted source command acceptance disposition",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/command_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-command-acknowledgement.schema.json" } }
+      },
+      "sourceStateEvent": {
+        "name": "SourceStateEvent",
+        "title": "Source-authoritative acquisition/finalization event",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/related_command_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-state-event.schema.json" } }
+      },
+      "sourceStateSnapshot": {
+        "name": "SourceStateSnapshot",
+        "title": "Source-authoritative restart/reconciliation snapshot",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-state.schema.json" } }
+      },
+      "startPlan": {
+        "name": "StartPlan",
+        "title": "Immutable coordinated future-start plan",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/start-plan.schema.json" } }
+      },
+      "readinessSnapshot": {
+        "name": "ReadinessSnapshot",
+        "title": "Versioned source readiness evidence and aggregate",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/readiness-snapshot.schema.json" } }
+      },
+      "packageCustodyRecord": {
+        "name": "PackageCustodyRecord",
+        "title": "Authority-scoped package custody state",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/package-custody-record.schema.json" } }
+      },
+      "packageCommitReceipt": {
+        "name": "PackageCommitReceipt",
+        "title": "Hash-bound receipt issued after durable commit",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/package-commit-receipt.schema.json" } }
+      },
+      "qualityAssessment": {
+        "name": "QualityAssessment",
+        "title": "Immutable quality interpretation over committed content",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/quality-assessment.schema.json" } }
       }
     }
   },

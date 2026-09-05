@@ -1,8 +1,8 @@
 # HumCapture Software Requirements Baseline
 
 **Document ID:** HC-SRS-001  
-**Version:** 0.3  
-**Status:** Preliminary; session/protocol control requirements are baselined and remaining interfaces are open
+**Version:** 0.4  
+**Status:** Preliminary; session/protocol and source-control wire requirements are baselined and remaining interfaces are open
 
 This document establishes requirement families and mandatory system constraints. Detailed atomic requirements and verification IDs are completed before each implementation phase.
 
@@ -64,6 +64,15 @@ This document establishes requirement families and mandatory system constraints.
 - **HC-COORD-REQ-012:** Network transfer failure alone SHALL NOT create terminal
   session failure; automatic and USB/MTP collection SHALL use the same package
   verification and commit predicates.
+- **HC-COORD-REQ-013:** Source commands SHALL bind stable coordinator/session/
+  trial/source/attempt identity and expected state; the same command ID with
+  changed semantic content SHALL be rejected as a conflict.
+- **HC-COORD-REQ-014:** A command acknowledgement SHALL report acceptance,
+  rejection, or prior application without asserting the requested acquisition
+  or repository outcome; authoritative events/records SHALL establish results.
+- **HC-COORD-REQ-015:** Restart reconciliation SHALL consume the authority-owned
+  source snapshot and SHALL NOT continue one capture attempt across a changed
+  source boot or monotonic-clock epoch.
 
 - **HC-UVC-REQ-001:** Each active UVC source SHALL be isolated so worker failure does not terminate unrelated sources.
 - **HC-UVC-REQ-002:** UVC timestamps SHALL identify sensor/device/host-sample/host-arrival provenance truthfully.
@@ -91,12 +100,25 @@ This document establishes requirement families and mandatory system constraints.
   reference the same session, subject, protocol snapshot identity/content hash,
   and record revisions; handoff artifact paths SHALL be relative and SHALL NOT
   escape the controlled repository destination.
+- **HC-DATA-REQ-007:** Package custody, commit receipt, and quality assessment
+  records SHALL retain exact package/attempt/content identity; a receipt SHALL
+  be created only after durable commit and a quality aggregate SHALL NOT hide
+  blocking or unresolved dimensions.
+- **HC-DATA-REQ-008:** A JSON record's `*_content_sha256` identity SHALL be the
+  lowercase SHA-256 of its RFC 8785 canonical UTF-8 JSON with that record's own
+  content-hash property omitted; referenced record hashes SHALL remain included.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.
 - **HC-TIME-REQ-003:** Future scheduled start SHALL be used for coordinated sources.
 - **HC-TIME-REQ-004:** The product SHALL NOT claim hardware synchronization in the MVP.
 - **HC-TIME-REQ-005:** Detected timing discontinuities SHALL remain visible in quality evidence.
+- **HC-TIME-REQ-006:** JSON control records SHALL preserve native monotonic
+  instants as a clock identity, canonical unsigned 64-bit decimal-string ticks,
+  and explicit tick frequency; mapped session instants SHALL also identify the
+  clock model and uncertainty.
+- **HC-TIME-REQ-007:** UTC and host-arrival timestamps SHALL support audit and
+  observation only and SHALL NOT replace or order scientific source timing.
 
 - **HC-SEC-REQ-001:** Discovery SHALL NOT grant control; pairing/authentication SHALL establish trust.
 - **HC-SEC-REQ-002:** Subject name/date of birth SHALL NOT appear in mDNS or Android source packages.
@@ -127,8 +149,9 @@ This document establishes requirement families and mandatory system constraints.
 
 ## Verification status
 
-HC-COORD-REQ-005–012 and HC-DATA-REQ-006 have executable schema/conformance
-verification in HC-CTRL-TEST-001–006. This is contract-source verification, not
+HC-COORD-REQ-005–015, HC-DATA-REQ-006–008, and HC-TIME-REQ-006/007 have
+executable schema/conformance verification in HC-CTRL-TEST-001–019. This is
+contract-source verification, not
 application implementation, runtime integration, HIL, field, clinical,
 regulatory, independent-review, or release evidence. All other implementation
 statuses remain `Not implemented / Not verified` unless separately recorded.

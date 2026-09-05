@@ -1,7 +1,7 @@
 # HumCapture Coordinator Control and State Contract
 
 **Document ID:** HC-IF-CTRL-001  
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Accepted engineering interface baseline; independent review and application implementation remain open  
 **Date:** 2026-09-05
 
@@ -14,9 +14,10 @@ package custody, quality, retakes, trial completion, and session/protocol
 execution.
 
 Versioned JSON Schemas, AsyncAPI operations, and conformance fixtures accompany
-this baseline. Transport security details, transfer endpoints, timing/IMU binary
-formats, complete repository layout, and application implementation remain
-separate controlled work.
+this baseline for session/protocol and source-control records. Transport
+security details, transfer endpoints, media/package manifests, timing/IMU binary
+formats, repository transactions, complete repository layout, and application
+implementation remain separate controlled work.
 
 ## 2. Normative language and invariants
 
@@ -59,6 +60,24 @@ Control records SHALL carry applicable stable UUIDs explicitly:
 Identity SHALL NOT be inferred from the active UI screen, friendly name, socket,
 or arrival order. A reconnect after interrupted capture creates a new attempt;
 a retake creates a new trial.
+
+### 4.1 Wire time and numeric precision
+
+JSON control records represent each native monotonic instant as `clock_id`,
+canonical unsigned-decimal-string `ticks`, and integer `ticks_per_second`.
+Mapped session instants additionally identify `session_clock_id`,
+`clock_model_id`, and `uncertainty_ns`. Decimal strings preserve exact unsigned
+64-bit values across Android/JVM, .NET, native, and JavaScript consumers.
+
+Every new source boot creates a new boot and clock identity. An attempt cannot
+continue across a changed boot/clock epoch. UTC timestamps support audit and
+display only; they SHALL NOT order scientific samples, prove scheduled start,
+or replace native/mapped monotonic evidence. See ADR-0011.
+
+A JSON record's `*_content_sha256` is the lowercase SHA-256 of the RFC 8785
+canonical UTF-8 JSON after omitting that record's own content-hash property.
+Hashes that bind referenced records remain included. Consumers fail closed on
+a content-hash mismatch.
 
 ## 5. Session and protocol execution lifecycle
 
@@ -223,6 +242,11 @@ coordinator/session/trial/source/attempt identity, command type, expected source
 state, coordinator issue observation, command deadline or scheduled session
 time, and command-specific payload.
 
+The I0.2A source envelope binds one exact coordinator, session, trial, logical
+source, capture attempt, expected source state, operator, and command payload.
+Configuration, readiness, and start-plan commands carry content identity rather
+than silently embedding or substituting mutable configuration.
+
 Command handling produces one acknowledgement:
 
 ```text
@@ -250,6 +274,12 @@ states, related IDs, and retry class: `DO_NOT_RETRY`, `RETRY_SAME_COMMAND`,
 Source events contain event ID/type, source boot ID, monotonically increasing
 per-boot event sequence, source monotonic timestamp, prior/resulting state, and
 related command ID. Critical transitions are persisted before announcement.
+
+`event_sequence` is scoped to one source boot and increases exactly once for
+each authoritative event. Event monotonic time cannot regress within that boot.
+`RECORDING` requires a `FIRST_MASTER_SAMPLE` event whose evidence is identical
+to the authoritative source snapshot; acknowledgement or scheduled time alone
+cannot create `RECORDING`.
 
 On reconnection or restart, the coordinator requests a snapshot containing
 identity/version compatibility, boot ID, active IDs, actual capture state,
@@ -437,14 +467,17 @@ applicable.
 
 ## 16. Baseline and deferred implementation boundary
 
-I0.1A-I are approved as the engineering control baseline. JSON Schema 2020-12
-artifacts and an AsyncAPI 3.1.0 document define the executable session/protocol
-message slice, while conformance fixtures provide an implementation-independent
-transition oracle.
+I0.1A-I and I0.2A are approved as engineering control baselines. HC-IF-CTRL-001
+version 1.1.0 adds transport-neutral source command/acknowledgement,
+configuration, state/event, start-plan, readiness, custody/receipt, and quality
+records to the existing session/protocol slice. JSON Schema 2020-12 artifacts,
+AsyncAPI 3.1.0 operations, and conformance fixtures provide an
+implementation-independent oracle.
 
 This baseline does not authorize production coordinator, Android, UVC,
 repository, transfer, or UI feature implementation. Transport bindings,
-authentication payloads, transfer and media formats, repository transactions,
-and the remaining control-message schemas require their named work items and
-reviews. Passing schema/conformance tests is software evidence only, not runtime,
-hardware, field, clinical, regulatory, or release evidence.
+authentication payloads, transfer endpoints/range behavior, capture/media
+manifests, timing/IMU binary streams, repository transaction implementation,
+receipt signing, and application features require their named work items and
+reviews. Passing schema/conformance tests is software evidence only, not
+runtime, hardware, field, clinical, regulatory, or release evidence.

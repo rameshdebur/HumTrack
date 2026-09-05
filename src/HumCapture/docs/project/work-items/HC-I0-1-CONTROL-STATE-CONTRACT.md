@@ -36,7 +36,9 @@ UVC, repository, or simulator feature implementation.
 
 ADR-0009 records the accepted state-authority decision. ADR-0010 records the
 accepted immutable session/protocol snapshot decision. I0.1A-I are consolidated
-as engineering interface baseline `HC-IF-CTRL-001` version `1.0.0`.
+as engineering interface baseline `HC-IF-CTRL-001` version `1.0.0`; approved
+I0.2A subsequently extends the aggregate interface to version `1.1.0` without
+rewriting the I0.1 record-schema versions.
 
 The executable session/protocol slice consists of AsyncAPI 3.1.0, JSON Schema
 2020-12 artifacts, and conformance fixtures/tests. This work item does not

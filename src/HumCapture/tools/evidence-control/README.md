@@ -34,10 +34,13 @@ Release creation, import, and verification validate records against them.
 This package also hosts the non-production conformance oracle used by the
 existing scoped CI job for `HC-IF-CTRL-001`. The interface artifacts themselves
 remain under `docs/interfaces/`; synthetic valid/invalid fixtures are under
-`fixtures/control/`, and HC-CTRL-TEST-001–006 exercise JSON Schema compilation,
-AsyncAPI reference closure, lifecycle/completion/handoff behavior, every
-forbidden transition in the accepted matrix, fail-closed invalid cases, and
-fixed/flexible source-count rules.
+`fixtures/control/`, and HC-CTRL-TEST-001–019 exercise JSON Schema compilation,
+AsyncAPI reference closure, session/source lifecycle, completion/handoff,
+monotonic precision, idempotency, first-sample authority, restart/boot epochs,
+readiness, custody/receipt, quality, every forbidden transition in the accepted
+matrices, fail-closed invalid cases, and fixed/flexible source-count rules.
+The source slice also checks RFC 8785/SHA-256 content identity, JSON-member-order
+stability, and content-tamper rejection.
 
 This placement reuses the already locked Ajv validation surface and does not
 couple production coordinator or capture code to the evidence-vault runtime.

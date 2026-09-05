@@ -89,20 +89,31 @@ test("HC-CTRL-TEST-001 all control schemas compile as JSON Schema 2020-12", asyn
   assert.deepEqual(files, [
     "command-acknowledgement.schema.json",
     "common.schema.json",
+    "package-commit-receipt.schema.json",
+    "package-custody-record.schema.json",
     "protocol-snapshot.schema.json",
+    "quality-assessment.schema.json",
+    "readiness-snapshot.schema.json",
     "session-command.schema.json",
     "session-completion-record.schema.json",
     "session-handoff-manifest.schema.json",
     "session-state-event.schema.json",
-    "session-state.schema.json"
+    "session-state.schema.json",
+    "source-command-acknowledgement.schema.json",
+    "source-command.schema.json",
+    "source-configuration.schema.json",
+    "source-state-event.schema.json",
+    "source-state.schema.json",
+    "start-plan.schema.json"
   ]);
 });
 
 test("HC-CTRL-TEST-002 AsyncAPI 3.1 document references every session message schema", async () => {
   const document = await json(path.join(humCaptureRoot, "docs", "interfaces", "asyncapi", "control-v1.asyncapi.json"));
   assert.equal(document.asyncapi, "3.1.0");
-  assert.equal(document.info.version, "1.0.0");
-  const references = Object.values(document.components.messages).map((message) => message.payload.schema.$ref).sort();
+  assert.equal(document.info.version, "1.1.0");
+  const references = ["sessionCommand", "commandAcknowledgement", "sessionStateEvent", "sessionStateSnapshot"]
+    .map((name) => document.components.messages[name].payload.schema.$ref).sort();
   assert.deepEqual(references, [
     "../schemas/control/v1/command-acknowledgement.schema.json",
     "../schemas/control/v1/session-command.schema.json",
