@@ -42,5 +42,12 @@ matrices, fail-closed invalid cases, and fixed/flexible source-count rules.
 The source slice also checks RFC 8785/SHA-256 content identity, JSON-member-order
 stability, and content-tamper rejection.
 
+HC-SEC-TEST-001–012 add a non-production oracle for HC-IF-SEC-001: schema and
+OpenAPI/AsyncAPI binding, attended bootstrap entropy/expiry/single use/lockout,
+enrollment transcript and certificate lifetime, trust lifecycle, peer/resource
+authorization, TLS profile/downgrade/early-data rejection, recovery lockout, and
+audit redaction. These tests do not exercise Android Keystore, Windows DPAPI, a
+TLS stack, hostile networks, hardware, or field workflow.
+
 This placement reuses the already locked Ajv validation surface and does not
 couple production coordinator or capture code to the evidence-vault runtime.

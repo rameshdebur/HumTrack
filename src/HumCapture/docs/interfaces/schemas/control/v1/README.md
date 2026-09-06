@@ -1,7 +1,8 @@
 # HumCapture control schemas v1
 
 These JSON Schema 2020-12 files are the executable transport-neutral control
-slice of `HC-IF-CTRL-001` version `1.1.0`. Individual record schemas start at
+record slice of `HC-IF-CTRL-001` version `1.2.0`. Individual record schemas
+remain at
 schema version `1.0.0`. `../../../asyncapi/control-v1.asyncapi.json`
 describes the logical message channels using AsyncAPI 3.1.0.
 
@@ -19,9 +20,10 @@ Encode SHA-256 as lowercase 64-character hexadecimal. References to another
 record's hash remain in the content and therefore bind that dependency. See
 ADR-0011 and HC-CTRL-TEST-019.
 
-Transport/authentication binding, transfer endpoints, media/package manifests,
-receipt signing, timing/IMU binary streams, and application implementation are
-not defined by this slice.
+The transport/authentication binding is defined separately by HC-IF-SEC-001 and
+the AsyncAPI WSS server. Transfer endpoints, media/package manifests, receipt
+signing, timing/IMU binary streams, and application implementation are not
+defined by this record-schema slice.
 
 ## Specification references
 

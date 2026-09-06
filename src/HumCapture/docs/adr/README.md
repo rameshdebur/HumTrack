@@ -17,3 +17,5 @@ Current records:
 - ADR-0009 — Separate workflow, acquisition, custody, and health state authorities.
 - ADR-0010 — Immutable session protocol snapshots.
 - ADR-0011 — Exact monotonic time wire representation.
+- ADR-0012 — Coordinator-pulled immutable package transfer.
+- ADR-0013 — Attended enrollment and mutual TLS.

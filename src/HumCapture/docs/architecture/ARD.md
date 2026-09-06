@@ -104,7 +104,11 @@ Provisional targets are clock-fit uncertainty no greater than 5 ms and first-fra
 
 ## 10. Discovery, trust, and control
 
-Android advertises `_humcapture._tcp` by mDNS. The coordinator browses, resolves, and initiates pairing/control. Manual endpoint and QR fallback remain available. Discovery is untrusted; pairing pins device/coordinator identities. One coordinator controls a phone during an active session.
+Android advertises `_humcapture._tcp` by mDNS. The coordinator browses, resolves,
+and initiates pairing/control. Manual endpoint fallback remains available.
+Discovery is untrusted. ADR-0013 and HC-IF-SEC-001 require an attended QR or
+high-entropy manual bootstrap that binds both peer public keys, followed by
+mutual TLS for control and transfer. One enrolled coordinator controls a phone.
 
 MVP control uses versioned JSON over authenticated encrypted WebSocket. Large data never travels in control messages. Commands are acknowledged, state-validated, and idempotent where practical. Reconnection begins with actual-state reconciliation.
 
@@ -134,9 +138,11 @@ start-scheduled/recording/stopping/finalizing/collecting/verifying/review-requir
 complete, with cancelled, recovery-required, and closed-incomplete outcomes.
 Source attempts and packages have separate lifecycles through finalization,
 commit receipt, and safe-to-delete. `docs/interfaces/CONTROL_STATE_MACHINE.md`
-version 1.1.0 and its executable session/source schema slices are the accepted
-engineering interface baseline; transport/security binding, binary timing/IMU
-formats, and application implementation remain separately gated.
+version 1.2.0 and its executable session/source schema slices are the accepted
+engineering interface baseline. HC-IF-SEC-001 version 1.0.0 binds control WSS
+and transfer HTTPS to attended enrollment, mutual certificates, active trust,
+peer role/identity, resource authorization, and replay controls. Binary
+timing/IMU formats and application implementation remain separately gated.
 
 All protocol-required sources must be ready before standard start. Once recording begins, one source failure does not stop surviving sources. Android network/coordinator/preview loss does not stop local master recording. Maximum duration and local emergency stop provide fallback.
 

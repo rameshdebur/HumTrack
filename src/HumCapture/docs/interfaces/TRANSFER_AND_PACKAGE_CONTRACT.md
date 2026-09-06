@@ -1,7 +1,7 @@
 # HumCapture Transfer and Package Contract
 
 **Contract ID:** HC-IF-XFR-001  
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Accepted engineering baseline  
 **Date:** 2026-09-05
 
@@ -79,9 +79,11 @@ the entire selected artifact representation. The manifest SHA-256 remains the
 authoritative post-storage identity. Exact chunk size and concurrency are
 implementation policy and may not back-pressure capture.
 
-The OpenAPI security extension marks the I0.3B binding as mandatory and
-deferred. Absence of a concrete scheme in this document never permits an
-unauthenticated or unencrypted implementation.
+The OpenAPI global security requirement binds every operation to
+`HC-IF-SEC-001` mutual TLS. Authentication also requires exact peer role,
+identity, trust revision, certificate validity/revocation, TLS profile, and
+package ownership authorization. `401`, `403`, and `429` are explicit generic
+failure surfaces; no operation permits anonymous or plaintext access.
 
 ## 5. Checkpoints and restart
 
@@ -131,22 +133,24 @@ Android presents the same status for informed manual cleanup.
 
 ## 8. Compatibility and errors
 
-Schema/API version is `1.0.0`. Unknown required semantics, unsupported major
+Record schema version remains `1.0.0`; API version is `1.1.0` for the additive
+security binding. Unknown required semantics, unsupported major
 versions, and identity conflicts fail safely. Historical finalized packages are
 not rewritten. HTTP errors use `application/problem+json` with stable `code`
 and `retry_class`; machine behavior does not depend on free text.
 
 ## 9. Deferred decisions
 
-I0.3B: discovery/pairing credentials, authentication, authorization, TLS trust,
-replay protection, and privacy binding. Later controlled work: range sizing,
-parallelism, receipt signing/offline acknowledgement, repository transaction
-implementation, retention/access controls, and runtime/HIL/field validation.
+Later controlled work: range sizing, parallelism, receipt signing/offline
+acknowledgement, repository transaction implementation, retention/access
+controls, and runtime/hostile-network/HIL/field validation.
 
 ## 10. Normative technical references
 
 - OpenAPI Specification 3.1.2: https://spec.openapis.org/oas/v3.1.2.html
 - RFC 9110 HTTP Semantics: https://www.rfc-editor.org/rfc/rfc9110.html
 - RFC 9530 Digest Fields: https://www.rfc-editor.org/rfc/rfc9530.html
+- RFC 9852, New Protocols Using TLS Must Require TLS 1.3:
+  https://www.rfc-editor.org/rfc/rfc9852.html
 - RFC 8785 JSON Canonicalization Scheme: https://www.rfc-editor.org/rfc/rfc8785.html
 - RFC 6234 SHA algorithms: https://www.rfc-editor.org/rfc/rfc6234.html

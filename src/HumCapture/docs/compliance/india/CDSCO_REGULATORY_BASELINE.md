@@ -2,7 +2,7 @@
 
 **Document ID:** HC-REG-BASE-IND-001  
 **Status:** Preliminary applicability baseline; qualified review required  
-**Reviewed:** 2026-09-05
+**Reviewed:** 2026-09-06
 
 ## Primary jurisdiction
 
@@ -52,10 +52,12 @@ Document intended purpose, user, population, environment, information produced, 
   no additional medical purpose or system impact. HumCapture also performs
   acquisition, timing, verification, and conformance functions, so that
   illustration is not used here as a classification conclusion.
-- I0.3A adds engineering controls for data integrity, traceability, recoverable
-  connectivity loss, verification, and audit linkage. Authentication/TLS trust,
-  access control, encryption at rest, retention, consent/notice, and incident
-  controls remain open or deferred; no conformity claim follows from this work.
+- I0.3A/I0.3B add engineering contracts for integrity, traceability, recoverable
+  connectivity loss, attended peer enrollment, mutual TLS, authorization,
+  credential lifecycle, and redacted audit. Runtime security implementation,
+  hostile-network/penetration evidence, encryption at rest beyond credential
+  protection, retention, consent/notice, incident controls, controlled standards
+  editions, and qualified review remain open; no conformity claim follows.
 
 ## Implementation gate
 

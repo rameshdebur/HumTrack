@@ -5,6 +5,7 @@
 - `component-map.md` — component responsibilities and interfaces.
 - `../adr/` — durable accepted architecture decisions.
 - `../interfaces/` — normative contract specifications when created.
+- `SECURITY_THREAT_MODEL.md` — current network trust boundaries and abuse cases;
+  contract model only, not penetration evidence.
 
 Architecture documents describe accepted design. Interface schemas and tests become more authoritative for implemented contract behavior.
-

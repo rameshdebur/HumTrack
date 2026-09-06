@@ -1,8 +1,8 @@
 # HumCapture Software Requirements Baseline
 
 **Document ID:** HC-SRS-001  
-**Version:** 0.4  
-**Status:** Preliminary; session/protocol and source-control wire requirements are baselined and remaining interfaces are open
+**Version:** 0.5  
+**Status:** Preliminary; control, source-wire, transfer/package, and pairing/transport-security requirements are baselined; remaining interfaces are open
 
 This document establishes requirement families and mandatory system constraints. Detailed atomic requirements and verification IDs are completed before each implementation phase.
 
@@ -144,6 +144,30 @@ This document establishes requirement families and mandatory system constraints.
   dependency relationships and validation evidence. A controlled release SHALL
   be blocked when its SBOM is missing, stale, invalid, or not hash-bound to the
   release record.
+- **HC-SEC-REQ-007:** Android first pairing SHALL be locally attended and SHALL
+  bind a single-use secret and nonce of at least 128 bits, an exact bootstrap
+  SPKI SHA-256 fingerprint, stable peer identities, and a ten-minute-or-shorter
+  window; mDNS, an endpoint, or a short numeric code alone SHALL NOT grant trust.
+- **HC-SEC-REQ-008:** Android and coordinator private keys SHALL be generated and
+  retained in platform-protected storage; Android key material SHALL be
+  non-exportable and Windows material SHALL be protected for the current user,
+  not machine scope.
+- **HC-SEC-REQ-009:** Control WSS and transfer HTTPS SHALL require mutual X.509
+  authentication plus active trust, peer-role/UUID, certificate, and target
+  resource authorization under `HC-IF-SEC-001`.
+- **HC-SEC-REQ-010:** TLS 1.3 SHALL be supported and preferred; the Windows 10
+  TLS 1.2 profile SHALL require an explicit compatibility reason, ECDHE/ECDSA
+  with AEAD, and no silent downgrade. TLS 1.1 or earlier, plaintext, anonymous
+  suites, static RSA, CBC/RC4, and TLS 1.3 early data SHALL be rejected.
+- **HC-SEC-REQ-011:** Pairing SHALL be single-use, fail closed after at most five
+  failed proofs, apply increasing retry delay, and return non-enumerating errors.
+- **HC-SEC-REQ-012:** Certificate rotation, revoke, unpair, credential loss, and
+  re-enrollment SHALL be explicit, revisioned, and auditable; trust removal
+  SHALL NOT occur during capture/finalization or delete preserved packages.
+- **HC-SEC-REQ-013:** Security audit records SHALL exclude private keys,
+  bootstrap secrets/proofs, subject identity/demographics, and master content.
+- **HC-SEC-REQ-014:** Authentication/network failure SHALL preserve acquisition
+  and permit later authenticated or USB/MTP collection without false completion.
 
 - **HC-USE-REQ-001:** Normal capture SHALL be for a trained supervised operator.
 - **HC-USE-REQ-002:** Blocking failures and allowed deviations SHALL be distinguishable and actionable.
@@ -162,8 +186,10 @@ This document establishes requirement families and mandatory system constraints.
 
 ## Verification status
 
-HC-COORD-REQ-005–015, HC-DATA-REQ-006–008, and HC-TIME-REQ-006/007 have
-executable schema/conformance verification in HC-CTRL-TEST-001–019. This is
+HC-COORD-REQ-005–015, HC-DATA-REQ-006–008, HC-TIME-REQ-006/007, and
+HC-SEC-REQ-007–014 have
+executable schema/conformance verification in HC-CTRL-TEST-001–019 and
+HC-SEC-TEST-001–012. This is
 contract-source verification, not
 application implementation, runtime integration, HIL, field, clinical,
 regulatory, independent-review, or release evidence. All other implementation

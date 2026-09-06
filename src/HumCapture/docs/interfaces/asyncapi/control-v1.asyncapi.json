@@ -3,10 +3,22 @@
   "id": "urn:humtrack:humcapture:control:v1",
   "info": {
     "title": "HumCapture coordinator session control",
-    "version": "1.1.0",
-    "description": "Logical message contract for coordinator-authoritative session execution and authority-scoped source, readiness, custody, receipt, and quality records. Transport and authentication bindings are intentionally deferred."
+    "version": "1.2.0",
+    "description": "Coordinator-authoritative session execution and authority-scoped records over HC-IF-SEC-001 mutually authenticated WSS."
   },
   "defaultContentType": "application/json",
+  "servers": {
+    "pairedCaptureNode": {
+      "host": "{captureNode}",
+      "pathname": "/control/v1",
+      "protocol": "wss",
+      "description": "A previously enrolled Android capture node. Discovery data is never trusted as identity.",
+      "variables": { "captureNode": { "default": "capture-node.invalid" } },
+      "security": [{ "$ref": "#/components/securitySchemes/HumCaptureMutualTLS" }],
+      "x-humcapture-security-binding": "HC-IF-SEC-001@1.0.0",
+      "x-humcapture-tls-profiles": ["HC-TLS-13-001", "HC-TLS-12-W10-001"]
+    }
+  },
   "channels": {
     "sessionCommands": {
       "address": "humcapture/control/v1/sessions/{sessionId}/commands",
@@ -168,6 +180,12 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "HumCaptureMutualTLS": {
+        "type": "X509",
+        "description": "Mutual certificate authentication plus HC-IF-SEC-001 peer-role, identity, trust-revision, TLS-profile, and resource authorization."
+      }
+    },
     "messages": {
       "sessionCommand": {
         "name": "SessionCommand",

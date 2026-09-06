@@ -26,6 +26,10 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
 | HC-RISK-020 | An in-progress or historical session is silently reinterpreted under a changed protocol, source count, trial plan, or completion rule | Immutable content-hashed session snapshot, audited pre-capture supersession, post-capture change rejection, new session for material change, immutable completion/handoff revisions | HC-COORD-REQ-005–011, HC-DATA-REQ-006 |
 | HC-RISK-021 | Monotonic timestamps lose integer precision, cross boot/clock epochs, regress, or are replaced by UTC/arrival time, causing incorrect source state or temporal interpretation | Canonical decimal-string uint64 ticks, explicit clock identity/frequency/model/uncertainty, boot-scoped sequence, first-sample authority, range/continuity/restart rejection | HC-TIME-REQ-001–007, HC-COORD-REQ-013–015 |
 | HC-RISK-022 | Interrupted, stale, or method-divergent transfer combines incompatible bytes, falsely verifies a package, or commits partial data | Immutable manifest, strong validator/If-Range, transport and stored-artifact digests, exact ranges, staging boundary, common verifier, artifact-boundary USB restart, identity-conflict quarantine, receipt only after durable commit | HC-COORD-REQ-012, HC-DATA-REQ-001–004/007–012, HC-SEC-REQ-003/005 |
+| HC-RISK-023 | Rogue discovery, endpoint substitution, or bootstrap interception enrolls an unauthorized coordinator/device | Attended exact-fingerprint bootstrap, 128-bit secret/nonce, transcript binding, expiry, single use, lockout, generic errors | HC-SEC-REQ-001/007/011 |
+| HC-RISK-024 | Weak/downgraded transport, replay, or certificate-only authorization permits unauthorized control or package access | Mutual TLS, TLS 1.3 default, restricted logged Win10 profile, no early data, active trust/role/UUID/resource binding, command/request idempotency | HC-SEC-REQ-003/009/010/014 |
+| HC-RISK-025 | Lost, expired, revoked, or silently replaced key material leaves unauthorized persistent access or blocks safe recovery | Platform-protected keys, finite certificate lifetime, revisioned rotation/revocation/unpair, explicit re-enrollment, audit, no bypass | HC-SEC-REQ-008/012/013 |
+| HC-RISK-026 | Security retries/logging disclose subject or credential data or starve scientific acquisition | Redacted audit schema, no subject/secret discovery records, bounded proof attempts, acquisition priority, offline recovery | HC-SEC-REQ-002/004/011/013/014 |
 
 ## Current Phase 0 evidence notes
 
@@ -127,3 +131,11 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   idempotency/quarantine, and commit/receipt linkage. HC-XFR-TEST-001–011 pass
   source-level conformance. Runtime transport, storage durability, device loss,
   hostile-network, HIL, field, and independent review evidence remain open.
+- **HC-RISK-023–026 initial contract control, 2026-09-06:** ADR-0013 and
+  `HC-IF-SEC-001` version 1.0.0 define attended exact-fingerprint enrollment,
+  platform-protected peer keys, mutual TLS, role/resource authorization,
+  restricted Windows 10 compatibility, replay/lockout controls, revocation and
+  recovery, and redacted audit. HC-SEC-TEST-001–012 pass source-level
+  conformance. Runtime Keystore/DPAPI/TLS, hostile-network, penetration,
+  restart/power, HIL, field, independent, and qualified regulatory evidence
+  remain open.

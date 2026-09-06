@@ -11,7 +11,9 @@
 | Package manifest/verification/receipt | Source package and coordinator custody/audit records | Integrity, traceability, recovery and cleanup status | Included as appropriate | Uses subject UUID; no name/DOB; receipt created only after durable commit |
 | Timing/IMU/camera data | Source package/repository | Scientific context and quality | Included | Preserve provenance/units |
 | Operator Windows identity | Audit records | Accountability | Excluded by default unless required | No app password database in MVP |
-| Pairing keys/tokens | Protected platform credential storage | Authentication | Never | No ordinary logs |
+| Pairing private keys | Android Keystore; coordinator current-user protected credential store | Mutual authentication | Never | Non-exportable on Android; DPAPI CurrentUser on Windows; no ordinary logs |
+| Pairing QR secret/nonce | Android protected ephemeral memory and attended display; coordinator memory during enrollment | One-time bootstrap proof | Never | At least 128 bits, ten-minute maximum, single-use, never persisted or logged |
+| Public certificate fingerprints/trust state | Android and coordinator trust/audit records | Peer identity, authorization, revocation and recovery | Excluded by default | No subject identity or master content; lifecycle retention policy remains open |
 | Diagnostic logs | Device/coordinator | Troubleshooting | Redacted support bundle | Exclude PII and masters by default |
 | Quality/audit reports | Session repository/catalog | Conformance and provenance | Included as appropriate | Retention policy linked to session |
 

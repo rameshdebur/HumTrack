@@ -1,6 +1,8 @@
 # HumCapture transfer schemas v1
 
-These JSON Schema 2020-12 records implement `HC-IF-XFR-001` version `1.0.0`:
+These JSON Schema 2020-12 records retain schema version `1.0.0` under
+`HC-IF-XFR-001` version `1.1.0`; version 1.1.0 adds the compatible
+HC-IF-SEC-001 transport binding without changing package records:
 
 - `package-manifest.schema.json` identifies one immutable finalized package and
   every artifact it contains;

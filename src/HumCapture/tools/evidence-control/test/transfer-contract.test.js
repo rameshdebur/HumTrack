@@ -105,10 +105,10 @@ test("HC-XFR-TEST-001 transfer schemas compile and accept the complete valid bun
   assert.deepEqual(files, ["collection-checkpoint.schema.json", "package-manifest.schema.json", "package-verification-record.schema.json"]);
 });
 
-test("HC-XFR-TEST-002 OpenAPI is HTTPS pull, versioned 3.1.2, range-aware, and security-deferred without authorizing anonymous use", async () => {
+test("HC-XFR-TEST-002 OpenAPI is HTTPS pull, versioned 3.1.2, range-aware, and bound to mutual TLS", async () => {
   const api = await json(openApiPath);
   assert.equal(api.openapi, "3.1.2"); assert.match(api.servers[0].url, /^https:/);
-  assert.equal(api.security, undefined); assert.match(api["x-humcapture-security-binding"], /^REQUIRED_DEFERRED/);
+  assert.deepEqual(api.security, [{ HumCaptureMutualTLS: [] }]); assert.equal(api["x-humcapture-security-binding"], "HC-IF-SEC-001@1.0.0");
   const manifestRef = api.paths["/packages/{packageId}/manifest"].get.responses["200"].content["application/json"].schema.$ref;
   assert.deepEqual(await json(path.resolve(path.dirname(openApiPath), manifestRef)), await json(path.join(transferSchemas, "package-manifest.schema.json")));
   const artifact = api.paths["/packages/{packageId}/artifacts/{artifactId}"];

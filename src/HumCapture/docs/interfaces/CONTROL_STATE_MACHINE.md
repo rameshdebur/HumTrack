@@ -1,7 +1,7 @@
 # HumCapture Coordinator Control and State Contract
 
 **Document ID:** HC-IF-CTRL-001  
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Status:** Accepted engineering interface baseline; independent review and application implementation remain open  
 **Date:** 2026-09-05
 
@@ -14,10 +14,11 @@ package custody, quality, retakes, trial completion, and session/protocol
 execution.
 
 Versioned JSON Schemas, AsyncAPI operations, and conformance fixtures accompany
-this baseline for session/protocol and source-control records. Transport
-security details, transfer endpoints, media/package manifests, timing/IMU binary
-formats, repository transactions, complete repository layout, and application
-implementation remain separate controlled work.
+this baseline for session/protocol and source-control records. AsyncAPI binds
+control to mutually authenticated WSS under `HC-IF-SEC-001`. Transfer endpoints,
+media/package manifests, timing/IMU binary formats, repository transactions,
+complete repository layout, and application implementation remain separate
+controlled work.
 
 ## 2. Normative language and invariants
 
@@ -467,17 +468,18 @@ applicable.
 
 ## 16. Baseline and deferred implementation boundary
 
-I0.1A-I and I0.2A are approved as engineering control baselines. HC-IF-CTRL-001
-version 1.1.0 adds transport-neutral source command/acknowledgement,
+I0.1A-I, I0.2A, and I0.3B are approved as engineering contract baselines.
+HC-IF-CTRL-001 version 1.2.0 adds the mutually authenticated WSS server binding
+to the version 1.1.0 source command/acknowledgement,
 configuration, state/event, start-plan, readiness, custody/receipt, and quality
 records to the existing session/protocol slice. JSON Schema 2020-12 artifacts,
 AsyncAPI 3.1.0 operations, and conformance fixtures provide an
 implementation-independent oracle.
 
 This baseline does not authorize production coordinator, Android, UVC,
-repository, transfer, or UI feature implementation. Transport bindings,
-authentication payloads, transfer endpoints/range behavior, capture/media
-manifests, timing/IMU binary streams, repository transaction implementation,
-receipt signing, and application features require their named work items and
-reviews. Passing schema/conformance tests is software evidence only, not
+repository, transfer, or UI feature implementation. Runtime credential stores,
+TLS stacks, transfer services, capture/media, timing/IMU binary streams,
+repository transaction implementation, receipt signing, and application
+features require their named work items and reviews. Passing schema/conformance
+tests is software evidence only, not
 runtime, hardware, field, clinical, regulatory, or release evidence.

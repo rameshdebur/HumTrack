@@ -111,7 +111,7 @@ test("HC-CTRL-TEST-001 all control schemas compile as JSON Schema 2020-12", asyn
 test("HC-CTRL-TEST-002 AsyncAPI 3.1 document references every session message schema", async () => {
   const document = await json(path.join(humCaptureRoot, "docs", "interfaces", "asyncapi", "control-v1.asyncapi.json"));
   assert.equal(document.asyncapi, "3.1.0");
-  assert.equal(document.info.version, "1.1.0");
+  assert.equal(document.info.version, "1.2.0");
   const references = ["sessionCommand", "commandAcknowledgement", "sessionStateEvent", "sessionStateSnapshot"]
     .map((name) => document.components.messages[name].payload.schema.$ref).sort();
   assert.deepEqual(references, [

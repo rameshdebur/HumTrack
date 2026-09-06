@@ -2,12 +2,14 @@
   "openapi": "3.1.2",
   "info": {
     "title": "HumCapture finalized package transfer API",
-    "version": "1.0.0",
-    "description": "Coordinator-pulled transfer of immutable finalized packages. Authentication and trust binding are mandatory but are defined by I0.3B, not this document."
+    "version": "1.1.0",
+    "description": "Coordinator-pulled transfer of immutable finalized packages, bound to HC-IF-SEC-001 mutual TLS and resource authorization."
   },
   "servers": [{ "url": "https://{captureNode}/v1", "variables": { "captureNode": { "default": "capture-node.invalid" } } }],
   "x-humcapture-contract-id": "HC-IF-XFR-001",
-  "x-humcapture-security-binding": "REQUIRED_DEFERRED_TO_I0.3B; this contract does not permit unauthenticated deployment",
+  "x-humcapture-security-binding": "HC-IF-SEC-001@1.0.0",
+  "x-humcapture-tls-profiles": ["HC-TLS-13-001", "HC-TLS-12-W10-001"],
+  "security": [{ "HumCaptureMutualTLS": [] }],
   "paths": {
     "/packages/{packageId}/manifest": {
       "get": {
@@ -25,9 +27,12 @@
             },
             "content": { "application/json": { "schema": { "$ref": "../schemas/transfer/v1/package-manifest.schema.json" } } }
           },
+          "401": { "$ref": "#/components/responses/Problem" },
+          "403": { "$ref": "#/components/responses/Problem" },
           "404": { "$ref": "#/components/responses/Problem" },
           "409": { "$ref": "#/components/responses/Problem" },
-          "426": { "$ref": "#/components/responses/Problem" }
+          "426": { "$ref": "#/components/responses/Problem" },
+          "429": { "$ref": "#/components/responses/Problem" }
         }
       }
     },
@@ -46,8 +51,11 @@
               "Accept-Ranges": { "$ref": "#/components/headers/AcceptRanges" }
             }
           },
+          "401": { "$ref": "#/components/responses/Problem" },
+          "403": { "$ref": "#/components/responses/Problem" },
           "404": { "$ref": "#/components/responses/Problem" },
-          "409": { "$ref": "#/components/responses/Problem" }
+          "409": { "$ref": "#/components/responses/Problem" },
+          "429": { "$ref": "#/components/responses/Problem" }
         }
       },
       "get": {
@@ -83,15 +91,24 @@
             },
             "content": { "application/octet-stream": { "schema": { "type": "string", "format": "binary" } } }
           },
+          "401": { "$ref": "#/components/responses/Problem" },
+          "403": { "$ref": "#/components/responses/Problem" },
           "404": { "$ref": "#/components/responses/Problem" },
           "409": { "$ref": "#/components/responses/Problem" },
           "416": { "$ref": "#/components/responses/Problem" },
-          "426": { "$ref": "#/components/responses/Problem" }
+          "426": { "$ref": "#/components/responses/Problem" },
+          "429": { "$ref": "#/components/responses/Problem" }
         }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "HumCaptureMutualTLS": {
+        "type": "mutualTLS",
+        "description": "Both peers present enrolled X.509 certificates and pass HC-IF-SEC-001 chain, role, peer-ID, trust-revision, validity, revocation, TLS-profile, and package-ownership authorization."
+      }
+    },
     "parameters": {
       "packageId": { "name": "packageId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
       "artifactId": { "name": "artifactId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
