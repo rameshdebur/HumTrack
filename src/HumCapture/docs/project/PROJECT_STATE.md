@@ -69,6 +69,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Verification report HC-VR-I0-3B-001 records 54/54 contract/evidence tests,
   55/55 capability regressions, 6/6 SBOM policy tests, both API validators,
   JSON parsing, diff checks, and explicit non-runtime limitations.
+  Implementation commit `2af6761beed6e0aaaba5f0348ba3d991678b4b37` is
+  remotely verified by successful HumCapture CI runs `34037481492` and
+  `34037479975`.
 
 ## Architecture summary
 

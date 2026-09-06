@@ -81,6 +81,8 @@ Local verification on 2026-09-06:
   advisory `info-license` excluded;
 - AsyncAPI CLI 6.0.2 validates the control document and references;
 - 59 non-dependency JSON documents parse and `git diff --check` passes.
+- implementation commit `2af6761beed6e0aaaba5f0348ba3d991678b4b37` is
+  pushed; exact-SHA HumCapture CI runs `34037481492` and `34037479975` pass.
 
 Detailed evidence and explicit limitations are recorded in
 `docs/verification/I0_3B_SECURITY_CONTRACT_REPORT.md`.
@@ -88,7 +90,8 @@ Detailed evidence and explicit limitations are recorded in
 ## Review decision
 
 - Engineering design: explicitly approved by project owner.
-- Engineering baseline: approved by project owner; pending commit and exact-SHA CI confirmation.
+- Engineering baseline: approved by project owner; source verification and
+  exact-SHA CI confirmed for the implementation commit.
 - Independent review: pending.
 - Controlled release: blocked.
 - Permitted claim: contract-source evidence only after verification passes.

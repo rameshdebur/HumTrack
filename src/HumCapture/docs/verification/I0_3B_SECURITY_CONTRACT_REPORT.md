@@ -4,6 +4,7 @@
 **Tags:** I0.3B | SECURITY | PAIRING | MUTUAL-TLS | AUTHORIZATION | RECOVERY | SOURCE-VERIFICATION  
 **Date:** 2026-09-06  
 **Baseline before change:** `c34bd7ac5cae972e150249b2bc8ac4245c7d7aee`  
+**Verified implementation commit:** `2af6761beed6e0aaaba5f0348ba3d991678b4b37`  
 **Environment:** Windows; signed-in account; Node.js contract harness
 
 ## Objective
@@ -43,6 +44,8 @@ Regression and supporting checks:
 - AsyncAPI CLI 6.0.2: document and referenced documents valid with no governance
   issue reported; CLI emitted only configuration/deprecation/telemetry warnings.
 - 59 non-`node_modules` JSON files parse; `git diff --check` passes.
+- exact-commit HumCapture CI: GitHub Actions runs `34037481492` and
+  `34037479975` both completed successfully for `2af6761beed6e0aaaba5f0348ba3d991678b4b37`.
 
 ## Defects found and disposition
 
