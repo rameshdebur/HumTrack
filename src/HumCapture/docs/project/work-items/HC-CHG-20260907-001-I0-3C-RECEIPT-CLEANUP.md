@@ -2,7 +2,7 @@
 
 **Change ID:** HC-CHG-20260907-001  
 **Title:** Baseline I0.3C receipt acknowledgement and operator cleanup contract  
-**State:** In review  
+**State:** Engineering baseline verified; independent review pending  
 **Change owner:** Signed-in project owner / System Architect  
 **Component owner:** Signed-in project owner / System Architect  
 **Verification owner:** Signed-in project owner / Engineering verification  
@@ -74,16 +74,20 @@ Detailed current commands/results and limitations are recorded in
 ## Review decision
 
 - Engineering design: explicitly approved by project owner.
-- Engineering baseline: pending final local and exact-SHA CI verification.
+- Engineering baseline: approved by project owner; local verification and exact
+  implementation-SHA CI passed.
 - Independent review: pending.
 - Controlled release: blocked.
 - Permitted claim: contract-source evidence only after verification passes.
 
-Local verification on 2026-09-07:
+## Local verification on 2026-09-07
 
 - evidence-control: 64/64 tests pass, including HC-RCP-TEST-001–010;
 - capability-evidence regression: 55/55 tests pass;
 - SBOM policy: 6/6 tests and current 20-component/21-node inventory validation pass;
 - both production dependency audits report zero vulnerabilities;
 - AsyncAPI CLI 6.0.2 accepts the document and referenced schemas;
-- 64 non-generated JSON documents parse and `git diff --check` passes.
+- 64 non-generated JSON documents parse and `git diff --check` passes;
+- implementation commit `1744443045295e741cf8db884da9006d337c7176` is
+  pushed; exact-SHA HumCapture CI push run `34093701024` and PR run
+  `34093704064` pass, including managed and native camera build/self-tests.

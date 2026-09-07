@@ -2,7 +2,7 @@
 
 **Report ID:** HC-VR-I0-3C-001  
 **Date:** 2026-09-07  
-**Status:** Local source-level verification passed; exact-SHA CI pending
+**Status:** Source-level verification and exact implementation-SHA CI passed
 
 ## Scope
 
@@ -34,12 +34,12 @@ loss, HIL, field workflow, independent review, regulatory review, or release.
 | Capability-evidence regression | 55/55 pass |
 | SBOM policy and dependency audit | 6/6 pass; retained 20-component/21-node SBOM validates; both production lockfile audits report zero vulnerabilities; no dependency manifest changed |
 | JSON parse, diff and API validation | 64 non-generated JSON documents parse; `git diff --check` passes; AsyncAPI CLI 6.0.2 accepts the document and references |
-| Exact implementation SHA CI | Pending commit/push |
+| Exact implementation SHA CI | Commit `1744443045295e741cf8db884da9006d337c7176`; push run `34093701024` and PR run `34093704064` passed, including managed and native camera builds/self-tests |
 
 ## Evidence classification
 
 - Source implemented: yes.
-- Build/static checks: passed for the contract/static scope; native/managed build regression remains delegated to CI.
+- Build/static checks: passed locally for the contract/static scope; managed and native build/self-test regressions passed in exact-SHA CI.
 - Automated behavior: 64/64 evidence-control and 55/55 capability tests passed.
 - Runtime integration: not verified.
 - Hardware-in-the-loop: not verified.

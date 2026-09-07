@@ -83,6 +83,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Local verification passes 64/64 evidence-control tests, 55/55 capability
   regressions, 6/6 SBOM policy tests, current SBOM validation, both production
   dependency audits, AsyncAPI CLI validation, JSON parsing, and diff checks.
+  Implementation commit `1744443045295e741cf8db884da9006d337c7176` is
+  remotely verified by successful HumCapture CI push run `34093701024` and PR
+  run `34093704064`, including managed and native camera build/self-tests.
   Android/coordinator persistence/UI/deletion, restart/power, HIL, field,
   independent review and qualified regulatory review remain open.
 
