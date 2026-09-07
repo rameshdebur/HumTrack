@@ -408,7 +408,115 @@ export function validateCommitReceipt(custody, receipt) {
   if (!["COMMITTED", "RECEIPT_PENDING", "RECEIPT_ACKNOWLEDGED", "SAFE_TO_DELETE", "DELETED_FROM_SOURCE", "RECEIPT_STATUS_UNKNOWN"].includes(custody.state)) {
     reject("RECEIPT_BEFORE_COMMIT", "A receipt can only bind an already committed package.");
   }
+  if (receipt.receipt_revision !== 1) reject("RECEIPT_REVISION_INVALID", "An exact commit/package hash has one immutable receipt at revision 1.");
+  if (!receipt.device_id) reject("RECEIPT_DEVICE_REQUIRED", "A receipt must bind the exact capture device.");
+  if (receipt.supersedes_receipt_id !== undefined) reject("RECEIPT_SUPERSESSION_FORBIDDEN", "Commit receipts are immutable and cannot supersede another receipt.");
   if (custody.receipt_id && custody.receipt_id !== receipt.receipt_id) reject("RECEIPT_ID_CONFLICT", "Custody references a different receipt.");
+  return true;
+}
+
+const receiptIdentityKeys = [
+  "receipt_id", "receipt_revision", "commit_id", "issued_by_coordinator_id", "device_id",
+  "session_id", "trial_id", "source_id", "capture_attempt_id", "package_id",
+  "package_content_sha256", "artifact_set_sha256", "repository_relative_path", "issued_utc"
+];
+
+export function classifyCommitReceiptReplay(existingReceipts, incoming) {
+  const byReceipt = existingReceipts.find((item) => item.receipt_id === incoming.receipt_id);
+  const byCommit = existingReceipts.find((item) => item.commit_id === incoming.commit_id);
+  const byPackageHash = existingReceipts.find((item) => item.package_id === incoming.package_id
+    && item.package_content_sha256 === incoming.package_content_sha256);
+  const existing = byReceipt ?? byCommit ?? byPackageHash;
+  if (!existing) return "NEW";
+  const identical = receiptIdentityKeys.every((key) => existing[key] === incoming[key]);
+  if (identical) return "IDEMPOTENT_REPLAY";
+  reject("RECEIPT_IMMUTABILITY_CONFLICT", "Receipt, commit, or package/hash identity was reused with different content; recovery is required and source files must be retained.");
+}
+
+const receiptAckIdentityKeys = ["receipt_id", "receipt_revision", "device_id", "source_id", "package_id", "package_content_sha256"];
+
+export function validateReceiptAcknowledgement(receipt, acknowledgement, localPackage, priorAcknowledgement) {
+  if (acknowledgement.result === "REJECTED_MISMATCH") {
+    const receiptMatches = receiptAckIdentityKeys.every((key) => receipt[key] === acknowledgement[key]);
+    const packageMatches = ["device_id", "source_id", "package_id", "package_content_sha256"].every((key) => receipt[key] === localPackage[key]);
+    if (acknowledgement.receipt_durably_stored !== false || (receiptMatches && packageMatches)) {
+      reject("RECEIPT_ACK_FALSE_MISMATCH", "Mismatch rejection must reflect a real identity/hash mismatch and must not store the receipt.");
+    }
+    return "RETAIN_AND_RECOVER";
+  }
+  sameIdentity(receipt, acknowledgement, receiptAckIdentityKeys, "RECEIPT_ACK_IDENTITY_MISMATCH");
+  sameIdentity(receipt, localPackage, ["device_id", "source_id", "package_id", "package_content_sha256"], "RECEIPT_LOCAL_PACKAGE_MISMATCH");
+  if (acknowledgement.receipt_durably_stored !== true) reject("RECEIPT_ACK_NOT_DURABLE", "Acceptance cannot be emitted until the exact receipt is durably stored.");
+  if (acknowledgement.result === "ALREADY_ACKNOWLEDGED") {
+    if (!priorAcknowledgement) reject("RECEIPT_ACK_HISTORY_MISSING", "ALREADY_ACKNOWLEDGED requires a durable prior acknowledgement.");
+    sameIdentity(priorAcknowledgement, acknowledgement, receiptAckIdentityKeys, "RECEIPT_ACK_REPLAY_CONFLICT");
+  } else if (priorAcknowledgement) {
+    reject("RECEIPT_ACK_DUPLICATE_AS_NEW", "A durable prior acknowledgement must replay as ALREADY_ACKNOWLEDGED.");
+  }
+  return "RECEIPT_ACKNOWLEDGED";
+}
+
+export function validateReceiptStatusReconciliation(receipt, query, response) {
+  sameIdentity(receipt, query, receiptAckIdentityKeys, "RECEIPT_QUERY_IDENTITY_MISMATCH");
+  sameIdentity(query, response, ["query_id", ...receiptAckIdentityKeys], "RECEIPT_STATUS_IDENTITY_MISMATCH");
+  if (response.status === "NOT_STORED") return "RESEND_IDENTICAL_RECEIPT";
+  if (response.status === "STORED_ACK_PENDING") return "REQUEST_SAME_ACKNOWLEDGEMENT";
+  if (response.status === "ACKNOWLEDGED") return "RECONCILE_EXISTING_ACKNOWLEDGEMENT";
+  reject("RECEIPT_STATUS_UNKNOWN", "Unknown receipt status requires recovery with source files retained.");
+}
+
+function indexedBy(values, key, code) {
+  unique(values.map((value) => value[key]), code, key);
+  return new Map(values.map((value) => [value[key], value]));
+}
+
+export function validateCleanupRequest(request, receipts, acknowledgements, runtime = {}) {
+  if (request.operator_confirmation !== true) reject("CLEANUP_CONFIRMATION_REQUIRED", "Cleanup requires one explicit informed operator confirmation.");
+  const receiptById = indexedBy(receipts, "receipt_id", "DUPLICATE_RECEIPT_ID");
+  const acknowledgementById = indexedBy(acknowledgements, "acknowledgement_id", "DUPLICATE_ACKNOWLEDGEMENT_ID");
+  unique(request.packages.map((item) => item.package_id), "DUPLICATE_CLEANUP_PACKAGE", "Cleanup package IDs");
+  const active = new Set(runtime.activePackageIds ?? []);
+  const offlineOnly = new Set(runtime.offlineOnlyPackageIds ?? []);
+  for (const selected of request.packages) {
+    if (active.has(selected.package_id)) reject("CLEANUP_PACKAGE_ACTIVE", "Capture, finalization, transfer, or recovery is active for a selected package.");
+    if (offlineOnly.has(selected.package_id)) reject("CLEANUP_OFFLINE_AUTOMATION_FORBIDDEN", "USB/MTP-only completion supports informed manual cleanup, not automatic deletion authority.");
+    const receipt = receiptById.get(selected.receipt_id);
+    const acknowledgement = acknowledgementById.get(selected.acknowledgement_id);
+    if (!receipt || !acknowledgement) reject("CLEANUP_DURABLE_EVIDENCE_MISSING", "Each selected package requires its durable receipt and acknowledgement.");
+    sameIdentity(receipt, selected, ["receipt_id", "receipt_revision", "source_id", "package_id", "package_content_sha256"], "CLEANUP_RECEIPT_MISMATCH");
+    sameIdentity(acknowledgement, selected, ["acknowledgement_id", "receipt_id", "receipt_revision", "source_id", "package_id", "package_content_sha256"], "CLEANUP_ACKNOWLEDGEMENT_MISMATCH");
+    if (receipt.device_id !== request.device_id || acknowledgement.device_id !== request.device_id) reject("CLEANUP_DEVICE_MISMATCH", "Cleanup request does not bind the receipt device.");
+    if (!["ACCEPTED", "ALREADY_ACKNOWLEDGED"].includes(acknowledgement.result)) reject("CLEANUP_RECEIPT_NOT_ACKNOWLEDGED", "A rejected receipt cannot authorize cleanup.");
+  }
+  return true;
+}
+
+export function validateCleanupResult(request, result) {
+  sameIdentity(request, result, ["cleanup_request_id", "device_id"], "CLEANUP_RESULT_REQUEST_MISMATCH");
+  const requested = indexedBy(request.packages, "package_id", "DUPLICATE_CLEANUP_PACKAGE");
+  const reported = indexedBy(result.packages, "package_id", "DUPLICATE_CLEANUP_RESULT");
+  if (requested.size !== reported.size) reject("CLEANUP_RESULT_INCOMPLETE", "Cleanup result must report every requested package exactly once.");
+  for (const [packageId, selected] of requested) {
+    const outcome = reported.get(packageId);
+    if (!outcome) reject("CLEANUP_RESULT_INCOMPLETE", "A requested package has no cleanup result.");
+    sameIdentity(selected, outcome, ["receipt_id", "source_id", "package_id", "package_content_sha256"], "CLEANUP_RESULT_IDENTITY_MISMATCH");
+    const remaining = outcome.remaining_artifact_relative_paths;
+    if (outcome.result === "DELETED" && remaining.length !== 0) reject("CLEANUP_FALSE_DELETED", "DELETED requires no remaining artifacts.");
+    if (outcome.result === "PARTIAL_DELETE" && remaining.length === 0) reject("CLEANUP_PARTIAL_WITHOUT_REMAINDER", "PARTIAL_DELETE must name every remaining artifact.");
+  }
+  return true;
+}
+
+export function validateCleanupRetry(previousRequest, previousResult, retryRequest) {
+  if (retryRequest.packages.length !== 1) reject("CLEANUP_RETRY_SCOPE_INVALID", "A partial retry must target one reconciled package.");
+  const selected = retryRequest.packages[0];
+  const priorRequest = previousRequest.packages.find((item) => item.package_id === selected.package_id);
+  const priorResult = previousResult.packages.find((item) => item.package_id === selected.package_id);
+  if (!priorRequest || !priorResult || priorResult.result !== "PARTIAL_DELETE") reject("CLEANUP_RETRY_NOT_PARTIAL", "Only a prior partial deletion may be retried.");
+  sameIdentity(priorRequest, selected, ["receipt_id", "receipt_revision", "acknowledgement_id", "source_id", "package_id", "package_content_sha256"], "CLEANUP_RETRY_IDENTITY_MISMATCH");
+  const expected = [...priorResult.remaining_artifact_relative_paths].sort();
+  const actual = [...selected.artifact_relative_paths].sort();
+  if (canonical(expected) !== canonical(actual)) reject("CLEANUP_RETRY_SET_MISMATCH", "Retry may target only the reconciled remaining artifact set.");
   return true;
 }
 

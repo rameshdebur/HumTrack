@@ -3,10 +3,12 @@
 ## Current interface work
 
 `CONTROL_STATE_MACHINE.md` is accepted engineering interface baseline
-`HC-IF-CTRL-001` version `1.2.0`. It consolidates explicitly accepted I0.1A-I
+`HC-IF-CTRL-001` version `1.3.0`. It consolidates explicitly accepted I0.1A-I
 and I0.2A decisions. ADR-0010 records immutable session protocol snapshots;
 ADR-0011 records exact JSON monotonic-time representation. ADR-0012 and
 `TRANSFER_AND_PACKAGE_CONTRACT.md` baseline `HC-IF-XFR-001` version `1.1.0`.
+ADR-0014 and `RECEIPT_ACKNOWLEDGEMENT_AND_CLEANUP_CONTRACT.md` baseline
+`HC-IF-RCP-001` version `1.0.0`.
 ADR-0013 and `PAIRING_AND_TRANSPORT_SECURITY_CONTRACT.md` baseline
 `HC-IF-SEC-001` version `1.0.0`.
 
@@ -16,7 +18,7 @@ The executable transport-neutral control slice is:
   bound to mutually authenticated WSS;
 - `schemas/control/v1/` — JSON Schema 2020-12 session/protocol plus source
   command, acknowledgement, configuration, state/event, start-plan, readiness,
-  custody/receipt, quality, completion, and handoff records; and
+  custody/receipt/acknowledgement/status/cleanup, quality, completion, and handoff records; and
 - `tools/evidence-control/fixtures/control/` plus HC-CTRL-TEST-001–019 — valid,
   invalid, cross-record, precision, replay/restart, and exhaustive
   forbidden-transition conformance.
@@ -41,7 +43,7 @@ feature work, complete and review the remaining contracts:
 |---|---|---|
 | Timing stream | Binary specification and test vectors | Ordering/discontinuity/round-trip parser tests |
 | IMU stream | Binary specification and test vectors | Timestamp/coordinate/provenance tests |
-| Completion receipt signing and offline conveyance | Signing/security rules | Replay/idempotency/identity and USB recovery tests |
+| Receipt signing and trusted offline acknowledgement | Future signing/security rules | Existing replay/idempotency/identity and USB manual-boundary regression tests |
 | Quality implementation profile | Protocol-specific rules | Threshold/versioning and reassessment tests |
 | Handoff manifest | JSON Schema | Relative-path/hash/package reconstruction tests |
 

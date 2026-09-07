@@ -298,9 +298,9 @@ test("HC-CTRL-TEST-016 AsyncAPI exposes every approved I0.2A source record", asy
     await readFile(path.resolve(humCaptureRoot, "docs", "interfaces", "asyncapi", reference));
   }
   assert.deepEqual(Object.keys(document.operations).filter((name) => /Source|StartPlan|Readiness|Custody|Receipt|Quality/.test(name)).sort(), [
-    "receivePackageCustodyRecord", "receiveQualityAssessment", "receiveReadinessSnapshot",
+    "receivePackageCustodyRecord", "receiveQualityAssessment", "receiveReadinessSnapshot", "receiveReceiptAcknowledgement", "receiveReceiptStatusResponse",
     "receiveSourceCommandAcknowledgement", "receiveSourceStateEvent", "receiveSourceStateSnapshot",
-    "sendPackageCommitReceipt", "sendSourceCommand", "sendSourceConfiguration", "sendStartPlan"
+    "sendPackageCommitReceipt", "sendReceiptStatusQuery", "sendSourceCommand", "sendSourceConfiguration", "sendStartPlan"
   ]);
 });
 

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/cleanup-request.schema.json",
+  "title": "HumCapture operator-confirmed cleanup request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "cleanup_request_id", "device_id", "operator_confirmation", "operator_event_id", "packages", "requested_utc"],
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "cleanup_request_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "device_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "operator_confirmation": { "const": true },
+    "operator_event_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "packages": {
+      "type": "array", "minItems": 1, "maxItems": 100, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["receipt_id", "receipt_revision", "acknowledgement_id", "source_id", "package_id", "package_content_sha256", "package_size_bytes", "capture_finalized_utc", "committed_utc", "artifact_relative_paths"],
+        "properties": {
+          "receipt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "receipt_revision": { "const": 1 },
+          "acknowledgement_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "package_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "package_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+          "package_size_bytes": { "$ref": "common.schema.json#/$defs/unsignedDecimal64" },
+          "capture_finalized_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" },
+          "committed_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" },
+          "artifact_relative_paths": {
+            "type": "array", "minItems": 1, "maxItems": 10000, "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._ -]+(?:/[A-Za-z0-9._ -]+)*$", "maxLength": 1024 }
+          }
+        }
+      }
+    },
+    "requested_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  }
+}

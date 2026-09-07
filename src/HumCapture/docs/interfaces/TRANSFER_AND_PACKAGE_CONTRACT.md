@@ -120,7 +120,8 @@ staging and cannot become the subject repository destination.
 Only `VERIFIED` may enter repository commit. The custody record binds the
 verification record and commit identity. A receipt binds the committed package
 and artifact-set hashes and is issued only after durable transactional commit.
-Receipt signing and exact transaction mechanics remain deferred.
+Receipt acknowledgement and cleanup are defined by HC-IF-RCP-001. Receipt
+signing and exact repository transaction mechanics remain deferred.
 
 ## 7. Cleanup and degraded operation
 
@@ -141,8 +142,8 @@ and `retry_class`; machine behavior does not depend on free text.
 
 ## 9. Deferred decisions
 
-Later controlled work: range sizing, parallelism, receipt signing/offline
-acknowledgement, repository transaction implementation, retention/access
+Later controlled work: range sizing, parallelism, receipt signing/trusted
+offline acknowledgement, repository transaction implementation, retention/access
 controls, and runtime/hostile-network/HIL/field validation.
 
 ## 10. Normative technical references

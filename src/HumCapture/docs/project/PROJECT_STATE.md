@@ -1,8 +1,8 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A and I0.3B are accepted; control, transfer/package, and security contracts pass source-level conformance  
-**Tags:** I0.3B | SECURITY | ATTENDED-PAIRING | MUTUAL-TLS | AUTHORIZATION | KEY-LIFECYCLE | RECOVERY | CONTRACT  
-**Last meaningful update:** 2026-09-06
+**Status:** I0.1A-I, I0.2A, and I0.3A-C are accepted; control, transfer/package, security, and receipt/cleanup contracts pass source-level conformance  
+**Tags:** I0.3C | RECEIPT | ACKNOWLEDGEMENT | OPERATOR-CLEANUP | RECOVERY | CONTRACT  
+**Last meaningful update:** 2026-09-07
 
 ## Objective
 
@@ -32,13 +32,13 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   available and will not be reconstructed. P0.2 qualification remains open.
 - I0.1/I0.2A coordinator control/state contract: decisions A-I and the
   source-message wire baseline were explicitly accepted in version `1.1.0`;
-  I0.3B adds the compatible WSS security binding in `HC-IF-CTRL-001` version
-  `1.2.0`.
+  I0.3B added the compatible WSS security binding in `HC-IF-CTRL-001` version
+  `1.2.0`, and I0.3C advances it additively to `1.3.0`.
   ADR-0009 separates workflow, source-attempt, package-custody, and health
   authorities; ADR-0010 fixes immutable session protocol snapshots. The
-  executable control slice contains 18 JSON Schema 2020-12 files, an AsyncAPI
-  3.1.0 logical interface, valid/invalid fixtures, and 19 named conformance
-  tests. All 31 tests in the existing evidence-control harness pass, including
+  executable control slice now contains 23 JSON Schema 2020-12 files, an AsyncAPI
+  3.1.0 logical interface, valid/invalid fixtures, and 29 named control/receipt
+  conformance tests. The current evidence-control harness passes, including
   rejection of 553 session, 2,799 source-command, 241 source-event, and 299
   package-custody forbidden combinations. ADR-0011 fixes exact decimal-string
   uint64 monotonic ticks, clock/frequency/model identity, uncertainty, and RFC
@@ -62,7 +62,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Keystore and Windows DPAPI CurrentUser custody, mutual TLS, active
   trust/role/resource authorization, TLS 1.3 default, restricted logged Windows
   10 TLS 1.2 compatibility, replay/lockout, rotation/revocation/re-enrollment,
-  and redacted audit. Control AsyncAPI is version 1.2.0 and transfer OpenAPI is
+  and redacted audit. Control AsyncAPI is now version 1.3.0 and transfer OpenAPI is
   version 1.1.0. Four security schemas and HC-SEC-TEST-001–012 pass locally.
   Runtime credential/TLS implementation, hostile-network/penetration, HIL,
   field, independent and qualified regulatory review remain open.
@@ -72,6 +72,19 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Implementation commit `2af6761beed6e0aaaba5f0348ba3d991678b4b37` is
   remotely verified by successful HumCapture CI runs `34037481492` and
   `34037479975`.
+- I0.3C is accepted as `HC-IF-RCP-001` version `1.0.0`; ADR-0014 keeps
+  durable coordinator commit as acquisition completion authority and makes
+  receipt acknowledgement a cleanup gate only. HC-IF-CTRL-001 version 1.3.0
+  adds durable receipt acknowledgement, status query/reconciliation, explicit
+  operator cleanup and truthful per-package result messages. One refined
+  receipt plus five new JSON schemas and HC-RCP-TEST-001–010 cover immutable
+  replay/conflict, lost acknowledgement, active-operation exclusion, manual
+  USB/MTP fallback, partial remainder-only retry and record minimization.
+  Local verification passes 64/64 evidence-control tests, 55/55 capability
+  regressions, 6/6 SBOM policy tests, current SBOM validation, both production
+  dependency audits, AsyncAPI CLI validation, JSON parsing, and diff checks.
+  Android/coordinator persistence/UI/deletion, restart/power, HIL, field,
+  independent review and qualified regulatory review remain open.
 
 ## Architecture summary
 
@@ -88,7 +101,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 - Independent review of the control/state-machine, transfer, and security
   schemas/bindings.
-- Receipt-signing/offline-conveyance rules.
+- Receipt signing and any future trusted offline acknowledgement mechanism.
 - Timing and IMU binary formats with test vectors.
 - Repository transaction and compatibility rules.
 
@@ -203,8 +216,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   in the existing snapshot/evidence vault; the CI-aware SBOM is not
   retroactively release-bound.
 - Laptop-hotspot discovery, timing, and throughput require named-hardware validation.
-- Exact timing/IMU binary formats, transport/security binding, schema
-  compatibility window, receipt signing, and offline USB receipt-conveyance
+- Exact timing/IMU binary formats, schema compatibility window, receipt
+  signing, and any future trusted offline USB receipt-conveyance
   mechanism remain open.
 - Evidence backup/restore, retention approval, independent signing/review,
   access audit, and any required WORM/eQMS integration remain open.
@@ -231,6 +244,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
    rejected path-2 combination without fresh evidence.
 6. Obtain 1080p60 UVC hardware and capture a complete prospective evidence
    package before normative or concurrent-camera qualification.
-7. Independently review HC-IF-CTRL-001 version 1.2.0, HC-IF-XFR-001 version
-   1.1.0, and HC-IF-SEC-001 version 1.0.0 without beginning application features.
+7. Independently review HC-IF-CTRL-001 version 1.3.0, HC-IF-XFR-001 version
+   1.1.0, HC-IF-SEC-001 version 1.0.0, and HC-IF-RCP-001 version 1.0.0 without
+   beginning application features.
 8. Do not begin production application features until the governance gate explicitly permits the named phase.

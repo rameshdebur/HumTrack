@@ -194,7 +194,7 @@ test("HC-XFR-TEST-010 commit receipt requires exact full verification and commit
     package_id: value.package_id, package_content_sha256: value.package_content_sha256, state: "COMMITTED", authority: "REPOSITORY", collection_method: "HTTPS",
     verification_record_id: verified.verification_record_id, commit_id: "60000000-0000-4000-8000-000000000002", repository_relative_path: "subjects/S1/session/package", recorded_utc: "2026-09-05T10:04:00.000Z" };
   const receipt = { schema_version: "1.0.0", receipt_id: "60000000-0000-4000-8000-000000000003", receipt_revision: 1, commit_id: custody.commit_id,
-    session_id: value.session_id, trial_id: value.trial_id, source_id: value.source_id, capture_attempt_id: value.capture_attempt_id, package_id: value.package_id,
+    session_id: value.session_id, trial_id: value.trial_id, device_id: "60000000-0000-4000-8000-000000000005", source_id: value.source_id, capture_attempt_id: value.capture_attempt_id, package_id: value.package_id,
     package_content_sha256: value.package_content_sha256, artifact_set_sha256: value.artifact_set_sha256, repository_relative_path: custody.repository_relative_path,
     issued_by_coordinator_id: "60000000-0000-4000-8000-000000000004", issued_utc: "2026-09-05T10:05:00.000Z" };
   assert.equal(validateVerifiedCommit(value, verified, custody, receipt), true);

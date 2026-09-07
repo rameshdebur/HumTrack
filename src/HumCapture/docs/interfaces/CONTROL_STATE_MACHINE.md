@@ -1,7 +1,7 @@
 # HumCapture Coordinator Control and State Contract
 
 **Document ID:** HC-IF-CTRL-001  
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Status:** Accepted engineering interface baseline; independent review and application implementation remain open  
 **Date:** 2026-09-05
 
@@ -394,9 +394,10 @@ authoritative subject/session/trial destination, catalog, commit journal, and
 verification record. Only `COMMITTED` counts toward completion.
 
 A hash-bound idempotent receipt is created only after durable commit. Receipt
-loss produces `RECEIPT_STATUS_UNKNOWN` and replay after repository verification,
-not a second commit. Only a valid receipt for the exact package/artifact set
-makes Android data `SAFE_TO_DELETE`.
+loss produces `RECEIPT_STATUS_UNKNOWN` and exact status reconciliation/replay,
+not a second commit. Durable Android acknowledgement of the exact receipt makes
+data eligible for an explicit transition to `SAFE_TO_DELETE`; it does not
+delete files or determine session completion.
 
 MVP cleanup is never silent. One informed trained-operator confirmation may be
 made through the coordinator; Android revalidates the receipt before deletion.
@@ -468,9 +469,11 @@ applicable.
 
 ## 16. Baseline and deferred implementation boundary
 
-I0.1A-I, I0.2A, and I0.3B are approved as engineering contract baselines.
-HC-IF-CTRL-001 version 1.2.0 adds the mutually authenticated WSS server binding
-to the version 1.1.0 source command/acknowledgement,
+I0.1A-I, I0.2A, and I0.3B-C are approved as engineering contract baselines.
+HC-IF-CTRL-001 version 1.3.0 adds receipt acknowledgement, status reconciliation,
+operator cleanup, and truthful cleanup-result records over the mutually
+authenticated WSS binding introduced in 1.2.0. These extend the version 1.1.0
+source command/acknowledgement,
 configuration, state/event, start-plan, readiness, custody/receipt, and quality
 records to the existing session/protocol slice. JSON Schema 2020-12 artifacts,
 AsyncAPI 3.1.0 operations, and conformance fixtures provide an
@@ -479,7 +482,7 @@ implementation-independent oracle.
 This baseline does not authorize production coordinator, Android, UVC,
 repository, transfer, or UI feature implementation. Runtime credential stores,
 TLS stacks, transfer services, capture/media, timing/IMU binary streams,
-repository transaction implementation, receipt signing, and application
+repository transaction implementation, receipt signing/trusted offline receipt conveyance, and application
 features require their named work items and reviews. Passing schema/conformance
 tests is software evidence only, not
 runtime, hardware, field, clinical, regulatory, or release evidence.

@@ -17,6 +17,7 @@
     "commit_id": { "$ref": "common.schema.json#/$defs/uuid" },
     "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
     "trial_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "device_id": { "$ref": "common.schema.json#/$defs/uuid" },
     "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
     "capture_attempt_id": { "$ref": "common.schema.json#/$defs/uuid" },
     "package_id": { "$ref": "common.schema.json#/$defs/uuid" },

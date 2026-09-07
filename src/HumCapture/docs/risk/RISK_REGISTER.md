@@ -30,6 +30,8 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
 | HC-RISK-024 | Weak/downgraded transport, replay, or certificate-only authorization permits unauthorized control or package access | Mutual TLS, TLS 1.3 default, restricted logged Win10 profile, no early data, active trust/role/UUID/resource binding, command/request idempotency | HC-SEC-REQ-003/009/010/014 |
 | HC-RISK-025 | Lost, expired, revoked, or silently replaced key material leaves unauthorized persistent access or blocks safe recovery | Platform-protected keys, finite certificate lifetime, revisioned rotation/revocation/unpair, explicit re-enrollment, audit, no bypass | HC-SEC-REQ-008/012/013 |
 | HC-RISK-026 | Security retries/logging disclose subject or credential data or starve scientific acquisition | Redacted audit schema, no subject/secret discovery records, bounded proof attempts, acquisition priority, offline recovery | HC-SEC-REQ-002/004/011/013/014 |
+| HC-RISK-027 | Lost, replayed, regenerated, or conflicting receipt state either falsely blocks a completed acquisition or authorizes cleanup of the wrong Android package | Commit remains completion authority; immutable exact receipt; durable matched acknowledgement; status query; identical replay; conflict recovery with source retention | HC-COORD-REQ-016, HC-DATA-REQ-013/014 |
+| HC-RISK-028 | Operator cleanup, concurrent activity, or partial deletion removes uncommitted data or falsely reports complete source removal | Eligible-only display; explicit selection/confirmation; immediate Android recheck; active-operation block; exact package/hash/path binding; truthful per-package remainder; manual USB fallback | HC-AND-REQ-005/006, HC-DATA-REQ-015/016, HC-USE-REQ-003 |
 
 ## Current Phase 0 evidence notes
 
@@ -139,3 +141,10 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   conformance. Runtime Keystore/DPAPI/TLS, hostile-network, penetration,
   restart/power, HIL, field, independent, and qualified regulatory evidence
   remain open.
+- **HC-RISK-027–028 initial contract control, 2026-09-07:** ADR-0014 and
+  `HC-IF-RCP-001` version 1.0.0 separate durable acquisition completion from
+  cleanup eligibility; define immutable receipt replay/conflict recovery,
+  matched durable acknowledgement, explicit operator cleanup, active-operation
+  exclusion, truthful partial results, and manual USB/MTP fallback. HC-RCP-
+  TEST-001–010 are source-level only. Runtime persistence/deletion, restart,
+  HIL, field, independent, and qualified regulatory evidence remain open.

@@ -19,3 +19,4 @@ Current records:
 - ADR-0011 — Exact monotonic time wire representation.
 - ADR-0012 — Coordinator-pulled immutable package transfer.
 - ADR-0013 — Attended enrollment and mutual TLS.
+- ADR-0014 — Commit receipts control cleanup, not acquisition completion.

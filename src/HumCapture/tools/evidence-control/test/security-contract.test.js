@@ -89,7 +89,7 @@ test("HC-SEC-TEST-002 transfer OpenAPI requires global mutual TLS and security f
 
 test("HC-SEC-TEST-003 control AsyncAPI binds every operation to mutually authenticated WSS", async () => {
   const api = await json(asyncApiPath); const server = api.servers.pairedCaptureNode;
-  assert.equal(api.info.version, "1.2.0"); assert.equal(server.protocol, "wss");
+  assert.equal(api.info.version, "1.3.0"); assert.equal(server.protocol, "wss");
   assert.deepEqual(server.security, [{ $ref: "#/components/securitySchemes/HumCaptureMutualTLS" }]);
   assert.equal(api.components.securitySchemes.HumCaptureMutualTLS.type, "X509");
   assert.equal(server["x-humcapture-security-binding"], "HC-IF-SEC-001@1.0.0");

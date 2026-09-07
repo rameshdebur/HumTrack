@@ -9,6 +9,7 @@
 | Master video | Android until committed; coordinator repository | Motion acquisition | Included when selected | Potentially directly identifiable |
 | Partial package artifacts/checkpoints | Coordinator staging until verification, retry, quarantine, or controlled disposal | Interrupted-transfer recovery | Never | Not a committed subject record; inherits source-artifact sensitivity |
 | Package manifest/verification/receipt | Source package and coordinator custody/audit records | Integrity, traceability, recovery and cleanup status | Included as appropriate | Uses subject UUID; no name/DOB; receipt created only after durable commit |
+| Receipt acknowledgement/status and cleanup history | Android protected app storage and coordinator catalog/audit | Prove cleanup eligibility, reconcile loss, and record truthful source removal | Excluded by default | Exact device/source/package/hash references only; no subject name/DOB, secret, token, or receipt signature in MVP; retention policy remains open |
 | Timing/IMU/camera data | Source package/repository | Scientific context and quality | Included | Preserve provenance/units |
 | Operator Windows identity | Audit records | Accountability | Excluded by default unless required | No app password database in MVP |
 | Pairing private keys | Android Keystore; coordinator current-user protected credential store | Mutual authentication | Never | Non-exportable on Android; DPAPI CurrentUser on Windows; no ordinary logs |

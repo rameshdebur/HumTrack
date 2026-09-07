@@ -90,6 +90,12 @@
 - **HC-US-XFR-011–012:** Reconcile restart and retry/quarantine hash failure while preserving phone original.
 - **HC-US-XFR-013:** Send replayable completion receipt only after durable commit.
 - **HC-US-XFR-014:** Network failure alone produces recovery-required, not recording failure.
+- **HC-US-XFR-015:** Treat durable coordinator commit as package/session completion even when receipt acknowledgement or cleanup is pending.
+- **HC-US-XFR-016:** Match and durably acknowledge one exact receipt on Android without deleting the package.
+- **HC-US-XFR-017:** Reconcile a lost acknowledgement and replay the identical receipt without recommit or receipt regeneration.
+- **HC-US-XFR-018:** Show the trained operator only cleanup-eligible packages with device, count, size, and capture/commit dates before one explicit confirmation.
+- **HC-US-XFR-019:** Report deleted, partial, missing, and rejected packages truthfully and retry only reconciled remaining files.
+- **HC-US-XFR-020:** Offer an informed manual cleanup list after USB/MTP completion without claiming automatic Android deletion authority.
 
 ## Quality and completion
 

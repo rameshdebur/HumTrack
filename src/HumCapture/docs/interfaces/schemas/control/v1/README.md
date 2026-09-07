@@ -1,7 +1,7 @@
 # HumCapture control schemas v1
 
 These JSON Schema 2020-12 files are the executable transport-neutral control
-record slice of `HC-IF-CTRL-001` version `1.2.0`. Individual record schemas
+record slice of `HC-IF-CTRL-001` version `1.3.0`. Individual record schemas
 remain at
 schema version `1.0.0`. `../../../asyncapi/control-v1.asyncapi.json`
 describes the logical message channels using AsyncAPI 3.1.0.
@@ -10,7 +10,8 @@ The schemas deliberately reject unknown properties and unsupported contract
 versions. Cross-record rules that JSON Schema cannot express, including source
 count bounds, immutable post-capture snapshot binding, unsigned 64-bit range,
 clock/boot continuity, command replay, readiness aggregate truth, authoritative
-source transitions, custody/receipt binding, quality false-pass rejection, and
+source transitions, custody/receipt binding, receipt acknowledgement/recovery,
+operator cleanup/partial-result truth, quality false-pass rejection, and
 completion/handoff consistency, are enforced by the non-production conformance
 oracle and fixtures under `tools/evidence-control`.
 
@@ -21,8 +22,9 @@ record's hash remain in the content and therefore bind that dependency. See
 ADR-0011 and HC-CTRL-TEST-019.
 
 The transport/authentication binding is defined separately by HC-IF-SEC-001 and
-the AsyncAPI WSS server. Transfer endpoints, media/package manifests, receipt
-signing, timing/IMU binary streams, and application implementation are not
+the AsyncAPI WSS server. HC-IF-RCP-001 defines receipt acknowledgement and
+cleanup semantics. Transfer endpoints, media/package manifests, receipt
+signing/trusted offline conveyance, timing/IMU binary streams, and application implementation are not
 defined by this record-schema slice.
 
 ## Specification references

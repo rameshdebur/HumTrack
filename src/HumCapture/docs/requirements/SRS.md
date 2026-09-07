@@ -34,6 +34,9 @@ This document establishes requirement families and mandatory system constraints.
 - **HC-AND-REQ-003:** Android SHALL record available orientation/gravity/gyro/acceleration with native timestamps and provenance.
 - **HC-AND-REQ-004:** Android SHALL expose only finalized packages for transfer/recovery.
 - **HC-AND-REQ-005:** Android SHALL delete no capture silently and SHALL distinguish safe, incomplete, and unknown states.
+- **HC-AND-REQ-006:** Android SHALL durably match the exact coordinator receipt
+  before acknowledging it and SHALL recheck that receipt, package identity, and
+  inactive operation state immediately before any programmatic deletion.
 
 - **HC-COORD-REQ-001:** The coordinator SHALL use the signed-in Windows account as the MVP operator identity.
 - **HC-COORD-REQ-002:** The coordinator SHALL guide subject/protocol/session/trial/source/readiness/capture/recovery/quality workflows without command-line prerequisites.
@@ -73,6 +76,9 @@ This document establishes requirement families and mandatory system constraints.
 - **HC-COORD-REQ-015:** Restart reconciliation SHALL consume the authority-owned
   source snapshot and SHALL NOT continue one capture attempt across a changed
   source boot or monotonic-clock epoch.
+- **HC-COORD-REQ-016:** The coordinator SHALL treat durable package commit as
+  completion authority, separately track receipt/cleanup status, and SHALL NOT
+  reverse session completion solely because acknowledgement or cleanup fails.
 
 - **HC-UVC-REQ-001:** Each active UVC source SHALL be isolated so worker failure does not terminate unrelated sources.
 - **HC-UVC-REQ-002:** UVC timestamps SHALL identify sensor/device/host-sample/host-arrival provenance truthfully.
@@ -120,6 +126,22 @@ This document establishes requirement families and mandatory system constraints.
   SHALL create a receipt.
 - **HC-DATA-REQ-012:** USB/MTP recovery SHALL skip only completely verified
   artifacts and SHALL restart each incomplete artifact from byte zero.
+- **HC-DATA-REQ-013:** One immutable revision-1 receipt SHALL bind the exact
+  durable commit, coordinator, device, source/session/trial/attempt/package
+  identities, package/artifact hashes, destination, schema version, and issue
+  time; identical replay SHALL be idempotent and conflicting reuse SHALL enter
+  recovery with source files retained.
+- **HC-DATA-REQ-014:** Receipt acceptance SHALL mean the exact receipt is
+  durably stored and matched on Android; it SHALL NOT mean deletion. Lost
+  acknowledgement recovery SHALL query state and reuse the same receipt.
+- **HC-DATA-REQ-015:** Programmatic cleanup SHALL require explicit trained-
+  operator selection/confirmation plus exact durable receipt/acknowledgement
+  evidence, and SHALL be blocked during capture, finalization, transfer, or
+  recovery.
+- **HC-DATA-REQ-016:** Cleanup SHALL record one truthful result per selected
+  package; partial deletion SHALL list remaining artifacts and subsequent retry
+  SHALL target only that reconciled remainder. USB/MTP-only completion SHALL
+  support informed manual cleanup but SHALL NOT authorize automatic deletion.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.

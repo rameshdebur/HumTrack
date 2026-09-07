@@ -42,6 +42,12 @@ matrices, fail-closed invalid cases, and fixed/flexible source-count rules.
 The source slice also checks RFC 8785/SHA-256 content identity, JSON-member-order
 stability, and content-tamper rejection.
 
+HC-RCP-TEST-001–010 exercise the I0.3C post-commit boundary: immutable receipt
+replay/conflict, durable exact acknowledgement, lost-acknowledgement status
+reconciliation, explicit inactive-package cleanup, USB/MTP manual-only fallback,
+truthful partial deletion and remainder-only retry. These are non-production
+contract oracles and do not delete files.
+
 HC-SEC-TEST-001–012 add a non-production oracle for HC-IF-SEC-001: schema and
 OpenAPI/AsyncAPI binding, attended bootstrap entropy/expiry/single use/lockout,
 enrollment transcript and certificate lifetime, trust lifecycle, peer/resource
