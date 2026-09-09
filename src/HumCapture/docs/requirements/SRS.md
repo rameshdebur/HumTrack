@@ -142,6 +142,24 @@ This document establishes requirement families and mandatory system constraints.
   package; partial deletion SHALL list remaining artifacts and subsequent retry
   SHALL target only that reconciled remainder. USB/MTP-only completion SHALL
   support informed manual cleanup but SHALL NOT authorize automatic deletion.
+- **HC-DATA-REQ-017:** HumCapture SHALL use a Coordinator-owned configurable
+  data root outside the source-code checkout, with a SQLite operational catalog
+  and immutable self-contained filesystem packages. The required subject name
+  SHALL remain Coordinator-local; the immutable subject UUID SHALL be the
+  authoritative repository folder identity.
+- **HC-DATA-REQ-018:** Collection staging and quarantine SHALL remain outside
+  the committed subject hierarchy. Commit staging and the final destination
+  SHALL share one filesystem volume so that verified immutable content can
+  cross the repository boundary by atomic rename rather than partial copy.
+- **HC-DATA-REQ-019:** Repository commit SHALL use a durable recoverable journal
+  across staged package, final destination, SQLite catalog, custody,
+  verification, and commit records. `COMMITTED` and its receipt SHALL be
+  produced only after reconciliation proves those authorities agree.
+- **HC-DATA-REQ-020:** Startup reconciliation SHALL classify unfinished commits
+  deterministically: identical package identity/content is idempotent;
+  conflicting content is quarantined without overwrite; partial or unverified
+  material remains uncommitted; disagreement enters recovery without receipt.
+  Repository failure SHALL NOT rewrite source capture or finalization facts.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.

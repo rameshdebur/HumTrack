@@ -13,6 +13,8 @@ ADR-0013 and `PAIRING_AND_TRANSPORT_SECURITY_CONTRACT.md` baseline
 `HC-IF-SEC-001` version `1.0.0`.
 ADR-0015 and `TIMING_AND_IMU_BINARY_CONTRACT.md` baseline `HC-IF-TIM-001`
 version `1.0.0` with executable binary vectors and timing/camera/IMU schemas.
+ADR-0016 accepts the I0.4B-A recoverable SQLite/filesystem commit architecture;
+the exact repository layout and executable schemas remain I0.4B-B work.
 
 The executable transport-neutral control slice is:
 
@@ -44,6 +46,7 @@ feature work, complete and review the remaining contracts:
 | Contract | Planned representation | Required evidence |
 |---|---|---|
 | Timing and IMU runtime producers/consumers | Implement HC-IF-TIM-001 1.0.0 in Android, UVC and Coordinator | Runtime/HIL production, ingestion and cross-platform vector tests |
+| Repository transaction and compatibility | Versioned repository layout, journal/catalog records and recovery rules under ADR-0016 | Schema plus crash-point, restart, idempotency, conflict, same-volume and receipt-ordering tests |
 | Receipt signing and trusted offline acknowledgement | Future signing/security rules | Existing replay/idempotency/identity and USB manual-boundary regression tests |
 | Quality implementation profile | Protocol-specific rules | Threshold/versioning and reassessment tests |
 | Handoff manifest | JSON Schema | Relative-path/hash/package reconstruction tests |

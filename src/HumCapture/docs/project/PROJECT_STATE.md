@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C and I0.4A are accepted; control, transfer, security, receipt/cleanup and timing/IMU contracts pass source-level conformance  
-**Tags:** I0.4A | TIMING | IMU | BINARY | CLOCK-MAPPING | CAMERA-METADATA | TEST-VECTORS | CONTRACT  
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A are accepted; repository transaction architecture is locked and its exact layout/schema remain next  
+**Tags:** I0.4B-A | REPOSITORY | SQLITE | FILESYSTEM | TRANSACTION | DURABILITY | RECOVERY | ADR  
 **Last meaningful update:** 2026-09-09
 
 ## Objective
@@ -104,6 +104,14 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Implementation commit `ffdd9557d61b8d9aebc792cf217cf58f670fd0a4`
   is remotely verified by successful HumCapture CI push run `34324594435` and
   PR run `34324599337`, including managed and native camera build/self-tests.
+- I0.4B-A is accepted in ADR-0016. HumCapture uses a Coordinator-owned data
+  root outside the source checkout, a SQLite operational catalog, immutable
+  filesystem packages, UUID-authoritative folder identity, same-volume staging,
+  and a recoverable journal across filesystem/catalog/verification/custody
+  state. Only reconciled `COMMITTED` state permits a receipt. I0.4B-B must still
+  define exact paths, schemas, compatibility behavior and executable
+  crash/restart tests; no repository application code is authorized by this
+  decision.
 
 ## Architecture summary
 
@@ -122,7 +130,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   schemas/bindings.
 - Receipt signing and any future trusted offline acknowledgement mechanism.
 - Independent review and production implementation of the accepted timing/IMU contract.
-- Repository transaction and compatibility rules.
+- I0.4B-B repository layout, executable transaction records and compatibility rules.
 
 ## Regulatory and policy position
 

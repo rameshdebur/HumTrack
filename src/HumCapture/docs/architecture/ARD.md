@@ -158,7 +158,14 @@ Subject folders use immutable UUIDs. Full name is required identity but is not a
 DATA_ROOT/subjects/SUBJECT_UUID/sessions/SESSION_UUID/trials/TRIAL_UUID/sources/SOURCE_UUID/
 ```
 
-Incoming data uses staging, validation, verification, and transactional commit. Identical reimports are idempotent; conflicting identities/hashes are quarantined. Runtime data lives outside the source checkout.
+Incoming data uses staging, validation, verification, and transactional commit.
+ADR-0016 requires repository-local same-volume staging and a recoverable journal
+across atomic package rename, SQLite catalog, custody, verification, and commit
+state. Only reconciled agreement becomes `COMMITTED` or permits a receipt.
+Identical reimports are idempotent; conflicting identities/hashes are
+quarantined. Runtime data lives outside the source checkout. Required subject
+name/demographics remain Coordinator-local while UUID is the authoritative
+folder identity. Exact paths and schemas are defined by later I0.4B work.
 
 ## 14. Transfer and recovery
 

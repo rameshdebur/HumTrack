@@ -101,6 +101,15 @@
 - **HC-US-XFR-018:** Show the trained operator only cleanup-eligible packages with device, count, size, and capture/commit dates before one explicit confirmation.
 - **HC-US-XFR-019:** Report deleted, partial, missing, and rejected packages truthfully and retry only reconciled remaining files.
 - **HC-US-XFR-020:** Offer an informed manual cleanup list after USB/MTP completion without claiming automatic Android deletion authority.
+- **HC-US-XFR-021:** Commit a verified package through a recoverable journal so
+  a restart or power interruption cannot create false completion or a premature
+  cleanup receipt.
+- **HC-US-XFR-022:** Reconcile filesystem, catalog, verification, custody, and
+  journal state at startup and present unresolved disagreement as recovery
+  rather than silently repairing or overwriting scientific data.
+- **HC-US-XFR-023:** Keep required subject name/demographics available in the
+  Coordinator while using immutable UUIDs and hashes for repository paths,
+  packages, receipts, logs, and pseudonymized handoff.
 
 ## Quality and completion
 

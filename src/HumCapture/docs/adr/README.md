@@ -21,3 +21,4 @@ Current records:
 - ADR-0013 — Attended enrollment and mutual TLS.
 - ADR-0014 — Commit receipts control cleanup, not acquisition completion.
 - ADR-0015 — Fixed binary native timing with explicit mappings.
+- ADR-0016 — Recoverable repository commit across filesystem and catalog.
