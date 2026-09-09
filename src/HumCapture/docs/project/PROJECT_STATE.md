@@ -101,6 +101,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   HC-IF-XFR-001 advances additively to version `1.2.0` for explicit timing
   profile/format declarations. Production Android/UVC writers, Coordinator
   ingestion, runtime/HIL/field and independent/regulatory review remain open.
+  Implementation commit `ffdd9557d61b8d9aebc792cf217cf58f670fd0a4`
+  is remotely verified by successful HumCapture CI push run `34324594435` and
+  PR run `34324599337`, including managed and native camera build/self-tests.
 
 ## Architecture summary
 

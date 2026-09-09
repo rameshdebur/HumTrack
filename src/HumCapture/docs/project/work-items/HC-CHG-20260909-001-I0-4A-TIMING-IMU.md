@@ -2,7 +2,7 @@
 
 **Change ID:** HC-CHG-20260909-001  
 **Title:** Baseline I0.4A timing, IMU and camera metadata contract  
-**State:** In review  
+**State:** Engineering baseline verified; independent review pending  
 **Change owner:** Signed-in project owner / System Architect  
 **Component owner:** Signed-in project owner / System Architect and timing owner  
 **Verification owner:** Signed-in project owner / Engineering verification  
@@ -62,7 +62,7 @@ QA, risk/regulatory and release/SBOM owners are affected.
 ## Implementation and configuration identity
 
 - Source baseline/branch: `1a0cd0b9ab2e7d274aa3a8303e2a917a8401a4b8` on `codex/humcapture-baseline`.
-- Commit: pending.
+- Implementation commit: `ffdd9557d61b8d9aebc792cf217cf58f670fd0a4`.
 - Build/toolchain: Node.js built-in binary/crypto APIs plus locked Ajv surface.
 - Dependency/SBOM change: no dependency or build manifest changed; current SBOM must be regression-validated.
 - Interface/schema change: HC-IF-TIM-001 1.0.0; HC-IF-XFR-001 1.2.0 additive profile fields.
@@ -103,16 +103,30 @@ analytics, field workflow and independent/regulatory review.
 
 ## Review
 
-- Complete diff inspected: pending final review.
-- Traceability: implemented; final consistency check pending.
+- Complete diff inspected: yes; all changed paths remain under `src/HumCapture`.
+- Traceability: requirements, risks, interface, ADR, tests and project state agree.
 - Test oracle: independent golden hash, corruption and semantic mutations implemented.
-- Documentation/project state: pending final refresh.
+- Documentation/project state: refreshed against implemented behavior and exact-SHA CI.
 - Independence limitation: authoring and local verification use the same AI-assisted workstream; human independent review pending.
 
 ## Decision and approvals
 
-- Decision: In review.
+- Decision: Engineering baseline accepted; independent review pending.
 - Permitted classification: Engineering contract snapshot only.
 - Release blockers: commit/CI, independent review, runtime/HIL/field and qualified regulatory review as applicable.
 - Change/verification owner: signed-in project owner, 2026-09-09, project owner/system architect.
 - Independent reviewer/release owner/regulatory-risk attribution: pending.
+
+## Final verification on 2026-09-09
+
+- HC-TIM-TEST-001–012: 12/12 pass;
+- evidence-control full regression: 76/76 pass;
+- capability-evidence regression: 55/55 pass;
+- SBOM policy: 6/6 pass; retained 20-component/21-node inventory validates and its SHA-256 matches;
+- both production dependency audits report zero vulnerabilities;
+- 73 tracked/new JSON documents parse; syntax and diff checks pass;
+- all 15 timing fixture files regenerate byte-identically;
+- Redocly CLI 2.51.2 accepts HC-IF-XFR-001 1.2.0 with the existing documented advisory-rule exclusions;
+- exact implementation SHA `ffdd9557d61b8d9aebc792cf217cf58f670fd0a4`
+  passed HumCapture CI push run `34324594435` and PR run `34324599337`,
+  including managed and native camera build/self-tests.

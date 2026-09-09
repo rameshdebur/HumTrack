@@ -2,7 +2,7 @@
 
 **Report ID:** HC-VR-I0-4A-001  
 **Date:** 2026-09-09  
-**Status:** Local source/static/automated verification passed; commit and exact-SHA CI pending
+**Status:** Source/static/automated verification and exact implementation-SHA CI passed
 
 ## Scope
 
@@ -42,7 +42,7 @@ review or controlled release.
 | OpenAPI regression | Redocly CLI 2.51.2 accepts HC-IF-XFR-001 1.2.0 with the existing documented advisory-rule exclusions |
 | Generator determinism | All 15 timing fixture files reproduce byte-identically |
 | Binary vectors | Nine deterministic files: six accepted and three rejected; decoded references, byte lengths/counts/SHA-256 checked by tests |
-| Exact implementation SHA CI | Pending commit/push |
+| Exact implementation SHA CI | Commit `ffdd9557d61b8d9aebc792cf217cf58f670fd0a4`; push run `34324594435` and PR run `34324599337` passed, including managed and native camera build/self-tests |
 
 ## Evidence classification
 
