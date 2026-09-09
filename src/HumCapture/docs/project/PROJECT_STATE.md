@@ -111,7 +111,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   state. Only reconciled `COMMITTED` state permits a receipt. I0.4B-B must still
   define exact paths, schemas, compatibility behavior and executable
   crash/restart tests; no repository application code is authorized by this
-  decision.
+  decision. Decision commit `cd0214ae6e0950882ca714390899c5c9ca8089b5`
+  passed HumCapture CI push run `34364850625` and PR run `34364851530`,
+  including existing contracts, SBOM/audits, and managed/native camera
+  build/self-tests.
 
 ## Architecture summary
 

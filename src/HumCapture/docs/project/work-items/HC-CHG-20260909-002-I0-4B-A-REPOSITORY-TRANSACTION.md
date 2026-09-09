@@ -62,8 +62,7 @@ cleanup, QA, backup/export, risk/regulatory and release owners are affected.
 ## Configuration identity
 
 - Source baseline/branch: `aa9e9808e9f3cf75a1f41466dd67d6b95d886553` on `codex/humcapture-baseline`.
-- Decision commit: assigned when this record is committed; exact SHA and CI are
-  recorded in the final verification update.
+- Decision commit: `cd0214ae6e0950882ca714390899c5c9ca8089b5`.
 - Dependency/SBOM change: none; no dependency or build manifest changed.
 - Interface/schema change: none; I0.4B-B remains the executable contract phase.
 - Backward compatibility: historical packages are not rewritten or renamed.
@@ -96,3 +95,17 @@ Evidence levels achieved:
 - Permitted classification: engineering architecture baseline only.
 - Change/verification owner: signed-in project owner, 2026-09-09.
 - Independent reviewer/release owner/regulatory-risk attribution: pending.
+
+## Final verification on 2026-09-09
+
+- capability-evidence regression: 55/55 pass;
+- evidence-control regression: 76/76 pass;
+- SBOM policy: 6/6 pass; retained 20-component/21-node inventory validates and
+  SHA-256 `605734f0667a18b76f446c2a86a8aeb3c2d6beecddfcfef8907e3d57242fee57`
+  matches;
+- both locked production dependency audits report zero vulnerabilities;
+- 73 tracked JSON documents parse; staged boundary, secret-pattern and diff
+  checks pass; and
+- exact decision SHA `cd0214ae6e0950882ca714390899c5c9ca8089b5`
+  passed HumCapture CI push run `34364850625` and PR run `34364851530`,
+  including managed and native camera builds/self-tests.
