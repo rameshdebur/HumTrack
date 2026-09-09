@@ -154,6 +154,31 @@ This document establishes requirement families and mandatory system constraints.
   clock model and uncertainty.
 - **HC-TIME-REQ-007:** UTC and host-arrival timestamps SHALL support audit and
   observation only and SHALL NOT replace or order scientific source timing.
+- **HC-TIME-REQ-008:** Every camera SHALL preserve a separate fixed-record
+  frame-timestamp stream with native clock identity, per-segment sequence,
+  provenance, disposition, integrity and optional mapped time/uncertainty.
+- **HC-TIME-REQ-009:** Android SHALL preserve available raw accelerometer and
+  gyroscope streams independently from optional platform-derived IMU streams;
+  every sensor SHALL retain its own sequence, native timestamp, units,
+  accuracy, cadence and discontinuity evidence.
+- **HC-TIME-REQ-010:** Binary timing and IMU masters SHALL use versioned
+  deterministic layouts, explicit presence flags, header/record CRC32C and
+  finalized package SHA-256; a recovery SHALL discard no more than an
+  incomplete final record and SHALL record that action.
+- **HC-TIME-REQ-011:** A clock mapping SHALL name source/target clocks, epoch,
+  validity interval, fit, anchors, residual, uncertainty and quality; it SHALL
+  NOT cross a restart, regression or epoch change or rewrite native evidence.
+- **HC-TIME-REQ-012:** Requested/advertised cadence SHALL NOT substitute for
+  measured cadence. Fixed, variable and adaptive rate capability SHALL be
+  evaluated against versioned protocol requirements without a universal
+  adaptive-rate requirement.
+- **HC-TIME-REQ-013:** Camera/lens/orientation metadata SHALL distinguish
+  reported, configured, observed, calibrated, inferred and unavailable values;
+  unavailable values SHALL NOT be fabricated.
+- **HC-TIME-REQ-014:** Camera–IMU association and derived horizon/motion/pan/tilt
+  outputs SHALL identify source streams, clocks, transforms, algorithm,
+  validity and uncertainty and SHALL NOT imply absolute heading, translation or
+  hardware synchronization without corresponding evidence.
 
 - **HC-SEC-REQ-001:** Discovery SHALL NOT grant control; pairing/authentication SHALL establish trust.
 - **HC-SEC-REQ-002:** Subject name/date of birth SHALL NOT appear in mDNS or Android source packages.

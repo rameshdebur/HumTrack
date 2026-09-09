@@ -20,3 +20,4 @@ Current records:
 - ADR-0012 — Coordinator-pulled immutable package transfer.
 - ADR-0013 — Attended enrollment and mutual TLS.
 - ADR-0014 — Commit receipts control cleanup, not acquisition completion.
+- ADR-0015 — Fixed binary native timing with explicit mappings.

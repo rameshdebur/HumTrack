@@ -57,3 +57,15 @@ TLS stack, hostile networks, hardware, or field workflow.
 
 This placement reuses the already locked Ajv validation surface and does not
 couple production coordinator or capture code to the evidence-vault runtime.
+# Timing contract vectors
+
+HC-IF-TIM-001 golden vectors are regenerated deterministically with:
+
+```powershell
+node src/generate-timing-vectors.js
+node --test --test-reporter spec
+```
+
+The committed vector manifest binds byte lengths, record counts and SHA-256.
+Regeneration is a review action: released vectors are immutable and changed
+bytes require a new contract/vector version.

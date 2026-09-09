@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0.0",
+  "vectors": [
+    {
+      "id": "HC-TIM-VEC-001",
+      "file": "valid-frame-timestamps.bin",
+      "kind": "FRAME",
+      "byte_length": 352,
+      "record_count": 3,
+      "sha256": "8979eb2b9f8c0537ac866a67e800009aef3add87682c093e22daf39e711de41c",
+      "expected": "ACCEPT"
+    },
+    {
+      "id": "HC-TIM-VEC-002",
+      "file": "valid-imu-samples.bin",
+      "kind": "IMU",
+      "byte_length": 304,
+      "record_count": 3,
+      "sha256": "a4f38efa5d64c499fb96dd3d3f57511e64bf7bbb919d5a4835654960c1c92691",
+      "expected": "ACCEPT"
+    },
+    {
+      "id": "HC-TIM-VEC-003",
+      "file": "valid-host-timestamp-frames.bin",
+      "kind": "FRAME",
+      "byte_length": 256,
+      "record_count": 2,
+      "sha256": "733a80a921bc634baa02bd004302d15e5c6b4198dbe38c989fe9df6ec66bbe10",
+      "expected": "ACCEPT",
+      "note": "UVC host provenance only; metadata must not relabel it as sensor time"
+    },
+    {
+      "id": "HC-TIM-VEC-004",
+      "file": "valid-variable-cadence-frames.bin",
+      "kind": "FRAME",
+      "byte_length": 448,
+      "record_count": 4,
+      "sha256": "018076d2e6a369c278791d5de6781682d8c24ebaef3c191f2af6694ed290d090",
+      "expected": "ACCEPT"
+    },
+    {
+      "id": "HC-TIM-VEC-005",
+      "file": "valid-segmented-restart-frames.bin",
+      "kind": "FRAME",
+      "byte_length": 352,
+      "record_count": 3,
+      "sha256": "6389336142565aa3ba720d34416c2718516a527bc315cb4054f35d2d79223006",
+      "expected": "ACCEPT",
+      "note": "Sequence reset is valid only in a new segment"
+    },
+    {
+      "id": "HC-TIM-VEC-006",
+      "file": "valid-imu-without-gyro.bin",
+      "kind": "IMU",
+      "byte_length": 224,
+      "record_count": 2,
+      "sha256": "1c8aa38db8fd63c89f7df5f362f79708f4515a578b5016ffccd623089f97c3c6",
+      "expected": "ACCEPT",
+      "note": "Protocol decides whether missing gyroscope is blocking"
+    },
+    {
+      "id": "HC-TIM-VEC-007",
+      "file": "invalid-corrupt-frame-record.bin",
+      "kind": "FRAME",
+      "byte_length": 352,
+      "sha256": "98e969f1cd9c37869375476b4e3fc58598df57b1fc4cf6478da624d2e9ccd8a9",
+      "expected": "REJECT",
+      "expected_code": "RECORD_CRC_MISMATCH"
+    },
+    {
+      "id": "HC-TIM-VEC-008",
+      "file": "invalid-truncated-finalized-frame.bin",
+      "kind": "FRAME",
+      "byte_length": 347,
+      "sha256": "cfb2196d51c4efb21ac50af513dc9c34e0b03515ec52097968d1a0273e70b284",
+      "expected": "REJECT",
+      "expected_code": "TRUNCATED_RECORD"
+    },
+    {
+      "id": "HC-TIM-VEC-009",
+      "file": "invalid-unsupported-major-frame.bin",
+      "kind": "FRAME",
+      "byte_length": 352,
+      "sha256": "0b9eaa7f06a4aeda18fecadf35b7bce718fa87a30fa468a4ed6d05d6e5974fd5",
+      "expected": "REJECT",
+      "expected_code": "MAJOR_VERSION_UNSUPPORTED"
+    }
+  ]
+}

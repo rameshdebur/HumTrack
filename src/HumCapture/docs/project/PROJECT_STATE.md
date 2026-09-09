@@ -1,8 +1,8 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, and I0.3A-C are accepted; control, transfer/package, security, and receipt/cleanup contracts pass source-level conformance  
-**Tags:** I0.3C | RECEIPT | ACKNOWLEDGEMENT | OPERATOR-CLEANUP | RECOVERY | CONTRACT  
-**Last meaningful update:** 2026-09-07
+**Status:** I0.1A-I, I0.2A, I0.3A-C and I0.4A are accepted; control, transfer, security, receipt/cleanup and timing/IMU contracts pass source-level conformance  
+**Tags:** I0.4A | TIMING | IMU | BINARY | CLOCK-MAPPING | CAMERA-METADATA | TEST-VECTORS | CONTRACT  
+**Last meaningful update:** 2026-09-09
 
 ## Objective
 
@@ -88,6 +88,19 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   run `34093704064`, including managed and native camera build/self-tests.
   Android/coordinator persistence/UI/deletion, restart/power, HIL, field,
   independent review and qualified regulatory review remain open.
+- I0.4A is accepted as `HC-IF-TIM-001` version `1.0.0`; ADR-0015 records
+  separate fixed-record little-endian frame/IMU scientific masters, native
+  timestamp authority, explicit presence/provenance, CRC32C plus package
+  SHA-256, segmented affine clock mappings, independent sensor sequences,
+  measured cadence, frame/video association, camera/lens/orientation metadata,
+  camera–IMU transforms and protocol-scoped quality gates. Fixed, variable and
+  adaptive camera rate classes are supported; lack of adaptive-rate control is
+  not a universal failure. Three JSON schemas, nine immutable binary vectors
+  (six accepted and three rejected), decoded references and HC-TIM-TEST-001–012
+  pass in the 76-test evidence-control suite.
+  HC-IF-XFR-001 advances additively to version `1.2.0` for explicit timing
+  profile/format declarations. Production Android/UVC writers, Coordinator
+  ingestion, runtime/HIL/field and independent/regulatory review remain open.
 
 ## Architecture summary
 
@@ -105,7 +118,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - Independent review of the control/state-machine, transfer, and security
   schemas/bindings.
 - Receipt signing and any future trusted offline acknowledgement mechanism.
-- Timing and IMU binary formats with test vectors.
+- Independent review and production implementation of the accepted timing/IMU contract.
 - Repository transaction and compatibility rules.
 
 ## Regulatory and policy position
@@ -219,8 +232,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   in the existing snapshot/evidence vault; the CI-aware SBOM is not
   retroactively release-bound.
 - Laptop-hotspot discovery, timing, and throughput require named-hardware validation.
-- Exact timing/IMU binary formats, schema compatibility window, receipt
-  signing, and any future trusted offline USB receipt-conveyance
+- Production timing/IMU codecs, broader future-version compatibility window,
+  receipt signing, and any future trusted offline USB receipt-conveyance
   mechanism remain open.
 - Evidence backup/restore, retention approval, independent signing/review,
   access audit, and any required WORM/eQMS integration remain open.
@@ -248,6 +261,6 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 6. Obtain 1080p60 UVC hardware and capture a complete prospective evidence
    package before normative or concurrent-camera qualification.
 7. Independently review HC-IF-CTRL-001 version 1.3.0, HC-IF-XFR-001 version
-   1.1.0, HC-IF-SEC-001 version 1.0.0, and HC-IF-RCP-001 version 1.0.0 without
-   beginning application features.
+   1.2.0, HC-IF-SEC-001 version 1.0.0, HC-IF-RCP-001 version 1.0.0 and
+   HC-IF-TIM-001 version 1.0.0 without beginning application features.
 8. Do not begin production application features until the governance gate explicitly permits the named phase.

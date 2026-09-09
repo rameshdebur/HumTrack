@@ -14,6 +14,10 @@
   ],
   "properties": {
     "schema_version": { "const": "1.0.0" },
+    "interface_profiles": {
+      "type": "array", "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^HC-IF-[A-Z0-9-]+@[0-9]+\\.[0-9]+\\.[0-9]+$" }
+    },
     "package_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
     "package_content_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
     "artifact_set_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
@@ -41,8 +45,9 @@
         "properties": {
           "artifact_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
           "relative_path": { "type": "string", "minLength": 1, "maxLength": 1024 },
-          "role": { "enum": ["SCIENTIFIC_MASTER_VIDEO", "FRAME_TIMESTAMPS", "CAMERA_METADATA", "CAPTURE_EVENTS", "FINALIZATION_RECORD", "IMU_SAMPLES", "IMU_METADATA", "CALIBRATION", "AUXILIARY_EVIDENCE"] },
+          "role": { "enum": ["SCIENTIFIC_MASTER_VIDEO", "FRAME_TIMESTAMPS", "TIMING_METADATA", "CAMERA_METADATA", "CAPTURE_EVENTS", "FINALIZATION_RECORD", "IMU_SAMPLES", "IMU_METADATA", "CALIBRATION", "AUXILIARY_EVIDENCE"] },
           "media_type": { "type": "string", "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+$", "maxLength": 127 },
+          "format_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+(?:\\.[0-9]+)?$" },
           "byte_length": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
           "sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
           "required": { "type": "boolean" },

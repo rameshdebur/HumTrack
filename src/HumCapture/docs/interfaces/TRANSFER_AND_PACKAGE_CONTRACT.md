@@ -1,7 +1,7 @@
 # HumCapture Transfer and Package Contract
 
 **Contract ID:** HC-IF-XFR-001  
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Status:** Accepted engineering baseline  
 **Date:** 2026-09-05
 
@@ -39,6 +39,12 @@ damaged artifacts remain visible rather than preventing survivor collection.
 Only pseudonymized `subject_id` is present. Subject name, date of birth, and
 operator account are coordinator-local and must not appear in this source
 package.
+
+Packages conforming to HC-IF-TIM-001 declare
+`HC-IF-TIM-001@1.0.0` in `interface_profiles`; timing artifacts additionally
+declare their binary or JSON `format_version` and normative media type. This is
+an additive profile marker: packages finalized before the timing contract remain
+historical artifacts and are not silently upgraded.
 
 ## 3. Identity and hashing
 
@@ -134,8 +140,8 @@ Android presents the same status for informed manual cleanup.
 
 ## 8. Compatibility and errors
 
-Record schema version remains `1.0.0`; API version is `1.1.0` for the additive
-security binding. Unknown required semantics, unsupported major
+Record schema version remains `1.0.0`; API version is `1.2.0` for the additive
+security binding and timing-profile declarations. Unknown required semantics, unsupported major
 versions, and identity conflicts fail safely. Historical finalized packages are
 not rewritten. HTTP errors use `application/problem+json` with stable `code`
 and `retry_class`; machine behavior does not depend on free text.

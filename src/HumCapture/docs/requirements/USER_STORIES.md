@@ -79,6 +79,11 @@
 - **HC-US-CAP-012:** No pause; interruption becomes finalized attempt and retake.
 - **HC-US-CAP-013:** UI lifecycle does not own scientific capture.
 - **HC-US-CAP-014:** Allow next trial after safe finalization while prior transfers remain pending and capacity passes.
+- **HC-US-CAP-015:** Preserve every camera's native per-frame timing, source/video association and visible loss without constructing frames from nominal FPS.
+- **HC-US-CAP-016:** Preserve available Android raw accelerometer/gyroscope and optional derived IMU streams with independent timestamps, sequences, units and cadence evidence.
+- **HC-US-CAP-017:** Preserve reported camera/lens/orientation data and explicit unavailable reasons without guessed specifications.
+- **HC-US-CAP-018:** Associate a camera and IMU only through explicit clocks/transforms/validity so downstream horizon and motion analytics can retain uncertainty.
+- **HC-US-CAP-019:** Use fixed-, variable- or adaptive-rate cameras when they meet the selected protocol; absence of adaptive control alone is not failure.
 
 ## Transfer and recovery
 

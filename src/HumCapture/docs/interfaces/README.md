@@ -6,11 +6,13 @@
 `HC-IF-CTRL-001` version `1.3.0`. It consolidates explicitly accepted I0.1A-I
 and I0.2A decisions. ADR-0010 records immutable session protocol snapshots;
 ADR-0011 records exact JSON monotonic-time representation. ADR-0012 and
-`TRANSFER_AND_PACKAGE_CONTRACT.md` baseline `HC-IF-XFR-001` version `1.1.0`.
+`TRANSFER_AND_PACKAGE_CONTRACT.md` baseline `HC-IF-XFR-001` version `1.2.0`.
 ADR-0014 and `RECEIPT_ACKNOWLEDGEMENT_AND_CLEANUP_CONTRACT.md` baseline
 `HC-IF-RCP-001` version `1.0.0`.
 ADR-0013 and `PAIRING_AND_TRANSPORT_SECURITY_CONTRACT.md` baseline
 `HC-IF-SEC-001` version `1.0.0`.
+ADR-0015 and `TIMING_AND_IMU_BINARY_CONTRACT.md` baseline `HC-IF-TIM-001`
+version `1.0.0` with executable binary vectors and timing/camera/IMU schemas.
 
 The executable transport-neutral control slice is:
 
@@ -41,8 +43,7 @@ feature work, complete and review the remaining contracts:
 
 | Contract | Planned representation | Required evidence |
 |---|---|---|
-| Timing stream | Binary specification and test vectors | Ordering/discontinuity/round-trip parser tests |
-| IMU stream | Binary specification and test vectors | Timestamp/coordinate/provenance tests |
+| Timing and IMU runtime producers/consumers | Implement HC-IF-TIM-001 1.0.0 in Android, UVC and Coordinator | Runtime/HIL production, ingestion and cross-platform vector tests |
 | Receipt signing and trusted offline acknowledgement | Future signing/security rules | Existing replay/idempotency/identity and USB manual-boundary regression tests |
 | Quality implementation profile | Protocol-specific rules | Threshold/versioning and reassessment tests |
 | Handoff manifest | JSON Schema | Relative-path/hash/package reconstruction tests |

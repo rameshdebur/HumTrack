@@ -78,7 +78,7 @@ test("HC-SEC-TEST-001 security schemas compile and accept redacted valid records
 
 test("HC-SEC-TEST-002 transfer OpenAPI requires global mutual TLS and security failure responses", async () => {
   const api = await json(openApiPath);
-  assert.equal(api.info.version, "1.1.0");
+  assert.equal(api.info.version, "1.2.0");
   assert.deepEqual(api.security, [{ HumCaptureMutualTLS: [] }]);
   assert.equal(api.components.securitySchemes.HumCaptureMutualTLS.type, "mutualTLS");
   assert.equal(api["x-humcapture-security-binding"], "HC-IF-SEC-001@1.0.0");
