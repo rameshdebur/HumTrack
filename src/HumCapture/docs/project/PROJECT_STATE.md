@@ -145,7 +145,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `COMMITTED` permits receipt/completion; these durability states map to the
   existing custody contract and do not add routine operator workflow steps.
   B3B exact journal/reconciliation fields and B3C executable schemas/fault
-  fixtures remain open.
+  fixtures remain open. Decision commit
+  `7db93a5a404f54bc7818f258f8187a8dc04cd43b` passed HumCapture CI push run
+  `34474035867` and PR run `34474039424`, including contracts/controls, SBOM,
+  dependency audit, and managed/native camera build/self-tests.
 
 ## Architecture summary
 

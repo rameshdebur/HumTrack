@@ -58,7 +58,7 @@ backup/export, QA, risk/regulatory and release owners are affected.
 ## Configuration identity
 
 - Source baseline/branch: `eb714162d10c56d2a3659832fb83dde3cfe1a86a` on `codex/humcapture-baseline`.
-- Decision commit: assigned on commit and recorded in a verification update.
+- Decision commit: `7db93a5a404f54bc7818f258f8187a8dc04cd43b`.
 - Interface change: HC-IF-REP-001 advances additively from 1.1.0 to 1.2.0.
 - Backward compatibility: repository paths and external package-custody states
   are unchanged; executable compatibility behavior remains B3C work.
@@ -71,6 +71,9 @@ backup/export, QA, risk/regulatory and release owners are affected.
   graph valid at 20 components/21 dependency nodes with hash
   `605734f0667a18b76f446c2a86a8aeb3c2d6beecddfcfef8907e3d57242fee57`,
   and both dependency audits reported zero findings.
+- Exact decision-commit CI: HumCapture CI push run `34474035867` and PR run
+  `34474039424` passed contracts/controls, SBOM policy/hash, runtime dependency
+  audit, and managed/native camera-probe build/self-tests.
 - Executable state/journal/reconciliation behavior: deferred to B3B/B3C.
 - Runtime, power-loss/HIL, field, independent and regulatory evidence: open.
 
