@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A/B1/B2/B3A are accepted; repository transaction states are locked  
-**Tags:** I0.4B-B3A | REPOSITORY | JOURNAL | STATE-MACHINE | CRASH | RECOVERY | CONTRACT  
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A/B1/B2/B3A/B3B are accepted; repository journal and recovery policy are locked  
+**Tags:** I0.4B-B3B | REPOSITORY | SQLITE | JOURNAL | HISTORY | RECONCILIATION | RECOVERY | CONTRACT  
 **Last meaningful update:** 2026-09-10
 
 ## Objective
@@ -144,11 +144,19 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `RECOVERY_REQUIRED` and `QUARANTINED` dispositions. Only evidence-reconciled
   `COMMITTED` permits receipt/completion; these durability states map to the
   existing custody contract and do not add routine operator workflow steps.
-  B3B exact journal/reconciliation fields and B3C executable schemas/fault
-  fixtures remain open. Decision commit
+  B3C executable schemas/fault fixtures remain open. Decision commit
   `7db93a5a404f54bc7818f258f8187a8dc04cd43b` passed HumCapture CI push run
   `34474035867` and PR run `34474039424`, including contracts/controls, SBOM,
   dependency audit, and managed/native camera build/self-tests.
+- I0.4B-B3B is accepted in ADR-0020 and advances HC-IF-REP-001 additively to
+  version 1.3.0. SQLite retains one current transaction row plus append-only
+  transition/reconciliation history; observations are separate from results,
+  sequence/revision outrank UTC, and transaction identity/hash/path bindings
+  are immutable. Six exact non-destructive actions may resume automatically;
+  conflicts/unsafe/unsupported/uncertain evidence require controlled operator
+  action. No force commit, overwrite, unique-copy deletion, or immutable-record
+  manufacture is permitted. B3C executable schemas/DDL representation and
+  crash fixtures remain open.
 
 ## Architecture summary
 
@@ -167,8 +175,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   schemas/bindings.
 - Receipt signing and any future trusted offline acknowledgement mechanism.
 - Independent review and production implementation of the accepted timing/IMU contract.
-- I0.4B-B3B/B3C exact journal/reconciliation fields, automatic/operator action
-  policy, executable repository schemas and fault fixtures.
+- I0.4B-B3C executable repository descriptor, catalog/journal/record-index/
+  reconciliation schemas, SQLite representation and fault fixtures.
 
 ## Regulatory and policy position
 

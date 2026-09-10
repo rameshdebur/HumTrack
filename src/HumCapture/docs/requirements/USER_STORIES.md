@@ -130,6 +130,16 @@
 - **HC-US-XFR-030:** Permit receipt and cleanup only after repository
   reconciliation proves the package, catalog, journal, verification, and
   immutable commit evidence agree.
+- **HC-US-XFR-031:** Review the complete ordered history of a repository
+  transaction, including automatic recovery, without relying on timestamps to
+  infer which state is authoritative.
+- **HC-US-XFR-032:** Allow the Coordinator to resume an exact, unambiguous and
+  non-destructive interrupted commit automatically while retaining what it
+  observed and did.
+- **HC-US-XFR-033:** Require an informed operator disposition when repository
+  evidence conflicts or is unsafe, with no option to force a package committed.
+- **HC-US-XFR-034:** Export bounded recovery diagnostics without including
+  subject name/demographics, secrets, raw media, or absolute repository paths.
 
 ## Quality and completion
 

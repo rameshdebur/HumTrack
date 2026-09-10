@@ -215,6 +215,27 @@ This document establishes requirement families and mandatory system constraints.
   only to the nearest state directly proven by durable evidence and SHALL
   retain the observed evidence and action. `COMMITTED` and `QUARANTINED` SHALL
   be terminal for one transaction identity.
+- **HC-DATA-REQ-034:** The SQLite repository journal SHALL retain one current
+  transaction row and append-only transition and reconciliation rows. Current
+  state update and transition insertion SHALL commit atomically in SQLite;
+  transaction identity/hash/path bindings SHALL be immutable after creation.
+- **HC-DATA-REQ-035:** Journal ordering SHALL use positive per-transaction
+  transition sequence and revision. UTC timestamps SHALL be audit/display
+  context only and SHALL NOT resolve state, identity, content, or durability.
+- **HC-DATA-REQ-036:** Reconciliation SHALL separately record observations for
+  journal, staging package, destination package, catalog linkage, verification
+  record, and commit record using controlled dispositions and available
+  expected/observed identities, hashes, lengths, and relative evidence paths.
+- **HC-DATA-REQ-037:** Automatic recovery SHALL be limited to the enumerated
+  exact, supported, canonical, non-conflicting and non-destructive actions in
+  HC-IF-REP-001. Every action SHALL be idempotent, transition-linked, retained,
+  and operator-visible in history.
+- **HC-DATA-REQ-038:** Conflicting identity/hash, dual-path material,
+  missing/corrupt immutable evidence, unsafe/unexpected entries, unsupported
+  versions, catalog conflict, or uncertain durability SHALL require an
+  operator-controlled retry, quarantine, retain, or diagnostic-export action.
+  No recovery action SHALL force commit, overwrite evidence, delete the only
+  verified copy, or manufacture a missing immutable record.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.

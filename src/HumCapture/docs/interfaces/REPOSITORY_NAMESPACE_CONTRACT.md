@@ -1,8 +1,8 @@
 # HumCapture Repository Namespace Contract
 
 **Contract ID:** HC-IF-REP-001  
-**Version:** 1.2.0  
-**Status:** Accepted namespace, record-authority and transaction-state baseline  
+**Version:** 1.3.0  
+**Status:** Accepted repository authority, transaction and reconciliation baseline  
 **Date:** 2026-09-10
 
 ## 1. Scope
@@ -64,7 +64,8 @@ automatically deleted.
 Version 1.1.0 adds the record-authority, descriptor and compatibility semantics
 below without changing version 1.0.0 package paths. Version 1.2.0 additively
 defines the internal repository transaction states without changing package
-custody states or paths.
+custody states or paths. Version 1.3.0 additively defines journal history and
+bounded reconciliation actions.
 
 SQLite is authoritative for mutable operational/current state, subject PII,
 transfer checkpoints, transaction journal and audit events. Mutable current
@@ -108,9 +109,31 @@ These internal states do not add operator workflow steps. Normal intermediates
 may display as **Saving**; recovery remains an actionable **Needs attention**
 condition.
 
-## 8. Deferred decisions
+## 8. Journal and reconciliation records
 
-I0.4B-B3 will define descriptor, milestone-index, catalog and journal schemas,
-transition evidence, crash-point fixtures, and exact recovery actions. Runtime,
-SQLite DDL/configuration, backup/restore, retention, power-loss, HIL, field,
-independent and regulatory evidence remain open.
+SQLite retains one current row per repository transaction plus append-only
+transition and reconciliation rows. The current-state update and corresponding
+transition insertion are one SQLite transaction. ADR-0020 defines the exact
+logical field set, observations, controlled triggers/actions, immutable
+identity fields, sequence authority, and prohibited data.
+
+Only `NO_ACTION`, `RETRY_FROM_STAGED`, `RESUME_AFTER_MOVE`,
+`COMPLETE_CATALOGING`, `FINALIZE_COMMIT`, and
+`CONFIRM_IDEMPOTENT_COMMIT` may run automatically, and only when all required
+identity, hash, path, version, absence, and uniqueness predicates agree. Every
+automatic result is retained and visible.
+
+Hash/identity conflict, material at both paths, missing/corrupt immutable
+evidence, unsafe/unexpected entries, unsupported versions, catalog conflict, or
+uncertain durability requires operator action. Permitted actions are
+`RETRY_RECONCILIATION`, `QUARANTINE_CONFLICT`,
+`RETAIN_FOR_INVESTIGATION`, and `EXPORT_DIAGNOSTICS`. No action may force
+commit, overwrite evidence, delete the only verified copy, or manufacture an
+immutable milestone.
+
+## 9. Deferred decisions
+
+I0.4B-B3C will define executable descriptor, milestone-index, catalog, journal,
+transition, and reconciliation schemas plus crash-point fixtures. Runtime,
+SQLite implementation/configuration, backup/restore, retention, power-loss,
+HIL, field, independent and regulatory evidence remain open.

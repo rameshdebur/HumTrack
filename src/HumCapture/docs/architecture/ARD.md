@@ -177,6 +177,10 @@ schemas remain later I0.4B work. ADR-0019 refines repository commit into
 `STAGED_VERIFIED`, `COMMITTING`, `MOVED`, `CATALOGED`, and `COMMITTED`, with
 explicit recovery/quarantine dispositions at crash boundaries; these are
 internal durability states rather than additional operator workflow steps.
+ADR-0020 combines one current transaction row with append-only transition and
+reconciliation history, allowing only enumerated exact, non-destructive
+automatic recovery while conflicts require operator disposition and can never
+be force-committed.
 
 ## 14. Transfer and recovery
 

@@ -25,3 +25,4 @@ Current records:
 - ADR-0017 — Shallow UUID repository namespace.
 - ADR-0018 — Split operational and immutable record authority.
 - ADR-0019 — Explicit repository transaction state machine.
+- ADR-0020 — Journal history and bounded reconciliation actions.
