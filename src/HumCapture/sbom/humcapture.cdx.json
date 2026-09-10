@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:3ebc385c-4a98-52cd-b2a5-0842da3aeaef",
+  "serialNumber": "urn:uuid:0ff021ac-6e9c-5a84-b73a-950731b7dfa5",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-31T17:45:00.000Z",
+    "timestamp": "2026-09-10T17:32:39.580Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-p0.2j",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-p0.2j",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-p0.2j",
+      "version": "0.1.0-i0.4b-c1",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c1",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c1",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -105,14 +105,14 @@
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-p0.2j",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
+      "version": "0.1.0-i0.4b-c1",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c1",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c1",
       "scope": "excluded",
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "39bf03be250b6bd39457cb8a78ff84b8be3a761f19542446789f6b85a731e87d"
+          "content": "3659785cac08830affc1e00afd1748ab71b17b6f38b21613996a48991bd3e38c"
         }
       ],
       "properties": [
@@ -131,6 +131,82 @@
         {
           "name": "humcapture:not-distributed",
           "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "HumCapture.Coordinator.Repository.SelfTest",
+      "version": "0.1.0",
+      "bom-ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
+      "purl": "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7bfa33a076cb1174dcff7d2731848c487a1a956ad9a0b7ed7da758dcac46cc20"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041.0"
+        },
+        {
+          "name": "humcapture:execution-context",
+          "value": "test"
+        },
+        {
+          "name": "humcapture:not-distributed",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "group": "HumCapture",
+      "name": "HumCapture.Coordinator.Repository",
+      "version": "0.1.0",
+      "bom-ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
+      "purl": "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "24aa622c85cd8d2f525525da71c2a4f3e241a28da82335ca4cfb14ca7277bd50"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041.0"
+        },
+        {
+          "name": "humcapture:distribution-status",
+          "value": "engineering-application-component-not-released"
         }
       ]
     },
@@ -271,6 +347,32 @@
         {
           "name": "humcapture:execution-context",
           "value": "build"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "name": "Microsoft.NETCore.App",
+      "version": "10.0.0",
+      "bom-ref": "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
+      "purl": "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
+      "scope": "required",
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party-platform"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "host-framework-licence-review-required"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "host-resolved-framework-not-hashed"
+        },
+        {
+          "name": "humcapture:resolution",
+          "value": "minimum framework from runtimeconfig; installed patch resolves at runtime"
         }
       ]
     },
@@ -710,6 +812,262 @@
           "value": "tools/evidence-control/package-lock.json"
         }
       ]
+    },
+    {
+      "type": "library",
+      "name": "Microsoft.CodeAnalysis.NetAnalyzers",
+      "version": "8.0.0",
+      "bom-ref": "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
+      "purl": "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
+      "scope": "excluded",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "0f18938240a5dc21aad6b626057db08d8ed719bc6205d2f827efc02480052cacb9cfbd0dc619d54673e086789c5d9f2817a24a557956df1c339d16c8de2a042a"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Microsoft.Data.Sqlite.Core",
+      "version": "10.0.12",
+      "bom-ref": "pkg:nuget/Microsoft.Data.Sqlite.Core@10.0.12",
+      "purl": "pkg:nuget/Microsoft.Data.Sqlite.Core@10.0.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "d9a2fd78be4742bd15e1bf15f74f520fe8d0031eaa9d34e5eec4ffbf70fc748be6af6506769648431aa6d698f626cddee04613be9c34a0c1fb0e36a9249b8f3f"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Microsoft.Data.Sqlite",
+      "version": "10.0.12",
+      "bom-ref": "pkg:nuget/Microsoft.Data.Sqlite@10.0.12",
+      "purl": "pkg:nuget/Microsoft.Data.Sqlite@10.0.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "c54abdc5473ae77b9eeda736acc7c269ff1440df94df34bca6859896e832729bc9965a6530cd0c93bbfff8c33409396ef731af6c630be013c7f185a1ad439f1b"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SonarAnalyzer.CSharp",
+      "version": "9.32.0.97167",
+      "bom-ref": "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167",
+      "purl": "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167",
+      "scope": "excluded",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "63193ce9157ef329c9a54864bb5630da12131669e65ca91727bddc2054b2f39a25e529d6444420f51b93c95f2723b57bfa9c8b2a909f4660fb3f4c2276c82392"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SQLitePCLRaw.bundle_e_sqlite3",
+      "version": "2.1.12",
+      "bom-ref": "pkg:nuget/SQLitePCLRaw.bundle_e_sqlite3@2.1.12",
+      "purl": "pkg:nuget/SQLitePCLRaw.bundle_e_sqlite3@2.1.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "98082c72940c2f0e7f9df035439a095404f6f7244e528d627d919b6d3a71fe5c19a52c4c506a186ca7e6bdd9bca17111f91cf1a819a643378111529f787bf69f"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SQLitePCLRaw.core",
+      "version": "2.1.12",
+      "bom-ref": "pkg:nuget/SQLitePCLRaw.core@2.1.12",
+      "purl": "pkg:nuget/SQLitePCLRaw.core@2.1.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "113a4dc3d0d8ddc9162e045101e0878fe18a3ae3e2eb569e7339178601dec54beaa19040620f11604484d89eced4cefea3a41b752119c2bc3d6dfab3b545565e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SQLitePCLRaw.lib.e_sqlite3",
+      "version": "2.1.12",
+      "bom-ref": "pkg:nuget/SQLitePCLRaw.lib.e_sqlite3@2.1.12",
+      "purl": "pkg:nuget/SQLitePCLRaw.lib.e_sqlite3@2.1.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "7d68bc0db927ba1820ef67d68a721d8d755aa8ed611cbe18041c152e7afb7b573d4c0670274404dfc8fdb325b5870c7a1daa84553c08f8ed3b58f7599fc469d3"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SQLitePCLRaw.provider.e_sqlite3",
+      "version": "2.1.12",
+      "bom-ref": "pkg:nuget/SQLitePCLRaw.provider.e_sqlite3@2.1.12",
+      "purl": "pkg:nuget/SQLitePCLRaw.provider.e_sqlite3@2.1.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "5b7a07e1721f0b316b81448328784de8df9d833039607391d95c57f0607a432ec2cab2498313c41bc362ae061694f402e4fda3cf69274ac7b15aee2d0d42f7de"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
     }
   ],
   "dependencies": [
@@ -718,12 +1076,30 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c1",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
         "pkg:github/actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7",
         "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
+      "dependsOn": [
+        "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
+        "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
+        "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
+        "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
+      "dependsOn": [
+        "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
+        "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
+        "pkg:nuget/Microsoft.Data.Sqlite@10.0.12",
+        "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167"
       ]
     },
     {
@@ -747,10 +1123,12 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-p0.2j",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c1",
       "dependsOn": [
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-p0.2j",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c1",
+        "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
+        "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
         "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
         "pkg:generic/humcapture/HumCapture.MfCapture@0.1.0-p0",
         "pkg:generic/humcapture/HumCapture.MfEnumerator@0.1.0-p0",
@@ -760,6 +1138,10 @@
     },
     {
       "ref": "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
       "dependsOn": []
     },
     {
@@ -830,6 +1212,49 @@
     {
       "ref": "pkg:npm/require-from-string@2.0.2",
       "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Data.Sqlite.Core@10.0.12",
+      "dependsOn": [
+        "pkg:nuget/SQLitePCLRaw.core@2.1.12"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Data.Sqlite@10.0.12",
+      "dependsOn": [
+        "pkg:nuget/Microsoft.Data.Sqlite.Core@10.0.12",
+        "pkg:nuget/SQLitePCLRaw.bundle_e_sqlite3@2.1.12",
+        "pkg:nuget/SQLitePCLRaw.core@2.1.12"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/SQLitePCLRaw.bundle_e_sqlite3@2.1.12",
+      "dependsOn": [
+        "pkg:nuget/SQLitePCLRaw.lib.e_sqlite3@2.1.12",
+        "pkg:nuget/SQLitePCLRaw.provider.e_sqlite3@2.1.12"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SQLitePCLRaw.core@2.1.12",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/SQLitePCLRaw.lib.e_sqlite3@2.1.12",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/SQLitePCLRaw.provider.e_sqlite3@2.1.12",
+      "dependsOn": [
+        "pkg:nuget/SQLitePCLRaw.core@2.1.12"
+      ]
     }
   ],
   "properties": [
@@ -839,7 +1264,7 @@
     },
     {
       "name": "humcapture:declared-manifests",
-      "value": "tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
+      "value": "tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
     }
   ]
 }

@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A/B1/B2/B3A/B3B/B3C are accepted; executable repository source contracts are baselined  
-**Tags:** I0.4B-B3C | REPOSITORY | JSON SCHEMA | SQLITE | DDL | RECONCILIATION | FAULT FIXTURES | CONTRACT  
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1 are implemented/accepted at their recorded evidence levels  
+**Tags:** I0.4B-C1 | WINDOWS COORDINATOR | REPOSITORY CORE | SQLITE | INITIALIZE | OPEN | COMPATIBILITY  
 **Last meaningful update:** 2026-09-10
 
 ## Objective
@@ -25,7 +25,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - P0.2A Windows camera API spike: source, builds, five self-tests, and named-device API inspection pass on the integrated HP camera and two Logitech C920 cameras. Managed/native surfaces agree on all HP formats; native Media Foundation exposes 119 additional H.264 signatures on each C920.
 - ADR-0006 is accepted. The isolated P0.2B native Media Foundation diagnostic builds with zero warnings/errors, passes eight selection self-tests, rejects unavailable 1080p60 and ambiguous profiles without output, preserves presentation/QPC timing evidence, and finalizes readable H.264 MP4 files.
 - Hardware probe execution: C920 B passed the short exact 1080p30 H.264 diagnostic at measured 29.92 fps. C920 A finalized readable media but delivered approximately 25.98 fps and then 24.00 fps in two runs; P0.2B acceptance is therefore blocked pending focused camera/control/profile/topology diagnosis. This is diagnostic evidence, not qualification.
-- Application source implementation: not started and not yet authorized.
+- Application source implementation: started only for the approved Windows
+  Coordinator I0.4B-C1 repository initialize/open slice; no UI, subject,
+  transfer, commit, reconciliation, receipt, cleanup or Android runtime exists.
 - P0.2K evidence integration: completed. Nine pre-integration P0.2A-J report files are hashed;
   both retained P0.2J runs verify in the controlled vault. Earlier P0.2 primary
   artifacts and complete normative P0.2J measurement/lifecycle records are not
@@ -174,6 +176,20 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `34502020209` and PR run `34502026587`, including repository schemas/DDL,
   contracts/controls, SBOM, dependency audit, and managed/native camera
   build/self-tests.
+- I0.4B-C1 implements the first production Windows Coordinator repository
+  slice. ADR-0022 selects locked `Microsoft.Data.Sqlite` 10.0.12 with the
+  bundled SQLitePCLRaw 2.1.12 runtime on
+  `net10.0-windows10.0.19041.0`. Initialization creates the accepted root
+  areas and catalog from the embedded versioned DDL, verifies and flushes catalog
+  state, and publishes the minimal descriptor last through a flushed
+  same-directory move. Open checks reparse/hard-link safety, descriptor
+  compatibility, SQLite integrity and exact descriptor/catalog metadata before
+  permitting mutation. Unsupported major, older/newer versions or unknown
+  required features return explicit descriptor-only read-only inspection and
+  never migrate. HC-REP-RUNTIME-001–017, the 91 contract tests and six SBOM
+  policy tests pass locally; current NuGet vulnerability/deprecation queries
+  report no findings. Process-kill, OS/power-loss, package commit/reconciliation,
+  backup/restore, HIL, field, independent and regulatory evidence remain open.
 
 ## Architecture summary
 

@@ -8,10 +8,56 @@ const discoveryExclusions = new Set([".git", "node_modules", "bin", "obj", "x64"
 
 function isDependencyManifest(name) {
   return name === "package-lock.json"
+    || name === "packages.lock.json"
     || name.endsWith(".csproj")
     || name.endsWith(".vcxproj")
     || ["build.gradle", "build.gradle.kts", "gradle.lockfile", "libs.versions.toml", "Cargo.lock", "go.sum", "pyproject.toml", "Podfile.lock"].includes(name)
     || /^requirements.*\.txt$/i.test(name);
+}
+
+function nugetPurl(name, version) {
+  return `pkg:nuget/${encodeURIComponent(name)}@${encodeURIComponent(version)}`;
+}
+
+async function nugetSurface(repoRoot, relativeLockPath, scope = "required") {
+  const text = await readFile(path.join(repoRoot, ...relativeLockPath.split("/")), "utf8");
+  const lock = JSON.parse(text);
+  const frameworks = Object.entries(lock.dependencies ?? {});
+  if (frameworks.length !== 1) throw new SbomError(`NuGet lock must contain exactly one target framework: ${relativeLockPath}`);
+  const [framework, entries] = frameworks[0];
+  const packages = [];
+  const dependencies = [];
+  const direct = [];
+  for (const [name, item] of Object.entries(entries)) {
+    if (item.type === "Project") continue;
+    if (!item.resolved || !item.contentHash) throw new SbomError(`NuGet package lacks resolved version/hash: ${relativeLockPath}:${name}`);
+    const ref = nugetPurl(name, item.resolved);
+    const packageScope = /Analyzer/i.test(name) ? "excluded" : scope;
+    packages.push({
+      type: "library",
+      name,
+      version: item.resolved,
+      "bom-ref": ref,
+      purl: ref,
+      scope: packageScope,
+      hashes: integrityHash(`sha512-${item.contentHash}`),
+      properties: [
+        { name: "humcapture:component-origin", value: "third-party" },
+        { name: "humcapture:resolution-source", value: relativeLockPath },
+        { name: "humcapture:target-framework", value: framework },
+        { name: "humcapture:license-status", value: "NuGet-package-licence-review-required" }
+      ]
+    });
+    dependencies.push({
+      ref,
+      dependsOn: Object.entries(item.dependencies ?? {}).map(([dependencyName, dependencyVersion]) => {
+        const resolved = entries[dependencyName]?.resolved ?? String(dependencyVersion).replace(/^\[|[, ].*$/g, "");
+        return nugetPurl(dependencyName, resolved);
+      }).sort()
+    });
+    if (item.type === "Direct") direct.push(ref);
+  }
+  return { packages, dependencies, direct: direct.sort(), manifestHash: sha256(text) };
 }
 
 export async function discoverDependencyManifests(root, current = root) {
@@ -227,8 +273,16 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     "tools/capability-probes/shared/package-lock.json",
     "tools/evidence-control/package-lock.json"
   ];
+  const coordinatorProjectPath = "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj";
+  const coordinatorLockPath = "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json";
+  const coordinatorSelfTestProjectPath = "apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj";
+  const coordinatorSelfTestLockPath = "apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json";
   const handledDependencyManifests = [
     ...npmLocks,
+    coordinatorProjectPath,
+    coordinatorLockPath,
+    coordinatorSelfTestProjectPath,
+    coordinatorSelfTestLockPath,
     "tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj",
     "tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj",
     "tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj"
@@ -239,6 +293,8 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   if (unhandled.length || missing.length) throw new SbomError(`SBOM manifest coverage changed. Unhandled: ${unhandled.join(", ") || "none"}. Missing: ${missing.join(", ") || "none"}.`);
   const npmSurfaces = [];
   for (const lock of npmLocks) npmSurfaces.push(await npmSurface(absoluteRoot, lock));
+  const coordinatorNuget = await nugetSurface(absoluteRoot, coordinatorLockPath);
+  const coordinatorSelfTestNuget = await nugetSurface(absoluteRoot, coordinatorSelfTestLockPath, "excluded");
 
   const managedProjectPath = "tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj";
   const nativeCaptureProjectPath = "tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj";
@@ -262,6 +318,15 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   const nativeEnumerator = await projectComponent(absoluteRoot, nativeEnumeratorProjectPath, "HumCapture.MfEnumerator", "application", "0.1.0-p0", [
     { name: "humcapture:platform-toolset", value: /<PlatformToolset>([^<]+)<\/PlatformToolset>/.exec(nativeEnumeratorProjectText)?.[1] ?? platformToolset },
     { name: "humcapture:windows-target-platform", value: /<WindowsTargetPlatformVersion>([^<]+)<\/WindowsTargetPlatformVersion>/.exec(nativeEnumeratorProjectText)?.[1] ?? windowsTarget }
+  ]);
+  const coordinator = await projectComponent(absoluteRoot, coordinatorProjectPath, "HumCapture.Coordinator.Repository", "library", "0.1.0", [
+    { name: "humcapture:target-framework", value: "net10.0-windows10.0.19041.0" },
+    { name: "humcapture:distribution-status", value: "engineering-application-component-not-released" }
+  ]);
+  const coordinatorSelfTest = await projectComponent(absoluteRoot, coordinatorSelfTestProjectPath, "HumCapture.Coordinator.Repository.SelfTest", "application", "0.1.0", [
+    { name: "humcapture:target-framework", value: "net10.0-windows10.0.19041.0" },
+    { name: "humcapture:execution-context", value: "test" },
+    { name: "humcapture:not-distributed", value: "true" }
   ]);
   const sbomTool = await projectComponent(absoluteRoot, "tools/sbom/package.json", "HumCapture SBOM Tool", "application", "0.1.0", [
     { name: "humcapture:execution-context", value: "build" }
@@ -290,11 +355,21 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   };
 
   const netRuntimeRef = "pkg:generic/microsoft/Microsoft.NETCore.App@8.0.0";
+  const net10RuntimeRef = "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0";
   const windowsRuntimeRef = "pkg:generic/microsoft/Windows-Media-Foundation-COM-Shell@host-provided";
   const windowsSdkRef = "pkg:generic/microsoft/Windows-SDK@10.0.19041.0";
   const platformComponents = [
     {
       type: "framework", name: "Microsoft.NETCore.App", version: "8.0.0", "bom-ref": netRuntimeRef, purl: netRuntimeRef, scope: "required",
+      properties: [
+        { name: "humcapture:component-origin", value: "third-party-platform" },
+        { name: "humcapture:license-status", value: "host-framework-licence-review-required" },
+        { name: "humcapture:hash-status", value: "host-resolved-framework-not-hashed" },
+        { name: "humcapture:resolution", value: "minimum framework from runtimeconfig; installed patch resolves at runtime" }
+      ]
+    },
+    {
+      type: "framework", name: "Microsoft.NETCore.App", version: "10.0.0", "bom-ref": net10RuntimeRef, purl: net10RuntimeRef, scope: "required",
       properties: [
         { name: "humcapture:component-origin", value: "third-party-platform" },
         { name: "humcapture:license-status", value: "host-framework-licence-review-required" },
@@ -323,9 +398,9 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     }
   ];
 
-  const firstParty = [...npmSurfaces.map((surface) => surface.firstParty), managed.component, nativeCapture.component, nativeEnumerator.component, sbomTool.component, workflowComponent];
+  const firstParty = [...npmSurfaces.map((surface) => surface.firstParty), managed.component, nativeCapture.component, nativeEnumerator.component, coordinator.component, coordinatorSelfTest.component, sbomTool.component, workflowComponent];
   const thirdPartyByRef = new Map();
-  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...platformComponents, ...githubActions, ...chocolateyPackages]) thirdPartyByRef.set(component["bom-ref"], component);
+  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...coordinatorSelfTestNuget.packages, ...coordinatorNuget.packages, ...platformComponents, ...githubActions, ...chocolateyPackages]) thirdPartyByRef.set(component["bom-ref"], component);
   const rootRef = `pkg:generic/humcapture/HumCapture@${encodeURIComponent(productVersion)}`;
   const rootComponent = {
     type: "application",
@@ -345,14 +420,18 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   const dependencies = [
     { ref: rootRef, dependsOn: firstParty.map((item) => item["bom-ref"]).sort() },
     ...npmSurfaces.flatMap((surface) => surface.dependencies),
+    ...coordinatorNuget.dependencies,
+    ...coordinatorSelfTestNuget.dependencies,
     { ref: managed.component["bom-ref"], dependsOn: [netRuntimeRef] },
     { ref: nativeCapture.component["bom-ref"], dependsOn: [windowsRuntimeRef, windowsSdkRef] },
     { ref: nativeEnumerator.component["bom-ref"], dependsOn: [windowsRuntimeRef, windowsSdkRef] },
+    { ref: coordinator.component["bom-ref"], dependsOn: [...coordinatorNuget.direct, net10RuntimeRef] },
+    { ref: coordinatorSelfTest.component["bom-ref"], dependsOn: [coordinator.component["bom-ref"], ...coordinatorSelfTestNuget.direct, net10RuntimeRef] },
     { ref: sbomTool.component["bom-ref"], dependsOn: [] },
     { ref: workflowRef, dependsOn: [...githubActions, ...chocolateyPackages].map((component) => component["bom-ref"]).sort() }
   ];
   for (const component of thirdPartyByRef.values()) if (!dependencies.some((item) => item.ref === component["bom-ref"])) dependencies.push({ ref: component["bom-ref"], dependsOn: [] });
-  const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, sbomTool.manifestHash, sha256(workflowText), productVersion, generatedAt.toISOString() ].join("\n"));
+  const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), coordinatorNuget.manifestHash, coordinatorSelfTestNuget.manifestHash, managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, coordinator.manifestHash, coordinatorSelfTest.manifestHash, sbomTool.manifestHash, sha256(workflowText), productVersion, generatedAt.toISOString() ].join("\n"));
   const bom = {
     "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
     bomFormat: "CycloneDX",
@@ -415,7 +494,7 @@ export async function validateSbom(bom) {
     for (const dependency of item.dependsOn ?? []) if (!refs.has(dependency)) errors.push(`Dependency graph points to unknown ref: ${dependency}`);
   }
   const declared = bom.properties?.find((item) => item.name === "humcapture:declared-manifests")?.value ?? "";
-  for (const required of ["tools/capability-probes/shared/package-lock.json", "tools/evidence-control/package-lock.json", "HumCapture.ManagedCameraProbe.csproj", "HumCapture.MfCapture.vcxproj", "HumCapture.MfEnumerator.vcxproj", "tools/sbom/package.json", ".github/workflows/humcapture-ci.yml"]) if (!declared.includes(required)) errors.push(`Declared manifest coverage missing: ${required}`);
+  for (const required of ["tools/capability-probes/shared/package-lock.json", "tools/evidence-control/package-lock.json", "HumCapture.ManagedCameraProbe.csproj", "HumCapture.MfCapture.vcxproj", "HumCapture.MfEnumerator.vcxproj", "HumCapture.Coordinator.Repository.csproj", "HumCapture.Coordinator.Repository.SelfTest.csproj", "packages.lock.json", "tools/sbom/package.json", ".github/workflows/humcapture-ci.yml"]) if (!declared.includes(required)) errors.push(`Declared manifest coverage missing: ${required}`);
   if (errors.length) throw new SbomError(`SBOM validation failed:\n${errors.join("\n")}`);
   return { componentCount: components.length, dependencyNodeCount: bom.dependencies.length };
 }

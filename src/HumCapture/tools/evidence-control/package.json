@@ -6,7 +6,9 @@
   "type": "module",
   "engines": { "node": ">=20" },
   "scripts": {
-    "test": "node --experimental-sqlite --test",
+    "test": "npm run test:contracts && npm run test:repository-runtime",
+    "test:contracts": "node --experimental-sqlite --test",
+    "test:repository-runtime": "dotnet run --project ../../apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj --configuration Release",
     "vault": "node src/cli.js"
   },
   "dependencies": {

@@ -27,3 +27,4 @@ Current records:
 - ADR-0019 — Explicit repository transaction state machine.
 - ADR-0020 — Journal history and bounded reconciliation actions.
 - ADR-0021 — Executable repository contract surface.
+- ADR-0022 — Microsoft.Data.Sqlite for the Coordinator repository.

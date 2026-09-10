@@ -185,3 +185,11 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   recovery fixtures and post-reconciliation receipt gating. These are
   source-level controls; production filesystem/SQLite behavior, power-loss,
   backup/restore, independent and qualified regulatory evidence remain open.
+- **HC-RISK-030 / HC-RISK-031 initialize/open implementation control,
+  2026-09-10:** I0.4B-C1 and ADR-0022 add a locked production SQLite provider,
+  real empty-root initialization, catalog creation from the accepted embedded
+  DDL, flushed descriptor-last publication, reparse/hard-link rejection,
+  integrity/metadata agreement and explicit no-write compatibility outcomes.
+  HC-REP-RUNTIME-001–017 pass on the local Windows process/filesystem. Abrupt
+  termination, OS/power-loss, removable storage, package commit/reconciliation,
+  backup/restore, independent and qualified regulatory evidence remain open.

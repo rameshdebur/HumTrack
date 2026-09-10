@@ -24,6 +24,11 @@ test("generates a valid CycloneDX 1.7 inventory with all declared surfaces", asy
   const bom = JSON.parse(await readFile(output, "utf8"));
   assert.ok(bom.components.some((item) => item.name === "ajv" && item.version === "8.20.0"));
   assert.ok(bom.components.some((item) => item.name === "Microsoft.NETCore.App"));
+  const sqlite = bom.components.find((item) => item.name === "Microsoft.Data.Sqlite" && item.version === "10.0.12");
+  assert.equal(sqlite.scope, "required");
+  assert.equal(sqlite.hashes[0].alg, "SHA-512");
+  assert.ok(bom.components.some((item) => item.name === "SQLitePCLRaw.bundle_e_sqlite3" && item.version === "2.1.12"));
+  assert.ok(bom.components.some((item) => item.name === "HumCapture.Coordinator.Repository"));
   assert.ok(bom.components.some((item) => item.name.includes("Windows Media Foundation")));
   assert.ok(bom.components.some((item) => item.name === "checkout" && item.group === "actions"));
   assert.ok(bom.components.some((item) => item.name === "setup-node" && item.group === "actions"));
