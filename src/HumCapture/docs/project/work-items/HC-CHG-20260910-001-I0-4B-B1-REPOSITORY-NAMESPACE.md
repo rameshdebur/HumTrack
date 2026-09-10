@@ -58,7 +58,7 @@ risk/regulatory and release owners are affected.
 ## Configuration identity
 
 - Source baseline/branch: `9d14de4973be9b1ca0d357341e71eb09b1e54cac` on `codex/humcapture-baseline`.
-- Decision commit: assigned on commit and recorded in a verification update.
+- Decision commit: `6021c50b18257a3b2f778c1b94c0b2b56d498f77`.
 - Interface change: HC-IF-REP-001 version 1.0.0 namespace baseline.
 - Backward compatibility: existing package internal paths remain unchanged.
 
@@ -78,3 +78,17 @@ risk/regulatory and release owners are affected.
 - Permitted classification: engineering architecture/interface baseline only.
 - Change/verification owner: signed-in project owner, 2026-09-10.
 - Independent reviewer/release owner/regulatory-risk attribution: pending.
+
+## Final verification on 2026-09-10
+
+- capability-evidence regression: 55/55 pass;
+- evidence-control regression: 76/76 pass;
+- SBOM policy: 6/6 pass; retained 20-component/21-node inventory validates and
+  SHA-256 `605734f0667a18b76f446c2a86a8aeb3c2d6beecddfcfef8907e3d57242fee57`
+  matches;
+- both locked production dependency audits report zero vulnerabilities;
+- 73 tracked JSON documents parse; staged boundary, secret-pattern and diff
+  checks pass; and
+- exact decision SHA `6021c50b18257a3b2f778c1b94c0b2b56d498f77`
+  passed HumCapture CI push run `34444103000` and PR run `34444106785`,
+  including managed and native camera builds/self-tests.

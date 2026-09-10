@@ -122,7 +122,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   canonical lowercase UUIDs. Trial/source/attempt identities remain in the
   manifest/catalog to limit Windows path depth. Package contents remain exactly
   as verified; display/PII values never become path authority. B2/B3 schemas,
-  compatibility and executable recovery tests remain open.
+  compatibility and executable recovery tests remain open. Decision commit
+  `6021c50b18257a3b2f778c1b94c0b2b56d498f77` passed HumCapture CI push run
+  `34444103000` and PR run `34444106785`, including existing contracts,
+  SBOM/audits, and managed/native camera build/self-tests.
 
 ## Architecture summary
 
