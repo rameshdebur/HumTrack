@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1 are implemented/accepted at their recorded evidence levels  
-**Tags:** I0.4B-C1 | WINDOWS COORDINATOR | REPOSITORY CORE | SQLITE | INITIALIZE | OPEN | COMPATIBILITY  
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1/C2 are implemented/accepted at their recorded evidence levels  
+**Tags:** I0.4B-C2 | WINDOWS COORDINATOR | REPOSITORY CORE | VERIFIED STAGING | JOURNAL | IMMUTABLE RECORD  
 **Last meaningful update:** 2026-09-10
 
 ## Objective
@@ -25,9 +25,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - P0.2A Windows camera API spike: source, builds, five self-tests, and named-device API inspection pass on the integrated HP camera and two Logitech C920 cameras. Managed/native surfaces agree on all HP formats; native Media Foundation exposes 119 additional H.264 signatures on each C920.
 - ADR-0006 is accepted. The isolated P0.2B native Media Foundation diagnostic builds with zero warnings/errors, passes eight selection self-tests, rejects unavailable 1080p60 and ambiguous profiles without output, preserves presentation/QPC timing evidence, and finalizes readable H.264 MP4 files.
 - Hardware probe execution: C920 B passed the short exact 1080p30 H.264 diagnostic at measured 29.92 fps. C920 A finalized readable media but delivered approximately 25.98 fps and then 24.00 fps in two runs; P0.2B acceptance is therefore blocked pending focused camera/control/profile/topology diagnosis. This is diagnostic evidence, not qualification.
-- Application source implementation: started only for the approved Windows
-  Coordinator I0.4B-C1 repository initialize/open slice; no UI, subject,
-  transfer, commit, reconciliation, receipt, cleanup or Android runtime exists.
+- Application source implementation: the approved Windows Coordinator
+  I0.4B-C1 initialize/open and I0.4B-C2 verified-staging journal slices exist;
+  no UI, subject service, collection transport, package commit/reconciliation,
+  receipt, cleanup or Android runtime exists.
 - P0.2K evidence integration: completed. Nine pre-integration P0.2A-J report files are hashed;
   both retained P0.2J runs verify in the controlled vault. Earlier P0.2 primary
   artifacts and complete normative P0.2J measurement/lifecycle records are not
@@ -192,6 +193,21 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `7594e4ee2e1670ad7457c169d0a9833f5ec74bbc` passed HumCapture CI push run
   `34509901600` and PR run `34509907387`. Process-kill, OS/power-loss, package commit/reconciliation,
   backup/restore, HIL, field, independent and regulatory evidence remain open.
+- I0.4B-C2 implements verified-staging admission into the production repository.
+  The service derives canonical staging, destination and verification-record
+  paths; rejects missing, changed, extra, unsafe, reparse or hard-linked package
+  material; independently rechecks RFC 8785 package identity, artifact bytes,
+  inventory and verification-record bindings; and publishes the immutable
+  verification record without overwrite. One SQLite transaction inserts the
+  current `STAGED_VERIFIED` row, sequence-1 transition and verification-record
+  index. Exact replay is idempotent, while identity/reuse/destination conflicts
+  fail closed. HC-REP-RUNTIME-001–031, including transactional rollback, pass
+  locally. Implementation commit `dfda300c754f8e99a084aac47acd423bf2b6fd8b`
+  passed HumCapture CI push run `34514312741` and PR run `34514321335`.
+  Collection transport/common
+  media decoding, `COMMITTING` and later states, reconciliation/quarantine moves,
+  process-kill/OS/power-loss, backup/restore, HIL, field, independent and
+  regulatory evidence remain open.
 
 ## Architecture summary
 

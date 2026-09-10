@@ -193,3 +193,14 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   HC-REP-RUNTIME-001–017 pass on the local Windows process/filesystem. Abrupt
   termination, OS/power-loss, removable storage, package commit/reconciliation,
   backup/restore, independent and qualified regulatory evidence remain open.
+- **HC-RISK-022 / HC-RISK-030 / HC-RISK-031 verified-staging implementation
+  control, 2026-09-10:** I0.4B-C2 rechecks canonical package identity, RFC 8785
+  content identity, exact artifact bytes/inventory, path/link safety and a
+  successful content-bound immutable verification record before admitting
+  `STAGED_VERIFIED`. Verification-record publication is non-overwriting; the
+  current row, initial append-only transition and verification index commit in
+  one SQLite transaction. Exact replay is idempotent and conflicting reuse,
+  destination material or index collision fails closed. HC-REP-RUNTIME-018–031
+  pass locally. Collection transport, production media decoding, later commit/
+  reconciliation states, concurrent external mutation, abrupt process/OS/power
+  loss, independent and qualified regulatory evidence remain open.
