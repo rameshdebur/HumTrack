@@ -114,6 +114,14 @@
   session UUIDs while retaining the package exactly as verified and preventing
   display-name changes, unsafe paths, or conflicts from renaming or
   overwriting it.
+- **HC-US-XFR-025:** Recover and verify immutable session milestones from
+  individually hashed records without treating them as a second mutable
+  Coordinator database.
+- **HC-US-XFR-026:** Detect disagreement between a milestone file and its
+  catalog index, block affected completion/cleanup, and present a specific
+  recovery state without silently choosing or recreating either record.
+- **HC-US-XFR-027:** Inspect a newer or older repository safely without silent
+  migration or modification when its required version/features are unsupported.
 
 ## Quality and completion
 

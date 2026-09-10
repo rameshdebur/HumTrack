@@ -177,6 +177,27 @@ This document establishes requirement families and mandatory system constraints.
   non-canonical UUIDs, case collisions, hard links and reparse points; existing
   destinations SHALL never be overwritten and unexpected entries SHALL not be
   silently deleted.
+- **HC-DATA-REQ-025:** SQLite SHALL be the sole authority for mutable current
+  Coordinator workflow, subject/demographic, protocol-registry, device,
+  transfer/checkpoint, custody/cleanup, journal and audit state; mutable current
+  state SHALL NOT be mirrored into replaceable JSON files.
+- **HC-DATA-REQ-026:** Immutable protocol snapshots, package verifications,
+  commits, receipts, quality assessments, completions and handoff manifests
+  SHALL be UUID-named, schema-versioned and content-hashed under the session
+  `records/{record_kind}/` namespace and indexed by SQLite without replacement.
+- **HC-DATA-REQ-027:** Scientific package bytes and immutable milestone files
+  SHALL remain filesystem authority for their content while SQLite is their
+  operational index. Required evidence disagreement SHALL enter recovery and
+  block affected receipt/completion without silent reconstruction or deletion.
+- **HC-DATA-REQ-028:** `repository.json` SHALL declare only repository/schema/
+  namespace/catalog versions, repository identity, creation provenance,
+  relative catalog path and required features; it SHALL contain no subject PII,
+  secret, absolute path, mutable capture state or persistent volume binding and
+  SHALL be published through validated durable atomic replacement.
+- **HC-DATA-REQ-029:** Unsupported repository major versions and unknown
+  required features SHALL refuse mutation. Repository open SHALL NOT silently
+  migrate data; historical packages and milestone files SHALL remain unchanged
+  unless a separately approved migration contract explicitly governs them.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.

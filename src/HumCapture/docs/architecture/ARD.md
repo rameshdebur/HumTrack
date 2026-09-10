@@ -169,8 +169,11 @@ folder identity. ADR-0017 and HC-IF-REP-001 define the shallow UUID namespace:
 `repository.json`, `catalog/`, `staging/`, `quarantine/`, and `subjects/`.
 Trial/source/attempt identities remain in the package manifest and catalog, not
 directory depth. Package contents and internal relative paths remain exactly as
-verified. Descriptor, catalog, journal and operational-record schemas remain
-later I0.4B work.
+verified. ADR-0018 makes SQLite the sole mutable workflow/PII authority while
+immutable protocol-snapshot, verification, commit, receipt, quality,
+completion, and handoff JSON records live under the session `records/`
+namespace and are indexed by SQLite. Descriptor, catalog, journal and record
+schemas remain later I0.4B work.
 
 ## 14. Transfer and recovery
 

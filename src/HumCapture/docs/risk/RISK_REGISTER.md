@@ -34,6 +34,7 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
 | HC-RISK-028 | Operator cleanup, concurrent activity, or partial deletion removes uncommitted data or falsely reports complete source removal | Eligible-only display; explicit selection/confirmation; immediate Android recheck; active-operation block; exact package/hash/path binding; truthful per-package remainder; manual USB fallback | HC-AND-REQ-005/006, HC-DATA-REQ-015/016, HC-USE-REQ-003 |
 | HC-RISK-029 | Binary layout, clock, cadence, frame/video association, coordinate transform, or unavailable camera/IMU metadata is misinterpreted and produces misleading downstream timing or motion analysis | HC-IF-TIM-001 magic/version/size/presence/CRC/SHA controls; independent sequence/clock domains; explicit provenance/mapping/uncertainty; protocol-scoped quality; immutable golden vectors and fail-closed validator | HC-TIME-REQ-008–014, HC-AND-REQ-001, HC-SYS-REQ-003 |
 | HC-RISK-030 | Crash, power loss, cross-volume copy, unsafe/deep/display-name path, or disagreement between filesystem, catalog, verification, custody, and journal state falsely marks a package committed, loses it, misassociates or overwrites another package, exposes PII, or authorizes premature source cleanup | Same-volume staging; verified immutable package; durable recoverable commit journal; shallow canonical UUID namespace; opaque package envelope; path/link rejection; atomic rename; startup reconciliation; conflict quarantine; receipt only after reconciled `COMMITTED` state | HC-DATA-REQ-002/003/011/013/017–024, HC-COORD-REQ-003 |
+| HC-RISK-031 | Mutable JSON/catalog duplication, missing or mismatched milestone indexes, lost subject PII, or silent repository migration creates competing authority, false history, unreadable sessions, or unsafe completion | SQLite-only mutable/PII authority; immutable content-hashed milestone files; exact index binding; disagreement recovery; no silent migration; coordinated repository/catalog backup required before release | HC-DATA-REQ-025–029, HC-COMPAT-REQ-002–004, HC-COORD-REQ-003 |
 
 ## Current Phase 0 evidence notes
 
@@ -161,4 +162,9 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   HC-IF-REP-001 version 1.0.0 fix a shallow canonical UUID repository hierarchy,
   preserve the exact verified package envelope, exclude display/PII values from
   paths, and reject unsafe/link-based substitution. Executable schemas and
-  Windows path tests remain I0.4B-B2/B3 work.
+  Windows path tests remain I0.4B-B3 work.
+- **HC-RISK-031 architectural control, 2026-09-10:** ADR-0018 and
+  HC-IF-REP-001 version 1.1.0 separate mutable SQLite authority from immutable
+  package/milestone evidence, require exact content-hash indexing, fail to
+  recovery on disagreement, and prohibit silent migration. Executable schemas,
+  catalog reconstruction, backup/restore and runtime fault evidence remain open.

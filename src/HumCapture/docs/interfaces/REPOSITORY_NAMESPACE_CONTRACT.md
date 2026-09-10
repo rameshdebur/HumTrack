@@ -1,16 +1,17 @@
 # HumCapture Repository Namespace Contract
 
 **Contract ID:** HC-IF-REP-001  
-**Version:** 1.0.0  
-**Status:** Accepted namespace baseline  
+**Version:** 1.1.0  
+**Status:** Accepted namespace and record-authority baseline  
 **Date:** 2026-09-10
 
 ## 1. Scope
 
-This contract fixes the repository-relative namespace used by collection,
-verification, commit, reconciliation, receipt, export, and backup work. It does
-not yet define repository descriptor, SQLite catalog, transaction-journal, or
-compatibility schemas and does not authorize application implementation.
+This contract fixes the repository-relative namespace and record authorities
+used by collection, verification, commit, reconciliation, receipt, export, and
+backup work. It does not yet define executable repository descriptor, SQLite
+catalog, transaction-journal, or reconciliation schemas and does not authorize
+application implementation.
 
 ## 2. Canonical paths
 
@@ -21,6 +22,7 @@ compatibility schemas and does not authorize application implementation.
 | Collected package | `staging/{collection_attempt_id}/{package_id}/` |
 | Quarantined package | `quarantine/{quarantine_record_id}/{package_id}/` |
 | Committed package | `subjects/{subject_id}/sessions/{session_id}/packages/{package_id}/` |
+| Immutable milestone record | `subjects/{subject_id}/sessions/{session_id}/records/{record_kind}/{record_id}.json` |
 
 Every identity placeholder is its canonical lowercase hyphenated UUID string.
 All paths are resolved relative to one configured data root. Staging,
@@ -59,15 +61,37 @@ automatically deleted.
 
 ## 6. Versioning
 
-`repository.json` declares `HC-IF-REP-001@1.0.0` and the repository UUID.
-Unknown required features and unsupported major versions fail closed without
-modifying packages. Historical finalized or committed packages are not moved,
-renamed, or internally rewritten by a later layout reader.
+Version 1.1.0 adds the record-authority, descriptor and compatibility semantics
+below without changing version 1.0.0 package paths.
+
+SQLite is authoritative for mutable operational/current state, subject PII,
+transfer checkpoints, transaction journal and audit events. Mutable current
+state is not mirrored into replaceable JSON. Scientific package bytes and the
+following immutable milestone kinds are filesystem evidence:
+
+`protocol-snapshots`, `verifications`, `commits`, `receipts`,
+`quality-assessments`, `completions`, and `handoffs`.
+
+Each milestone filename uses its canonical record UUID and the file is
+schema-versioned, content-hashed and immutable. SQLite indexes its type, UUID,
+revision, hash, subject/session binding and repository-relative path. A
+conflict or mismatch enters recovery and blocks affected receipt/completion.
+
+`repository.json` declares the descriptor schema version, repository UUID,
+HC-IF-REP-001 version, namespace version, catalog schema version, creation UTC,
+creating Windows account, catalog-relative path, and required features. It has
+no subject PII, secret, absolute path, mutable capture state, or persistent
+volume binding. Publication uses validated write/flush/atomic replacement.
+
+Unsupported major versions refuse mutation and may expose only explicitly safe
+read-only inspection/export. A newer minor version with an unknown required
+feature refuses mutation; known compatible versions open normally. Opening an
+older supported repository does not migrate it silently. Historical packages
+and milestone files are not moved, renamed, or rewritten by a later reader.
 
 ## 7. Deferred decisions
 
-I0.4B-B2/B3 will define subject/session operational records, descriptor,
-catalog and journal schemas, transaction transitions, compatibility window,
-crash-point fixtures, and recovery outcomes. Runtime, backup/restore,
-retention, power-loss, HIL, field, independent and regulatory evidence remain
-open.
+I0.4B-B3 will define descriptor, milestone-index, catalog and journal schemas,
+transaction transitions, crash-point fixtures, and recovery outcomes. Runtime,
+SQLite DDL/configuration, backup/restore, retention, power-loss, HIL, field,
+independent and regulatory evidence remain open.

@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A and I0.4B-B1 are accepted; repository transaction architecture and namespace are locked  
-**Tags:** I0.4B-B1 | REPOSITORY | NAMESPACE | UUID | PATH-SAFETY | WINDOWS | CONTRACT  
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A/B1/B2 are accepted; repository transaction, namespace and record authorities are locked  
+**Tags:** I0.4B-B2 | REPOSITORY | SQLITE | RECORDS | DESCRIPTOR | VERSIONING | RECOVERY | CONTRACT  
 **Last meaningful update:** 2026-09-10
 
 ## Objective
@@ -126,6 +126,15 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `6021c50b18257a3b2f778c1b94c0b2b56d498f77` passed HumCapture CI push run
   `34444103000` and PR run `34444106785`, including existing contracts,
   SBOM/audits, and managed/native camera build/self-tests.
+- I0.4B-B2 is accepted in ADR-0018 and advances HC-IF-REP-001 additively to
+  version 1.1.0. SQLite is the sole mutable workflow/subject-PII authority;
+  verified packages and immutable protocol-snapshot, verification, commit,
+  receipt, quality, completion and handoff records are filesystem evidence
+  indexed by UUID/revision/hash/path. Disagreement enters recovery and blocks
+  receipt/completion. The minimal `repository.json` version/feature descriptor
+  contains no subject data or secrets; unsupported major/required features
+  refuse mutation and opening never silently migrates history. B3 executable
+  schemas and fault tests remain open.
 
 ## Architecture summary
 
@@ -144,7 +153,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   schemas/bindings.
 - Receipt signing and any future trusted offline acknowledgement mechanism.
 - Independent review and production implementation of the accepted timing/IMU contract.
-- I0.4B-B2/B3 subject/session records, executable repository transaction schemas and compatibility rules.
+- I0.4B-B3 executable repository descriptor, record-index, journal, reconciliation schemas and fault rules.
 
 ## Regulatory and policy position
 

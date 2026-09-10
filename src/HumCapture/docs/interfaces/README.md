@@ -14,9 +14,10 @@ ADR-0013 and `PAIRING_AND_TRANSPORT_SECURITY_CONTRACT.md` baseline
 ADR-0015 and `TIMING_AND_IMU_BINARY_CONTRACT.md` baseline `HC-IF-TIM-001`
 version `1.0.0` with executable binary vectors and timing/camera/IMU schemas.
 ADR-0016 accepts the I0.4B-A recoverable SQLite/filesystem commit architecture;
-ADR-0017 and `REPOSITORY_NAMESPACE_CONTRACT.md` baseline the shallow UUID
-repository namespace as `HC-IF-REP-001` version `1.0.0`. Its descriptor,
-catalog/journal records and executable schemas remain I0.4B-B2/B3 work.
+ADR-0017/0018 and `REPOSITORY_NAMESPACE_CONTRACT.md` baseline the shallow UUID
+namespace and split operational/immutable record authority as `HC-IF-REP-001`
+version `1.1.0`. Executable descriptor, catalog/journal and reconciliation
+schemas remain I0.4B-B3 work.
 
 The executable transport-neutral control slice is:
 
