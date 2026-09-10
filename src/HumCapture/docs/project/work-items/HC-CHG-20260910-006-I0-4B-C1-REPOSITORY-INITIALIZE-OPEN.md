@@ -2,7 +2,7 @@
 
 **Change ID:** HC-CHG-20260910-006  
 **Title:** Implement I0.4B-C1 repository initialize and open  
-**State:** In review; implementation and automated verification complete  
+**State:** Implementation remotely verified; independent review pending  
 **Change owner:** Signed-in project owner / Coordinator repository owner  
 **Component owner:** Software Engineer with Coordinator/repository assignment  
 **Verification owner:** Engineering QA  
@@ -58,7 +58,7 @@
 ## Implementation and configuration identity
 
 - Branch: `codex/humcapture-baseline` in the isolated HumCapture worktree.
-- Implementation commit: pending final commit.
+- Implementation commit: `7594e4ee2e1670ad7457c169d0a9833f5ec74bbc`.
 - Toolchain: .NET SDK 10.0.401; Microsoft.NETCore.App 10.0.12; Windows host
   10.0.26200; Node.js contract harness.
 - Interface/schema change: none.
@@ -77,6 +77,7 @@
 | HC-REP-TEST-001–015 and full contracts | Contract regression | 91/91 pass |
 | NuGet advisory/deprecation query | Supply-chain screening | No findings from current configured sources |
 | HC-GOV-002 SBOM | Dependency inventory and format | 6/6 tests; project and official validation pass; 31 components/32 nodes |
+| Exact-source remote CI | Reproducible branch/PR verification | Push `34509901600` and PR `34509907387` passed for implementation SHA `7594e4ee2e1670ad7457c169d0a9833f5ec74bbc` |
 
 Evidence levels achieved: source implemented; build/static checks passed;
 automated behavior verified; local Windows process/runtime integration verified.

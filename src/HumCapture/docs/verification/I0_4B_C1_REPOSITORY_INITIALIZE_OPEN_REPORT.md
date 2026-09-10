@@ -22,6 +22,9 @@ explicit mutation-versus-read-only compatibility decision.
   project and official CycloneDX CLI 0.33.1 validation passed.
 - NuGet current-source vulnerable-package query: no findings.
 - NuGet current-source deprecated-package query: no findings.
+- Exact implementation commit
+  `7594e4ee2e1670ad7457c169d0a9833f5ec74bbc` passed HumCapture CI push run
+  `34509901600` and PR run `34509907387`.
 
 The runtime tests create real temporary directories and SQLite files, execute
 the embedded accepted DDL, query catalog metadata, check supported reopen,

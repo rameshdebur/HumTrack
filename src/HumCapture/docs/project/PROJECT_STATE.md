@@ -188,7 +188,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   required features return explicit descriptor-only read-only inspection and
   never migrate. HC-REP-RUNTIME-001–017, the 91 contract tests and six SBOM
   policy tests pass locally; current NuGet vulnerability/deprecation queries
-  report no findings. Process-kill, OS/power-loss, package commit/reconciliation,
+  report no findings. Implementation commit
+  `7594e4ee2e1670ad7457c169d0a9833f5ec74bbc` passed HumCapture CI push run
+  `34509901600` and PR run `34509907387`. Process-kill, OS/power-loss, package commit/reconciliation,
   backup/restore, HIL, field, independent and regulatory evidence remain open.
 
 ## Architecture summary
