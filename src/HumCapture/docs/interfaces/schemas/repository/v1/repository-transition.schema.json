@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/repository/v1/repository-transition.schema.json",
+  "title": "HumCapture append-only repository transition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "transition_id", "transaction_id", "transition_sequence",
+    "from_state", "to_state", "operation_id", "trigger", "actor_kind",
+    "actor_windows_account", "reconciliation_id", "reason_code", "reason",
+    "recorded_utc"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "transition_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "transaction_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "transition_sequence": { "type": "integer", "minimum": 1 },
+    "from_state": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/repository_state" }, { "type": "null" }]
+    },
+    "to_state": { "$ref": "common.schema.json#/$defs/repository_state" },
+    "operation_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "trigger": { "$ref": "common.schema.json#/$defs/trigger" },
+    "actor_kind": { "$ref": "common.schema.json#/$defs/actor_kind" },
+    "actor_windows_account": { "$ref": "common.schema.json#/$defs/windows_account" },
+    "reconciliation_id": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/uuid" }, { "type": "null" }]
+    },
+    "reason_code": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/reason_code" }, { "type": "null" }]
+    },
+    "reason": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/bounded_reason" }, { "type": "null" }]
+    },
+    "recorded_utc": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "transition_sequence": { "const": 1 } }, "required": ["transition_sequence"] },
+      "then": {
+        "properties": {
+          "from_state": { "type": "null" },
+          "to_state": { "const": "STAGED_VERIFIED" }
+        }
+      },
+      "else": { "properties": { "from_state": { "$ref": "common.schema.json#/$defs/repository_state" } } }
+    },
+    {
+      "if": { "properties": { "trigger": { "const": "OPERATOR" } }, "required": ["trigger"] },
+      "then": { "properties": { "actor_kind": { "const": "OPERATOR" } } }
+    }
+  ]
+}

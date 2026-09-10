@@ -178,3 +178,10 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   history, fact/result separation, bounded exact automatic continuation,
   operator-controlled conflict disposition, and no force commit. Executable
   schemas, DDL, crash fixtures and runtime/power-loss evidence remain open.
+- **HC-RISK-030 / HC-RISK-031 executable contract control, 2026-09-10:**
+  ADR-0021 and HC-REP-TEST-001–015 add closed repository schemas, executable
+  constrained/append-only SQLite DDL, exact namespace and cross-record
+  bindings, exhaustive transition rejection, complete observations, bounded
+  recovery fixtures and post-reconciliation receipt gating. These are
+  source-level controls; production filesystem/SQLite behavior, power-loss,
+  backup/restore, independent and qualified regulatory evidence remain open.

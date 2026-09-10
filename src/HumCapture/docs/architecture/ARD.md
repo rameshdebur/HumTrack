@@ -181,6 +181,10 @@ ADR-0020 combines one current transaction row with append-only transition and
 reconciliation history, allowing only enumerated exact, non-destructive
 automatic recovery while conflicts require operator disposition and can never
 be force-committed.
+ADR-0021 realizes that policy as closed JSON schemas, executable strict SQLite
+DDL, complete/invalid/crash fixtures and relational conformance tests. The
+pinned Node SQLite adapter is verification-only; production Coordinator
+repository implementation and durability evidence remain separate work.
 
 ## 14. Transfer and recovery
 

@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A/B1/B2/B3A/B3B are accepted; repository journal and recovery policy are locked  
-**Tags:** I0.4B-B3B | REPOSITORY | SQLITE | JOURNAL | HISTORY | RECONCILIATION | RECOVERY | CONTRACT  
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A/B1/B2/B3A/B3B/B3C are accepted; executable repository source contracts are baselined  
+**Tags:** I0.4B-B3C | REPOSITORY | JSON SCHEMA | SQLITE | DDL | RECONCILIATION | FAULT FIXTURES | CONTRACT  
 **Last meaningful update:** 2026-09-10
 
 ## Objective
@@ -160,6 +160,17 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `2d82f55c36a4bb164f74b23c019e1fe11eba97cd` passed HumCapture CI push run
   `34495803152` and PR run `34495806849`, including contracts/controls, SBOM,
   dependency audit, and managed/native camera build/self-tests.
+- I0.4B-B3C is accepted in ADR-0021 and realizes HC-IF-REP-001 version 1.3.0
+  through eight JSON Schemas, executable strict-table SQLite DDL, one complete
+  lifecycle, eight crash/reconciliation cases, three named invalid fixtures,
+  and HC-REP-TEST-001–015. Schema validation controls individual records;
+  relational conformance controls paths, ordered states, immutable bindings,
+  exact replay, six-authority observation, automatic/operator actions,
+  committed-evidence agreement and receipt gating. The pinned Node SQLite
+  adapter is test-only. Production repository I/O, real filesystem durability,
+  backup/restore, runtime/power-loss, HIL, field, independent and regulatory
+  evidence remain open. Decision commit and exact CI are pending the controlled
+  verification update.
 
 ## Architecture summary
 
@@ -178,8 +189,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   schemas/bindings.
 - Receipt signing and any future trusted offline acknowledgement mechanism.
 - Independent review and production implementation of the accepted timing/IMU contract.
-- I0.4B-B3C executable repository descriptor, catalog/journal/record-index/
-  reconciliation schemas, SQLite representation and fault fixtures.
+- Production implementation and independent review of HC-IF-REP-001 1.3.0,
+  including real filesystem crash/restart, atomicity and backup/restore.
 
 ## Regulatory and policy position
 

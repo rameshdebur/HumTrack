@@ -2,15 +2,16 @@
 
 **Contract ID:** HC-IF-REP-001  
 **Version:** 1.3.0  
-**Status:** Accepted repository authority, transaction and reconciliation baseline  
+**Status:** Accepted executable repository source contract  
 **Date:** 2026-09-10
 
 ## 1. Scope
 
 This contract fixes the repository-relative namespace and record authorities
 used by collection, verification, commit, reconciliation, receipt, export, and
-backup work. It does not yet define executable repository descriptor, SQLite
-catalog, transaction-journal, or reconciliation schemas and does not authorize
+backup work. Its executable source representation comprises JSON Schema
+2020-12 records under `schemas/repository/v1/`, strict SQLite DDL at
+`sqlite/repository-v1.sql`, and HC-REP-TEST-001–015. It does not authorize
 application implementation.
 
 ## 2. Canonical paths
@@ -131,9 +132,17 @@ uncertain durability requires operator action. Permitted actions are
 commit, overwrite evidence, delete the only verified copy, or manufacture an
 immutable milestone.
 
-## 9. Deferred decisions
+## 9. Executable representation and deferred implementation
 
-I0.4B-B3C will define executable descriptor, milestone-index, catalog, journal,
-transition, and reconciliation schemas plus crash-point fixtures. Runtime,
-SQLite implementation/configuration, backup/restore, retention, power-loss,
-HIL, field, independent and regulatory evidence remain open.
+ADR-0021 and I0.4B-B3C define executable descriptor, milestone-index, catalog,
+journal, transition, reconciliation and commit-record schemas; SQLite DDL; a
+complete valid lifecycle; named invalid fixtures; and crash-boundary
+reconciliation cases. JSON Schema controls individual records, while the
+conformance suite controls relational identity, ordering, idempotency,
+automatic/operator actions and receipt eligibility.
+
+The SQLite DDL is executed in memory by the pinned verification runtime. It is
+a logical persistence contract, not the production Coordinator repository.
+Runtime provider/configuration, real filesystem/link handling, atomic
+move/flush behavior, backup/restore, retention, power-loss, HIL, field,
+independent and regulatory evidence remain open.

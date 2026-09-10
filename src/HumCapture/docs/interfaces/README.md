@@ -14,10 +14,11 @@ ADR-0013 and `PAIRING_AND_TRANSPORT_SECURITY_CONTRACT.md` baseline
 ADR-0015 and `TIMING_AND_IMU_BINARY_CONTRACT.md` baseline `HC-IF-TIM-001`
 version `1.0.0` with executable binary vectors and timing/camera/IMU schemas.
 ADR-0016 accepts the I0.4B-A recoverable SQLite/filesystem commit architecture;
-ADR-0017–0020 and `REPOSITORY_NAMESPACE_CONTRACT.md` baseline the shallow UUID
+ADR-0017–0021 and `REPOSITORY_NAMESPACE_CONTRACT.md` baseline the shallow UUID
 namespace, split operational/immutable record authority, and internal commit
-state/reconciliation model as `HC-IF-REP-001` version `1.3.0`. Executable
-descriptor, catalog/journal and reconciliation schemas remain I0.4B-B3C work.
+state/reconciliation model as `HC-IF-REP-001` version `1.3.0`. I0.4B-B3C adds
+eight repository JSON Schemas, executable SQLite DDL, fixtures, and
+HC-REP-TEST-001–015 relational conformance.
 
 The executable transport-neutral control slice is:
 
@@ -43,13 +44,24 @@ The executable security slice adds four JSON Schemas for ephemeral bootstrap,
 enrollment, trust lifecycle, and redacted audit records; mutual-TLS bindings in
 both interface documents; and HC-SEC-TEST-001–012 negative-path conformance.
 
+The executable repository slice adds:
+
+- `schemas/repository/v1/` — descriptor, current transaction, transition,
+  reconciliation, package catalog, immutable record index and commit record;
+- `sqlite/repository-v1.sql` — executable strict-table SQLite logical schema
+  with constrained identities/states and immutable/append-only triggers;
+- `fixtures/repository/v1/` — one complete lifecycle, eight crash/recovery
+  cases and three named invalid fixtures; and
+- HC-REP-TEST-001–015 — schema, DDL, compatibility, namespace, lifecycle,
+  replay, reconciliation, minimization, committed-evidence and receipt gates.
+
 No runtime interface implementation is authorized yet. Before cross-component
 feature work, complete and review the remaining contracts:
 
 | Contract | Planned representation | Required evidence |
 |---|---|---|
 | Timing and IMU runtime producers/consumers | Implement HC-IF-TIM-001 1.0.0 in Android, UVC and Coordinator | Runtime/HIL production, ingestion and cross-platform vector tests |
-| Repository records and compatibility | HC-IF-REP-001 descriptor, journal/catalog records and recovery rules under ADR-0016–0020 | Schema plus crash-point, restart, canonical-path, package-opacity, idempotency, conflict, same-volume and receipt-ordering tests |
+| Repository runtime implementation | Implement HC-IF-REP-001 1.3.0 and ADR-0016–0021 in the Coordinator | Runtime crash/restart, real-path/link, same-volume/atomicity, backup/restore and receipt-ordering evidence |
 | Receipt signing and trusted offline acknowledgement | Future signing/security rules | Existing replay/idempotency/identity and USB manual-boundary regression tests |
 | Quality implementation profile | Protocol-specific rules | Threshold/versioning and reassessment tests |
 | Handoff manifest | JSON Schema | Relative-path/hash/package reconstruction tests |
