@@ -160,6 +160,23 @@ This document establishes requirement families and mandatory system constraints.
   conflicting content is quarantined without overwrite; partial or unverified
   material remains uncommitted; disagreement enters recovery without receipt.
   Repository failure SHALL NOT rewrite source capture or finalization facts.
+- **HC-DATA-REQ-021:** Repository version 1 SHALL use the canonical paths in
+  `HC-IF-REP-001`: `repository.json`, `catalog/humcapture.sqlite3`,
+  `staging/{collection_attempt_id}/{package_id}/`,
+  `quarantine/{quarantine_record_id}/{package_id}/`, and
+  `subjects/{subject_id}/sessions/{session_id}/packages/{package_id}/`.
+- **HC-DATA-REQ-022:** Every identity path segment SHALL be a canonical
+  lowercase hyphenated UUID. Names, codes, demographics, labels, dates and
+  operator account names SHALL NOT be repository path authority.
+- **HC-DATA-REQ-023:** A committed package envelope SHALL preserve the exact
+  verified manifest, artifact set, relative paths and bytes and SHALL contain
+  no injected repository metadata. Trial/source/attempt identities SHALL be
+  resolved from and cross-checked between manifest and catalog.
+- **HC-DATA-REQ-024:** Repository path handling SHALL reject escape, absolute
+  or drive-relative paths, Windows aliases, alternate data streams,
+  non-canonical UUIDs, case collisions, hard links and reparse points; existing
+  destinations SHALL never be overwritten and unexpected entries SHALL not be
+  silently deleted.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.

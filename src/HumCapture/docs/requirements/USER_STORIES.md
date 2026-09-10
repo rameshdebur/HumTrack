@@ -110,6 +110,10 @@
 - **HC-US-XFR-023:** Keep required subject name/demographics available in the
   Coordinator while using immutable UUIDs and hashes for repository paths,
   packages, receipts, logs, and pseudonymized handoff.
+- **HC-US-XFR-024:** Locate a committed package under its stable subject and
+  session UUIDs while retaining the package exactly as verified and preventing
+  display-name changes, unsafe paths, or conflicts from renaming or
+  overwriting it.
 
 ## Quality and completion
 

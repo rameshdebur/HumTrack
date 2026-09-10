@@ -1,8 +1,8 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A are accepted; repository transaction architecture is locked and its exact layout/schema remain next  
-**Tags:** I0.4B-A | REPOSITORY | SQLITE | FILESYSTEM | TRANSACTION | DURABILITY | RECOVERY | ADR  
-**Last meaningful update:** 2026-09-09
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A and I0.4B-B1 are accepted; repository transaction architecture and namespace are locked  
+**Tags:** I0.4B-B1 | REPOSITORY | NAMESPACE | UUID | PATH-SAFETY | WINDOWS | CONTRACT  
+**Last meaningful update:** 2026-09-10
 
 ## Objective
 
@@ -115,6 +115,14 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   passed HumCapture CI push run `34364850625` and PR run `34364851530`,
   including existing contracts, SBOM/audits, and managed/native camera
   build/self-tests.
+- I0.4B-B1 is accepted in ADR-0017 and HC-IF-REP-001 version 1.0.0. The
+  repository uses root descriptor/catalog/staging/quarantine/subjects areas and
+  commits packages at
+  `subjects/{subject_id}/sessions/{session_id}/packages/{package_id}/` using
+  canonical lowercase UUIDs. Trial/source/attempt identities remain in the
+  manifest/catalog to limit Windows path depth. Package contents remain exactly
+  as verified; display/PII values never become path authority. B2/B3 schemas,
+  compatibility and executable recovery tests remain open.
 
 ## Architecture summary
 
@@ -133,7 +141,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   schemas/bindings.
 - Receipt signing and any future trusted offline acknowledgement mechanism.
 - Independent review and production implementation of the accepted timing/IMU contract.
-- I0.4B-B repository layout, executable transaction records and compatibility rules.
+- I0.4B-B2/B3 subject/session records, executable repository transaction schemas and compatibility rules.
 
 ## Regulatory and policy position
 

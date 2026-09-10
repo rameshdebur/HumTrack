@@ -33,7 +33,7 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
 | HC-RISK-027 | Lost, replayed, regenerated, or conflicting receipt state either falsely blocks a completed acquisition or authorizes cleanup of the wrong Android package | Commit remains completion authority; immutable exact receipt; durable matched acknowledgement; status query; identical replay; conflict recovery with source retention | HC-COORD-REQ-016, HC-DATA-REQ-013/014 |
 | HC-RISK-028 | Operator cleanup, concurrent activity, or partial deletion removes uncommitted data or falsely reports complete source removal | Eligible-only display; explicit selection/confirmation; immediate Android recheck; active-operation block; exact package/hash/path binding; truthful per-package remainder; manual USB fallback | HC-AND-REQ-005/006, HC-DATA-REQ-015/016, HC-USE-REQ-003 |
 | HC-RISK-029 | Binary layout, clock, cadence, frame/video association, coordinate transform, or unavailable camera/IMU metadata is misinterpreted and produces misleading downstream timing or motion analysis | HC-IF-TIM-001 magic/version/size/presence/CRC/SHA controls; independent sequence/clock domains; explicit provenance/mapping/uncertainty; protocol-scoped quality; immutable golden vectors and fail-closed validator | HC-TIME-REQ-008–014, HC-AND-REQ-001, HC-SYS-REQ-003 |
-| HC-RISK-030 | Crash, power loss, cross-volume copy, or disagreement between filesystem, catalog, verification, custody, and journal state falsely marks a package committed, loses it, overwrites another package, or authorizes premature source cleanup | Same-volume staging; verified immutable package; durable recoverable commit journal; UUID/hash identity; atomic rename; startup reconciliation; conflict quarantine; receipt only after reconciled `COMMITTED` state | HC-DATA-REQ-002/003/011/013/017–020, HC-COORD-REQ-003 |
+| HC-RISK-030 | Crash, power loss, cross-volume copy, unsafe/deep/display-name path, or disagreement between filesystem, catalog, verification, custody, and journal state falsely marks a package committed, loses it, misassociates or overwrites another package, exposes PII, or authorizes premature source cleanup | Same-volume staging; verified immutable package; durable recoverable commit journal; shallow canonical UUID namespace; opaque package envelope; path/link rejection; atomic rename; startup reconciliation; conflict quarantine; receipt only after reconciled `COMMITTED` state | HC-DATA-REQ-002/003/011/013/017–024, HC-COORD-REQ-003 |
 
 ## Current Phase 0 evidence notes
 
@@ -157,3 +157,8 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   Exact schemas, durability APIs, crash/power fault injection, runtime,
   backup/restore, field, independent and qualified regulatory evidence remain
   open.
+- **HC-RISK-030 namespace refinement, 2026-09-10:** ADR-0017 and
+  HC-IF-REP-001 version 1.0.0 fix a shallow canonical UUID repository hierarchy,
+  preserve the exact verified package envelope, exclude display/PII values from
+  paths, and reject unsafe/link-based substitution. Executable schemas and
+  Windows path tests remain I0.4B-B2/B3 work.

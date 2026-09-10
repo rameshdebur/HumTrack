@@ -155,7 +155,7 @@ Reusable, versioned protocols define purpose, fixed or flexible source count, so
 Subject folders use immutable UUIDs. Full name is required identity but is not a folder identifier and remains coordinator-local. Session packages carry subject UUID/code rather than full identity by default.
 
 ```text
-DATA_ROOT/subjects/SUBJECT_UUID/sessions/SESSION_UUID/trials/TRIAL_UUID/sources/SOURCE_UUID/
+DATA_ROOT/subjects/SUBJECT_UUID/sessions/SESSION_UUID/packages/PACKAGE_UUID/
 ```
 
 Incoming data uses staging, validation, verification, and transactional commit.
@@ -165,7 +165,12 @@ state. Only reconciled agreement becomes `COMMITTED` or permits a receipt.
 Identical reimports are idempotent; conflicting identities/hashes are
 quarantined. Runtime data lives outside the source checkout. Required subject
 name/demographics remain Coordinator-local while UUID is the authoritative
-folder identity. Exact paths and schemas are defined by later I0.4B work.
+folder identity. ADR-0017 and HC-IF-REP-001 define the shallow UUID namespace:
+`repository.json`, `catalog/`, `staging/`, `quarantine/`, and `subjects/`.
+Trial/source/attempt identities remain in the package manifest and catalog, not
+directory depth. Package contents and internal relative paths remain exactly as
+verified. Descriptor, catalog, journal and operational-record schemas remain
+later I0.4B work.
 
 ## 14. Transfer and recovery
 
