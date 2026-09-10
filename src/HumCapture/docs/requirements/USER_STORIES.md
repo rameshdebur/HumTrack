@@ -122,6 +122,14 @@
   recovery state without silently choosing or recreating either record.
 - **HC-US-XFR-027:** Inspect a newer or older repository safely without silent
   migration or modification when its required version/features are unsupported.
+- **HC-US-XFR-028:** Resume after a crash at any repository durability boundary
+  without guessing that a package is committed or losing the verified package.
+- **HC-US-XFR-029:** See a simple **Saving**, **Needs attention**,
+  **Quarantined**, or **Completed** outcome while diagnostic records retain the
+  exact internal transaction state and evidence.
+- **HC-US-XFR-030:** Permit receipt and cleanup only after repository
+  reconciliation proves the package, catalog, journal, verification, and
+  immutable commit evidence agree.
 
 ## Quality and completion
 

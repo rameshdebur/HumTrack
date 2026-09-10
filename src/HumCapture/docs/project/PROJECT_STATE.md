@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A/B1/B2 are accepted; repository transaction, namespace and record authorities are locked  
-**Tags:** I0.4B-B2 | REPOSITORY | SQLITE | RECORDS | DESCRIPTOR | VERSIONING | RECOVERY | CONTRACT  
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A and I0.4B-A/B1/B2/B3A are accepted; repository transaction states are locked  
+**Tags:** I0.4B-B3A | REPOSITORY | JOURNAL | STATE-MACHINE | CRASH | RECOVERY | CONTRACT  
 **Last meaningful update:** 2026-09-10
 
 ## Objective
@@ -121,8 +121,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `subjects/{subject_id}/sessions/{session_id}/packages/{package_id}/` using
   canonical lowercase UUIDs. Trial/source/attempt identities remain in the
   manifest/catalog to limit Windows path depth. Package contents remain exactly
-  as verified; display/PII values never become path authority. B2/B3 schemas,
-  compatibility and executable recovery tests remain open. Decision commit
+  as verified; display/PII values never become path authority. B3 executable
+  schemas and recovery tests remain open. Decision commit
   `6021c50b18257a3b2f778c1b94c0b2b56d498f77` passed HumCapture CI push run
   `34444103000` and PR run `34444106785`, including existing contracts,
   SBOM/audits, and managed/native camera build/self-tests.
@@ -138,6 +138,14 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   `d9f656b05ed9ff4d88baf670293aa364d0281065` passed HumCapture CI push run
   `34445863047` and PR run `34445866678`, including contracts/controls, SBOM,
   dependency audit, and managed/native camera build/self-tests.
+- I0.4B-B3A is accepted in ADR-0019 and advances HC-IF-REP-001 additively to
+  version 1.2.0. Internal repository transactions use `STAGED_VERIFIED`,
+  `COMMITTING`, `MOVED`, `CATALOGED`, and `COMMITTED`, with explicit
+  `RECOVERY_REQUIRED` and `QUARANTINED` dispositions. Only evidence-reconciled
+  `COMMITTED` permits receipt/completion; these durability states map to the
+  existing custody contract and do not add routine operator workflow steps.
+  B3B exact journal/reconciliation fields and B3C executable schemas/fault
+  fixtures remain open.
 
 ## Architecture summary
 
@@ -156,7 +164,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   schemas/bindings.
 - Receipt signing and any future trusted offline acknowledgement mechanism.
 - Independent review and production implementation of the accepted timing/IMU contract.
-- I0.4B-B3 executable repository descriptor, record-index, journal, reconciliation schemas and fault rules.
+- I0.4B-B3B/B3C exact journal/reconciliation fields, automatic/operator action
+  policy, executable repository schemas and fault fixtures.
 
 ## Regulatory and policy position
 

@@ -173,7 +173,10 @@ verified. ADR-0018 makes SQLite the sole mutable workflow/PII authority while
 immutable protocol-snapshot, verification, commit, receipt, quality,
 completion, and handoff JSON records live under the session `records/`
 namespace and are indexed by SQLite. Descriptor, catalog, journal and record
-schemas remain later I0.4B work.
+schemas remain later I0.4B work. ADR-0019 refines repository commit into
+`STAGED_VERIFIED`, `COMMITTING`, `MOVED`, `CATALOGED`, and `COMMITTED`, with
+explicit recovery/quarantine dispositions at crash boundaries; these are
+internal durability states rather than additional operator workflow steps.
 
 ## 14. Transfer and recovery
 

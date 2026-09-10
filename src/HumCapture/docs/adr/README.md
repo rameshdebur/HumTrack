@@ -24,3 +24,4 @@ Current records:
 - ADR-0016 — Recoverable repository commit across filesystem and catalog.
 - ADR-0017 — Shallow UUID repository namespace.
 - ADR-0018 — Split operational and immutable record authority.
+- ADR-0019 — Explicit repository transaction state machine.

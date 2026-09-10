@@ -1,8 +1,8 @@
 # HumCapture Repository Namespace Contract
 
 **Contract ID:** HC-IF-REP-001  
-**Version:** 1.1.0  
-**Status:** Accepted namespace and record-authority baseline  
+**Version:** 1.2.0  
+**Status:** Accepted namespace, record-authority and transaction-state baseline  
 **Date:** 2026-09-10
 
 ## 1. Scope
@@ -62,7 +62,9 @@ automatically deleted.
 ## 6. Versioning
 
 Version 1.1.0 adds the record-authority, descriptor and compatibility semantics
-below without changing version 1.0.0 package paths.
+below without changing version 1.0.0 package paths. Version 1.2.0 additively
+defines the internal repository transaction states without changing package
+custody states or paths.
 
 SQLite is authoritative for mutable operational/current state, subject PII,
 transfer checkpoints, transaction journal and audit events. Mutable current
@@ -89,9 +91,26 @@ feature refuses mutation; known compatible versions open normally. Opening an
 older supported repository does not migrate it silently. Historical packages
 and milestone files are not moved, renamed, or rewritten by a later reader.
 
-## 7. Deferred decisions
+## 7. Repository transaction states
+
+The internal repository transaction advances normally through:
+
+```text
+STAGED_VERIFIED -> COMMITTING -> MOVED -> CATALOGED -> COMMITTED
+```
+
+`RECOVERY_REQUIRED` and `QUARANTINED` are exceptional states. Only reconciled
+`COMMITTED` permits receipt creation. `COMMITTED` and `QUARANTINED` are terminal
+for one transaction identity. The detailed semantics, custody-state mapping,
+restart classification, and no-skip/no-overwrite rules are defined by ADR-0019.
+
+These internal states do not add operator workflow steps. Normal intermediates
+may display as **Saving**; recovery remains an actionable **Needs attention**
+condition.
+
+## 8. Deferred decisions
 
 I0.4B-B3 will define descriptor, milestone-index, catalog and journal schemas,
-transaction transitions, crash-point fixtures, and recovery outcomes. Runtime,
+transition evidence, crash-point fixtures, and exact recovery actions. Runtime,
 SQLite DDL/configuration, backup/restore, retention, power-loss, HIL, field,
 independent and regulatory evidence remain open.

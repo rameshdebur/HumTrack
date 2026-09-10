@@ -198,6 +198,23 @@ This document establishes requirement families and mandatory system constraints.
   required features SHALL refuse mutation. Repository open SHALL NOT silently
   migrate data; historical packages and milestone files SHALL remain unchanged
   unless a separately approved migration contract explicitly governs them.
+- **HC-DATA-REQ-030:** A repository transaction SHALL advance without skipping
+  through `STAGED_VERIFIED`, `COMMITTING`, `MOVED`, `CATALOGED`, and
+  `COMMITTED`; only reconciled `COMMITTED` SHALL permit receipt creation or
+  satisfy acquisition completion.
+- **HC-DATA-REQ-031:** Every normal repository transaction state SHALL be
+  supported by durable evidence for its completed boundary. Intended state,
+  final-folder presence alone, nominal workflow status, and timestamps SHALL
+  NOT substitute for the required package, journal, catalog, verification, and
+  immutable-record agreement.
+- **HC-DATA-REQ-032:** Missing, conflicting, ambiguous, unsafe, or uncertainly
+  durable repository evidence SHALL enter `RECOVERY_REQUIRED` or
+  `QUARANTINED`, block receipt/completion/handoff/cleanup, preserve evidence,
+  and provide a specific safe recovery action without overwrite.
+- **HC-DATA-REQ-033:** Repository reconciliation SHALL classify a transaction
+  only to the nearest state directly proven by durable evidence and SHALL
+  retain the observed evidence and action. `COMMITTED` and `QUARANTINED` SHALL
+  be terminal for one transaction identity.
 
 - **HC-TIME-REQ-001:** Wall clock SHALL NOT be the primary scientific timing source.
 - **HC-TIME-REQ-002:** Raw synchronization exchanges, RTT, fit, uncertainty, drift, and provenance SHALL be retained.

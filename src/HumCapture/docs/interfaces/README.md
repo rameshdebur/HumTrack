@@ -14,10 +14,10 @@ ADR-0013 and `PAIRING_AND_TRANSPORT_SECURITY_CONTRACT.md` baseline
 ADR-0015 and `TIMING_AND_IMU_BINARY_CONTRACT.md` baseline `HC-IF-TIM-001`
 version `1.0.0` with executable binary vectors and timing/camera/IMU schemas.
 ADR-0016 accepts the I0.4B-A recoverable SQLite/filesystem commit architecture;
-ADR-0017/0018 and `REPOSITORY_NAMESPACE_CONTRACT.md` baseline the shallow UUID
-namespace and split operational/immutable record authority as `HC-IF-REP-001`
-version `1.1.0`. Executable descriptor, catalog/journal and reconciliation
-schemas remain I0.4B-B3 work.
+ADR-0017–0019 and `REPOSITORY_NAMESPACE_CONTRACT.md` baseline the shallow UUID
+namespace, split operational/immutable record authority, and internal commit
+state machine as `HC-IF-REP-001` version `1.2.0`. Executable descriptor,
+catalog/journal and reconciliation schemas remain I0.4B-B3 work.
 
 The executable transport-neutral control slice is:
 
@@ -49,7 +49,7 @@ feature work, complete and review the remaining contracts:
 | Contract | Planned representation | Required evidence |
 |---|---|---|
 | Timing and IMU runtime producers/consumers | Implement HC-IF-TIM-001 1.0.0 in Android, UVC and Coordinator | Runtime/HIL production, ingestion and cross-platform vector tests |
-| Repository records and compatibility | HC-IF-REP-001 descriptor, journal/catalog records and recovery rules under ADR-0016/0017 | Schema plus crash-point, restart, canonical-path, package-opacity, idempotency, conflict, same-volume and receipt-ordering tests |
+| Repository records and compatibility | HC-IF-REP-001 descriptor, journal/catalog records and recovery rules under ADR-0016–0019 | Schema plus crash-point, restart, canonical-path, package-opacity, idempotency, conflict, same-volume and receipt-ordering tests |
 | Receipt signing and trusted offline acknowledgement | Future signing/security rules | Existing replay/idempotency/identity and USB manual-boundary regression tests |
 | Quality implementation profile | Protocol-specific rules | Threshold/versioning and reassessment tests |
 | Handoff manifest | JSON Schema | Relative-path/hash/package reconstruction tests |
