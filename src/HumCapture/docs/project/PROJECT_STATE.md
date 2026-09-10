@@ -134,7 +134,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   receipt/completion. The minimal `repository.json` version/feature descriptor
   contains no subject data or secrets; unsupported major/required features
   refuse mutation and opening never silently migrates history. B3 executable
-  schemas and fault tests remain open.
+  schemas and fault tests remain open. Decision commit
+  `d9f656b05ed9ff4d88baf670293aa364d0281065` passed HumCapture CI push run
+  `34445863047` and PR run `34445866678`, including contracts/controls, SBOM,
+  dependency audit, and managed/native camera build/self-tests.
 
 ## Architecture summary
 
