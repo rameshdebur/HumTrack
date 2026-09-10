@@ -156,7 +156,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   conflicts/unsafe/unsupported/uncertain evidence require controlled operator
   action. No force commit, overwrite, unique-copy deletion, or immutable-record
   manufacture is permitted. B3C executable schemas/DDL representation and
-  crash fixtures remain open.
+  crash fixtures remain open. Decision commit
+  `2d82f55c36a4bb164f74b23c019e1fe11eba97cd` passed HumCapture CI push run
+  `34495803152` and PR run `34495806849`, including contracts/controls, SBOM,
+  dependency audit, and managed/native camera build/self-tests.
 
 ## Architecture summary
 
