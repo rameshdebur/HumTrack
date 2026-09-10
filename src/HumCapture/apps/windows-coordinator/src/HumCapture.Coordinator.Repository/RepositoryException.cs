@@ -22,7 +22,19 @@ public enum RepositoryErrorCode
     /// <summary>The repository catalog was unreadable or failed integrity checks.</summary>
     CatalogInvalid,
     /// <summary>The descriptor and catalog identities or versions disagreed.</summary>
-    CatalogMetadataMismatch
+    CatalogMetadataMismatch,
+    /// <summary>The repository was opened in inspection-only mode.</summary>
+    MutationNotAllowed,
+    /// <summary>The staged package path or required evidence was absent.</summary>
+    StagedPackageMissing,
+    /// <summary>The staged package or verification evidence did not agree with the requested identity.</summary>
+    EvidenceMismatch,
+    /// <summary>An immutable record already existed with different bytes.</summary>
+    ImmutableRecordConflict,
+    /// <summary>A transaction, operation, or package identity was reused inconsistently.</summary>
+    JournalConflict,
+    /// <summary>The repository catalog rejected or could not persist a journal mutation.</summary>
+    CatalogWriteFailed
 }
 
 /// <summary>Represents a controlled repository initialization or open failure.</summary>

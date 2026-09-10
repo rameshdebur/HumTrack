@@ -56,6 +56,50 @@ internal static class RepositoryPathSafety
         }
     }
 
+    public static string ResolveRelativePath(string root, string relativePath)
+    {
+        if (string.IsNullOrWhiteSpace(relativePath)
+            || Path.IsPathFullyQualified(relativePath)
+            || relativePath.Contains('\\', StringComparison.Ordinal)
+            || relativePath.Contains(':', StringComparison.Ordinal))
+        {
+            throw new RepositoryException(RepositoryErrorCode.UnsafePath, "Repository-relative path is not canonical.");
+        }
+
+        var canonical = relativePath.Replace('/', Path.DirectorySeparatorChar);
+        var resolved = Path.GetFullPath(Path.Combine(root, canonical));
+        var prefix = Path.TrimEndingDirectorySeparator(root) + Path.DirectorySeparatorChar;
+        if (!resolved.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new RepositoryException(RepositoryErrorCode.UnsafePath, "Repository-relative path escapes the data root.");
+        }
+
+        return resolved;
+    }
+
+    public static void RequireSafeDirectoryTree(string directoryPath)
+    {
+        if (!Directory.Exists(directoryPath))
+        {
+            throw new RepositoryException(RepositoryErrorCode.StagedPackageMissing, "Required staged package directory is missing.");
+        }
+
+        RejectReparsePointsInExistingPath(directoryPath);
+        foreach (var entry in Directory.EnumerateFileSystemEntries(directoryPath, "*", SearchOption.AllDirectories))
+        {
+            var attributes = File.GetAttributes(entry);
+            if ((attributes & FileAttributes.ReparsePoint) != 0)
+            {
+                throw new RepositoryException(RepositoryErrorCode.UnsafePath, $"Staged package contains a reparse point: {entry}");
+            }
+
+            if (!Directory.Exists(entry))
+            {
+                RequireSingleLinkFile(entry);
+            }
+        }
+    }
+
     [DllImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool GetFileInformationByHandle(

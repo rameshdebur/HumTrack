@@ -6,8 +6,8 @@ does not reference HumTrack application internals.
 
 ## Repository core
 
-`src/HumCapture.Coordinator.Repository` is the I0.4B-C1 repository
-initialize/open slice. It:
+`src/HumCapture.Coordinator.Repository` contains the I0.4B-C1 initialize/open
+and I0.4B-C2 verified-staging journal slices. It:
 
 - targets Windows 10 version 2004 (build 19041) or later on .NET 10;
 - pins and lock-resolves `Microsoft.Data.Sqlite` 10.0.12;
@@ -20,10 +20,20 @@ initialize/open slice. It:
 - enables mutation only when descriptor versions/features, SQLite integrity
   and catalog metadata agree exactly; and
 - returns explicit read-only inspection for unsupported versions/features
-  without opening the catalog or performing migration.
+  without opening the catalog or performing migration;
+- rechecks an already-collected staged package against its manifest bytes,
+  artifact inventory, canonical content hashes and successful immutable
+  verification record before journal admission;
+- publishes the exact verification record without overwrite; and
+- atomically inserts the initial `STAGED_VERIFIED` transaction, sequence-1
+  transition and verification-record index, with exact-replay idempotency and
+  fail-closed identity conflict handling.
 
-The component does not yet implement subject records, transfer, package
-commit, reconciliation, receipts, backup/restore, UI, or migration.
+The C2 API is an admission boundary for a package already collected by the
+future transfer/common-verifier service. It does not itself collect or decode
+media. The component does not yet implement subject records, transfer,
+`COMMITTING` or later package commit states, reconciliation, quarantine moves,
+receipts, backup/restore, UI, or migration.
 
 ## Verification
 
