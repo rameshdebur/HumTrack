@@ -30,8 +30,8 @@
 
 - Source baseline/branch: `ef0b39ec37ac0560c079bc0976cd6c6059d18d82` on
   `codex/humcapture-baseline`.
-- Decision/implementation commit: assigned on commit and recorded in a
-  verification update.
+- Decision/implementation commit:
+  `de2c49134ff775c3bddaeed935c1322ebcde0ecf`.
 - Compatibility: no existing repository exists in production; the descriptor
   fails closed for unsupported major versions or unknown required features.
 
@@ -46,6 +46,8 @@
   `605734f0667a18b76f446c2a86a8aeb3c2d6beecddfcfef8907e3d57242fee57`.
 - Both production dependency audits: zero findings.
 - All 86 tracked/new JSON files parsed; diff whitespace check passed.
+- Exact decision-commit CI: HumCapture CI push run `34502020209` and PR run
+  `34502026587` passed for `de2c49134ff775c3bddaeed935c1322ebcde0ecf`.
 - Runtime integration, real filesystem crash/power-loss, HIL, field,
   independent and regulatory evidence: open.
 

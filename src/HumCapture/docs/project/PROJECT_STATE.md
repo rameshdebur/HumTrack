@@ -169,8 +169,11 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   committed-evidence agreement and receipt gating. The pinned Node SQLite
   adapter is test-only. Production repository I/O, real filesystem durability,
   backup/restore, runtime/power-loss, HIL, field, independent and regulatory
-  evidence remain open. Decision commit and exact CI are pending the controlled
-  verification update.
+  evidence remain open. Decision commit
+  `de2c49134ff775c3bddaeed935c1322ebcde0ecf` passed HumCapture CI push run
+  `34502020209` and PR run `34502026587`, including repository schemas/DDL,
+  contracts/controls, SBOM, dependency audit, and managed/native camera
+  build/self-tests.
 
 ## Architecture summary
 
