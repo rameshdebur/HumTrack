@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 
 namespace HumCapture.Coordinator.Repository;
 
-internal static class RepositoryCatalog
+internal static partial class RepositoryCatalog
 {
     public static void Create(string databasePath, RepositoryDescriptor descriptor)
     {

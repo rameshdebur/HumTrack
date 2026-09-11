@@ -33,6 +33,14 @@ public enum RepositoryErrorCode
     ImmutableRecordConflict,
     /// <summary>A transaction, operation, or package identity was reused inconsistently.</summary>
     JournalConflict,
+    /// <summary>The requested repository transaction does not exist.</summary>
+    JournalEntryMissing,
+    /// <summary>The package location or journal state requires controlled reconciliation.</summary>
+    CommitRecoveryRequired,
+    /// <summary>The staging and destination paths are not proven to share one filesystem volume.</summary>
+    SameVolumeRequired,
+    /// <summary>The atomic package move failed after commit intent was recorded.</summary>
+    PackageMoveFailed,
     /// <summary>The repository catalog rejected or could not persist a journal mutation.</summary>
     CatalogWriteFailed
 }

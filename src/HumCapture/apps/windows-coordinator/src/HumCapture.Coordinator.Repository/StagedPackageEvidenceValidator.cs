@@ -24,7 +24,12 @@ internal static partial class StagedPackageEvidenceValidator
 
     public static ValidatedStagedEvidence Validate(
         string stagingDirectory,
-        StagedVerifiedPackageRegistration registration)
+        StagedVerifiedPackageRegistration registration) =>
+        Validate(stagingDirectory, StagedPackageEvidenceExpectation.FromRegistration(registration));
+
+    public static ValidatedStagedEvidence Validate(
+        string stagingDirectory,
+        StagedPackageEvidenceExpectation expectation)
     {
         RepositoryPathSafety.RequireSafeDirectoryTree(stagingDirectory);
         var manifestPath = Path.Combine(stagingDirectory, ManifestFileName);
@@ -56,16 +61,16 @@ internal static partial class StagedPackageEvidenceValidator
         ], "Package manifest");
 
         Equal("1.0.0", String(manifest, "schema_version"), "Manifest schema version");
-        Bind(registration.PackageId, String(manifest, "package_id"), "package_id");
-        Bind(registration.SubjectId, String(manifest, "subject_id"), "subject_id");
-        Bind(registration.SessionId, String(manifest, "session_id"), "session_id");
-        Bind(registration.TrialId, String(manifest, "trial_id"), "trial_id");
-        Bind(registration.SourceId, String(manifest, "source_id"), "source_id");
-        Bind(registration.CaptureAttemptId, String(manifest, "capture_attempt_id"), "capture_attempt_id");
-        Equal(registration.PackageContentSha256, Sha256(manifest, "package_content_sha256"), "package_content_sha256");
-        Equal(registration.ArtifactSetSha256, Sha256(manifest, "artifact_set_sha256"), "artifact_set_sha256");
-        Equal(registration.PackageByteLength, U64(manifest, "package_byte_length"), "package_byte_length");
-        Equal(registration.ArtifactCount, Integer(manifest, "artifact_count"), "artifact_count");
+        Bind(expectation.PackageId, String(manifest, "package_id"), "package_id");
+        Bind(expectation.SubjectId, String(manifest, "subject_id"), "subject_id");
+        Bind(expectation.SessionId, String(manifest, "session_id"), "session_id");
+        Bind(expectation.TrialId, String(manifest, "trial_id"), "trial_id");
+        Bind(expectation.SourceId, String(manifest, "source_id"), "source_id");
+        Bind(expectation.CaptureAttemptId, String(manifest, "capture_attempt_id"), "capture_attempt_id");
+        Equal(expectation.PackageContentSha256, Sha256(manifest, "package_content_sha256"), "package_content_sha256");
+        Equal(expectation.ArtifactSetSha256, Sha256(manifest, "artifact_set_sha256"), "artifact_set_sha256");
+        Equal(expectation.PackageByteLength, U64(manifest, "package_byte_length"), "package_byte_length");
+        Equal(expectation.ArtifactCount, Integer(manifest, "artifact_count"), "artifact_count");
         _ = CanonicalUuid(manifest, "source_boot_id");
         _ = CanonicalUuid(manifest, "protocol_snapshot_id");
         _ = Sha256(manifest, "protocol_snapshot_content_sha256");
@@ -98,7 +103,7 @@ internal static partial class StagedPackageEvidenceValidator
         }
 
         var artifacts = artifactsElement.EnumerateArray().Select(ParseArtifact).ToArray();
-        if (artifacts.Length != registration.ArtifactCount)
+        if (artifacts.Length != expectation.ArtifactCount)
         {
             throw Mismatch("Manifest artifact count does not match the registration.");
         }
@@ -125,10 +130,10 @@ internal static partial class StagedPackageEvidenceValidator
         ulong total = 0;
         foreach (var artifact in artifacts)
         {
-            Equal(registration.SessionId.ToString("D"), artifact.SessionId, "artifact session_id");
-            Equal(registration.TrialId.ToString("D"), artifact.TrialId, "artifact trial_id");
-            Equal(registration.SourceId.ToString("D"), artifact.SourceId, "artifact source_id");
-            Equal(registration.CaptureAttemptId.ToString("D"), artifact.CaptureAttemptId, "artifact capture_attempt_id");
+            Equal(expectation.SessionId.ToString("D"), artifact.SessionId, "artifact session_id");
+            Equal(expectation.TrialId.ToString("D"), artifact.TrialId, "artifact trial_id");
+            Equal(expectation.SourceId.ToString("D"), artifact.SourceId, "artifact source_id");
+            Equal(expectation.CaptureAttemptId.ToString("D"), artifact.CaptureAttemptId, "artifact capture_attempt_id");
 
             var artifactPath = RepositoryPathSafety.ResolveRelativePath(stagingDirectory, artifact.RelativePath);
             if (!File.Exists(artifactPath) || Directory.Exists(artifactPath))
@@ -149,7 +154,7 @@ internal static partial class StagedPackageEvidenceValidator
             checked { total += artifact.Length; }
         }
 
-        Equal(registration.PackageByteLength, total.ToString(CultureInfo.InvariantCulture), "Artifact byte-length sum");
+        Equal(expectation.PackageByteLength, total.ToString(CultureInfo.InvariantCulture), "Artifact byte-length sum");
         var actualFiles = Directory.EnumerateFiles(stagingDirectory, "*", SearchOption.AllDirectories)
             .Select(path => Path.GetRelativePath(stagingDirectory, path).Replace('\\', '/'))
             .Where(path => !string.Equals(path, ManifestFileName, StringComparison.OrdinalIgnoreCase))
@@ -164,24 +169,24 @@ internal static partial class StagedPackageEvidenceValidator
         var inventory = string.Concat(artifacts
             .Select(item => $"{item.RelativePath}\t{item.Length.ToString(CultureInfo.InvariantCulture)}\t{item.ContentSha256}\n")
             .Order(StringComparer.Ordinal));
-        Equal(registration.ArtifactSetSha256,
+        Equal(expectation.ArtifactSetSha256,
             Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(inventory))),
             "Computed artifact-set SHA-256");
 
-        Equal(registration.PackageContentSha256, ComputeCanonicalManifestHash(manifest), "Computed package-content SHA-256");
+        Equal(expectation.PackageContentSha256, ComputeCanonicalManifestHash(manifest), "Computed package-content SHA-256");
 
-        var verificationBytes = registration.VerificationRecordUtf8.ToArray();
-        Equal(registration.VerificationRecordContentSha256,
+        var verificationBytes = expectation.VerificationRecordUtf8.ToArray();
+        Equal(expectation.VerificationRecordContentSha256,
             Convert.ToHexStringLower(SHA256.HashData(verificationBytes)),
             "Verification-record SHA-256");
         using var verificationDocument = Parse(verificationBytes, "verification record");
-        var revision = ValidateVerification(verificationDocument.RootElement, registration, artifacts);
+        var revision = ValidateVerification(verificationDocument.RootElement, expectation, artifacts);
         return new ValidatedStagedEvidence(revision);
     }
 
     private static int ValidateVerification(
         JsonElement verification,
-        StagedVerifiedPackageRegistration registration,
+        StagedPackageEvidenceExpectation expectation,
         IReadOnlyList<ManifestArtifact> artifacts)
     {
         RequireObject(verification, "Verification record");
@@ -199,10 +204,10 @@ internal static partial class StagedPackageEvidenceValidator
             "verifier_name", "verifier_version", "verified_utc", "outcome", "checks", "artifact_results"
         ], "Verification record");
         Equal("1.0.0", String(verification, "schema_version"), "Verification schema version");
-        Bind(registration.VerificationRecordId, String(verification, "verification_record_id"), "verification_record_id");
-        Bind(registration.PackageId, String(verification, "package_id"), "verification package_id");
-        Equal(registration.PackageContentSha256, Sha256(verification, "package_content_sha256"), "verification package hash");
-        Equal(registration.ArtifactSetSha256, Sha256(verification, "artifact_set_sha256"), "verification artifact-set hash");
+        Bind(expectation.VerificationRecordId, String(verification, "verification_record_id"), "verification_record_id");
+        Bind(expectation.PackageId, String(verification, "package_id"), "verification package_id");
+        Equal(expectation.PackageContentSha256, Sha256(verification, "package_content_sha256"), "verification package hash");
+        Equal(expectation.ArtifactSetSha256, Sha256(verification, "artifact_set_sha256"), "verification artifact-set hash");
         Equal("VERIFIED", String(verification, "outcome"), "Verification outcome");
         RequireBoundedString(verification, "verified_by_windows_account", 1, 256);
         RequireBoundedString(verification, "verifier_name", 1, 128);

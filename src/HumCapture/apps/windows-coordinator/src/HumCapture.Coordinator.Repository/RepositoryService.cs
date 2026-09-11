@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Collections.Concurrent;
 
 namespace HumCapture.Coordinator.Repository;
 
@@ -8,6 +9,8 @@ namespace HumCapture.Coordinator.Repository;
 public sealed class RepositoryService
 {
     private const string InitializationLockName = ".humcapture-initialize.lock";
+    private static readonly ConcurrentDictionary<string, object> _commitLocks =
+        new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>Initializes an empty absolute data root and publishes its descriptor after catalog durability checks.</summary>
     /// <param name="rootPath">The absolute Coordinator-owned data root.</param>
@@ -179,6 +182,213 @@ public sealed class RepositoryService
         var catalogPath = RepositoryPathSafety.ResolveRelativePath(root, RepositoryConstants.CatalogRelativePath);
         return RepositoryCatalog.RegisterStagedVerified(catalogPath, admission);
     }
+
+    /// <summary>
+    /// Durably records commit intent, moves the exact package through a same-volume
+    /// write-through rename, verifies the result, and advances the journal only to MOVED.
+    /// This method does not catalog or commit the package and cannot authorize a receipt.
+    /// </summary>
+    public RepositoryCommitMoveSnapshot MoveStagedVerifiedPackage(
+        string rootPath,
+        RepositoryCommitMoveRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ValidateCommitMoveRequest(request);
+        var opened = Open(rootPath);
+        if (!opened.CanMutate)
+        {
+            throw new RepositoryException(RepositoryErrorCode.MutationNotAllowed, "Repository compatibility permits inspection only; package movement is disabled.");
+        }
+
+        var gate = _commitLocks.GetOrAdd(opened.RootPath, static _ => new object());
+        lock (gate)
+        {
+            return MoveStagedVerifiedPackage(opened, request);
+        }
+    }
+
+    private static RepositoryCommitMoveSnapshot MoveStagedVerifiedPackage(
+        RepositoryOpenResult opened,
+        RepositoryCommitMoveRequest request)
+    {
+        var root = opened.RootPath;
+        var catalogPath = RepositoryPathSafety.ResolveRelativePath(root, RepositoryConstants.CatalogRelativePath);
+        var context = RepositoryCatalog.ReadCommitContext(
+            catalogPath,
+            request.TransactionId,
+            opened.Descriptor.RepositoryId);
+        var committing = NormalTransition(
+            request,
+            1,
+            2,
+            "STAGED_VERIFIED",
+            "COMMITTING",
+            request.CommittingTransitionId,
+            request.CommittingOperationId,
+            request.CommittingRecordedAt);
+        var moved = NormalTransition(
+            request,
+            2,
+            3,
+            "COMMITTING",
+            "MOVED",
+            request.MovedTransitionId,
+            request.MovedOperationId,
+            request.MovedRecordedAt);
+
+        if (context.State is "MOVED" or "CATALOGED" or "COMMITTED")
+        {
+            RepositoryCatalog.RequireExactNormalTransition(catalogPath, committing);
+            RepositoryCatalog.RequireExactNormalTransition(catalogPath, moved);
+            RequireMovedPackage(root, context);
+            return Snapshot(context, request, wasAlreadyMoved: true);
+        }
+
+        if (context.State == "COMMITTING")
+        {
+            RepositoryCatalog.RequireExactNormalTransition(catalogPath, committing);
+            throw CommitRecovery(root, context);
+        }
+
+        if (context.State != "STAGED_VERIFIED" || context.Revision != 1)
+        {
+            throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "Repository transaction is not at a normal C3 move boundary; controlled reconciliation is required.");
+        }
+
+        var stagingPath = RepositoryPathSafety.ResolveRelativePath(root, context.StagingRelativePath);
+        var destinationPath = RepositoryPathSafety.ResolveRelativePath(root, context.DestinationRelativePath);
+        if (!Directory.Exists(stagingPath) || Path.Exists(destinationPath))
+        {
+            throw CommitRecovery(root, context);
+        }
+
+        ValidatePackageAt(root, stagingPath, context);
+        var destinationParent = Path.GetDirectoryName(destinationPath)
+            ?? throw new RepositoryException(RepositoryErrorCode.UnsafePath, "Repository destination has no parent directory.");
+        try
+        {
+            Directory.CreateDirectory(destinationParent);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            throw new RepositoryException(RepositoryErrorCode.PackageMoveFailed, "Repository destination parent could not be prepared before commit intent.", exception);
+        }
+
+        RepositoryPathSafety.RejectReparsePointsInExistingPath(destinationParent);
+        RepositoryDirectoryMover.RequireSameVolumeAndAvailableMetadataSpace(stagingPath, destinationParent);
+
+        RepositoryCatalog.AdvanceNormalState(catalogPath, committing);
+        RepositoryDirectoryMover.MoveDirectoryWriteThrough(stagingPath, destinationPath);
+        if (Path.Exists(stagingPath) || !Directory.Exists(destinationPath))
+        {
+            throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "Package location after the move is ambiguous; reconciliation is required.");
+        }
+
+        ValidatePackageAt(root, destinationPath, context);
+        RepositoryCatalog.AdvanceNormalState(catalogPath, moved);
+        var completed = RepositoryCatalog.ReadCommitContext(
+            catalogPath,
+            request.TransactionId,
+            opened.Descriptor.RepositoryId);
+        if (completed.State != "MOVED" || completed.Revision != 3)
+        {
+            throw new RepositoryException(RepositoryErrorCode.CatalogWriteFailed, "MOVED journal state could not be read back exactly.");
+        }
+
+        return Snapshot(completed, request, wasAlreadyMoved: false);
+    }
+
+    private static void RequireMovedPackage(string root, JournalCommitContext context)
+    {
+        var stagingPath = RepositoryPathSafety.ResolveRelativePath(root, context.StagingRelativePath);
+        var destinationPath = RepositoryPathSafety.ResolveRelativePath(root, context.DestinationRelativePath);
+        if (Path.Exists(stagingPath) || !Directory.Exists(destinationPath))
+        {
+            throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "Journal state and package location disagree; reconciliation is required.");
+        }
+
+        ValidatePackageAt(root, destinationPath, context);
+    }
+
+    private static void ValidatePackageAt(string root, string packagePath, JournalCommitContext context)
+    {
+        var verificationPath = RepositoryPathSafety.ResolveRelativePath(root, context.VerificationRecordRelativePath);
+        RepositoryPathSafety.RejectReparsePointsInExistingPath(verificationPath);
+        if (!File.Exists(verificationPath) || Directory.Exists(verificationPath))
+        {
+            throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "Immutable verification record is missing; reconciliation is required.");
+        }
+
+        RepositoryPathSafety.RequireSingleLinkFile(verificationPath);
+        var verificationBytes = File.ReadAllBytes(verificationPath);
+        var expectation = new StagedPackageEvidenceExpectation(
+            context.SubjectId,
+            context.SessionId,
+            context.TrialId,
+            context.SourceId,
+            context.CaptureAttemptId,
+            context.PackageId,
+            context.PackageContentSha256,
+            context.ArtifactSetSha256,
+            context.VerificationRecordId,
+            context.VerificationRecordContentSha256,
+            context.PackageByteLength,
+            context.ArtifactCount,
+            verificationBytes);
+        var evidence = StagedPackageEvidenceValidator.Validate(packagePath, expectation);
+        if (evidence.VerificationRecordRevision != context.VerificationRecordRevision)
+        {
+            throw new RepositoryException(RepositoryErrorCode.EvidenceMismatch, "Verification-record revision differs from its immutable repository index.");
+        }
+    }
+
+    private static RepositoryException CommitRecovery(string root, JournalCommitContext context)
+    {
+        var staging = Path.Exists(RepositoryPathSafety.ResolveRelativePath(root, context.StagingRelativePath));
+        var destination = Path.Exists(RepositoryPathSafety.ResolveRelativePath(root, context.DestinationRelativePath));
+        var location = (staging, destination) switch
+        {
+            (true, false) => "The exact staging location remains; RETRY_FROM_STAGED reconciliation is required.",
+            (false, true) => "The destination location exists; RESUME_AFTER_MOVE reconciliation is required.",
+            (true, true) => "Both staging and destination contain material; operator-controlled reconciliation is required.",
+            _ => "Neither expected package location exists; operator-controlled reconciliation is required."
+        };
+        return new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, location);
+    }
+
+    private static JournalNormalTransition NormalTransition(
+        RepositoryCommitMoveRequest request,
+        long expectedRevision,
+        long nextRevision,
+        string fromState,
+        string toState,
+        Guid transitionId,
+        Guid operationId,
+        DateTimeOffset recordedAt) =>
+        new(
+            request.TransactionId,
+            expectedRevision,
+            nextRevision,
+            fromState,
+            toState,
+            transitionId,
+            operationId,
+            request.ActorWindowsAccount,
+            recordedAt.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'", CultureInfo.InvariantCulture));
+
+    private static RepositoryCommitMoveSnapshot Snapshot(
+        JournalCommitContext context,
+        RepositoryCommitMoveRequest request,
+        bool wasAlreadyMoved) =>
+        new(
+            Id(context.TransactionId),
+            context.Revision,
+            context.State,
+            context.StagingRelativePath,
+            context.DestinationRelativePath,
+            Id(request.CommittingOperationId),
+            Id(request.MovedOperationId),
+            wasAlreadyMoved);
 
     private static RepositoryOpenResult ClassifyCompatibility(
         RepositoryDescriptor descriptor,
@@ -358,6 +568,30 @@ public sealed class RepositoryService
         }
 
         ValidateWindowsAccount(registration.ActorWindowsAccount);
+    }
+
+    private static void ValidateCommitMoveRequest(RepositoryCommitMoveRequest request)
+    {
+        var ids = new[]
+        {
+            request.TransactionId,
+            request.CommittingTransitionId,
+            request.CommittingOperationId,
+            request.MovedTransitionId,
+            request.MovedOperationId
+        };
+        if (Array.Exists(ids, id => id == Guid.Empty))
+        {
+            throw new ArgumentException("Commit-move UUIDs must not be empty.", nameof(request));
+        }
+
+        if (request.CommittingTransitionId == request.MovedTransitionId
+            || request.CommittingOperationId == request.MovedOperationId)
+        {
+            throw new ArgumentException("Commit-move transition and operation identities must be unique per boundary.", nameof(request));
+        }
+
+        ValidateWindowsAccount(request.ActorWindowsAccount);
     }
 
     private static void ValidateSha256(string value, string parameterName)

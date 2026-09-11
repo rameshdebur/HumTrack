@@ -38,7 +38,21 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-028 immutable verification collision is refused", ImmutableVerificationCollisionRefused),
     ("HC-REP-RUNTIME-029 read-only repository refuses journal mutation", ReadOnlyJournalMutationRefused),
     ("HC-REP-RUNTIME-030 hard-linked staged artifact is refused", HardLinkedStagedArtifactRefused),
-    ("HC-REP-RUNTIME-031 failed index insert rolls back journal rows", IndexFailureRollsBackJournal)
+    ("HC-REP-RUNTIME-031 failed index insert rolls back journal rows", IndexFailureRollsBackJournal),
+    ("HC-REP-RUNTIME-032 durable intent precedes exact atomic package move", CommitIntentMovesExactPackage),
+    ("HC-REP-RUNTIME-033 C3 transitions are contiguous and content-bound", CommitMoveTransitionsAreExact),
+    ("HC-REP-RUNTIME-034 exact completed move replay is idempotent", CommitMoveReplayIsIdempotent),
+    ("HC-REP-RUNTIME-035 changed staged bytes block intent", ChangedBytesBlockCommitIntent),
+    ("HC-REP-RUNTIME-036 destination material blocks intent without overwrite", DestinationMaterialBlocksCommitIntent),
+    ("HC-REP-RUNTIME-037 failed COMMITTING insert rolls back current state", CommittingInsertFailureRollsBack),
+    ("HC-REP-RUNTIME-038 failed MOVED insert retains moved package and durable intent", MovedInsertFailureRetainsIntent),
+    ("HC-REP-RUNTIME-039 interrupted pre-move intent requires reconciliation", InterruptedPreMoveRequiresReconciliation),
+    ("HC-REP-RUNTIME-040 moved location with COMMITTING state requires reconciliation", InterruptedAfterMoveRequiresReconciliation),
+    ("HC-REP-RUNTIME-041 moved package tampering blocks idempotent replay", MovedPackageTamperingBlocksReplay),
+    ("HC-REP-RUNTIME-042 conflicting move operation replay is refused", ConflictingMoveReplayIsRefused),
+    ("HC-REP-RUNTIME-043 absent transaction cannot begin commit", AbsentTransactionCannotMove),
+    ("HC-REP-RUNTIME-044 read-only repository refuses package movement", ReadOnlyPackageMovementRefused),
+    ("HC-REP-RUNTIME-045 current state must agree with contiguous history", CurrentStateHistoryMismatchRefused)
 };
 
 var failures = 0;
@@ -428,6 +442,301 @@ static void IndexFailureRollsBackJournal()
     });
 }
 
+static void CommitIntentMovesExactPackage()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        var stage = Absolute(root, fixture.StagingRelativePath);
+        var before = DirectoryFingerprint(stage);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var request = CreateMoveRequest(fixture.Registration);
+        var result = service.MoveStagedVerifiedPackage(root, request);
+
+        Equal("MOVED", result.State);
+        Equal(3L, result.Revision);
+        Equal(false, result.WasAlreadyMoved);
+        True(!Path.Exists(stage));
+        var destination = Absolute(root, fixture.DestinationRelativePath);
+        True(Directory.Exists(destination));
+        Equal(before, DirectoryFingerprint(destination));
+
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal("MOVED", ScalarText(connection, "SELECT state FROM repository_transactions"));
+        Equal(3L, ScalarLong(connection, "SELECT revision FROM repository_transactions"));
+        Equal(3L, ScalarLong(connection, "SELECT count(*) FROM repository_transitions"));
+        Equal(0L, ScalarLong(connection, "SELECT count(*) FROM repository_package_catalog"));
+        Equal(0L, ScalarLong(connection, "SELECT count(*) FROM repository_record_index WHERE record_kind = 'commits'"));
+    });
+}
+
+static void CommitMoveTransitionsAreExact()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var request = CreateMoveRequest(fixture.Registration);
+        _ = service.MoveStagedVerifiedPackage(root, request);
+
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal(1L, ScalarLong(connection, "SELECT count(*) FROM repository_transitions WHERE transition_sequence = 2 AND from_state = 'STAGED_VERIFIED' AND to_state = 'COMMITTING' AND trigger = 'NORMAL' AND actor_kind = 'SYSTEM' AND reconciliation_id IS NULL AND reason_code IS NULL AND reason IS NULL"));
+        Equal(request.CommittingTransitionId.ToString("D"), ScalarText(connection, "SELECT transition_id FROM repository_transitions WHERE transition_sequence = 2"));
+        Equal(request.CommittingOperationId.ToString("D"), ScalarText(connection, "SELECT operation_id FROM repository_transitions WHERE transition_sequence = 2"));
+        Equal(1L, ScalarLong(connection, "SELECT count(*) FROM repository_transitions WHERE transition_sequence = 3 AND from_state = 'COMMITTING' AND to_state = 'MOVED' AND trigger = 'NORMAL' AND actor_kind = 'SYSTEM' AND reconciliation_id IS NULL AND reason_code IS NULL AND reason IS NULL"));
+        Equal(request.MovedTransitionId.ToString("D"), ScalarText(connection, "SELECT transition_id FROM repository_transitions WHERE transition_sequence = 3"));
+        Equal(request.MovedOperationId.ToString("D"), ScalarText(connection, "SELECT operation_id FROM repository_transitions WHERE transition_sequence = 3"));
+    });
+}
+
+static void CommitMoveReplayIsIdempotent()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var request = CreateMoveRequest(fixture.Registration);
+        _ = service.MoveStagedVerifiedPackage(root, request);
+        var before = DirectoryFingerprint(Absolute(root, fixture.DestinationRelativePath));
+        var replay = service.MoveStagedVerifiedPackage(root, request);
+
+        True(replay.WasAlreadyMoved);
+        Equal("MOVED", replay.State);
+        Equal(before, DirectoryFingerprint(Absolute(root, fixture.DestinationRelativePath)));
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal(3L, ScalarLong(connection, "SELECT count(*) FROM repository_transitions"));
+    });
+}
+
+static void ChangedBytesBlockCommitIntent()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        File.AppendAllText(Path.Combine(Absolute(root, fixture.StagingRelativePath), "events.json"), "changed");
+        Throws(RepositoryErrorCode.EvidenceMismatch, () => service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration)));
+        AssertTransactionBoundary(root, "STAGED_VERIFIED", 1, 1);
+        True(Directory.Exists(Absolute(root, fixture.StagingRelativePath)));
+        True(!Path.Exists(Absolute(root, fixture.DestinationRelativePath)));
+    });
+}
+
+static void DestinationMaterialBlocksCommitIntent()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var destination = Absolute(root, fixture.DestinationRelativePath);
+        Directory.CreateDirectory(destination);
+        File.WriteAllText(Path.Combine(destination, "retain.txt"), "do-not-overwrite");
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration)));
+        AssertTransactionBoundary(root, "STAGED_VERIFIED", 1, 1);
+        Equal("do-not-overwrite", File.ReadAllText(Path.Combine(destination, "retain.txt")));
+        True(Directory.Exists(Absolute(root, fixture.StagingRelativePath)));
+    });
+}
+
+static void CommittingInsertFailureRollsBack()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        AddTransitionAbortTrigger(root, "COMMITTING");
+        Throws(RepositoryErrorCode.CatalogWriteFailed, () => service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration)));
+        AssertTransactionBoundary(root, "STAGED_VERIFIED", 1, 1);
+        True(Directory.Exists(Absolute(root, fixture.StagingRelativePath)));
+        True(!Path.Exists(Absolute(root, fixture.DestinationRelativePath)));
+    });
+}
+
+static void MovedInsertFailureRetainsIntent()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        AddTransitionAbortTrigger(root, "MOVED");
+        Throws(RepositoryErrorCode.CatalogWriteFailed, () => service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration)));
+        AssertTransactionBoundary(root, "COMMITTING", 2, 2);
+        True(!Path.Exists(Absolute(root, fixture.StagingRelativePath)));
+        True(Directory.Exists(Absolute(root, fixture.DestinationRelativePath)));
+    });
+}
+
+static void InterruptedPreMoveRequiresReconciliation()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var request = CreateMoveRequest(fixture.Registration);
+        ForceCommitting(root, request);
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.MoveStagedVerifiedPackage(root, request));
+        AssertTransactionBoundary(root, "COMMITTING", 2, 2);
+        True(Directory.Exists(Absolute(root, fixture.StagingRelativePath)));
+        True(!Path.Exists(Absolute(root, fixture.DestinationRelativePath)));
+    });
+}
+
+static void InterruptedAfterMoveRequiresReconciliation()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var request = CreateMoveRequest(fixture.Registration);
+        ForceCommitting(root, request);
+        Directory.CreateDirectory(Path.GetDirectoryName(Absolute(root, fixture.DestinationRelativePath))!);
+        Directory.Move(Absolute(root, fixture.StagingRelativePath), Absolute(root, fixture.DestinationRelativePath));
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.MoveStagedVerifiedPackage(root, request));
+        AssertTransactionBoundary(root, "COMMITTING", 2, 2);
+        True(!Path.Exists(Absolute(root, fixture.StagingRelativePath)));
+        True(Directory.Exists(Absolute(root, fixture.DestinationRelativePath)));
+    });
+}
+
+static void MovedPackageTamperingBlocksReplay()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var request = CreateMoveRequest(fixture.Registration);
+        _ = service.MoveStagedVerifiedPackage(root, request);
+        File.AppendAllText(Path.Combine(Absolute(root, fixture.DestinationRelativePath), "events.json"), "changed");
+        Throws(RepositoryErrorCode.EvidenceMismatch, () => service.MoveStagedVerifiedPackage(root, request));
+        AssertTransactionBoundary(root, "MOVED", 3, 3);
+    });
+}
+
+static void ConflictingMoveReplayIsRefused()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var request = CreateMoveRequest(fixture.Registration);
+        _ = service.MoveStagedVerifiedPackage(root, request);
+        var conflict = request with { MovedOperationId = TestId(9999) };
+        Throws(RepositoryErrorCode.JournalConflict, () => service.MoveStagedVerifiedPackage(root, conflict));
+        AssertTransactionBoundary(root, "MOVED", 3, 3);
+    });
+}
+
+static void AbsentTransactionCannotMove()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        Throws(RepositoryErrorCode.JournalEntryMissing, () => service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration)));
+        AssertNoJournalRows(root);
+    });
+}
+
+static void ReadOnlyPackageMovementRefused()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        EditDescriptor(root, descriptor => descriptor["interface_version"] = "2.0.0");
+        Throws(RepositoryErrorCode.MutationNotAllowed, () => service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration)));
+        AssertTransactionBoundary(root, "STAGED_VERIFIED", 1, 1);
+    });
+}
+
+static void CurrentStateHistoryMismatchRefused()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite))
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = "UPDATE repository_transactions SET revision = 2, state = 'COMMITTING'";
+            Equal(1, command.ExecuteNonQuery());
+        }
+        Throws(RepositoryErrorCode.CatalogInvalid, () => service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration)));
+        True(Directory.Exists(Absolute(root, fixture.StagingRelativePath)));
+        True(!Path.Exists(Absolute(root, fixture.DestinationRelativePath)));
+    });
+}
+
+static RepositoryCommitMoveRequest CreateMoveRequest(StagedVerifiedPackageRegistration registration) => new()
+{
+    TransactionId = registration.TransactionId,
+    CommittingTransitionId = TestId(5001),
+    CommittingOperationId = TestId(5002),
+    MovedTransitionId = TestId(5003),
+    MovedOperationId = TestId(5004),
+    ActorWindowsAccount = "TEST\\operator",
+    CommittingRecordedAt = new DateTimeOffset(2026, 9, 10, 12, 1, 0, TimeSpan.Zero),
+    MovedRecordedAt = new DateTimeOffset(2026, 9, 10, 12, 2, 0, TimeSpan.Zero)
+};
+
+static void AddTransitionAbortTrigger(string root, string state)
+{
+    using var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite);
+    using var command = connection.CreateCommand();
+    command.CommandText = $"CREATE TRIGGER test_abort_{state.ToLowerInvariant()} BEFORE INSERT ON repository_transitions WHEN NEW.to_state = '{state}' BEGIN SELECT RAISE(ABORT, 'injected {state} failure'); END;";
+    command.ExecuteNonQuery();
+}
+
+static void ForceCommitting(string root, RepositoryCommitMoveRequest request)
+{
+    var recordedUtc = request.CommittingRecordedAt.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'");
+    using var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite);
+    using var transaction = connection.BeginTransaction();
+    using (var update = connection.CreateCommand())
+    {
+        update.Transaction = transaction;
+        update.CommandText = "UPDATE repository_transactions SET revision = 2, state = 'COMMITTING', state_changed_utc = $recorded_utc WHERE transaction_id = $transaction_id";
+        update.Parameters.AddWithValue("$recorded_utc", recordedUtc);
+        update.Parameters.AddWithValue("$transaction_id", request.TransactionId.ToString("D"));
+        Equal(1, update.ExecuteNonQuery());
+    }
+    using (var insert = connection.CreateCommand())
+    {
+        insert.Transaction = transaction;
+        insert.CommandText = """
+            INSERT INTO repository_transitions (
+              transition_id, schema_version, transaction_id, transition_sequence,
+              from_state, to_state, operation_id, trigger, actor_kind,
+              actor_windows_account, reconciliation_id, reason_code, reason, recorded_utc
+            ) VALUES ($transition_id, '1.0.0', $transaction_id, 2,
+              'STAGED_VERIFIED', 'COMMITTING', $operation_id, 'NORMAL', 'SYSTEM',
+              $actor, NULL, NULL, NULL, $recorded_utc)
+            """;
+        insert.Parameters.AddWithValue("$transition_id", request.CommittingTransitionId.ToString("D"));
+        insert.Parameters.AddWithValue("$transaction_id", request.TransactionId.ToString("D"));
+        insert.Parameters.AddWithValue("$operation_id", request.CommittingOperationId.ToString("D"));
+        insert.Parameters.AddWithValue("$actor", request.ActorWindowsAccount);
+        insert.Parameters.AddWithValue("$recorded_utc", recordedUtc);
+        insert.ExecuteNonQuery();
+    }
+    transaction.Commit();
+}
+
+static void AssertTransactionBoundary(string root, string state, long revision, long transitionCount)
+{
+    using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+    Equal(state, ScalarText(connection, "SELECT state FROM repository_transactions"));
+    Equal(revision, ScalarLong(connection, "SELECT revision FROM repository_transactions"));
+    Equal(transitionCount, ScalarLong(connection, "SELECT count(*) FROM repository_transitions"));
+}
+
+static string Absolute(string root, string relativePath) =>
+    Path.Combine(root, relativePath.Replace('/', Path.DirectorySeparatorChar));
+
+static string DirectoryFingerprint(string path) => string.Join("\n",
+    Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
+        .Select(file => $"{Path.GetRelativePath(path, file).Replace('\\', '/')}\t{new FileInfo(file).Length}\t{Hash(file)}")
+        .Order(StringComparer.Ordinal));
+
 static (StagedVerifiedPackageRegistration Registration, string StagingRelativePath, string DestinationRelativePath, string VerificationRelativePath) CreateStagedFixture(
     string root,
     int variant = 1,
@@ -630,6 +939,13 @@ static long ScalarLong(SqliteConnection connection, string sql)
     using var command = connection.CreateCommand();
     command.CommandText = sql;
     return (long)(command.ExecuteScalar() ?? throw new InvalidOperationException("Expected scalar result."));
+}
+
+static string ScalarText(SqliteConnection connection, string sql)
+{
+    using var command = connection.CreateCommand();
+    command.CommandText = sql;
+    return (string)(command.ExecuteScalar() ?? throw new InvalidOperationException("Expected scalar text result."));
 }
 
 static void AssertNoJournalRows(string root)

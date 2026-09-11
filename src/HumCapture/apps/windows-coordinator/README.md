@@ -6,8 +6,9 @@ does not reference HumTrack application internals.
 
 ## Repository core
 
-`src/HumCapture.Coordinator.Repository` contains the I0.4B-C1 initialize/open
-and I0.4B-C2 verified-staging journal slices. It:
+`src/HumCapture.Coordinator.Repository` contains the I0.4B-C1 initialize/open,
+I0.4B-C2 verified-staging journal, and I0.4B-C3 commit-intent/atomic-move
+slices. It:
 
 - targets Windows 10 version 2004 (build 19041) or later on .NET 10;
 - pins and lock-resolves `Microsoft.Data.Sqlite` 10.0.12;
@@ -27,12 +28,21 @@ and I0.4B-C2 verified-staging journal slices. It:
 - publishes the exact verification record without overwrite; and
 - atomically inserts the initial `STAGED_VERIFIED` transaction, sequence-1
   transition and verification-record index, with exact-replay idempotency and
-  fail-closed identity conflict handling.
+  fail-closed identity conflict handling;
+- revalidates journal history, immutable verification evidence, exact staged
+  bytes, canonical paths, volume identity and repository availability before
+  crossing the repository boundary;
+- atomically records `COMMITTING` intent before moving package data; and
+- uses a same-volume, non-overwriting Windows write-through directory move,
+  revalidates the exact destination package, then atomically advances the
+  journal to `MOVED`.
 
 The C2 API is an admission boundary for a package already collected by the
-future transfer/common-verifier service. It does not itself collect or decode
-media. The component does not yet implement subject records, transfer,
-`COMMITTING` or later package commit states, reconciliation, quarantine moves,
+future transfer/common-verifier service. C3 moves that package only through
+the internal `MOVED` durability boundary. Neither API collects or decodes
+media. `MOVED` is not cataloged or committed and cannot authorize completion,
+a receipt or source cleanup. The component does not yet implement subject
+records, transfer, `CATALOGED`/`COMMITTED`, reconciliation, quarantine moves,
 receipts, backup/restore, UI, or migration.
 
 ## Verification
