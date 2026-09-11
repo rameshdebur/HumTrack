@@ -1,7 +1,7 @@
 # HumCapture SBOM Validation Report
 
 **Report ID:** HC-SBOM-VR-001  
-**Revision:** 1.4  
+**Revision:** 1.5  
 **Date:** 2026-09-11  
 **Disposition:** `PASS` for engineering SBOM generation and format validation  
 **Regulatory/release disposition:** Not a controlled release or conformity claim
@@ -30,11 +30,11 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 | Field | Result |
 |---|---|
 | Format | CycloneDX JSON 1.7 |
-| Primary component | HumCapture `0.1.0-i0.4b-c3` engineering/unreleased |
+| Primary component | HumCapture `0.1.0-i0.4b-c4` engineering/unreleased |
 | Components | 31 |
 | Dependency graph nodes | 32, complete closure including primary component |
-| SBOM SHA-256 | `58161eca97eaa69c14ebfb47d66f7f814c63f241f4bca94b43beba35545f0dfd` |
-| Generated UTC | `2026-09-11T11:44:30.127Z` |
+| SBOM SHA-256 | `c35505dabe44602dce788065ed20690af69738922ae62104973c19c2052ec911` |
+| Generated UTC | `2026-09-11T14:14:30.511Z` |
 | Project tests | 6/6 passed, including NuGet/Coordinator coverage, future-manifest drift, floating-action rejection and exact CI package versions |
 | Project validator | Passed |
 | Deterministic regeneration | Passed for fixed manifests, version and timestamp |
@@ -55,8 +55,8 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 The earlier validated 15-component SBOM remains retained in the evidence vault
 and referenced by engineering snapshot `HC-ENG-20260831T163246Z-7d17f5afce36`.
 The snapshot and P0.2J evidence retain its exact bytes and SHA-256; accepted
-evidence is not edited. The 31-component I0.4B-C3 inventory supersedes the C2
-engineering inventory while retaining the same dependency graph; C3 changes
+evidence is not edited. The 31-component I0.4B-C4 inventory supersedes the C3
+engineering inventory while retaining the same dependency graph; C4 changes
 repository source behavior but adds no dependency. It is not retroactively
 bound to the earlier snapshot and requires a new release/snapshot record for
 release binding.
@@ -76,7 +76,7 @@ release binding.
 ## Evidence levels
 
 - Source implemented: yes.
-- Automated behavior: 6 SBOM tests, 91 contract/evidence-control tests and 45
+- Automated behavior: 6 SBOM tests, 91 contract/evidence-control tests and 56
   Coordinator repository runtime tests pass.
 - Official format validation: passed.
 - Release integration: engineering snapshot and vault binding passed.

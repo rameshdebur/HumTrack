@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1/C2/C3 are implemented/accepted at their recorded evidence levels  
-**Tags:** I0.4B-C3 | WINDOWS COORDINATOR | REPOSITORY CORE | COMMIT INTENT | ATOMIC MOVE | RECOVERY BOUNDARY  
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1/C2/C3/C4 are implemented/accepted at their recorded evidence levels  
+**Tags:** I0.4B-C4 | WINDOWS COORDINATOR | REPOSITORY CORE | STARTUP RECONCILIATION | RECOVERY ACTIONS  
 **Last meaningful update:** 2026-09-11
 
 ## Objective
@@ -26,10 +26,12 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - ADR-0006 is accepted. The isolated P0.2B native Media Foundation diagnostic builds with zero warnings/errors, passes eight selection self-tests, rejects unavailable 1080p60 and ambiguous profiles without output, preserves presentation/QPC timing evidence, and finalizes readable H.264 MP4 files.
 - Hardware probe execution: C920 B passed the short exact 1080p30 H.264 diagnostic at measured 29.92 fps. C920 A finalized readable media but delivered approximately 25.98 fps and then 24.00 fps in two runs; P0.2B acceptance is therefore blocked pending focused camera/control/profile/topology diagnosis. This is diagnostic evidence, not qualification.
 - Application source implementation: the approved Windows Coordinator
-  I0.4B-C1 initialize/open, I0.4B-C2 verified-staging journal and I0.4B-C3
-  durable commit-intent/atomic-move slices exist. C3 stops at `MOVED`; no UI,
+  I0.4B-C1 initialize/open, I0.4B-C2 verified-staging journal, I0.4B-C3
+  durable commit-intent/atomic-move and I0.4B-C4 bounded startup reconciliation
+  slices exist. C4 stops at safely reconciling `STAGED_VERIFIED`, `COMMITTING`
+  and `MOVED`; no UI,
   subject service, collection transport, catalog publication, final
-  `COMMITTED` decision, reconciliation, receipt, cleanup or Android runtime
+  `COMMITTED` decision, operator/quarantine recovery, receipt, cleanup or Android runtime
   exists.
 - P0.2K evidence integration: completed. Nine pre-integration P0.2A-J report files are hashed;
   both retained P0.2J runs verify in the controlled vault. Earlier P0.2 primary
@@ -225,6 +227,22 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   passed HumCapture CI push run `34595856604` and PR run `34595859162`.
   External cross-process writer exclusion, process-kill/OS/power-loss,
   reconciliation/quarantine, catalog/commit publication, backup/restore, HIL,
+  field, independent and regulatory evidence remain open.
+- I0.4B-C4 implements bounded automatic startup reconciliation for the
+  repository states that C2/C3 currently produce. It records journal, staging,
+  destination, catalog-linkage, verification-record and commit-record
+  observations separately. Exact evidence permits `NO_ACTION`,
+  `RETRY_FROM_STAGED` or `RESUME_AFTER_MOVE`; any state-changing result appends
+  a contiguous system transition in the same SQLite transaction as the
+  reconciliation and its six observations. Exact replay is idempotent, while
+  changed, dual-path, unsafe or later-authority evidence fails closed and
+  preserves package material for trained-operator handling. A reconciled
+  retry can then complete C3 without resetting revision history.
+  HC-REP-RUNTIME-001–056 pass locally. Implementation commit
+  `e7e2a2e50aacb4acf71b0c0ac3c495bb34a04e39` passed HumCapture CI push run
+  `34609304657` and PR run `34609310422`. Operator/quarantine actions,
+  cross-process writer exclusion,
+  process-kill/OS/power-loss, catalog/commit publication, backup/restore, HIL,
   field, independent and regulatory evidence remain open.
 
 ## Architecture summary

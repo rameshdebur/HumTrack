@@ -215,3 +215,15 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   HC-REP-RUNTIME-032–045 pass locally and exact-source CI passes. This is not a
   power-loss, cross-process exclusion, reconciliation, `COMMITTED`, receipt,
   cleanup, HIL, field, independent or qualified regulatory claim.
+- **HC-RISK-022 / HC-RISK-030 / HC-RISK-031 startup-reconciliation
+  implementation control, 2026-09-11:** I0.4B-C4 observes all six accepted
+  repository authorities and automatically performs only exact `NO_ACTION`,
+  `RETRY_FROM_STAGED` or `RESUME_AFTER_MOVE` outcomes within the implemented
+  C2/C3 boundary. Reconciliation, observations and any contiguous state
+  transition are committed atomically; exact replay is idempotent. Changed,
+  dual-path, unsafe, unreadable or later-authority evidence fails closed and
+  retains package material. HC-REP-RUNTIME-046–056 pass locally, including
+  transactional rollback and successful C3 retry after reconciliation. This is
+  not operator/quarantine implementation, cross-process exclusion, abrupt
+  process/OS/power-loss, final commit, HIL, field, independent or qualified
+  regulatory evidence.
