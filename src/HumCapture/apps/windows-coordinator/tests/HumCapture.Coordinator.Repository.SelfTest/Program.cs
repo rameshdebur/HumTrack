@@ -52,7 +52,18 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-042 conflicting move operation replay is refused", ConflictingMoveReplayIsRefused),
     ("HC-REP-RUNTIME-043 absent transaction cannot begin commit", AbsentTransactionCannotMove),
     ("HC-REP-RUNTIME-044 read-only repository refuses package movement", ReadOnlyPackageMovementRefused),
-    ("HC-REP-RUNTIME-045 current state must agree with contiguous history", CurrentStateHistoryMismatchRefused)
+    ("HC-REP-RUNTIME-045 current state must agree with contiguous history", CurrentStateHistoryMismatchRefused),
+    ("HC-REP-RUNTIME-046 startup records six-authority staged no-action", StartupStagedNoAction),
+    ("HC-REP-RUNTIME-047 startup returns interrupted pre-move intent to staged", StartupRetriesFromStaged),
+    ("HC-REP-RUNTIME-048 startup proves interrupted post-move intent as moved", StartupResumesAfterMove),
+    ("HC-REP-RUNTIME-049 startup records six-authority moved no-action", StartupMovedNoAction),
+    ("HC-REP-RUNTIME-050 exact startup reconciliation replay is idempotent", StartupReplayIsIdempotent),
+    ("HC-REP-RUNTIME-051 conflicting reconciliation identity is refused", StartupReplayConflictRefused),
+    ("HC-REP-RUNTIME-052 dual-path material requires operator handling", StartupDualPathRefused),
+    ("HC-REP-RUNTIME-053 changed package requires operator handling", StartupChangedPackageRefused),
+    ("HC-REP-RUNTIME-054 unexpected catalog linkage blocks automatic action", StartupCatalogConflictRefused),
+    ("HC-REP-RUNTIME-055 reconciliation rollback is atomic", StartupReconciliationRollsBack),
+    ("HC-REP-RUNTIME-056 reconciled staged package can retry the C3 move", StartupRetryCanMove)
 };
 
 var failures = 0;
@@ -666,6 +677,173 @@ static void CurrentStateHistoryMismatchRefused()
     });
 }
 
+static void StartupStagedNoAction()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var result = service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, false));
+        Equal("NO_ACTION", result.ActionCode); Equal("STAGED_VERIFIED", result.ResultState); Equal(1L, result.Revision);
+        AssertReconciliation(root, result.ReconciliationId, 6, null);
+    });
+}
+
+static void StartupRetriesFromStaged()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        ForceCommitting(root, CreateMoveRequest(fixture.Registration));
+        var result = service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, true));
+        Equal("RETRY_FROM_STAGED", result.ActionCode); Equal("STAGED_VERIFIED", result.ResultState);
+        AssertTransactionBoundary(root, "STAGED_VERIFIED", 3, 3); AssertReconciliation(root, result.ReconciliationId, 6, result.ResultTransitionId);
+    });
+}
+
+static void StartupResumesAfterMove()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        ForceCommitting(root, CreateMoveRequest(fixture.Registration));
+        Directory.CreateDirectory(Path.GetDirectoryName(Absolute(root, fixture.DestinationRelativePath))!);
+        Directory.Move(Absolute(root, fixture.StagingRelativePath), Absolute(root, fixture.DestinationRelativePath));
+        var result = service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, true));
+        Equal("RESUME_AFTER_MOVE", result.ActionCode); Equal("MOVED", result.ResultState); AssertTransactionBoundary(root, "MOVED", 3, 3);
+    });
+}
+
+static void StartupMovedNoAction()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        _ = service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration));
+        var result = service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, false));
+        Equal("NO_ACTION", result.ActionCode); Equal("MOVED", result.ResultState); Equal(3L, result.Revision);
+    });
+}
+
+static void StartupReplayIsIdempotent()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        ForceCommitting(root, CreateMoveRequest(fixture.Registration));
+        var request = CreateReconciliationRequest(fixture.Registration, true);
+        _ = service.ReconcileStartupTransaction(root, request);
+        var replay = service.ReconcileStartupTransaction(root, request);
+        True(replay.WasAlreadyRecorded); Equal(1L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_reconciliations"));
+    });
+}
+
+static void StartupReplayConflictRefused()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        var request = CreateReconciliationRequest(fixture.Registration, false); _ = service.ReconcileStartupTransaction(root, request);
+        Throws(RepositoryErrorCode.JournalConflict, () => service.ReconcileStartupTransaction(root, request with { ActorWindowsAccount = "TEST\\other" }));
+    });
+}
+
+static void StartupDualPathRefused()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        CopyDirectory(Absolute(root, fixture.StagingRelativePath), Absolute(root, fixture.DestinationRelativePath));
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, false)));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_reconciliations"));
+    });
+}
+
+static void StartupChangedPackageRefused()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        File.AppendAllText(Absolute(root, fixture.StagingRelativePath + "/events.json"), "changed");
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, false)));
+    });
+}
+
+static void StartupCatalogConflictRefused()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        InsertUnexpectedCatalogEntry(root);
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, false)));
+    });
+}
+
+static void StartupReconciliationRollsBack()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite)) using (var command = connection.CreateCommand())
+        { command.CommandText = "CREATE TRIGGER test_abort_observation BEFORE INSERT ON repository_reconciliation_observations WHEN NEW.authority = 'VERIFICATION_RECORD' BEGIN SELECT RAISE(ABORT, 'injected'); END;"; command.ExecuteNonQuery(); }
+        Throws(RepositoryErrorCode.CatalogWriteFailed, () => service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, false)));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_reconciliations"));
+    });
+}
+
+static void StartupRetryCanMove()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root); _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        ForceCommitting(root, CreateMoveRequest(fixture.Registration));
+        _ = service.ReconcileStartupTransaction(root, CreateReconciliationRequest(fixture.Registration, true));
+        var moved = service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration) with
+        { CommittingTransitionId = TestId(6101), CommittingOperationId = TestId(6102), MovedTransitionId = TestId(6103), MovedOperationId = TestId(6104) });
+        Equal("MOVED", moved.State); Equal(5L, moved.Revision);
+    });
+}
+
+static RepositoryStartupReconciliationRequest CreateReconciliationRequest(StagedVerifiedPackageRegistration registration, bool changesState) => new()
+{
+    TransactionId = registration.TransactionId, ReconciliationId = TestId(6001),
+    ResultTransitionId = changesState ? TestId(6002) : null, ResultOperationId = changesState ? TestId(6003) : null,
+    ActorWindowsAccount = "TEST\\operator", StartedAt = new DateTimeOffset(2026, 9, 11, 10, 0, 0, TimeSpan.Zero),
+    FinishedAt = new DateTimeOffset(2026, 9, 11, 10, 0, 1, TimeSpan.Zero)
+};
+
+static void AssertReconciliation(string root, string reconciliationId, long observations, string? transitionId)
+{
+    using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+    Equal(observations, ScalarLong(connection, $"SELECT count(*) FROM repository_reconciliation_observations WHERE reconciliation_id = '{reconciliationId}'"));
+    Equal(transitionId, ScalarNullableText(connection, $"SELECT result_transition_id FROM repository_reconciliations WHERE reconciliation_id = '{reconciliationId}'"));
+}
+
+static void InsertUnexpectedCatalogEntry(string root)
+{
+    using var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite); using var command = connection.CreateCommand();
+    command.CommandText = """
+        INSERT INTO repository_package_catalog SELECT
+          '00000000-0000-0000-0000-000000009001','1.0.0',repository_id,transaction_id,subject_id,session_id,trial_id,source_id,
+          capture_attempt_id,collection_attempt_id,package_id,package_content_sha256,artifact_set_sha256,package_byte_length,
+          artifact_count,destination_relative_path,verification_record_id,verification_record_content_sha256,1,state_changed_utc
+        FROM repository_transactions;
+        """; command.ExecuteNonQuery();
+}
+
+static void CopyDirectory(string source, string destination)
+{
+    Directory.CreateDirectory(destination);
+    foreach (var directory in Directory.EnumerateDirectories(source, "*", SearchOption.AllDirectories))
+    {
+        Directory.CreateDirectory(directory.Replace(source, destination));
+    }
+    foreach (var file in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories))
+    {
+        File.Copy(file, file.Replace(source, destination));
+    }
+}
+
 static RepositoryCommitMoveRequest CreateMoveRequest(StagedVerifiedPackageRegistration registration) => new()
 {
     TransactionId = registration.TransactionId,
@@ -941,11 +1119,25 @@ static long ScalarLong(SqliteConnection connection, string sql)
     return (long)(command.ExecuteScalar() ?? throw new InvalidOperationException("Expected scalar result."));
 }
 
+static long ScalarLongAtRoot(string root, string sql)
+{
+    using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+    return ScalarLong(connection, sql);
+}
+
 static string ScalarText(SqliteConnection connection, string sql)
 {
     using var command = connection.CreateCommand();
     command.CommandText = sql;
     return (string)(command.ExecuteScalar() ?? throw new InvalidOperationException("Expected scalar text result."));
+}
+
+static string? ScalarNullableText(SqliteConnection connection, string sql)
+{
+    using var command = connection.CreateCommand();
+    command.CommandText = sql;
+    var value = command.ExecuteScalar();
+    return value is null or DBNull ? null : (string)value;
 }
 
 static void AssertNoJournalRows(string root)

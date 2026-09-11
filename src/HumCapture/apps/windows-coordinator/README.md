@@ -7,8 +7,8 @@ does not reference HumTrack application internals.
 ## Repository core
 
 `src/HumCapture.Coordinator.Repository` contains the I0.4B-C1 initialize/open,
-I0.4B-C2 verified-staging journal, and I0.4B-C3 commit-intent/atomic-move
-slices. It:
+I0.4B-C2 verified-staging journal, I0.4B-C3 commit-intent/atomic-move, and
+I0.4B-C4 bounded startup-reconciliation slices. It:
 
 - targets Windows 10 version 2004 (build 19041) or later on .NET 10;
 - pins and lock-resolves `Microsoft.Data.Sqlite` 10.0.12;
@@ -35,14 +35,22 @@ slices. It:
 - atomically records `COMMITTING` intent before moving package data; and
 - uses a same-volume, non-overwriting Windows write-through directory move,
   revalidates the exact destination package, then atomically advances the
-  journal to `MOVED`.
+  journal to `MOVED`;
+- observes journal, staging, destination, catalog linkage, immutable
+  verification record and commit record separately at startup; and
+- atomically retains the six observations plus `NO_ACTION`,
+  `RETRY_FROM_STAGED`, or `RESUME_AFTER_MOVE`, with exact replay and contiguous
+  recovery transitions.
 
 The C2 API is an admission boundary for a package already collected by the
 future transfer/common-verifier service. C3 moves that package only through
 the internal `MOVED` durability boundary. Neither API collects or decodes
-media. `MOVED` is not cataloged or committed and cannot authorize completion,
-a receipt or source cleanup. The component does not yet implement subject
-records, transfer, `CATALOGED`/`COMMITTED`, reconciliation, quarantine moves,
+media. C4 automatically acts only on exact, safe, supported evidence within
+`STAGED_VERIFIED`, `COMMITTING`, and `MOVED`; every other observation fails
+closed for trained-operator handling without moving or deleting material.
+`MOVED` is not cataloged or committed and cannot authorize completion, a
+receipt or source cleanup. The component does not yet implement subject
+records, transfer, catalog/commit reconciliation, operator/quarantine actions,
 receipts, backup/restore, UI, or migration.
 
 ## Verification

@@ -207,6 +207,71 @@ public sealed class RepositoryService
         }
     }
 
+    /// <summary>
+    /// Observes all six repository authorities and records one exact automatic
+    /// startup reconciliation within the implemented STAGED_VERIFIED/MOVED boundary.
+    /// </summary>
+    public RepositoryStartupReconciliationSnapshot ReconcileStartupTransaction(
+        string rootPath,
+        RepositoryStartupReconciliationRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ValidateStartupReconciliationRequest(request);
+        var opened = Open(rootPath);
+        if (!opened.CanMutate)
+        {
+            throw new RepositoryException(RepositoryErrorCode.MutationNotAllowed, "Repository compatibility permits inspection only; reconciliation is disabled.");
+        }
+
+        var gate = _commitLocks.GetOrAdd(opened.RootPath, static _ => new object());
+        lock (gate)
+        {
+            var catalogPath = RepositoryPathSafety.ResolveRelativePath(opened.RootPath, RepositoryConstants.CatalogRelativePath);
+            var replay = RepositoryCatalog.ReadStartupReconciliationReplay(catalogPath, request);
+            if (replay is not null)
+            {
+                return replay;
+            }
+            var context = RepositoryCatalog.ReadCommitContext(catalogPath, request.TransactionId, opened.Descriptor.RepositoryId);
+            if (context.State is not ("STAGED_VERIFIED" or "COMMITTING" or "MOVED"))
+            {
+                throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "C4 cannot reconcile this later or exceptional state; a later controlled slice or operator action is required.");
+            }
+
+            var observations = ObserveStartupAuthorities(opened.RootPath, catalogPath, context)
+                .OrderBy(item => item.Authority, StringComparer.Ordinal)
+                .ToArray();
+            var byAuthority = observations.ToDictionary(item => item.Authority, StringComparer.Ordinal);
+            var action = ClassifyStartupAction(context.State, byAuthority);
+            if (action is null)
+            {
+                throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "Startup evidence is conflicting, unsafe, unreadable, or outside the C4 boundary; retain all material and use trained-operator reconciliation.");
+            }
+
+            var changed = action.Value.ResultState != context.State;
+            if (changed != (request.ResultTransitionId is not null && request.ResultOperationId is not null))
+            {
+                throw new ArgumentException("A state-changing reconciliation requires both result transition and operation identities; NO_ACTION requires neither.", nameof(request));
+            }
+
+            var value = new JournalStartupReconciliation(
+                request.ReconciliationId,
+                request.TransactionId,
+                context.Revision,
+                context.State,
+                action.Value.ResultState,
+                action.Value.ActionCode,
+                request.ResultTransitionId,
+                request.ResultOperationId,
+                request.ActorWindowsAccount,
+                Utc(request.StartedAt),
+                Utc(request.FinishedAt),
+                action.Value.Explanation,
+                observations);
+            return RepositoryCatalog.RecordAutomaticReconciliation(catalogPath, value);
+        }
+    }
+
     private static RepositoryCommitMoveSnapshot MoveStagedVerifiedPackage(
         RepositoryOpenResult opened,
         RepositoryCommitMoveRequest request)
@@ -217,10 +282,17 @@ public sealed class RepositoryService
             catalogPath,
             request.TransactionId,
             opened.Descriptor.RepositoryId);
+        var baseRevision = context.State switch
+        {
+            "STAGED_VERIFIED" => context.Revision,
+            "COMMITTING" => context.Revision - 1,
+            "MOVED" => context.Revision - 2,
+            _ => throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "C3 cannot replay after a later repository boundary; reconcile through the owning slice.")
+        };
         var committing = NormalTransition(
             request,
-            1,
-            2,
+            baseRevision,
+            baseRevision + 1,
             "STAGED_VERIFIED",
             "COMMITTING",
             request.CommittingTransitionId,
@@ -228,15 +300,15 @@ public sealed class RepositoryService
             request.CommittingRecordedAt);
         var moved = NormalTransition(
             request,
-            2,
-            3,
+            baseRevision + 1,
+            baseRevision + 2,
             "COMMITTING",
             "MOVED",
             request.MovedTransitionId,
             request.MovedOperationId,
             request.MovedRecordedAt);
 
-        if (context.State is "MOVED" or "CATALOGED" or "COMMITTED")
+        if (context.State == "MOVED")
         {
             RepositoryCatalog.RequireExactNormalTransition(catalogPath, committing);
             RepositoryCatalog.RequireExactNormalTransition(catalogPath, moved);
@@ -250,7 +322,7 @@ public sealed class RepositoryService
             throw CommitRecovery(root, context);
         }
 
-        if (context.State != "STAGED_VERIFIED" || context.Revision != 1)
+        if (context.State != "STAGED_VERIFIED")
         {
             throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "Repository transaction is not at a normal C3 move boundary; controlled reconciliation is required.");
         }
@@ -290,12 +362,122 @@ public sealed class RepositoryService
             catalogPath,
             request.TransactionId,
             opened.Descriptor.RepositoryId);
-        if (completed.State != "MOVED" || completed.Revision != 3)
+        if (completed.State != "MOVED" || completed.Revision != moved.NextRevision)
         {
             throw new RepositoryException(RepositoryErrorCode.CatalogWriteFailed, "MOVED journal state could not be read back exactly.");
         }
 
         return Snapshot(completed, request, wasAlreadyMoved: false);
+    }
+
+    private static IReadOnlyList<RepositoryAuthorityObservation> ObserveStartupAuthorities(
+        string root,
+        string catalogPath,
+        JournalCommitContext context)
+    {
+        var expectedId = Id(context.PackageId);
+        var expectedHash = context.PackageContentSha256;
+        var expectedLength = context.PackageByteLength;
+        RepositoryAuthorityObservation Observation(string authority, string disposition, string? path = null) =>
+            new(authority, disposition, expectedId, disposition == "MATCH" ? expectedId : null,
+                expectedHash, disposition == "MATCH" ? expectedHash : null,
+                expectedLength, disposition == "MATCH" ? expectedLength : null,
+                path is null ? [] : [path]);
+
+        var staging = ObservePackage(root, context.StagingRelativePath, context);
+        var destination = ObservePackage(root, context.DestinationRelativePath, context);
+        var verification = ObserveVerification(root, context);
+        var later = RepositoryCatalog.ObserveLaterAuthorities(catalogPath, context);
+        return
+        [
+            Observation("JOURNAL", "MATCH", RepositoryConstants.CatalogRelativePath),
+            Observation("STAGING_PACKAGE", staging, context.StagingRelativePath),
+            Observation("DESTINATION_PACKAGE", destination, context.DestinationRelativePath),
+            Observation("CATALOG_LINKAGE", later.Catalog),
+            Observation("VERIFICATION_RECORD", verification, context.VerificationRecordRelativePath),
+            Observation("COMMIT_RECORD", later.Commit)
+        ];
+    }
+
+    private static string ObservePackage(string root, string relativePath, JournalCommitContext context)
+    {
+        string path;
+        try
+        {
+            path = RepositoryPathSafety.ResolveRelativePath(root, relativePath);
+            if (!Path.Exists(path))
+            {
+                return "ABSENT";
+            }
+            if (!Directory.Exists(path))
+            {
+                return "MISMATCH";
+            }
+            ValidatePackageAt(root, path, context);
+            return "MATCH";
+        }
+        catch (RepositoryException exception) when (exception.Code == RepositoryErrorCode.UnsafePath)
+        {
+            return "UNSAFE";
+        }
+        catch (RepositoryException exception) when (exception.Code is RepositoryErrorCode.EvidenceMismatch or RepositoryErrorCode.StagedPackageMissing or RepositoryErrorCode.CommitRecoveryRequired)
+        {
+            return "MISMATCH";
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return "UNREADABLE";
+        }
+    }
+
+    private static string ObserveVerification(string root, JournalCommitContext context)
+    {
+        try
+        {
+            var path = RepositoryPathSafety.ResolveRelativePath(root, context.VerificationRecordRelativePath);
+            if (!Path.Exists(path))
+            {
+                return "ABSENT";
+            }
+            if (!File.Exists(path) || Directory.Exists(path))
+            {
+                return "MISMATCH";
+            }
+            RepositoryPathSafety.RejectReparsePointsInExistingPath(path);
+            RepositoryPathSafety.RequireSingleLinkFile(path);
+            return Convert.ToHexStringLower(SHA256.HashData(File.ReadAllBytes(path))) == context.VerificationRecordContentSha256
+                ? "MATCH"
+                : "MISMATCH";
+        }
+        catch (RepositoryException exception) when (exception.Code == RepositoryErrorCode.UnsafePath)
+        {
+            return "UNSAFE";
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return "UNREADABLE";
+        }
+    }
+
+    private static (string ActionCode, string ResultState, string Explanation)? ClassifyStartupAction(
+        string state,
+        IReadOnlyDictionary<string, RepositoryAuthorityObservation> observations)
+    {
+        bool Is(string authority, string disposition) => observations[authority].Disposition == disposition;
+        if (!Is("JOURNAL", "MATCH") || !Is("VERIFICATION_RECORD", "MATCH")
+            || !Is("CATALOG_LINKAGE", "ABSENT") || !Is("COMMIT_RECORD", "ABSENT"))
+        {
+            return null;
+        }
+
+        return (state, observations["STAGING_PACKAGE"].Disposition, observations["DESTINATION_PACKAGE"].Disposition) switch
+        {
+            ("STAGED_VERIFIED", "MATCH", "ABSENT") => ("NO_ACTION", "STAGED_VERIFIED", "Exact durable evidence directly proves STAGED_VERIFIED."),
+            ("COMMITTING", "MATCH", "ABSENT") => ("RETRY_FROM_STAGED", "STAGED_VERIFIED", "Exact verified staging evidence permits a bounded retry from staging."),
+            ("COMMITTING", "ABSENT", "MATCH") => ("RESUME_AFTER_MOVE", "MOVED", "Exact destination evidence and durable intent prove the move boundary."),
+            ("MOVED", "ABSENT", "MATCH") => ("NO_ACTION", "MOVED", "Exact durable evidence directly proves MOVED."),
+            _ => null
+        };
     }
 
     private static void RequireMovedPackage(string root, JournalCommitContext context)
@@ -593,6 +775,27 @@ public sealed class RepositoryService
 
         ValidateWindowsAccount(request.ActorWindowsAccount);
     }
+
+    private static void ValidateStartupReconciliationRequest(RepositoryStartupReconciliationRequest request)
+    {
+        if (request.TransactionId == Guid.Empty || request.ReconciliationId == Guid.Empty
+            || request.ResultTransitionId == Guid.Empty || request.ResultOperationId == Guid.Empty)
+        {
+            throw new ArgumentException("Startup reconciliation UUIDs must not be empty.", nameof(request));
+        }
+        if ((request.ResultTransitionId is null) != (request.ResultOperationId is null))
+        {
+            throw new ArgumentException("Result transition and operation identities must be supplied together.", nameof(request));
+        }
+        if (request.FinishedAt < request.StartedAt)
+        {
+            throw new ArgumentException("Reconciliation finish time cannot precede start time.", nameof(request));
+        }
+        ValidateWindowsAccount(request.ActorWindowsAccount);
+    }
+
+    private static string Utc(DateTimeOffset value) =>
+        value.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'", CultureInfo.InvariantCulture);
 
     private static void ValidateSha256(string value, string parameterName)
     {
