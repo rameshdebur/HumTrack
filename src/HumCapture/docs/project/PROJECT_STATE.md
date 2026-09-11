@@ -1,8 +1,8 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1/C2 are implemented/accepted at their recorded evidence levels  
-**Tags:** I0.4B-C2 | WINDOWS COORDINATOR | REPOSITORY CORE | VERIFIED STAGING | JOURNAL | IMMUTABLE RECORD  
-**Last meaningful update:** 2026-09-10
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1/C2/C3 are implemented/accepted at their recorded evidence levels  
+**Tags:** I0.4B-C3 | WINDOWS COORDINATOR | REPOSITORY CORE | COMMIT INTENT | ATOMIC MOVE | RECOVERY BOUNDARY  
+**Last meaningful update:** 2026-09-11
 
 ## Objective
 
@@ -26,9 +26,11 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - ADR-0006 is accepted. The isolated P0.2B native Media Foundation diagnostic builds with zero warnings/errors, passes eight selection self-tests, rejects unavailable 1080p60 and ambiguous profiles without output, preserves presentation/QPC timing evidence, and finalizes readable H.264 MP4 files.
 - Hardware probe execution: C920 B passed the short exact 1080p30 H.264 diagnostic at measured 29.92 fps. C920 A finalized readable media but delivered approximately 25.98 fps and then 24.00 fps in two runs; P0.2B acceptance is therefore blocked pending focused camera/control/profile/topology diagnosis. This is diagnostic evidence, not qualification.
 - Application source implementation: the approved Windows Coordinator
-  I0.4B-C1 initialize/open and I0.4B-C2 verified-staging journal slices exist;
-  no UI, subject service, collection transport, package commit/reconciliation,
-  receipt, cleanup or Android runtime exists.
+  I0.4B-C1 initialize/open, I0.4B-C2 verified-staging journal and I0.4B-C3
+  durable commit-intent/atomic-move slices exist. C3 stops at `MOVED`; no UI,
+  subject service, collection transport, catalog publication, final
+  `COMMITTED` decision, reconciliation, receipt, cleanup or Android runtime
+  exists.
 - P0.2K evidence integration: completed. Nine pre-integration P0.2A-J report files are hashed;
   both retained P0.2J runs verify in the controlled vault. Earlier P0.2 primary
   artifacts and complete normative P0.2J measurement/lifecycle records are not
@@ -208,6 +210,22 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   media decoding, `COMMITTING` and later states, reconciliation/quarantine moves,
   process-kill/OS/power-loss, backup/restore, HIL, field, independent and
   regulatory evidence remain open.
+- I0.4B-C3 implements the bounded `STAGED_VERIFIED` -> `COMMITTING` ->
+  `MOVED` repository path. Before durable intent it revalidates the exact
+  staged package and immutable verification record, proves the staging and
+  destination parent are on the same Windows volume, checks available metadata
+  space and refuses a pre-existing destination. It then atomically journals
+  `COMMITTING`, performs a non-overwriting write-through `MoveFileExW` directory
+  rename, revalidates the destination and atomically journals `MOVED`. Exact
+  completed replay is idempotent. Any interruption after durable intent is
+  preserved as `COMMITTING` with a controlled reconciliation action; C3 never
+  deletes either location and never implies `CATALOGED`, `COMMITTED`, receipt,
+  completion or source cleanup. HC-REP-RUNTIME-001–045 pass locally.
+  Implementation commit `0b715d34d4b854eec7e4ebefd0a73e0d83e70f80`
+  passed HumCapture CI push run `34595856604` and PR run `34595859162`.
+  External cross-process writer exclusion, process-kill/OS/power-loss,
+  reconciliation/quarantine, catalog/commit publication, backup/restore, HIL,
+  field, independent and regulatory evidence remain open.
 
 ## Architecture summary
 

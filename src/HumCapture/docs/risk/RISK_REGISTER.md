@@ -204,3 +204,14 @@ All entries are `Open / not implemented / not verified` unless later evidence sa
   pass locally. Collection transport, production media decoding, later commit/
   reconciliation states, concurrent external mutation, abrupt process/OS/power
   loss, independent and qualified regulatory evidence remain open.
+- **HC-RISK-022 / HC-RISK-030 / HC-RISK-031 commit-intent and atomic-move
+  implementation control, 2026-09-11:** I0.4B-C3 revalidates exact staged
+  evidence before intent, proves same-volume placement, refuses destination
+  overwrite, atomically journals `COMMITTING`, performs a write-through Windows
+  directory rename, revalidates the destination and atomically journals
+  `MOVED`. Exact replay is idempotent. Failures before the intent transaction
+  roll back and retain staging; failures after intent retain the observable
+  package locations and durable `COMMITTING` state for later reconciliation.
+  HC-REP-RUNTIME-032–045 pass locally and exact-source CI passes. This is not a
+  power-loss, cross-process exclusion, reconciliation, `COMMITTED`, receipt,
+  cleanup, HIL, field, independent or qualified regulatory claim.
