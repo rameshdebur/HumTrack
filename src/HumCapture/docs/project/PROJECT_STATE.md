@@ -393,8 +393,8 @@ automatic MOVED-to-CATALOGED publication and receipt integration remain open.
   solo-maintainer engineering flow; independent human review remains an open
   controlled-release blocker.
 - The current SBOM now includes the CI workflow, three commit-pinned GitHub
-  Actions and the exact Windows SDK Chocolatey build package. It contains 20
-  components/21 dependency nodes; six project tests and project validation
+  Actions and the exact Windows SDK Chocolatey build package. With the Coordinator
+  NuGet inventory it contains 31 components/32 dependency nodes; six project tests and project validation
   pass. The prior 15-component SBOM remains immutable
   in the existing snapshot/evidence vault; the CI-aware SBOM is not
   retroactively release-bound.

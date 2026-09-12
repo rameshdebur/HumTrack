@@ -3,7 +3,7 @@
 **Change ID:** HC-CHG-20260912-012  
 **Title:** C7 startup discovery and later-state recovery  
 **Date:** 2026-09-12  
-**State:** Local implementation verified; remote verification and independent review pending
+**State:** Local and remote implementation verified; independent review pending
 
 The user authorized the next repository slice. Primary owner: Coordinator
 repository engineer. Affected owners: Architect, QA, Risk/Regulatory and
@@ -31,3 +31,6 @@ source deletion, session completion, operator quarantine or UI.
 AI contribution: source, regression tests, architecture/source review and
 controlled-record drafting. Independent human review remains pending.
 See HC-VR-I0-4B-C7-001 for commands, results and evidence limitations.
+
+Implementation: `282977955f9ab8ed929b0021d5103396ccc97ab5`.
+CI push `34686843552` and PR `34686845066` passed on that source.

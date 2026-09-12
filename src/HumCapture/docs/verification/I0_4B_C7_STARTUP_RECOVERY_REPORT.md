@@ -2,7 +2,7 @@
 
 **Verification ID:** HC-VR-I0-4B-C7-001  
 **Date:** 2026-09-12  
-**Disposition:** Local engineering verification passed; remote and independent review pending
+**Disposition:** Local and remote engineering verification passed; independent review pending
 
 ## Objective and implementation
 
@@ -53,6 +53,13 @@ validation pass. SBOM 0.1.0-i0.4b-c7 has 31 components/32 graph nodes,
 generated 2026-09-12T09:47:03.168Z, SHA-256
 814b3adebe9473b3aa50872aa330669541c863b76e864bfc6f4f3c113399ed27.
 No dependency added.
+
+Implementation commit: `282977955f9ab8ed929b0021d5103396ccc97ab5`.
+HumCapture CI [push 34686843552](https://github.com/rameshdebur/HumTrack/actions/runs/34686843552)
+and [PR 34686845066](https://github.com/rameshdebur/HumTrack/actions/runs/34686845066)
+passed on that source, including managed/native camera builds and self-tests.
+Both npm production audits and separate NuGet vulnerable/deprecated queries
+reported no findings. These results are point-in-time engineering evidence.
 
 ## Evidence limits and next integration
 
