@@ -3,7 +3,7 @@
 **Change ID:** HC-CHG-20260912-011  
 **Title:** C6 immutable commit publication and final reconciliation  
 **Date:** 2026-09-12  
-**State:** Local implementation verified; independent review pending
+**State:** Local and remote implementation verified; independent review pending
 
 The user authorized the next final-commit slice. Primary owner: Coordinator
 repository engineer. Affected owners: Architect, QA, Risk/Regulatory and
@@ -26,3 +26,6 @@ startup enumeration, operator quarantine or UI.
 AI contribution: implementation, tests, source review and controlled-record
 drafting. Independent human review and release attribution remain pending.
 Verification and remaining limitations are in HC-VR-I0-4B-C6-001.
+
+Implementation: `342d31642451dd389e0562bfb9a6c97fbb357fdb`.
+CI push `34685773998` and PR `34685775626` passed.
