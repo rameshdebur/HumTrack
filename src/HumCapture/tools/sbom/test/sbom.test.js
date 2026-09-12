@@ -22,6 +22,10 @@ test("generates a valid CycloneDX 1.7 inventory with all declared surfaces", asy
   const validated = await validateSbomFile(output);
   assert.equal(validated.componentCount, generated.componentCount);
   const bom = JSON.parse(await readFile(output, "utf8"));
+  const host = bom.components.find((item) => item.name === "HumCapture.Coordinator.Host");
+  assert.ok(host);
+  const repository = bom.components.find((item) => item.name === "HumCapture.Coordinator.Repository");
+  assert.ok(bom.dependencies.find((item) => item.ref === host["bom-ref"]).dependsOn.includes(repository["bom-ref"]));
   assert.ok(bom.components.some((item) => item.name === "ajv" && item.version === "8.20.0"));
   assert.ok(bom.components.some((item) => item.name === "Microsoft.NETCore.App"));
   const sqlite = bom.components.find((item) => item.name === "Microsoft.Data.Sqlite" && item.version === "10.0.12");

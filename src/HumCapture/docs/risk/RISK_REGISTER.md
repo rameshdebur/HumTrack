@@ -1,5 +1,14 @@
 # HumCapture Preliminary Risk Register
 
+C9 control update (2026-09-12), HC-RISK-022/030/031: executable startup requires
+an explicit existing root, emits controlled output/exit codes and never creates
+missing repositories. A named same-session mutex refuses overlapping cooperating
+hosts. HC-REP-RUNTIME-096–102 exercise real child processes including recovery,
+failure preservation and mutex contention. Direct library writers, alternate
+path aliases and other Windows sessions are not covered by the guard.
+Ctrl+C signal delivery, abandoned-mutex recovery and crash/power-loss behavior
+are not tested in C9. No capture-readiness, session completion or cleanup claim.
+
 C8 control update (2026-09-12), HC-RISK-022/030/031: RunStartupPass separates
 page completion, item recovery failures and package state. It uses the current
 Windows identity and a bounded page, cancels only between transactions, retains

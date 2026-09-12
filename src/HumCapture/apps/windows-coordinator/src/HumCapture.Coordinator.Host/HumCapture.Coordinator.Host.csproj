@@ -10,9 +10,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RestoreLockedMode>true</RestoreLockedMode>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="../../src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj" />
-    <ProjectReference Include="..\..\src\HumCapture.Coordinator.Repository\HumCapture.Coordinator.Repository.csproj" />
+    <ProjectReference Include="../HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj" />
   </ItemGroup>
 </Project>

@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:92170088-e0ec-5069-a2e0-d153a64bc422",
+  "serialNumber": "urn:uuid:17577db4-a15f-5759-a22f-682f3d3fbec0",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-12T10:26:38.644Z",
+    "timestamp": "2026-09-12T11:41:13.083Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-i0.4b-c8",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c8",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c8",
+      "version": "0.1.0-i0.4b-c9",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c9",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c9",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -105,9 +105,9 @@
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-i0.4b-c8",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c8",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c8",
+      "version": "0.1.0-i0.4b-c9",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c9",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c9",
       "scope": "excluded",
       "hashes": [
         {
@@ -137,6 +137,42 @@
     {
       "type": "application",
       "group": "HumCapture",
+      "name": "HumCapture.Coordinator.Host",
+      "version": "0.1.0",
+      "bom-ref": "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
+      "purl": "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b4f4adf543a584e98e30eb87d8b4baa693e2b7ef41ef351370b770d9be0a0993"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041.0"
+        },
+        {
+          "name": "humcapture:distribution-status",
+          "value": "engineering-application-component-not-released"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "HumCapture",
       "name": "HumCapture.Coordinator.Repository.SelfTest",
       "version": "0.1.0",
       "bom-ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
@@ -144,7 +180,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "7bfa33a076cb1174dcff7d2731848c487a1a956ad9a0b7ed7da758dcac46cc20"
+          "content": "a9dd8aadfdbaa4cb0aaea1b39b22141a5ea4cfd60a078625e415fe238c5c996c"
         }
       ],
       "properties": [
@@ -833,7 +869,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -865,7 +901,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -897,7 +933,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -929,7 +965,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -961,7 +997,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -993,7 +1029,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1025,7 +1061,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1057,7 +1093,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1076,7 +1112,7 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c8",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c9",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
@@ -1085,8 +1121,18 @@
       ]
     },
     {
+      "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
+      "dependsOn": [
+        "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
+        "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
+        "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
+        "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167"
+      ]
+    },
+    {
       "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
       "dependsOn": [
+        "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
         "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
         "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
@@ -1123,10 +1169,11 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c8",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c9",
       "dependsOn": [
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c8",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c9",
+        "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
         "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
@@ -1264,7 +1311,7 @@
     },
     {
       "name": "humcapture:declared-manifests",
-      "value": "tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
+      "value": "tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
     }
   ]
 }

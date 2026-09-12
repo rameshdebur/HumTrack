@@ -82,7 +82,7 @@ cancellationToken)` as the host-callable startup entry point in this assembly.
 It opens the repository, uses the current Windows identity, and runs one
 bounded page (default 100, maximum 1000) before returning. Call before starting
 capture, on the future host's worker context, not a UI or acquisition thread.
-There is no executable host or capture scheduler in this slice.
+C9 now provides the executable below; a capture scheduler remains unimplemented.
 
 Status is Completed, MoreWork, Cancelled or ReadOnlyInspection. Completed means
 only that no further candidates were found after this cursor at the final check.
@@ -102,6 +102,48 @@ verification are not immediately cancellable. There is no automatic retry loop.
 Audit timestamps supplied to reconciliation identify the action request, not
 measured verification elapsed time. Root/open failures propagate and must block
 repository startup rather than being treated as an empty successful pass.
+
+## Executable host (C9)
+
+From the HumCapture directory, run against an existing repository:
+
+```powershell
+dotnet run --project apps/windows-coordinator/src/HumCapture.Coordinator.Host -c Release -- startup --root "D:\HumCaptureData" --limit 100
+```
+
+The example path must be replaced with the actual repository root. This command
+can perform the approved recovery actions; it is not a read-only diagnostic.
+It never initializes missing repositories, starts cameras, issues receipts or
+deletes source data. It runs once and exits, without opening a visible UI.
+The host requires the project's .NET 10 Windows runtime/build environment.
+
+For structured output without build output, build first and invoke
+`HumCapture.Coordinator.Host.exe` in its Release target-framework directory.
+Pass `--after UUID` from last_processed_transaction_id to continue a page.
+Restart a fresh scan from no cursor; retain prior page failures for investigation.
+The single JSON output has schema_version 1.0.0. Root errors contain a controlled
+code only. Per-item output has transaction ID, state, action, error and next action.
+Completed describes scan exhaustion, not capture/session completion.
+
+| Exit | Meaning |
+|---|---|
+| 0 | Completed scan with no item errors |
+| 2 | Invalid arguments |
+| 3 | Repository/startup failure |
+| 4 | One or more items need operator investigation |
+| 5 | More candidates remain |
+| 6 | Inspection-only repository |
+| 7 | Another cooperating host holds this root's same-session guard |
+| 130 | Cancellation between transactions |
+
+Cancellation wins over item errors; item errors win over MoreWork, so inspect
+the output status as well as the exit code. Ctrl+C requests cancellation but
+does not interrupt a finalization already in progress.
+The named mutex is limited to cooperating hosts in one Windows session; it does
+not protect against direct library writers, other sessions or path aliases.
+Do not run concurrent writers through these other routes.
+No installer, background service, capture-readiness gate or controlled release
+is supplied. See ADR-0023 and HC-VR-I0-4B-C9-001.
 
 C5 adds `PublishMovedPackage`: it revalidates the final package and verification
 record, then inserts the immutable package catalog row and advances the journal

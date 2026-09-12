@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** Prior accepted slices and I0.4B-C1–C8 are implemented at their recorded evidence levels  
-**Tags:** I0.4B-C8 | WINDOWS COORDINATOR | STARTUP ORCHESTRATION | BOUNDED PASS  
+**Status:** Prior accepted slices and I0.4B-C1–C9 are implemented at their recorded evidence levels  
+**Tags:** I0.4B-C9 | WINDOWS COORDINATOR | EXECUTABLE HOST | STARTUP  
 **Last meaningful update:** 2026-09-12
 
 ## Objective
@@ -32,7 +32,7 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   C7 adds paginated startup discovery and recovery for `CATALOGED` and
   `COMMITTED`, alongside C4 support for `STAGED_VERIFIED`, `COMMITTING`
   and `MOVED`. C8 supplies a host-callable bounded startup entry point in the
-  existing assembly; no executable host, UI,
+  existing assembly. C9 adds a one-pass command-line executable host; no UI,
   subject service, collection transport,
   operator/quarantine recovery, receipt, cleanup or Android runtime
   exists.
@@ -274,7 +274,11 @@ candidate page, per-item recovery/error results and cancellation between
 transactions. The approved C8 engineering scope uses the accepted design,
 requirements, roles/governance and preliminary India baseline recorded in
 HC-CHG-20260912-013. HC-REP-RUNTIME-088–095 pass (95 runtime tests total);
-see HC-VR-I0-4B-C8-001. There is still no executable host or capture startup gate.
+see HC-VR-I0-4B-C8-001. C9 now invokes that entry point from the executable host
+under ADR-0023 and HC-CHG-20260912-014, using the existing engineering
+design/requirements/governance baseline. HC-REP-RUNTIME-096–102 pass as child
+processes; all 102 runtime tests pass. There is no resident host, capture startup
+gate or UI. See HC-VR-I0-4B-C9-001.
 Automatic MOVED-to-CATALOGED publication and receipt integration remain open.
 
 - Android capture node: Kotlin, Camera2, MediaCodec/MediaMuxer, IMU, local master, RTP preview, control and resumable transfer services.
@@ -401,7 +405,7 @@ Automatic MOVED-to-CATALOGED publication and receipt integration remain open.
   controlled-release blocker.
 - The current SBOM now includes the CI workflow, three commit-pinned GitHub
   Actions and the exact Windows SDK Chocolatey build package. With the Coordinator
-  NuGet inventory it contains 31 components/32 dependency nodes; six project tests and project validation
+  NuGet and host inventory it contains 32 components/33 dependency nodes; six project tests and project validation
   pass. The prior 15-component SBOM remains immutable
   in the existing snapshot/evidence vault; the CI-aware SBOM is not
   retroactively release-bound.

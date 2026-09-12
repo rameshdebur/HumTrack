@@ -102,7 +102,14 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-092 cancelled startup pass preserves repository", StartupPassCancelled),
     ("HC-REP-RUNTIME-093 startup pass leaves unsupported repository read only", StartupPassReadOnly),
     ("HC-REP-RUNTIME-094 startup pass handles committing without forcing completion", StartupPassCommitting),
-    ("HC-REP-RUNTIME-095 startup pass rejects invalid bounds before mutation", StartupPassBounds)
+    ("HC-REP-RUNTIME-095 startup pass rejects invalid bounds before mutation", StartupPassBounds),
+    ("HC-REP-RUNTIME-096 host process opens empty repository", HostEmpty),
+    ("HC-REP-RUNTIME-097 host rejects arguments and missing root", HostArguments),
+    ("HC-REP-RUNTIME-098 host process finalizes and rechecks", HostFinalizes),
+    ("HC-REP-RUNTIME-099 host process reports bounded continuation", HostContinuation),
+    ("HC-REP-RUNTIME-100 host process reports inspection only", HostReadOnly),
+    ("HC-REP-RUNTIME-101 host process preserves malformed evidence", HostFailure),
+    ("HC-REP-RUNTIME-102 host process refuses overlapping instance", HostBusy)
 };
 
 var failures = 0;
@@ -131,6 +138,145 @@ static RepositoryStartupReconciliationRequest LaterStartup(RepositoryFinalCommit
     StartedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 0, TimeSpan.Zero),
     FinishedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 1, TimeSpan.Zero)
 };
+
+static (int ExitCode, JsonDocument Output) RunHost(params string[] arguments)
+{
+    var start = new ProcessStartInfo("dotnet")
+    {
+        UseShellExecute = false, CreateNoWindow = true,
+        RedirectStandardOutput = true, RedirectStandardError = true
+    };
+    start.ArgumentList.Add(typeof(HumCapture.Coordinator.Host.Program).Assembly.Location);
+    foreach (var argument in arguments) { start.ArgumentList.Add(argument); }
+    using var process = Process.Start(start) ?? throw new InvalidOperationException("Host did not start.");
+    var output = process.StandardOutput.ReadToEndAsync();
+    var error = process.StandardError.ReadToEndAsync();
+    if (!process.WaitForExit(60000))
+    {
+        process.Kill(entireProcessTree: true);
+        throw new InvalidOperationException("Host exceeded test deadline.");
+    }
+    Equal(string.Empty, error.GetAwaiter().GetResult());
+    return (process.ExitCode, JsonDocument.Parse(output.GetAwaiter().GetResult()));
+}
+
+static void HostEmpty()
+{
+    WithRepository((root, _) =>
+    {
+        var before = DirectoryFingerprint(root);
+        var result = RunHost("startup", "--root", root);
+        using var output = result.Output;
+        Equal(0, result.ExitCode);
+        Equal("1.0.0", output.RootElement.GetProperty("schema_version").GetString()!);
+        Equal("Completed", output.RootElement.GetProperty("status").GetString()!);
+        Equal(before, DirectoryFingerprint(root));
+        True(!output.RootElement.GetRawText().Contains(root, StringComparison.OrdinalIgnoreCase));
+    });
+}
+
+static void HostArguments()
+{
+    WithRepository((root, _) =>
+    {
+        foreach (var arguments in new[]
+        {
+            Array.Empty<string>(), new[] { "startup", "--root", "relative" },
+            new[] { "startup", "--root", root, "--limit", "0" },
+            new[] { "startup", "--root", root, "--root", root },
+            new[] { "startup", "--root", root, "--after", "invalid" }
+        })
+        {
+            var bad = RunHost(arguments);
+            using var output = bad.Output;
+            Equal(2, bad.ExitCode);
+        }
+        var absent = Path.Combine(root, "not-created");
+        var missing = RunHost("startup", "--root", absent);
+        using var document = missing.Output;
+        Equal(3, missing.ExitCode);
+        True(!Directory.Exists(absent));
+    });
+}
+
+static void HostFinalizes()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareFinalCommit(root, service);
+        var first = RunHost("startup", "--root", root);
+        using var firstOutput = first.Output;
+        Equal(0, first.ExitCode);
+        Equal("COMMITTED", firstOutput.RootElement.GetProperty("items")[0].GetProperty("state").GetString()!);
+        var second = RunHost("startup", "--root", root);
+        using var secondOutput = second.Output;
+        Equal(0, second.ExitCode);
+        Equal("CONFIRM_IDEMPOTENT_COMMIT", secondOutput.RootElement.GetProperty("items")[0].GetProperty("action").GetString()!);
+    });
+}
+
+static void HostContinuation()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareFinalCommit(root, service);
+        service.RegisterStagedVerifiedPackage(root, CreateStagedFixture(root, 2).Registration);
+        var first = RunHost("startup", "--root", root, "--limit", "1");
+        using var firstOutput = first.Output;
+        Equal(5, first.ExitCode);
+        var cursor = firstOutput.RootElement.GetProperty("last_processed_transaction_id").GetString()!;
+        var second = RunHost("startup", "--root", root, "--limit", "1", "--after", cursor);
+        using var secondOutput = second.Output;
+        Equal(0, second.ExitCode);
+        Equal(1, secondOutput.RootElement.GetProperty("items").GetArrayLength());
+    });
+}
+
+static void HostReadOnly()
+{
+    WithRepository((root, _) =>
+    {
+        var path = Path.Combine(root, "repository.json");
+        File.WriteAllText(path, File.ReadAllText(path).Replace("\"1.3.0\"", "\"9.0.0\"", StringComparison.Ordinal));
+        var before = DirectoryFingerprint(root);
+        var result = RunHost("startup", "--root", root);
+        using var output = result.Output;
+        Equal(6, result.ExitCode);
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void HostFailure()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        service.CompleteCatalogedPackage(root, final);
+        var path = FinalRecordPath(root, final);
+        File.WriteAllText(path, "broken");
+        var result = RunHost("startup", "--root", root);
+        using var output = result.Output;
+        Equal(4, result.ExitCode);
+        Equal(true, output.RootElement.GetProperty("requires_operator_attention").GetBoolean());
+        Equal("broken", File.ReadAllText(path));
+    });
+}
+
+static void HostBusy()
+{
+    WithRepository((root, _) =>
+    {
+        using var guard = new Mutex(true, HumCapture.Coordinator.Host.Program.StartupMutexName(root));
+        try
+        {
+            var result = RunHost("startup", "--root", root);
+            using var output = result.Output;
+            Equal(7, result.ExitCode);
+            Equal("STARTUP_ALREADY_RUNNING", output.RootElement.GetProperty("error_code").GetString()!);
+        }
+        finally { guard.ReleaseMutex(); }
+    });
+}
 
 static void StartupPassEmpty()
 {
