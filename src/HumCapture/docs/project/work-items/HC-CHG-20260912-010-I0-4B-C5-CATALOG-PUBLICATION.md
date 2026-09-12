@@ -2,7 +2,7 @@
 
 **Change ID:** HC-CHG-20260912-010  
 **Title:** I0.4B-C5 normal catalog publication  
-**State:** Implemented; local verification passed; independent review pending  
+**State:** Implemented; local and remote verification passed; independent review pending  
 **Date:** 2026-09-12
 
 Primary owner: Coordinator/repository software engineer. Affected owners:
@@ -27,3 +27,6 @@ AI-assisted. Independent human review and release approval remain pending.
 
 See HC-VR-I0-4B-C5-001 for results and limitations. This is an engineering
 implementation, not a controlled release.
+
+Implementation identity: `017d8ddb515f97f209ef47004effcc08ce475cf5`.
+CI push `34680439913` and PR `34680440500` passed on this source.

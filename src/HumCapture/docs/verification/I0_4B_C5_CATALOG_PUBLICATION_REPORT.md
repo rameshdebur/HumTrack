@@ -2,7 +2,7 @@
 
 **Verification ID:** HC-VR-I0-4B-C5-001  
 **Date:** 2026-09-12  
-**Disposition:** Local engineering checks passed; remote checks pending
+**Disposition:** Local and remote engineering checks passed; independent review pending
 
 PublishMovedPackage requires MOVED, exact final package and verification
 evidence, absent staging, and no conflicting catalog or indexed commit
@@ -27,6 +27,12 @@ SBOM retains 31 components/32 dependency nodes; version 0.1.0-i0.4b-c5.
 SHA-256: 5d7c6f2110ad2946fe805a246037fab60a473a17666397220a2b6a6dcd9ddbd0.
 Generation UTC: 2026-09-12T07:16:40.526Z.
 Official CycloneDX CLI 0.33.1 accepts the BOM.
+
+Implementation commit: `017d8ddb515f97f209ef47004effcc08ce475cf5`.
+GitHub HumCapture CI push run `34680439913` and PR run `34680440500`
+passed for that commit, including managed/native camera builds and self-tests.
+Both npm production audits and separate NuGet vulnerability/deprecation
+queries returned no findings from their configured sources.
 
 Evidence levels: source implemented; build/static and automated behavior
 verified; runtime integration covers a local Windows process, filesystem and
