@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** Prior accepted slices and I0.4B-C1–C11 are implemented at their recorded evidence levels  
-**Tags:** I0.4B-C11 | COORDINATOR HOST | STAGED-PACKAGE PROCESSING  
+**Status:** Prior accepted slices and I0.4B-C1–C12 are implemented at their recorded evidence levels  
+**Tags:** I0.4B-C12 | COORDINATOR HOST | VERIFIED-STAGING ADMISSION  
 **Last meaningful update:** 2026-09-12
 
 ## Objective
@@ -13,6 +13,9 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C12 host admission of already-collected verified staging is authorized under
+  HC-CHG-20260912-017 and ADR-0025; collection/verifier implementation is excluded.
 
 - C11 staged processing is authorized under the existing engineering baseline;
   HC-CHG-20260912-016 and ADR-0024 record scope and review.
@@ -295,6 +298,12 @@ separate from startup recovery. It skips other states without claiming verificat
 and preserves interrupted work for startup reconciliation. Host output is 1.1.0
 under ADR-0024. See HC-CHG-20260912-016 and HC-VR-I0-4B-C11-001.
 Receipt integration, UI and capture-readiness remain separate work.
+C12 adds admit-staged / AdmitStagedRequest for already-collected staging with
+existing verification bytes, through the C2 admission boundary. Input envelope
+1.0.0 is bounded, strict and account-independent; runtime supplies the current
+Windows identity. Host output is 1.2.0. HC-CHG-20260912-017 and
+HC-VR-I0-4B-C12-001 record scope/evidence. This does not implement collection,
+media decoding or production verifier-record creation.
 
 - Android capture node: Kotlin, Camera2, MediaCodec/MediaMuxer, IMU, local master, RTP preview, control and resumable transfer services.
 - Windows coordinator: .NET/Avalonia, headless coordinator host, SQLite operational catalog, subject/session/trial repository, transfer/verification/quality services.

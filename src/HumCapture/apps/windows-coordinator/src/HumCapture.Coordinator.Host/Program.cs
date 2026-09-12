@@ -12,7 +12,7 @@ public static class Program
     /// <summary>Runs a single explicitly requested repository pass.</summary>
     public static int Main(string[] args)
     {
-        if (!TryParse(args, out var root, out var limit, out var after))
+        if (!TryParse(args, out var root, out var limit, out var after, out var requestPath))
         {
             WriteError("INVALID_ARGUMENTS");
             return 2;
@@ -30,7 +30,9 @@ public static class Program
                     WriteError("STARTUP_ALREADY_RUNNING");
                     return 7;
                 }
-                return Run(root, limit, after, args[0] == "process-staged");
+                return args[0] == "admit-staged"
+                    ? RunAdmission(root, requestPath!)
+                    : Run(root, limit, after, args[0] == "process-staged");
             }
             finally
             {
@@ -70,7 +72,7 @@ public static class Program
                 : service.RunStartupPass(root, after, limit, cancellation.Token);
             Console.WriteLine(JsonSerializer.Serialize(new
             {
-                schema_version = "1.1.0", status = pass.Status.ToString(),
+                schema_version = "1.2.0", status = pass.Status.ToString(),
                 last_processed_transaction_id = pass.LastProcessedTransactionId,
                 requires_operator_attention = pass.RequiresOperatorAttention,
                 items = pass.Items.Select(item => new
@@ -95,7 +97,25 @@ public static class Program
     }
 
     private static void WriteError(string code) =>
-        Console.WriteLine(JsonSerializer.Serialize(new { schema_version = "1.1.0", status = "Failed", error_code = code }));
+        Console.WriteLine(JsonSerializer.Serialize(new { schema_version = "1.2.0", status = "Failed", error_code = code }));
+
+    private static int RunAdmission(string root, string requestPath)
+    {
+        ConsoleCancelEventHandler handler = (_, e) => e.Cancel = true;
+        Console.CancelKeyPress += handler;
+        try
+        {
+            var admitted = new RepositoryService().AdmitStagedRequest(root, requestPath);
+            Console.WriteLine(JsonSerializer.Serialize(new
+            {
+                schema_version = "1.2.0", status = "Admitted",
+                transaction_id = admitted.TransactionId, state = admitted.State,
+                revision = admitted.Revision, was_already_present = admitted.WasAlreadyPresent
+            }));
+            return 0;
+        }
+        finally { Console.CancelKeyPress -= handler; }
+    }
 
     private static string? ItemAction(RepositoryStartupItem item)
     {
@@ -103,12 +123,13 @@ public static class Program
         return item.NormalMove is not null ? "MOVE_STAGED_PACKAGE" : item.Reconciliation?.ActionCode;
     }
 
-    private static bool TryParse(string[] args, out string root, out int limit, out Guid? after)
+    private static bool TryParse(string[] args, out string root, out int limit, out Guid? after, out string? requestPath)
     {
         root = string.Empty;
         limit = 100;
         after = null;
-        if (args.Length < 3 || args[0] is not ("startup" or "process-staged") || args.Length % 2 != 1) { return false; }
+        requestPath = null;
+        if (args.Length < 3 || args[0] is not ("startup" or "process-staged" or "admit-staged") || args.Length % 2 != 1) { return false; }
         var seen = new HashSet<string>(StringComparer.Ordinal);
         for (var index = 1; index < args.Length; index += 2)
         {
@@ -118,6 +139,7 @@ public static class Program
             switch (key)
             {
                 case "--root": root = value; break;
+                case "--request": requestPath = value; break;
                 case "--limit":
                     if (!int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out limit)
                         || limit is < 1 or > 1000) { return false; }
@@ -129,6 +151,10 @@ public static class Program
                 default: return false;
             }
         }
+        var admission = args[0] == "admit-staged";
+        if (admission && (requestPath is null || !Path.IsPathFullyQualified(requestPath)
+            || seen.Contains("--limit") || seen.Contains("--after"))) { return false; }
+        if (!admission && requestPath is not null) { return false; }
         return !string.IsNullOrWhiteSpace(root) && Path.IsPathFullyQualified(root);
     }
 }

@@ -1,5 +1,15 @@
 # HumCapture Preliminary Risk Register
 
+C12 control update (2026-09-12), HC-RISK-022/030/031: host admission reads a
+bounded strict request, supplies the current Windows identity, preserves exact
+verifier bytes and invokes existing package/evidence checks. It does not create
+PASS evidence or independently establish supplied decoder/verifier claims.
+HC-REP-RUNTIME-118–125 cover replay, current account, pipeline, malformed/duplicate
+requests, oversized input, package/verifier tamper, unavailable staging/root
+and host guard. Collection and production verifier implementation remain open.
+Ctrl+C defers completion of this one admission; signal/abrupt-loss testing remains
+open. No receipt/cleanup or medical conformity claim.
+
 C11 control update (2026-09-12), HC-RISK-022/030/031: explicit process-staged
 uses C3's fresh evidence validation and durable move, stops at MOVED, and skips
 other states without reporting a verified state. Interrupted movement requires

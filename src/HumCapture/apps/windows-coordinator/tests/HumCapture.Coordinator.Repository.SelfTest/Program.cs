@@ -124,7 +124,15 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-114 staged evidence tamper is retained and refused", ProcessStagedTamper),
     ("HC-REP-RUNTIME-115 staged processing is paginated", ProcessStagedPages),
     ("HC-REP-RUNTIME-116 staged processing respects cancellation and read only", ProcessStagedCancellationReadOnly),
-    ("HC-REP-RUNTIME-117 staged processing shares host exclusion", ProcessStagedGuard)
+    ("HC-REP-RUNTIME-117 staged processing shares host exclusion", ProcessStagedGuard),
+    ("HC-REP-RUNTIME-118 host admits exact staged evidence and replays", AdmissionHostReplay),
+    ("HC-REP-RUNTIME-119 admitted package completes existing host pipeline", AdmissionHostPipeline),
+    ("HC-REP-RUNTIME-120 admission request rejects malformed unknown duplicate and caller actor fields", AdmissionRequestInvalid),
+    ("HC-REP-RUNTIME-121 admission rejects oversized request", AdmissionRequestOversized),
+    ("HC-REP-RUNTIME-122 admission retains changed package and refuses it", AdmissionPackageTamper),
+    ("HC-REP-RUNTIME-123 admission refuses missing staging and unsupported root", AdmissionUnavailable),
+    ("HC-REP-RUNTIME-124 admission shares host guard and rejects incompatible CLI options", AdmissionHostGuard),
+    ("HC-REP-RUNTIME-125 admission rejects changed verifier bytes", AdmissionVerifierTamper)
 };
 
 var failures = 0;
@@ -153,6 +161,165 @@ static RepositoryStartupReconciliationRequest LaterStartup(RepositoryFinalCommit
     StartedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 0, TimeSpan.Zero),
     FinishedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 1, TimeSpan.Zero)
 };
+
+static string WriteAdmissionRequest(string root, StagedVerifiedPackageRegistration registration)
+{
+    var node = JsonSerializer.SerializeToNode(registration,
+        new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower })!.AsObject();
+    node.Remove("actor_windows_account");
+    var envelope = new System.Text.Json.Nodes.JsonObject
+    {
+        ["schema_version"] = "1.0.0", ["registration"] = node
+    };
+    var path = Path.Combine(root, "admission-request.json");
+    File.WriteAllText(path, envelope.ToJsonString());
+    return path;
+}
+
+static void AdmissionHostReplay()
+{
+    WithRepository((root, _) =>
+    {
+        var path = WriteAdmissionRequest(root, CreateStagedFixture(root).Registration);
+        var first = RunHost("admit-staged", "--root", root, "--request", path);
+        using var output = first.Output;
+        Equal(0, first.ExitCode);
+        Equal("STAGED_VERIFIED", output.RootElement.GetProperty("state").GetString()!);
+        Equal(false, output.RootElement.GetProperty("was_already_present").GetBoolean());
+        var before = DirectoryFingerprint(root);
+        var replay = RunHost("admit-staged", "--root", root, "--request", path);
+        using var repeated = replay.Output;
+        Equal(0, replay.ExitCode);
+        Equal(true, repeated.RootElement.GetProperty("was_already_present").GetBoolean());
+        Equal(before, DirectoryFingerprint(root));
+        using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal(identity.Name, ScalarText(connection, "SELECT actor_windows_account FROM repository_transitions"));
+    });
+}
+
+static void AdmissionHostPipeline()
+{
+    WithRepository((root, _) =>
+    {
+        var path = WriteAdmissionRequest(root, CreateStagedFixture(root).Registration);
+        var admission = RunHost("admit-staged", "--root", root, "--request", path);
+        using var admitted = admission.Output;
+        Equal(0, admission.ExitCode);
+        foreach (var command in new[] { "process-staged", "startup", "startup" })
+        {
+            var run = RunHost(command, "--root", root);
+            using var output = run.Output;
+            Equal(0, run.ExitCode);
+        }
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal("COMMITTED", ScalarText(connection, "SELECT state FROM repository_transactions"));
+    });
+}
+
+static void AdmissionRequestInvalid()
+{
+    WithRepository((root, service) =>
+    {
+        var path = WriteAdmissionRequest(root, CreateStagedFixture(root).Registration);
+        var valid = File.ReadAllText(path);
+        var invalid = new List<string> { "{broken", valid.Insert(1, "\"schema_version\":\"1.0.0\",") };
+        foreach (var change in new[] { "version", "actor", "unknown", "missing-time", "base64" })
+        {
+            var node = System.Text.Json.Nodes.JsonNode.Parse(valid)!.AsObject();
+            var registration = node["registration"]!.AsObject();
+            switch (change)
+            {
+                case "version": node["schema_version"] = "9.0.0"; break;
+                case "actor": registration["actor_windows_account"] = "untrusted"; break;
+                case "unknown": registration["unexpected"] = true; break;
+                case "missing-time": registration.Remove("recorded_at"); break;
+                case "base64": registration["verification_record_utf8"] = "%%%"; break;
+            }
+            invalid.Add(node.ToJsonString());
+        }
+        foreach (var content in invalid)
+        {
+            File.WriteAllText(path, content);
+            Throws(RepositoryErrorCode.AdmissionRequestInvalid, () => service.AdmitStagedRequest(root, path));
+        }
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_transactions"));
+    });
+}
+
+static void AdmissionRequestOversized()
+{
+    WithRepository((root, service) =>
+    {
+        var path = Path.Combine(root, "oversized.json");
+        File.WriteAllText(path, new string(' ', 1048577));
+        Throws(RepositoryErrorCode.AdmissionRequestInvalid, () => service.AdmitStagedRequest(root, path));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_transactions"));
+    });
+}
+
+static void AdmissionPackageTamper()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = CreateStagedFixture(root).Registration;
+        var request = WriteAdmissionRequest(root, registration);
+        var path = Path.Combine(root, "staging", registration.CollectionAttemptId.ToString("D"),
+            registration.PackageId.ToString("D"), "events.json");
+        File.AppendAllText(path, "changed");
+        var before = Hash(path);
+        Throws(RepositoryErrorCode.EvidenceMismatch, () => service.AdmitStagedRequest(root, request));
+        Equal(before, Hash(path));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_transactions"));
+    });
+}
+
+static void AdmissionUnavailable()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = CreateStagedFixture(root).Registration;
+        var request = WriteAdmissionRequest(root, registration with { CollectionAttemptId = TestId(99001) });
+        var missing = RunHost("admit-staged", "--root", root, "--request", request);
+        using var missingOutput = missing.Output;
+        Equal(3, missing.ExitCode);
+        var descriptor = Path.Combine(root, "repository.json");
+        File.WriteAllText(descriptor, File.ReadAllText(descriptor).Replace("\"1.3.0\"", "\"9.0.0\"", StringComparison.Ordinal));
+        var before = DirectoryFingerprint(root);
+        Throws(RepositoryErrorCode.MutationNotAllowed, () => service.AdmitStagedRequest(root, request));
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void AdmissionHostGuard()
+{
+    WithRepository((root, _) =>
+    {
+        var request = WriteAdmissionRequest(root, CreateStagedFixture(root).Registration);
+        var usage = RunHost("admit-staged", "--root", root, "--request", request, "--limit", "1");
+        using var usageOutput = usage.Output;
+        Equal(2, usage.ExitCode);
+        using var guard = new Mutex(true, HumCapture.Coordinator.Host.Program.StartupMutexName(root));
+        try
+        {
+            var blocked = RunHost("admit-staged", "--root", root, "--request", request);
+            using var blockedOutput = blocked.Output;
+            Equal(7, blocked.ExitCode);
+        }
+        finally { guard.ReleaseMutex(); }
+    });
+}
+
+static void AdmissionVerifierTamper()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = CreateStagedFixture(root).Registration;
+        var path = WriteAdmissionRequest(root, registration with { VerificationRecordUtf8 = Encoding.UTF8.GetBytes("{}") });
+        Throws(RepositoryErrorCode.EvidenceMismatch, () => service.AdmitStagedRequest(root, path));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_transactions"));
+    });
+}
 
 static void ProcessStagedHost()
 {
@@ -461,7 +628,7 @@ static void HostEmpty()
         var result = RunHost("startup", "--root", root);
         using var output = result.Output;
         Equal(0, result.ExitCode);
-        Equal("1.1.0", output.RootElement.GetProperty("schema_version").GetString()!);
+        Equal("1.2.0", output.RootElement.GetProperty("schema_version").GetString()!);
         Equal("Completed", output.RootElement.GetProperty("status").GetString()!);
         Equal(before, DirectoryFingerprint(root));
         True(!output.RootElement.GetRawText().Contains(root, StringComparison.OrdinalIgnoreCase));

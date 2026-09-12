@@ -1,7 +1,7 @@
 # HumCapture SBOM Validation Report
 
 **Report ID:** HC-SBOM-VR-001  
-**Revision:** 1.12  
+**Revision:** 1.13  
 **Date:** 2026-09-12  
 **Disposition:** `PASS` for engineering SBOM generation and format validation  
 **Regulatory/release disposition:** Not a controlled release or conformity claim
@@ -31,11 +31,11 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 | Field | Result |
 |---|---|
 | Format | CycloneDX JSON 1.7 |
-| Primary component | HumCapture `0.1.0-i0.4b-c11` engineering/unreleased |
+| Primary component | HumCapture `0.1.0-i0.4b-c12` engineering/unreleased |
 | Components | 32 |
 | Dependency graph nodes | 33, complete closure including primary component |
-| SBOM SHA-256 | `f54ca6d2c9990ab0bcec5468ad781defbd9e9ed946991f5866cdb545728a494d` |
-| Generated UTC | `2026-09-12T13:24:36.966Z` |
+| SBOM SHA-256 | `6a93468599a1dbca12b3baf64e91ad470f1e9518e39d8bb1b6a1937c75783ac3` |
+| Generated UTC | `2026-09-12T13:43:07.999Z` |
 | Project tests | 6/6 passed, including NuGet/Coordinator coverage, future-manifest drift, floating-action rejection and exact CI package versions |
 | Project validator | Passed |
 | Deterministic regeneration | Passed for fixed manifests, version and timestamp |
@@ -56,7 +56,7 @@ project policy HC-GOV-SBOM-001 and the official CycloneDX 1.7 validator.
 The earlier validated 15-component SBOM remains retained in the evidence vault
 and referenced by engineering snapshot `HC-ENG-20260831T163246Z-7d17f5afce36`.
 The snapshot and P0.2J evidence retain its exact bytes and SHA-256; accepted
-evidence is not edited. The 32-component I0.4B-C11 inventory supersedes the C10
+evidence is not edited. The 32-component I0.4B-C12 inventory supersedes the C11
 engineering inventory with unchanged dependency graph and no new third-party
 packages. It is not retroactively
 bound to the earlier snapshot and requires a new release/snapshot record for
@@ -77,7 +77,7 @@ release binding.
 ## Evidence levels
 
 - Source implemented: yes.
-- Automated behavior: 6 SBOM tests, 91 contract/evidence-control tests and 117
+- Automated behavior: 6 SBOM tests, 91 contract/evidence-control tests and 125
   Coordinator repository runtime tests pass.
 - Official format validation: passed.
 - Release integration: engineering snapshot and vault binding passed.

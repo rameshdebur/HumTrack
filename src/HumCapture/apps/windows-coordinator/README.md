@@ -121,7 +121,7 @@ For structured output without build output, build first and invoke
 `HumCapture.Coordinator.Host.exe` in its Release target-framework directory.
 Pass `--after UUID` from last_processed_transaction_id to continue a page.
 Restart a fresh scan from no cursor; retain prior page failures for investigation.
-The single JSON output has schema_version 1.1.0 (C11). Root errors contain a controlled
+The single JSON output has schema_version 1.2.0 (C12). Root errors contain a controlled
 code only. Per-item output has transaction ID, state, action, error and next action.
 Completed describes scan exhaustion, not capture/session completion.
 
@@ -184,8 +184,34 @@ cancellation-between-packages and exit codes. Page limits count all inspected
 candidates, including skipped entries. Start a fresh pass without --after to
 revisit earlier candidates; always aggregate per-item errors. Audit timestamps
 describe requests, not measured acquisition or elapsed processing time.
-The CLI output minor version is 1.1.0; all previous fields remain.
+The CLI output minor version is now 1.2.0; all previous fields remain.
 No transfer ingestion, receipt, source deletion, capture readiness or UI is added.
+
+## Admission of verified staging (C12)
+
+Use admit-staged --root ABSOLUTE_ROOT --request ABSOLUTE_JSON. It invokes the
+existing C2 admission boundary, stopping at STAGED_VERIFIED. The library API is
+AdmitStagedRequest. It does not copy external packages, initialize a repository,
+generate verifier records or rerun media decoding.
+
+The request uses HC-IF-HOST-ADM-001 1.0.0, documented in
+docs/interfaces/HOST_ADMISSION_CONTRACT.md. It carries stable admission/context
+IDs, package hashes/length/count, a fixed UTC recorded_at and base64 of the exact
+existing verifier-record bytes. The current Windows account is supplied by the
+host; a request-provided actor is rejected. Keep this file outside the package
+directory. The request and package bytes are not rewritten.
+
+Unknown/duplicate fields, unsupported versions, oversized requests and unsafe
+request links are refused. The existing verifier binding and package validation
+must pass before admission. A supplied PASS flag is not independent verification.
+Exit 0 returns Admitted plus state/revision/transaction identity and exact-replay
+status; it is not acquisition completion. --limit/--after do not apply.
+Ctrl+C is deferred until this single admission completes; then the host exits
+with the actual result. Abrupt termination remains unqualified.
+
+Use the same request/account for retry before movement. Afterwards use startup.
+After successful admission, process-staged may move the package; subsequent
+startup passes may catalog and commit it. No receipt/cleanup is authorized.
 
 C5 adds `PublishMovedPackage`: it revalidates the final package and verification
 record, then inserts the immutable package catalog row and advances the journal

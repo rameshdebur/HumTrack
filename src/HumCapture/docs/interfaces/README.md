@@ -55,8 +55,11 @@ The executable repository slice adds:
 - HC-REP-TEST-001–015 — schema, DDL, compatibility, namespace, lifecycle,
   replay, reconciliation, minimization, committed-evidence and receipt gates.
 
-No runtime interface implementation is authorized yet. Before cross-component
-feature work, complete and review the remaining contracts:
+Coordinator repository runtime slices C1–C12 are authorized and implemented;
+verification scope and remaining gates are recorded in `../project/PROJECT_STATE.md`.
+`HOST_ADMISSION_CONTRACT.md` defines HC-IF-HOST-ADM-001 version 1.0.0:
+explicit admission of existing verified staging, not collection or media verification.
+Before further cross-component feature work, review the remaining contracts:
 
 | Contract | Planned representation | Required evidence |
 |---|---|---|

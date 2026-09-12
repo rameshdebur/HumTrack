@@ -42,7 +42,9 @@ public enum RepositoryErrorCode
     /// <summary>The atomic package move failed after commit intent was recorded.</summary>
     PackageMoveFailed,
     /// <summary>The repository catalog rejected or could not persist a journal mutation.</summary>
-    CatalogWriteFailed
+    CatalogWriteFailed,
+    /// <summary>A host admission request was malformed, unsupported or outside its bounds.</summary>
+    AdmissionRequestInvalid
 }
 
 /// <summary>Represents a controlled repository initialization or open failure.</summary>
