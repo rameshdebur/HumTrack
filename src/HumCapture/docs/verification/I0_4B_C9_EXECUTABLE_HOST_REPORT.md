@@ -2,7 +2,7 @@
 
 **ID:** HC-VR-I0-4B-C9-001  
 **Date:** 2026-09-12  
-**Disposition:** Local engineering verification passed; CI/independent review pending
+**Disposition:** Local and remote engineering verification passed; independent review pending
 
 Objective: execute the Coordinator startup API as a real Windows child process,
 with explicit root selection, bounded output and non-success exits for recovery
@@ -42,5 +42,14 @@ filesystem/SQLite integration verified. No camera activation, HIL, field,
 Ctrl+C signal injection, abandoned mutex, process-kill/power-loss, installer,
 cross-session exclusion, clinical or qualified regulatory review.
 DLL-based process execution does not establish deployed apphost installation.
+The local built Windows .exe was also launched with an invalid relative root:
+it emitted versioned INVALID_ARGUMENTS JSON and exit 2 without repository writes.
 Completed is scan exhaustion, not capture readiness or session completion.
 Failure results remain caller-visible output rather than a durable failure log.
+
+Implementation: `501dd224262b4b632309c224ef4c73c5e94fa23c`.
+[Push CI 34691808768](https://github.com/rameshdebur/HumTrack/actions/runs/34691808768)
+and [PR CI 34691810332](https://github.com/rameshdebur/HumTrack/actions/runs/34691810332)
+passed, including managed/native camera builds and self-tests.
+Both npm production audits and host NuGet vulnerable/deprecated queries
+reported no current findings.

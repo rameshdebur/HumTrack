@@ -2,7 +2,7 @@
 
 **ID:** HC-CHG-20260912-014  
 **Date:** 2026-09-12  
-**State:** Local engineering verification passed; CI and independent review pending
+**State:** Local and remote engineering verification passed; independent review pending
 
 User authorized the next executable-host step. Primary owner: Coordinator
 engineer. Affected: Architect, repository engineer, QA, Risk/Regulatory and
@@ -27,3 +27,6 @@ No root HumTrack workflow modification.
 AI contribution: implementation, tests, architecture review and documentation.
 Independent human review remains required. HC-VR-I0-4B-C9-001 records evidence
 and limitations.
+
+Implementation: `501dd224262b4b632309c224ef4c73c5e94fa23c`.
+Push CI `34691808768` and PR CI `34691810332` passed on that source.
