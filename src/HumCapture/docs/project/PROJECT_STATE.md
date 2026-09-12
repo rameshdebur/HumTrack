@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** Prior accepted slices and I0.4B-C1–C6 are implemented at their recorded evidence levels  
-**Tags:** I0.4B-C6 | WINDOWS COORDINATOR | REPOSITORY CORE | COMMIT RECORD | FINAL RECONCILIATION  
+**Status:** Prior accepted slices and I0.4B-C1–C7 are implemented at their recorded evidence levels  
+**Tags:** I0.4B-C7 | WINDOWS COORDINATOR | REPOSITORY CORE | STARTUP RECOVERY  
 **Last meaningful update:** 2026-09-12
 
 ## Objective
@@ -29,8 +29,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   I0.4B-C1 initialize/open, I0.4B-C2 verified-staging journal, I0.4B-C3
   durable commit-intent/atomic-move and I0.4B-C4 bounded startup reconciliation
   slices exist, with C5 catalog publication and C6 final commit through `COMMITTED`.
-  C4 startup reconciliation supports `STAGED_VERIFIED`, `COMMITTING`
-  and `MOVED`; no UI,
+  C7 adds paginated startup discovery and recovery for `CATALOGED` and
+  `COMMITTED`, alongside C4 support for `STAGED_VERIFIED`, `COMMITTING`
+  and `MOVED`; no host startup orchestration, UI,
   subject service, collection transport,
   operator/quarantine recovery, receipt, cleanup or Android runtime
   exists.
@@ -260,8 +261,14 @@ Exact replay revalidates the package, verification, catalog, record, index and
 journal. Missing committed evidence is refused without reconstruction.
 HC-REP-RUNTIME-064–076 pass, bringing repository coverage to 76 tests.
 See HC-CHG-20260912-011 and HC-VR-I0-4B-C6-001.
-The caller must retain the complete request for retry; automatic startup
-enumeration/recovery of later states and receipt integration remain open.
+C7 adds read-only paginated candidate discovery and reconstructs publication/
+finalization requests from retained history. Cataloged packages can complete
+at startup, preserving any valid orphan commit record's bytes and audit fields.
+Committed packages require fresh evidence checks, with retained confirmation
+observations and no state revision increase. Startup replay also revalidates
+current evidence. HC-REP-RUNTIME-077–087 pass (87 repository tests total).
+See HC-CHG-20260912-012 and HC-VR-I0-4B-C7-001. Host lifecycle orchestration,
+automatic MOVED-to-CATALOGED publication and receipt integration remain open.
 
 - Android capture node: Kotlin, Camera2, MediaCodec/MediaMuxer, IMU, local master, RTP preview, control and resumable transfer services.
 - Windows coordinator: .NET/Avalonia, headless coordinator host, SQLite operational catalog, subject/session/trial repository, transfer/verification/quality services.

@@ -113,17 +113,17 @@ internal static partial class RepositoryCatalog
             JOIN repository_reconciliations r ON r.reconciliation_id = x.reconciliation_id
             WHERE t.transaction_id = $transaction_id AND t.state = 'COMMITTED' AND t.revision = $expected_revision + 1
               AND t.commit_record_id = $commit_id AND t.commit_record_content_sha256 = $hash
-              AND t.last_reconciliation_id = $reconciliation_id AND t.state_changed_utc = $finished_utc
+              AND t.state_changed_utc = $finished_utc
               AND i.index_entry_id = $index_id AND i.repository_id = t.repository_id
               AND i.record_revision = 1 AND i.record_content_sha256 = $hash
               AND i.subject_id = t.subject_id AND i.session_id = t.session_id AND i.package_id = t.package_id
               AND i.record_relative_path = $path AND i.indexed_utc = $finished_utc
               AND x.transition_sequence = t.revision AND x.from_state = 'CATALOGED' AND x.to_state = 'COMMITTED'
-              AND x.operation_id = $operation_id AND x.trigger = 'PRE_RECEIPT' AND x.actor_kind = 'SYSTEM'
+              AND x.operation_id = $operation_id AND x.trigger = $trigger AND x.actor_kind = 'SYSTEM'
               AND x.actor_windows_account = $actor AND x.recorded_utc = $finished_utc
               AND x.reason_code = 'EXACT_EVIDENCE_RECONCILED' AND x.reason = $explanation
               AND r.reconciliation_id = $reconciliation_id AND r.transaction_id = t.transaction_id
-              AND r.trigger = 'PRE_RECEIPT' AND r.actor_kind = 'SYSTEM' AND r.actor_windows_account = $actor
+              AND r.trigger = $trigger AND r.actor_kind = 'SYSTEM' AND r.actor_windows_account = $actor
               AND r.prior_state = 'CATALOGED' AND r.result_state = 'COMMITTED' AND r.action_code = 'FINALIZE_COMMIT'
               AND r.automatic = 1 AND r.blocking_reason_codes_json = '[]'
               AND r.started_utc = $started_utc AND r.finished_utc = $finished_utc

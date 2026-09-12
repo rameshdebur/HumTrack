@@ -1,5 +1,15 @@
 # HumCapture Preliminary Risk Register
 
+C7 control update (2026-09-12), HC-RISK-022/030/031: startup discovery is not
+verification. Later-state recovery revalidates all retained package authorities,
+refuses missing committed records, preserves orphan bytes/audit fields, and
+rejects malformed or ambiguous orphan records without deleting material.
+HC-REP-RUNTIME-077–087 cover these controls, interrupted database finalization,
+read-only compatibility and stale replay. Commit-directory corruption can
+conservatively block other recovery in that session; operator investigation
+is required. Operator disposition tooling and host startup orchestration remain
+open. Tests do not establish abrupt power-loss or concurrent-writer safety.
+
 C6 control update (2026-09-12), HC-RISK-022/030/031: final commit requires
 exact package, verification, catalog, immutable record, index, and journal
 agreement. Index/reconciliation/observations/final transition commit atomically.

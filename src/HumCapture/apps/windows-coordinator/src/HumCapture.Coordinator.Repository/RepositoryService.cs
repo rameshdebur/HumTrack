@@ -230,9 +230,17 @@ public sealed partial class RepositoryService
             var replay = RepositoryCatalog.ReadStartupReconciliationReplay(catalogPath, request);
             if (replay is not null)
             {
+                if (replay.ResultState == "COMMITTED")
+                {
+                    RevalidateRetainedCommit(opened, catalogPath, request.TransactionId);
+                }
                 return replay;
             }
             var context = RepositoryCatalog.ReadCommitContext(catalogPath, request.TransactionId, opened.Descriptor.RepositoryId);
+            if (context.State is "CATALOGED" or "COMMITTED")
+            {
+                return ReconcileLaterStartup(opened, catalogPath, context, request);
+            }
             if (context.State is not ("STAGED_VERIFIED" or "COMMITTING" or "MOVED"))
             {
                 throw new RepositoryException(RepositoryErrorCode.CommitRecoveryRequired, "C4 cannot reconcile this later or exceptional state; a later controlled slice or operator action is required.");

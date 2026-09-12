@@ -83,7 +83,18 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-073 changed verification blocks final commit", FinalCommitChangedVerification),
     ("HC-REP-RUNTIME-074 conflicting existing record is preserved", FinalCommitExistingConflict),
     ("HC-REP-RUNTIME-075 damaged commit index blocks replay", FinalCommitIndexMismatch),
-    ("HC-REP-RUNTIME-076 startup replay cannot reuse final reconciliation", FinalCommitRejectsStartupReplay)
+    ("HC-REP-RUNTIME-076 startup replay cannot reuse final reconciliation", FinalCommitRejectsStartupReplay),
+    ("HC-REP-RUNTIME-077 startup discovery paginates without mutation", StartupDiscoveryPages),
+    ("HC-REP-RUNTIME-078 startup finalizes cataloged package without original request", StartupFinalizesCataloged),
+    ("HC-REP-RUNTIME-079 startup reuses orphan commit bytes and original audit fields", StartupReusesOrphan),
+    ("HC-REP-RUNTIME-080 committed confirmations retain final replay", StartupConfirmsCommitted),
+    ("HC-REP-RUNTIME-081 startup never recreates missing committed record", StartupMissingCommittedRecord),
+    ("HC-REP-RUNTIME-082 confirmation replay checks current record bytes", StartupConfirmationRechecks),
+    ("HC-REP-RUNTIME-083 malformed orphan blocks startup", StartupMalformedOrphan),
+    ("HC-REP-RUNTIME-084 duplicate orphan evidence is refused", StartupDuplicateOrphan),
+    ("HC-REP-RUNTIME-085 interrupted startup finalization retries retained bytes", StartupFinalizationRollback),
+    ("HC-REP-RUNTIME-086 unsupported repository refuses discovery", StartupDiscoveryReadOnly),
+    ("HC-REP-RUNTIME-087 startup finalization replay rechecks media", StartupFinalizationRechecks)
 };
 
 var failures = 0;
@@ -103,6 +114,195 @@ foreach (var (name, body) in tests)
 
 await Console.Out.WriteLineAsync($"SUMMARY total={tests.Length} passed={tests.Length - failures} failed={failures}");
 return failures == 0 ? 0 : 1;
+
+static RepositoryStartupReconciliationRequest LaterStartup(RepositoryFinalCommitRequest final, bool change) => new()
+{
+    TransactionId = final.Publication.TransactionId, ReconciliationId = TestId(9001),
+    ResultTransitionId = change ? TestId(9002) : null, ResultOperationId = change ? TestId(9003) : null,
+    ActorWindowsAccount = "TEST\\recovery",
+    StartedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 0, TimeSpan.Zero),
+    FinishedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 1, TimeSpan.Zero)
+};
+
+static void StartupDiscoveryPages()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareFinalCommit(root, service);
+        var second = CreateStagedFixture(root, 2);
+        service.RegisterStagedVerifiedPackage(root, second.Registration);
+        var before = DirectoryFingerprint(root);
+        var first = service.ListStartupTransactions(root, limit: 1);
+        var next = service.ListStartupTransactions(root, first[0].TransactionId, 1);
+        Equal(1, first.Count); Equal(1, next.Count);
+        True(first[0].TransactionId != next[0].TransactionId);
+        Equal(0, service.ListStartupTransactions(root, next[0].TransactionId, 1).Count);
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void StartupFinalizesCataloged()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        var request = LaterStartup(final, true);
+        var result = new RepositoryService().ReconcileStartupTransaction(root, request);
+        Equal("COMMITTED", result.ResultState);
+        Equal("FINALIZE_COMMIT", result.ActionCode);
+        Equal(6, result.Observations.Count);
+        Equal(5L, result.Revision);
+        Equal(false, result.WasAlreadyRecorded);
+        Equal(true, service.ReconcileStartupTransaction(root, request).WasAlreadyRecorded);
+    });
+}
+
+static void DropCommitAbort(string root)
+{
+    using var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite);
+    using var command = connection.CreateCommand();
+    command.CommandText = "DROP TRIGGER test_abort_committed";
+    command.ExecuteNonQuery();
+}
+
+static void StartupReusesOrphan()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        AddTransitionAbortTrigger(root, "COMMITTED");
+        Throws(RepositoryErrorCode.CatalogWriteFailed, () => service.CompleteCatalogedPackage(root, final));
+        var path = FinalRecordPath(root, final);
+        var hash = Hash(path);
+        DropCommitAbort(root);
+        Equal("COMMITTED", new RepositoryService().ReconcileStartupTransaction(root, LaterStartup(final, true)).ResultState);
+        Equal(hash, Hash(path));
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal("TEST\\recovery", ScalarText(connection, "SELECT actor_windows_account FROM repository_reconciliations"));
+        Equal("STARTUP", ScalarText(connection, "SELECT trigger FROM repository_reconciliations"));
+        Equal("CONFIRM_IDEMPOTENT_COMMIT", service.ReconcileStartupTransaction(root,
+            LaterStartup(final, false) with { ReconciliationId = TestId(9009) }).ActionCode);
+    });
+}
+
+static void StartupConfirmsCommitted()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        service.CompleteCatalogedPackage(root, final);
+        var request = LaterStartup(final, false);
+        Equal("CONFIRM_IDEMPOTENT_COMMIT", service.ReconcileStartupTransaction(root, request).ActionCode);
+        Equal("CONFIRM_IDEMPOTENT_COMMIT", service.ReconcileStartupTransaction(root,
+            request with { ReconciliationId = TestId(9009) }).ActionCode);
+        Equal(true, service.CompleteCatalogedPackage(root, final).WasAlreadyCommitted);
+        Equal(5L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+        Equal(3L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_reconciliations"));
+    });
+}
+
+static void StartupMissingCommittedRecord()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        service.CompleteCatalogedPackage(root, final);
+        var path = FinalRecordPath(root, final);
+        File.Delete(path);
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.ReconcileStartupTransaction(root, LaterStartup(final, false)));
+        True(!File.Exists(path));
+        Equal(1L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_reconciliations"));
+    });
+}
+
+static void StartupConfirmationRechecks()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        service.CompleteCatalogedPackage(root, final);
+        var request = LaterStartup(final, false);
+        service.ReconcileStartupTransaction(root, request);
+        var path = FinalRecordPath(root, final);
+        File.WriteAllText(path, File.ReadAllText(path).Replace("1.0.0", "9.0.0", StringComparison.Ordinal));
+        Throws(RepositoryErrorCode.ImmutableRecordConflict, () => service.ReconcileStartupTransaction(root, request));
+    });
+}
+
+static void StartupMalformedOrphan()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        var path = FinalRecordPath(root, final);
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.WriteAllText(path, "broken");
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.ReconcileStartupTransaction(root, LaterStartup(final, true)));
+        Equal("broken", File.ReadAllText(path));
+    });
+}
+
+static void StartupDuplicateOrphan()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        AddTransitionAbortTrigger(root, "COMMITTED");
+        Throws(RepositoryErrorCode.CatalogWriteFailed, () => service.CompleteCatalogedPackage(root, final));
+        DropCommitAbort(root);
+        var path = FinalRecordPath(root, final);
+        var second = TestId(9099).ToString("D");
+        File.WriteAllText(Path.Combine(Path.GetDirectoryName(path)!, second + ".json"),
+            File.ReadAllText(path).Replace(final.CommitRecordId.ToString("D"), second, StringComparison.Ordinal));
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.ReconcileStartupTransaction(root, LaterStartup(final, true)));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_reconciliations"));
+    });
+}
+
+static void StartupFinalizationRollback()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        var request = LaterStartup(final, true);
+        AddTransitionAbortTrigger(root, "COMMITTED");
+        Throws(RepositoryErrorCode.CatalogWriteFailed, () => service.ReconcileStartupTransaction(root, request));
+        DropCommitAbort(root);
+        var commitDirectory = Path.GetDirectoryName(FinalRecordPath(root, final))!;
+        var retained = Directory.GetFiles(commitDirectory).Single();
+        var hash = Hash(retained);
+        Equal("COMMITTED", new RepositoryService().ReconcileStartupTransaction(root, request).ResultState);
+        Equal(hash, Hash(retained));
+        Equal(1, Directory.GetFiles(commitDirectory).Length);
+    });
+}
+
+static void StartupDiscoveryReadOnly()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareFinalCommit(root, service);
+        var path = Path.Combine(root, "repository.json");
+        File.WriteAllText(path, File.ReadAllText(path).Replace("\"1.3.0\"", "\"9.0.0\"", StringComparison.Ordinal));
+        Throws(RepositoryErrorCode.MutationNotAllowed, () => service.ListStartupTransactions(root));
+    });
+}
+
+static void StartupFinalizationRechecks()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        var request = LaterStartup(final, true);
+        service.ReconcileStartupTransaction(root, request);
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly))
+        {
+            File.AppendAllText(Path.Combine(Absolute(root, ScalarText(connection,
+                "SELECT destination_relative_path FROM repository_transactions")), "events.json"), "changed");
+        }
+        Throws(RepositoryErrorCode.EvidenceMismatch, () => service.ReconcileStartupTransaction(root, request));
+    });
+}
 
 static RepositoryFinalCommitRequest PrepareFinalCommit(string root, RepositoryService service)
 {

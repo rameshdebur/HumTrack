@@ -61,15 +61,27 @@ immutable commit record, verifies its bytes and package evidence, then saves
 the index, six observations, PRE_RECEIPT reconciliation and COMMITTED transition
 atomically. Exact retry reuses a retained file after a database rollback.
 Replay revalidates existing evidence and never recreates a missing committed
-record. Callers must retain the request across interruption; automatic startup
-discovery and receipts remain later integration work.
+record. Exact public retry uses the retained request. C7 startup recovery can
+instead reconstruct requests from retained catalog and transition history.
+
+C7 adds `ListStartupTransactions(root, afterTransactionId, limit)` (default 100,
+maximum 1000). A candidate's stored state is not fresh verification. Pass each
+candidate to `ReconcileStartupTransaction`: CATALOGED requires transition and
+operation IDs and can finalize with STARTUP provenance; COMMITTED requires
+null transition/operation IDs and records CONFIRM_IDEMPOTENT_COMMIT without
+changing revision. Use a fresh reconciliation ID for a new inspection.
+Exact reconciliation replay still checks current committed evidence.
+An interrupted unindexed commit retains its original bytes and audit fields;
+the new recovery audit records the current actor/time separately. Ambiguous,
+malformed or conflicting records block recovery and are preserved. Missing
+committed records are never recreated. Host startup orchestration, automatic
+MOVED-to-CATALOGED publication and receipts remain separate integration work.
 
 C5 adds `PublishMovedPackage`: it revalidates the final package and verification
 record, then inserts the immutable package catalog row and advances the journal
 from `MOVED` to `CATALOGED` in one SQLite transaction. Exact replay checks the
-complete catalog binding and original transition. Cataloged packages still
-await immutable commit publication and final reconciliation. The C4 startup
-API intentionally refuses later states, including `CATALOGED`.
+complete catalog binding and original transition. C6 implements normal final
+commit, and C7 extends the C4 startup API to CATALOGED and COMMITTED.
 
 Run the Coordinator repository self-tests directly:
 

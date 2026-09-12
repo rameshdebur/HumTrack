@@ -7,6 +7,10 @@ public sealed partial class RepositoryService
 {
     /// <summary>Publishes and reconciles the immutable record before committing one cataloged package.</summary>
     public RepositoryFinalCommitSnapshot CompleteCatalogedPackage(string rootPath, RepositoryFinalCommitRequest request)
+        => CompleteCatalogedPackageCore(rootPath, request, "PRE_RECEIPT", false);
+
+    private RepositoryFinalCommitSnapshot CompleteCatalogedPackageCore(string rootPath,
+        RepositoryFinalCommitRequest request, string trigger, bool preserveRecordFields)
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(request.Publication);
@@ -43,13 +47,24 @@ public sealed partial class RepositoryService
             var relative = $"subjects/{Id(context.SubjectId)}/sessions/{Id(context.SessionId)}/records/commits/{Id(request.CommitRecordId)}.json";
             var path = RepositoryPathSafety.ResolveRelativePath(opened.RootPath, relative);
             RepositoryPathSafety.RejectReparsePointsInExistingPath(path);
-            var bytes = CreateCommitRecord(context, request);
+            var recordRequest = request;
+            if (preserveRecordFields && File.Exists(path))
+            {
+                using var retained = JsonDocument.Parse(ReadRecoveryRecord(path));
+                recordRequest = request with
+                {
+                    ActorWindowsAccount = retained.RootElement.GetProperty("committed_by_windows_account").GetString()!,
+                    RecordedAt = retained.RootElement.GetProperty("committed_utc").GetDateTimeOffset()
+                };
+                ValidateWindowsAccount(recordRequest.ActorWindowsAccount);
+            }
+            var bytes = CreateCommitRecord(context, recordRequest);
             var hash = Convert.ToHexStringLower(SHA256.HashData(bytes));
             var value = new JournalStartupReconciliation(request.ReconciliationId, context.TransactionId,
                 catalogRevision, "CATALOGED", "COMMITTED", "FINALIZE_COMMIT", request.TransitionId,
                 request.OperationId, request.ActorWindowsAccount, Utc(request.StartedAt), Utc(request.RecordedAt),
                 "Exact package, catalog, verification and immutable commit evidence agree.",
-                CommitObservations(context, relative), "PRE_RECEIPT");
+                CommitObservations(context, relative), trigger);
             if (!replay)
             {
                 RepositoryCatalog.RequireUncommittedEvidence(database, context.TransactionId, context.PackageId);
