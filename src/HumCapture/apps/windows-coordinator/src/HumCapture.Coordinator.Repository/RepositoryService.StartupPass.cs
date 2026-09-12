@@ -24,7 +24,13 @@ public enum RepositoryStartupPassStatus
 /// <param name="NextAction">Safe next step; never a cleanup authorization.</param>
 public sealed record RepositoryStartupItem(Guid TransactionId,
     RepositoryStartupReconciliationSnapshot? Reconciliation,
-    RepositoryErrorCode? ErrorCode, string NextAction);
+    RepositoryErrorCode? ErrorCode, string NextAction)
+{
+    /// <summary>Gets the verified normal move result when processing staged work.</summary>
+    public RepositoryCommitMoveSnapshot? NormalMove { get; init; }
+    /// <summary>Gets whether processing skipped this item without verifying its state.</summary>
+    public bool WasSkipped { get; init; }
+}
 
 /// <summary>Bounded startup progress; Completed does not imply every item succeeded.</summary>
 /// <param name="Repository">Compatibility result.</param>
@@ -48,6 +54,18 @@ public sealed partial class RepositoryService
     /// </summary>
     public RepositoryStartupPass RunStartupPass(string rootPath, Guid? afterTransactionId = null,
         int maxTransactions = 100, CancellationToken cancellationToken = default)
+        => RunBoundedPass(rootPath, afterTransactionId, maxTransactions, cancellationToken, false);
+
+    /// <summary>
+    /// Explicitly processes staged candidates through normal durable movement only.
+    /// Non-staged candidates are skipped, not reconciled or freshly verified.
+    /// </summary>
+    public RepositoryStartupPass ProcessStagedPass(string rootPath, Guid? afterTransactionId = null,
+        int maxTransactions = 100, CancellationToken cancellationToken = default)
+        => RunBoundedPass(rootPath, afterTransactionId, maxTransactions, cancellationToken, true);
+
+    private RepositoryStartupPass RunBoundedPass(string rootPath, Guid? afterTransactionId,
+        int maxTransactions, CancellationToken cancellationToken, bool processStaged)
     {
         if (maxTransactions is < 1 or > 1000)
         {
@@ -76,7 +94,9 @@ public sealed partial class RepositoryService
                 {
                     return new(opened, RepositoryStartupPassStatus.Cancelled, cursor, items.AsReadOnly());
                 }
-                items.Add(ReconcileStartupCandidate(opened.RootPath, candidate, actor));
+                items.Add(processStaged
+                    ? ProcessStagedCandidate(opened.RootPath, candidate, actor)
+                    : ReconcileStartupCandidate(opened.RootPath, candidate, actor));
                 cursor = candidate.TransactionId;
             }
             var status = RepositoryStartupPassStatus.Cancelled;

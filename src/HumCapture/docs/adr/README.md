@@ -29,3 +29,4 @@ Current records:
 - ADR-0021 — Executable repository contract surface.
 - ADR-0022 — Microsoft.Data.Sqlite for the Coordinator repository.
 - ADR-0023 — Bounded Coordinator startup executable.
+- ADR-0024 — Explicit staged-package processing command.

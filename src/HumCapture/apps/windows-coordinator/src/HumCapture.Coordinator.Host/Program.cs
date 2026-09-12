@@ -6,10 +6,10 @@ using HumCapture.Coordinator.Repository;
 
 namespace HumCapture.Coordinator.Host;
 
-/// <summary>Bounded command-line Coordinator startup process.</summary>
+/// <summary>Bounded command-line Coordinator recovery and staged-processing host.</summary>
 public static class Program
 {
-    /// <summary>Runs a single explicitly requested startup pass.</summary>
+    /// <summary>Runs a single explicitly requested repository pass.</summary>
     public static int Main(string[] args)
     {
         if (!TryParse(args, out var root, out var limit, out var after))
@@ -30,7 +30,7 @@ public static class Program
                     WriteError("STARTUP_ALREADY_RUNNING");
                     return 7;
                 }
-                return Run(root, limit, after);
+                return Run(root, limit, after, args[0] == "process-staged");
             }
             finally
             {
@@ -57,24 +57,27 @@ public static class Program
         return "Local\\HumCapture.Startup." + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(canonical)));
     }
 
-    private static int Run(string root, int limit, Guid? after)
+    private static int Run(string root, int limit, Guid? after, bool processStaged)
     {
         using var cancellation = new CancellationTokenSource();
         ConsoleCancelEventHandler handler = (_, e) => { e.Cancel = true; cancellation.Cancel(); };
         Console.CancelKeyPress += handler;
         try
         {
-            var pass = new RepositoryService().RunStartupPass(root, after, limit, cancellation.Token);
+            var service = new RepositoryService();
+            var pass = processStaged
+                ? service.ProcessStagedPass(root, after, limit, cancellation.Token)
+                : service.RunStartupPass(root, after, limit, cancellation.Token);
             Console.WriteLine(JsonSerializer.Serialize(new
             {
-                schema_version = "1.0.0", status = pass.Status.ToString(),
+                schema_version = "1.1.0", status = pass.Status.ToString(),
                 last_processed_transaction_id = pass.LastProcessedTransactionId,
                 requires_operator_attention = pass.RequiresOperatorAttention,
                 items = pass.Items.Select(item => new
                 {
                     transaction_id = item.TransactionId,
-                    state = item.Reconciliation?.ResultState,
-                    action = item.Reconciliation?.ActionCode,
+                    state = item.NormalMove?.State ?? item.Reconciliation?.ResultState,
+                    action = ItemAction(item),
                     error_code = item.ErrorCode?.ToString(), next_action = item.NextAction
                 })
             }));
@@ -92,14 +95,20 @@ public static class Program
     }
 
     private static void WriteError(string code) =>
-        Console.WriteLine(JsonSerializer.Serialize(new { schema_version = "1.0.0", status = "Failed", error_code = code }));
+        Console.WriteLine(JsonSerializer.Serialize(new { schema_version = "1.1.0", status = "Failed", error_code = code }));
+
+    private static string? ItemAction(RepositoryStartupItem item)
+    {
+        if (item.WasSkipped) { return "SKIP_NOT_STAGED"; }
+        return item.NormalMove is not null ? "MOVE_STAGED_PACKAGE" : item.Reconciliation?.ActionCode;
+    }
 
     private static bool TryParse(string[] args, out string root, out int limit, out Guid? after)
     {
         root = string.Empty;
         limit = 100;
         after = null;
-        if (args.Length < 3 || args[0] != "startup" || args.Length % 2 != 1) { return false; }
+        if (args.Length < 3 || args[0] is not ("startup" or "process-staged") || args.Length % 2 != 1) { return false; }
         var seen = new HashSet<string>(StringComparer.Ordinal);
         for (var index = 1; index < args.Length; index += 2)
         {

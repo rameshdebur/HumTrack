@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** Prior accepted slices and I0.4B-C1–C10 are implemented at their recorded evidence levels  
-**Tags:** I0.4B-C10 | REPOSITORY RECOVERY | AUTOMATIC CATALOGING  
+**Status:** Prior accepted slices and I0.4B-C1–C11 are implemented at their recorded evidence levels  
+**Tags:** I0.4B-C11 | COORDINATOR HOST | STAGED-PACKAGE PROCESSING  
 **Last meaningful update:** 2026-09-12
 
 ## Objective
@@ -13,6 +13,9 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C11 staged processing is authorized under the existing engineering baseline;
+  HC-CHG-20260912-016 and ADR-0024 record scope and review.
 
 - C10 automatic cataloging is authorized within the existing engineering baseline;
   scope and architecture review are recorded in HC-CHG-20260912-015.
@@ -286,8 +289,12 @@ C10 adds automatic MOVED-to-CATALOGED publication with six retained observations
 and STARTUP reconciliation in the same database transaction. Later finalization
 verifies that publication history; exact startup replay rechecks current evidence.
 The host performs one action per package per pass. HC-REP-RUNTIME-103–109 pass
-(109 runtime tests total); see HC-VR-I0-4B-C10-001. Receipt integration and
-normal move continuation from STAGED_VERIFIED remain separate work.
+(109 runtime tests total); see HC-VR-I0-4B-C10-001.
+C11 connects normal staged movement to explicit ProcessStagedPass/process-staged,
+separate from startup recovery. It skips other states without claiming verification,
+and preserves interrupted work for startup reconciliation. Host output is 1.1.0
+under ADR-0024. See HC-CHG-20260912-016 and HC-VR-I0-4B-C11-001.
+Receipt integration, UI and capture-readiness remain separate work.
 
 - Android capture node: Kotlin, Camera2, MediaCodec/MediaMuxer, IMU, local master, RTP preview, control and resumable transfer services.
 - Windows coordinator: .NET/Avalonia, headless coordinator host, SQLite operational catalog, subject/session/trial repository, transfer/verification/quality services.

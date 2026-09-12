@@ -121,7 +121,7 @@ For structured output without build output, build first and invoke
 `HumCapture.Coordinator.Host.exe` in its Release target-framework directory.
 Pass `--after UUID` from last_processed_transaction_id to continue a page.
 Restart a fresh scan from no cursor; retain prior page failures for investigation.
-The single JSON output has schema_version 1.0.0. Root errors contain a controlled
+The single JSON output has schema_version 1.1.0 (C11). Root errors contain a controlled
 code only. Per-item output has transaction ID, state, action, error and next action.
 Completed describes scan exhaustion, not capture/session completion.
 
@@ -162,7 +162,30 @@ Recovered STARTUP publication history is not relabelled NORMAL.
 
 Unexpected matching commit files, catalog conflict, changed/missing evidence
 and unsafe paths block recovery without overwrite or deletion. STAGED_VERIFIED
-still needs normal move continuation. No receipt or source cleanup is authorized.
+uses the explicit processing command below. No receipt or source cleanup is authorized.
+
+## Normal staged processing (C11)
+
+Use process-staged with the same --root, --limit and --after arguments as startup.
+The library entry point is ProcessStagedPass. It initiates the existing durable
+STAGED_VERIFIED -> COMMITTING -> MOVED operation, then stops for that package.
+It does not catalog or commit automatically. Startup remains recovery-only:
+it does not initiate movement of an intact STAGED_VERIFIED package.
+
+process-staged skips other journal states with action SKIP_NOT_STAGED and null
+state. A skip is not proof of validity or completion, even when the exit code is 0.
+Successful movement reports MOVE_STAGED_PACKAGE, state MOVED and next action
+RUN_STARTUP_TO_CONTINUE_CATALOGING. Failed movement preserves evidence and reports
+RETAIN_AND_RUN_STARTUP_RECOVERY. Run startup to establish the actual state before
+attempting normal processing again; no blind in-place move retry is performed.
+
+Both commands share bounds, pagination, account attribution, same-session mutex,
+cancellation-between-packages and exit codes. Page limits count all inspected
+candidates, including skipped entries. Start a fresh pass without --after to
+revisit earlier candidates; always aggregate per-item errors. Audit timestamps
+describe requests, not measured acquisition or elapsed processing time.
+The CLI output minor version is 1.1.0; all previous fields remain.
+No transfer ingestion, receipt, source deletion, capture readiness or UI is added.
 
 C5 adds `PublishMovedPackage`: it revalidates the final package and verification
 record, then inserts the immutable package catalog row and advances the journal

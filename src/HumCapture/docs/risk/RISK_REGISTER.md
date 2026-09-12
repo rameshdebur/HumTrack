@@ -1,5 +1,14 @@
 # HumCapture Preliminary Risk Register
 
+C11 control update (2026-09-12), HC-RISK-022/030/031: explicit process-staged
+uses C3's fresh evidence validation and durable move, stops at MOVED, and skips
+other states without reporting a verified state. Interrupted movement requires
+startup reconciliation before a new normal attempt. Shared host exclusion and
+bounded iteration remain in force. HC-REP-RUNTIME-110–117 cover processing,
+repeat skip, interrupted intent/move, tamper refusal, pagination and access/cancel
+controls. No receipt/cleanup authorization; Ctrl+C mid-operation and power loss
+remain unverified. The C3 two-transition move is one normal processing operation.
+
 C10 control update (2026-09-12), HC-RISK-022/030/031: automatic cataloging verifies
 exact moved evidence and absent catalog/commit authority before atomically saving
 catalog, six observations, reconciliation and transition. Unexpected commit

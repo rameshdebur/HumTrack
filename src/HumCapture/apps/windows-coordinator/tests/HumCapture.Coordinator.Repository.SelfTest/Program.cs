@@ -116,7 +116,15 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-106 changed moved package blocks catalog recovery", StartupCatalogTamper),
     ("HC-REP-RUNTIME-107 unexpected commit file blocks catalog recovery", StartupCatalogUnexpectedCommit),
     ("HC-REP-RUNTIME-108 altered catalog recovery observations block final commit", StartupCatalogHistoryTamper),
-    ("HC-REP-RUNTIME-109 catalog recovery replay rechecks final evidence", StartupCatalogReplayAfterCommit)
+    ("HC-REP-RUNTIME-109 catalog recovery replay rechecks final evidence", StartupCatalogReplayAfterCommit),
+    ("HC-REP-RUNTIME-110 host processes staged package and skips repeat", ProcessStagedHost),
+    ("HC-REP-RUNTIME-111 explicit processing and startup reach final commit", ProcessStagedChain),
+    ("HC-REP-RUNTIME-112 interrupted processing resumes after move", ProcessStagedAfterMoveFailure),
+    ("HC-REP-RUNTIME-113 pending intent requires recovery before processing", ProcessStagedPendingIntent),
+    ("HC-REP-RUNTIME-114 staged evidence tamper is retained and refused", ProcessStagedTamper),
+    ("HC-REP-RUNTIME-115 staged processing is paginated", ProcessStagedPages),
+    ("HC-REP-RUNTIME-116 staged processing respects cancellation and read only", ProcessStagedCancellationReadOnly),
+    ("HC-REP-RUNTIME-117 staged processing shares host exclusion", ProcessStagedGuard)
 };
 
 var failures = 0;
@@ -145,6 +153,149 @@ static RepositoryStartupReconciliationRequest LaterStartup(RepositoryFinalCommit
     StartedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 0, TimeSpan.Zero),
     FinishedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 1, TimeSpan.Zero)
 };
+
+static void ProcessStagedHost()
+{
+    WithRepository((root, service) =>
+    {
+        service.RegisterStagedVerifiedPackage(root, CreateStagedFixture(root).Registration);
+        var run = RunHost("process-staged", "--root", root);
+        using var output = run.Output;
+        Equal(0, run.ExitCode);
+        Equal("MOVED", output.RootElement.GetProperty("items")[0].GetProperty("state").GetString()!);
+        Equal("MOVE_STAGED_PACKAGE", output.RootElement.GetProperty("items")[0].GetProperty("action").GetString()!);
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+        var before = DirectoryFingerprint(root);
+        var repeated = RunHost("process-staged", "--root", root);
+        using var repeatedOutput = repeated.Output;
+        Equal(0, repeated.ExitCode);
+        Equal("SKIP_NOT_STAGED", repeatedOutput.RootElement.GetProperty("items")[0].GetProperty("action").GetString()!);
+        Equal(JsonValueKind.Null, repeatedOutput.RootElement.GetProperty("items")[0].GetProperty("state").ValueKind);
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void ProcessStagedChain()
+{
+    WithRepository((root, service) =>
+    {
+        service.RegisterStagedVerifiedPackage(root, CreateStagedFixture(root).Registration);
+        Equal("STAGED_VERIFIED", service.RunStartupPass(root).Items[0].Reconciliation!.ResultState);
+        Equal("MOVED", service.ProcessStagedPass(root).Items[0].NormalMove!.State);
+        Equal("CATALOGED", service.RunStartupPass(root).Items[0].Reconciliation!.ResultState);
+        Equal("COMMITTED", service.RunStartupPass(root).Items[0].Reconciliation!.ResultState);
+        Equal(5L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+    });
+}
+
+static void ProcessStagedAfterMoveFailure()
+{
+    WithRepository((root, service) =>
+    {
+        service.RegisterStagedVerifiedPackage(root, CreateStagedFixture(root).Registration);
+        AddTransitionAbortTrigger(root, "MOVED");
+        var failed = service.ProcessStagedPass(root);
+        Equal(true, failed.RequiresOperatorAttention);
+        Equal("RETAIN_AND_RUN_STARTUP_RECOVERY", failed.Items[0].NextAction);
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite))
+        {
+            Equal("COMMITTING", ScalarText(connection, "SELECT state FROM repository_transactions"));
+            using var command = connection.CreateCommand();
+            command.CommandText = "DROP TRIGGER test_abort_moved";
+            command.ExecuteNonQuery();
+        }
+        Equal("RESUME_AFTER_MOVE", service.RunStartupPass(root).Items[0].Reconciliation!.ActionCode);
+        Equal(true, service.ProcessStagedPass(root).Items[0].WasSkipped);
+        Equal(3L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+    });
+}
+
+static void ProcessStagedPendingIntent()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = CreateStagedFixture(root).Registration;
+        service.RegisterStagedVerifiedPackage(root, registration);
+        ForceCommitting(root, CreateMoveRequest(registration));
+        var before = DirectoryFingerprint(root);
+        Equal(true, service.ProcessStagedPass(root).Items[0].WasSkipped);
+        Equal(before, DirectoryFingerprint(root));
+        Equal("RETRY_FROM_STAGED", service.RunStartupPass(root).Items[0].Reconciliation!.ActionCode);
+        Equal("MOVED", service.ProcessStagedPass(root).Items[0].NormalMove!.State);
+        Equal(5L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+    });
+}
+
+static void ProcessStagedTamper()
+{
+    WithRepository((root, service) =>
+    {
+        service.RegisterStagedVerifiedPackage(root, CreateStagedFixture(root).Registration);
+        string path;
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly))
+        {
+            path = Path.Combine(Absolute(root, ScalarText(connection,
+                "SELECT staging_relative_path FROM repository_transactions")), "events.json");
+        }
+        File.AppendAllText(path, "changed");
+        var before = Hash(path);
+        var run = RunHost("process-staged", "--root", root);
+        using var output = run.Output;
+        Equal(4, run.ExitCode);
+        Equal(before, Hash(path));
+        Equal(1L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+    });
+}
+
+static void ProcessStagedPages()
+{
+    WithRepository((root, service) =>
+    {
+        service.RegisterStagedVerifiedPackage(root, CreateStagedFixture(root).Registration);
+        service.RegisterStagedVerifiedPackage(root, CreateStagedFixture(root, 2).Registration);
+        var first = service.ProcessStagedPass(root, maxTransactions: 1);
+        Equal(RepositoryStartupPassStatus.MoreWork, first.Status);
+        Equal(1, first.Items.Count);
+        var last = service.ProcessStagedPass(root, first.LastProcessedTransactionId, 1);
+        Equal(RepositoryStartupPassStatus.Completed, last.Status);
+        Equal(1, last.Items.Count);
+        Equal(2L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_transactions WHERE state = 'MOVED'"));
+    });
+}
+
+static void ProcessStagedCancellationReadOnly()
+{
+    WithRepository((root, service) =>
+    {
+        service.RegisterStagedVerifiedPackage(root, CreateStagedFixture(root).Registration);
+        var before = DirectoryFingerprint(root);
+        Equal(RepositoryStartupPassStatus.Cancelled, service.ProcessStagedPass(root,
+            cancellationToken: new CancellationToken(true)).Status);
+        Equal(before, DirectoryFingerprint(root));
+        var path = Path.Combine(root, "repository.json");
+        File.WriteAllText(path, File.ReadAllText(path).Replace("\"1.3.0\"", "\"9.0.0\"", StringComparison.Ordinal));
+        before = DirectoryFingerprint(root);
+        var run = RunHost("process-staged", "--root", root);
+        using var output = run.Output;
+        Equal(6, run.ExitCode);
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void ProcessStagedGuard()
+{
+    WithRepository((root, _) =>
+    {
+        using var guard = new Mutex(true, HumCapture.Coordinator.Host.Program.StartupMutexName(root));
+        try
+        {
+            var run = RunHost("process-staged", "--root", root);
+            using var output = run.Output;
+            Equal(7, run.ExitCode);
+        }
+        finally { guard.ReleaseMutex(); }
+    });
+}
 
 static StagedVerifiedPackageRegistration PrepareMoved(string root, RepositoryService service)
 {
@@ -310,7 +461,7 @@ static void HostEmpty()
         var result = RunHost("startup", "--root", root);
         using var output = result.Output;
         Equal(0, result.ExitCode);
-        Equal("1.0.0", output.RootElement.GetProperty("schema_version").GetString()!);
+        Equal("1.1.0", output.RootElement.GetProperty("schema_version").GetString()!);
         Equal("Completed", output.RootElement.GetProperty("status").GetString()!);
         Equal(before, DirectoryFingerprint(root));
         True(!output.RootElement.GetRawText().Contains(root, StringComparison.OrdinalIgnoreCase));
