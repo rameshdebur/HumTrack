@@ -28,3 +28,9 @@
 | Phase 0 named-hardware qualification | HC-SYS-REQ-002/004, HC-TIME-REQ-001–005, HC-COMPAT-REQ-001/002 | HC-RISK-003/004/006/008/013/015/016/017 | HC-P0-AND-001–003, HC-P0-UVC-001–003, HC-P0-NET-001–002, HC-P0-COMP-001; P0.2K evidence integration | P0.2K consolidates P0.2A-J and hashes every report. Two P0.2J primary runs verify in the controlled vault; P0.2A-I primary artifacts and complete normative P0.2J measurements are unavailable. No tested device reports 1080p60. Engineering integration is complete; normative qualification remains open and must use prospective complete evidence |
 
 Expand this matrix with atomic test IDs before each implementation phase.
+
+C5 extension (2026-09-12): HC-US-XFR-021–034, HC-COORD-REQ-003,
+HC-DATA-REQ-030/031/034/035, HC-RISK-022/030/031 map to
+HC-REP-RUNTIME-057–063. All seven cases pass, bringing repository runtime
+coverage to 63 passing cases. Normal publication now reaches CATALOGED;
+final commit and later-state startup reconciliation remain open.

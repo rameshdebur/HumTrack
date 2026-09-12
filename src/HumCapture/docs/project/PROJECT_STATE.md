@@ -1,8 +1,8 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1/C2/C3/C4 are implemented/accepted at their recorded evidence levels  
-**Tags:** I0.4B-C4 | WINDOWS COORDINATOR | REPOSITORY CORE | STARTUP RECONCILIATION | RECOVERY ACTIONS  
-**Last meaningful update:** 2026-09-11
+**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1/C2/C3/C4/C5 are implemented/accepted at their recorded evidence levels  
+**Tags:** I0.4B-C5 | WINDOWS COORDINATOR | REPOSITORY CORE | CATALOG PUBLICATION  
+**Last meaningful update:** 2026-09-12
 
 ## Objective
 
@@ -28,9 +28,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - Application source implementation: the approved Windows Coordinator
   I0.4B-C1 initialize/open, I0.4B-C2 verified-staging journal, I0.4B-C3
   durable commit-intent/atomic-move and I0.4B-C4 bounded startup reconciliation
-  slices exist. C4 stops at safely reconciling `STAGED_VERIFIED`, `COMMITTING`
+  slices exist, with C5 normal catalog publication through `CATALOGED`.
+  C4 startup reconciliation supports `STAGED_VERIFIED`, `COMMITTING`
   and `MOVED`; no UI,
-  subject service, collection transport, catalog publication, final
+  subject service, collection transport, final
   `COMMITTED` decision, operator/quarantine recovery, receipt, cleanup or Android runtime
   exists.
 - P0.2K evidence integration: completed. Nine pre-integration P0.2A-J report files are hashed;
@@ -246,6 +247,15 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   field, independent and regulatory evidence remain open.
 
 ## Architecture summary
+
+C5 implements normal `MOVED -> CATALOGED` publication with full package
+revalidation, immutable catalog bindings, atomic catalog/history/state writes,
+and exact replay after reopening. HC-REP-RUNTIME-057–063 cover publication,
+rollback, wrong-state, tampering, existing-conflict, replay-conflict and
+read-only cases; all 63 repository tests and 91 contract tests pass locally.
+See HC-CHG-20260912-010 and HC-VR-I0-4B-C5-001 for scope and evidence.
+Final commit publication/reconciliation and startup support for later states
+remain the next repository implementation work.
 
 - Android capture node: Kotlin, Camera2, MediaCodec/MediaMuxer, IMU, local master, RTP preview, control and resumable transfer services.
 - Windows coordinator: .NET/Avalonia, headless coordinator host, SQLite operational catalog, subject/session/trial repository, transfer/verification/quality services.

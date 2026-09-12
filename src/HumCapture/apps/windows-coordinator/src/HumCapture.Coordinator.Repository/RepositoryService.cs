@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 namespace HumCapture.Coordinator.Repository;
 
 /// <summary>Initializes and compatibility-checks the Coordinator-owned HumCapture repository.</summary>
-public sealed class RepositoryService
+public sealed partial class RepositoryService
 {
     private const string InitializationLockName = ".humcapture-initialize.lock";
     private static readonly ConcurrentDictionary<string, object> _commitLocks =

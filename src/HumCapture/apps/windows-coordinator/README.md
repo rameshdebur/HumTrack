@@ -55,6 +55,13 @@ receipts, backup/restore, UI, or migration.
 
 ## Verification
 
+C5 adds `PublishMovedPackage`: it revalidates the final package and verification
+record, then inserts the immutable package catalog row and advances the journal
+from `MOVED` to `CATALOGED` in one SQLite transaction. Exact replay checks the
+complete catalog binding and original transition. Cataloged packages still
+await immutable commit publication and final reconciliation. The C4 startup
+API intentionally refuses later states, including `CATALOGED`.
+
 Run the Coordinator repository self-tests directly:
 
 ```powershell

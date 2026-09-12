@@ -1,5 +1,12 @@
 # HumCapture Preliminary Risk Register
 
+C5 control update (2026-09-12), HC-RISK-022/030/031: publication revalidates the
+destination and immutable verification evidence, then atomically writes the
+catalog row, contiguous transition and current state. HC-REP-RUNTIME-057–063
+verify exact replay, rollback and refusal of unsafe publication conditions.
+CATALOGED does not authorize receipt, completion or source cleanup. Independent
+review, cross-process exclusion and abrupt power-loss evidence remain open.
+
 All entries are `Open / not implemented / not verified` unless later evidence says otherwise. Qualitative ratings are deferred until intended use and risk method are professionally reviewed.
 
 | Risk ID | Hazard or hazardous situation | Principal controls | Requirement links |

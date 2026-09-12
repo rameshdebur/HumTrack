@@ -134,6 +134,15 @@ immutable milestone.
 
 ## 9. Executable representation and deferred implementation
 
+Implementation clarification (C5, 2026-09-12): the accepted B3C
+`before-commit-record` crash fixture explicitly represents `CATALOGED` with
+matching catalog/verification and an absent commit record. C5 follows that
+executable ordering: package catalog insertion and its journal transition are
+atomic; commit-record publication/indexing and final reconciliation follow.
+This qualifies ADR-0019's earlier wording about commit/milestone linkages at
+`CATALOGED`; the accepted historical ADR is retained. Custody remains
+`COMMITTING` through this boundary. No schema or state transition is changed.
+
 ADR-0021 and I0.4B-B3C define executable descriptor, milestone-index, catalog,
 journal, transition, reconciliation and commit-record schemas; SQLite DDL; a
 complete valid lifecycle; named invalid fixtures; and crash-boundary

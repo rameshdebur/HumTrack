@@ -63,7 +63,14 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-053 changed package requires operator handling", StartupChangedPackageRefused),
     ("HC-REP-RUNTIME-054 unexpected catalog linkage blocks automatic action", StartupCatalogConflictRefused),
     ("HC-REP-RUNTIME-055 reconciliation rollback is atomic", StartupReconciliationRollsBack),
-    ("HC-REP-RUNTIME-056 reconciled staged package can retry the C3 move", StartupRetryCanMove)
+    ("HC-REP-RUNTIME-056 reconciled staged package can retry the C3 move", StartupRetryCanMove),
+    ("HC-REP-RUNTIME-057 catalog publication retains exact linkage and replays", CatalogPublicationReplays),
+    ("HC-REP-RUNTIME-058 catalog transition failure rolls back all publication", CatalogPublicationRollsBack),
+    ("HC-REP-RUNTIME-059 catalog publication rejects staged packages", CatalogRejectsStaged),
+    ("HC-REP-RUNTIME-060 catalog publication rejects destination tampering", CatalogRejectsTampering),
+    ("HC-REP-RUNTIME-061 catalog publication refuses existing catalog conflict", CatalogRejectsConflict),
+    ("HC-REP-RUNTIME-062 catalog publication rejects changed replay identity", CatalogRejectsChangedReplay),
+    ("HC-REP-RUNTIME-063 catalog publication respects read-only compatibility", CatalogRejectsReadOnly)
 };
 
 var failures = 0;
@@ -83,6 +90,120 @@ foreach (var (name, body) in tests)
 
 await Console.Out.WriteLineAsync($"SUMMARY total={tests.Length} passed={tests.Length - failures} failed={failures}");
 return failures == 0 ? 0 : 1;
+
+static RepositoryCatalogPublicationRequest PublicationRequest(StagedVerifiedPackageRegistration registration) => new()
+{
+    TransactionId = registration.TransactionId, CatalogEntryId = TestId(7001),
+    TransitionId = TestId(7002), OperationId = TestId(7003),
+    ActorWindowsAccount = "TEST\\operator",
+    RecordedAt = new DateTimeOffset(2026, 9, 12, 10, 0, 0, TimeSpan.Zero)
+};
+
+static void CatalogPublicationReplays()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration));
+        var before = DirectoryFingerprint(Absolute(root, fixture.DestinationRelativePath));
+        var request = PublicationRequest(fixture.Registration);
+        var first = service.PublishMovedPackage(root, request);
+        Equal(4L, first.Revision);
+        Equal(false, first.WasAlreadyCataloged);
+        Equal(true, new RepositoryService().PublishMovedPackage(root, request).WasAlreadyCataloged);
+        Equal(before, DirectoryFingerprint(Absolute(root, fixture.DestinationRelativePath)));
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal("CATALOGED", ScalarText(connection, "SELECT state FROM repository_transactions"));
+        Equal(4L, ScalarLong(connection, "SELECT count(*) FROM repository_transitions"));
+        Equal(1L, ScalarLong(connection, "SELECT count(*) FROM repository_package_catalog"));
+        Equal(fixture.Registration.PackageContentSha256, ScalarText(connection, "SELECT package_content_sha256 FROM repository_package_catalog"));
+        Equal(0L, ScalarLong(connection, "SELECT count(*) FROM repository_record_index WHERE record_kind IN ('commits','receipts')"));
+    });
+}
+
+static void CatalogPublicationRollsBack()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration));
+        AddTransitionAbortTrigger(root, "CATALOGED");
+        Throws(RepositoryErrorCode.CatalogWriteFailed, () => service.PublishMovedPackage(root, PublicationRequest(fixture.Registration)));
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal("MOVED", ScalarText(connection, "SELECT state FROM repository_transactions"));
+        Equal(3L, ScalarLong(connection, "SELECT count(*) FROM repository_transitions"));
+        Equal(0L, ScalarLong(connection, "SELECT count(*) FROM repository_package_catalog"));
+        True(Directory.Exists(Absolute(root, fixture.DestinationRelativePath)));
+    });
+}
+
+static void CatalogRejectsStaged()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.PublishMovedPackage(root, PublicationRequest(fixture.Registration)));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+    });
+}
+
+static void CatalogRejectsTampering()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration));
+        File.AppendAllText(Path.Combine(Absolute(root, fixture.DestinationRelativePath), "events.json"), "changed");
+        Throws(RepositoryErrorCode.EvidenceMismatch, () => service.PublishMovedPackage(root, PublicationRequest(fixture.Registration)));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+    });
+}
+
+static void CatalogRejectsConflict()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration));
+        InsertUnexpectedCatalogEntry(root);
+        Throws(RepositoryErrorCode.JournalConflict, () => service.PublishMovedPackage(root, PublicationRequest(fixture.Registration)));
+        Equal(1L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+        Equal(3L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+    });
+}
+
+static void CatalogRejectsChangedReplay()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration));
+        var request = PublicationRequest(fixture.Registration);
+        service.PublishMovedPackage(root, request);
+        Throws(RepositoryErrorCode.JournalConflict, () => service.PublishMovedPackage(root, request with { CatalogEntryId = TestId(7010) }));
+        Throws(RepositoryErrorCode.JournalConflict, () => service.PublishMovedPackage(root, request with { OperationId = TestId(7011) }));
+        Equal(1L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+    });
+}
+
+static void CatalogRejectsReadOnly()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration));
+        var descriptorPath = Path.Combine(root, "repository.json");
+        File.WriteAllText(descriptorPath, File.ReadAllText(descriptorPath).Replace("\"1.3.0\"", "\"9.0.0\"", StringComparison.Ordinal));
+        Throws(RepositoryErrorCode.MutationNotAllowed, () => service.PublishMovedPackage(root, PublicationRequest(fixture.Registration)));
+    });
+}
 
 static void InitializeCreatesSurface()
 {
