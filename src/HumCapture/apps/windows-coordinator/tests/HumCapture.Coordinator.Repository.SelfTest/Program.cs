@@ -94,7 +94,15 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-084 duplicate orphan evidence is refused", StartupDuplicateOrphan),
     ("HC-REP-RUNTIME-085 interrupted startup finalization retries retained bytes", StartupFinalizationRollback),
     ("HC-REP-RUNTIME-086 unsupported repository refuses discovery", StartupDiscoveryReadOnly),
-    ("HC-REP-RUNTIME-087 startup finalization replay rechecks media", StartupFinalizationRechecks)
+    ("HC-REP-RUNTIME-087 startup finalization replay rechecks media", StartupFinalizationRechecks),
+    ("HC-REP-RUNTIME-088 empty startup pass does not mutate", StartupPassEmpty),
+    ("HC-REP-RUNTIME-089 startup pass uses Windows identity and confirms after restart", StartupPassAccount),
+    ("HC-REP-RUNTIME-090 startup pass bounds and resumes discovery", StartupPassBounded),
+    ("HC-REP-RUNTIME-091 startup pass isolates bad package and preserves evidence", StartupPassIsolates),
+    ("HC-REP-RUNTIME-092 cancelled startup pass preserves repository", StartupPassCancelled),
+    ("HC-REP-RUNTIME-093 startup pass leaves unsupported repository read only", StartupPassReadOnly),
+    ("HC-REP-RUNTIME-094 startup pass handles committing without forcing completion", StartupPassCommitting),
+    ("HC-REP-RUNTIME-095 startup pass rejects invalid bounds before mutation", StartupPassBounds)
 };
 
 var failures = 0;
@@ -123,6 +131,144 @@ static RepositoryStartupReconciliationRequest LaterStartup(RepositoryFinalCommit
     StartedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 0, TimeSpan.Zero),
     FinishedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 1, TimeSpan.Zero)
 };
+
+static void StartupPassEmpty()
+{
+    WithRepository((root, service) =>
+    {
+        var before = DirectoryFingerprint(root);
+        var result = service.RunStartupPass(root);
+        Equal(RepositoryStartupPassStatus.Completed, result.Status);
+        Equal(0, result.Items.Count);
+        Equal(false, result.RequiresOperatorAttention);
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void StartupPassAccount()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareFinalCommit(root, service);
+        var result = service.RunStartupPass(root);
+        Equal(RepositoryStartupPassStatus.Completed, result.Status);
+        Equal("COMMITTED", result.Items.Single().Reconciliation!.ResultState);
+        Equal("AWAIT_FRESH_RECEIPT_AUTHORIZATION", result.Items.Single().NextAction);
+        using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+        using var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly);
+        Equal(identity.Name, ScalarText(connection, "SELECT actor_windows_account FROM repository_reconciliations"));
+        var reopened = new RepositoryService().RunStartupPass(root);
+        Equal("CONFIRM_IDEMPOTENT_COMMIT", reopened.Items.Single().Reconciliation!.ActionCode);
+        Equal(false, reopened.RequiresOperatorAttention);
+    });
+}
+
+static void StartupPassBounded()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareFinalCommit(root, service);
+        var second = CreateStagedFixture(root, 2);
+        service.RegisterStagedVerifiedPackage(root, second.Registration);
+        var first = service.RunStartupPass(root, maxTransactions: 1);
+        Equal(RepositoryStartupPassStatus.MoreWork, first.Status);
+        Equal(1, first.Items.Count);
+        var last = service.RunStartupPass(root, first.LastProcessedTransactionId, 1);
+        Equal(RepositoryStartupPassStatus.Completed, last.Status);
+        Equal(1, last.Items.Count);
+        True(first.Items[0].TransactionId != last.Items[0].TransactionId);
+        var staged = first.Items.Concat(last.Items).Single(item => item.TransactionId == second.Registration.TransactionId);
+        Equal("STAGED_VERIFIED", staged.Reconciliation!.ResultState);
+        Equal("CONTINUE_PACKAGE_WORKFLOW", staged.NextAction);
+    });
+}
+
+static void StartupPassIsolates()
+{
+    WithRepository((root, service) =>
+    {
+        var final = PrepareFinalCommit(root, service);
+        service.CompleteCatalogedPackage(root, final);
+        var path = FinalRecordPath(root, final);
+        File.WriteAllText(path, "broken");
+        var second = CreateStagedFixture(root, 2);
+        service.RegisterStagedVerifiedPackage(root, second.Registration);
+        var result = service.RunStartupPass(root);
+        Equal(RepositoryStartupPassStatus.Completed, result.Status);
+        Equal(true, result.RequiresOperatorAttention);
+        Equal(2, result.Items.Count);
+        var failed = result.Items.Single(item => item.TransactionId == final.Publication.TransactionId);
+        Equal(RepositoryErrorCode.CommitRecoveryRequired, failed.ErrorCode!.Value);
+        Equal("RETAIN_AND_INVESTIGATE_THEN_RETRY", failed.NextAction);
+        True(failed.Reconciliation is null);
+        Equal("broken", File.ReadAllText(path));
+        Equal("STAGED_VERIFIED", result.Items.Single(item => item.TransactionId == second.Registration.TransactionId).Reconciliation!.ResultState);
+    });
+}
+
+static void StartupPassCancelled()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareFinalCommit(root, service);
+        var before = DirectoryFingerprint(root);
+        var result = service.RunStartupPass(root, cancellationToken: new CancellationToken(true));
+        Equal(RepositoryStartupPassStatus.Cancelled, result.Status);
+        Equal(0, result.Items.Count);
+        True(result.LastProcessedTransactionId is null);
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void StartupPassReadOnly()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareFinalCommit(root, service);
+        var path = Path.Combine(root, "repository.json");
+        File.WriteAllText(path, File.ReadAllText(path).Replace("\"1.3.0\"", "\"9.0.0\"", StringComparison.Ordinal));
+        var before = DirectoryFingerprint(root);
+        var result = service.RunStartupPass(root);
+        Equal(RepositoryStartupPassStatus.ReadOnlyInspection, result.Status);
+        Equal(0, result.Items.Count);
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void StartupPassCommitting()
+{
+    WithRepository((root, service) =>
+    {
+        var fixture = CreateStagedFixture(root);
+        service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+        ForceCommitting(root, CreateMoveRequest(fixture.Registration));
+        var result = service.RunStartupPass(root);
+        Equal("RETRY_FROM_STAGED", result.Items.Single().Reconciliation!.ActionCode);
+        Equal("STAGED_VERIFIED", result.Items.Single().Reconciliation!.ResultState);
+        Equal(false, result.RequiresOperatorAttention);
+    });
+}
+
+static void StartupPassBounds()
+{
+    WithRepository((root, service) =>
+    {
+        var before = DirectoryFingerprint(root);
+        foreach (var bound in new[] { 0, 1001 })
+        {
+            try
+            {
+                service.RunStartupPass(root, maxTransactions: bound);
+                throw new InvalidOperationException("Invalid startup bound accepted.");
+            }
+            catch (ArgumentOutOfRangeException exception)
+            {
+                Equal("maxTransactions", exception.ParamName!);
+            }
+        }
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
 
 static void StartupDiscoveryPages()
 {

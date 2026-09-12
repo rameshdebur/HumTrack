@@ -1,5 +1,15 @@
 # HumCapture Preliminary Risk Register
 
+C8 control update (2026-09-12), HC-RISK-022/030/031: RunStartupPass separates
+page completion, item recovery failures and package state. It uses the current
+Windows identity and a bounded page, cancels only between transactions, retains
+failed material and does not force STAGED_VERIFIED/MOVED to completion.
+HC-REP-RUNTIME-088–095 verify the entry point; no executable startup integration
+or capture-readiness gate is claimed. Callers must aggregate failures across
+pages and retry failed identities; the cursor is not durable recovery evidence.
+Only successful reconciliation observations are currently journaled. Failure
+presentation/history integration and mid-pass cancellation injection remain open.
+
 C7 control update (2026-09-12), HC-RISK-022/030/031: startup discovery is not
 verification. Later-state recovery revalidates all retained package authorities,
 refuses missing committed records, preserves orphan bytes/audit fields, and

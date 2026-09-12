@@ -77,6 +77,32 @@ malformed or conflicting records block recovery and are preserved. Missing
 committed records are never recreated. Host startup orchestration, automatic
 MOVED-to-CATALOGED publication and receipts remain separate integration work.
 
+C8 supplies `RunStartupPass(root, afterTransactionId, maxTransactions,
+cancellationToken)` as the host-callable startup entry point in this assembly.
+It opens the repository, uses the current Windows identity, and runs one
+bounded page (default 100, maximum 1000) before returning. Call before starting
+capture, on the future host's worker context, not a UI or acquisition thread.
+There is no executable host or capture scheduler in this slice.
+
+Status is Completed, MoreWork, Cancelled or ReadOnlyInspection. Completed means
+only that no further candidates were found after this cursor at the final check.
+Always inspect RequiresOperatorAttention and every item; neither Completed nor
+a successful reconciliation means session completion, receipt authorization or
+permission to delete source data. STAGED_VERIFIED/MOVED results need normal
+package workflow continuation. Failed items retain material and a controlled
+error/next action; raw exceptions and absolute paths are not returned per item.
+
+Continue MoreWork from LastProcessedTransactionId. Aggregate results across
+pages, including failures; failed items also advance the cursor and must be
+retried explicitly or on a later fresh pass. Start a new application startup
+from a null cursor. This is not a cross-page snapshot or durable failure log.
+Cancellation returns completed item results and is observed between transactions,
+not mid-finalization. Waiting for the process-local gate and a running
+verification are not immediately cancellable. There is no automatic retry loop.
+Audit timestamps supplied to reconciliation identify the action request, not
+measured verification elapsed time. Root/open failures propagate and must block
+repository startup rather than being treated as an empty successful pass.
+
 C5 adds `PublishMovedPackage`: it revalidates the final package and verification
 record, then inserts the immutable package catalog row and advances the journal
 from `MOVED` to `CATALOGED` in one SQLite transaction. Exact replay checks the

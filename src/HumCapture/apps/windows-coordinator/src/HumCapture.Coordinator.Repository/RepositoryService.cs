@@ -209,7 +209,7 @@ public sealed partial class RepositoryService
 
     /// <summary>
     /// Observes all six repository authorities and records one exact automatic
-    /// startup reconciliation within the implemented STAGED_VERIFIED/MOVED boundary.
+    /// startup reconciliation within the implemented early and committed boundaries.
     /// </summary>
     public RepositoryStartupReconciliationSnapshot ReconcileStartupTransaction(
         string rootPath,

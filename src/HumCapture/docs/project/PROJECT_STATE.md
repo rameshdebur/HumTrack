@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** Prior accepted slices and I0.4B-C1–C7 are implemented at their recorded evidence levels  
-**Tags:** I0.4B-C7 | WINDOWS COORDINATOR | REPOSITORY CORE | STARTUP RECOVERY  
+**Status:** Prior accepted slices and I0.4B-C1–C8 are implemented at their recorded evidence levels  
+**Tags:** I0.4B-C8 | WINDOWS COORDINATOR | STARTUP ORCHESTRATION | BOUNDED PASS  
 **Last meaningful update:** 2026-09-12
 
 ## Objective
@@ -31,7 +31,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   slices exist, with C5 catalog publication and C6 final commit through `COMMITTED`.
   C7 adds paginated startup discovery and recovery for `CATALOGED` and
   `COMMITTED`, alongside C4 support for `STAGED_VERIFIED`, `COMMITTING`
-  and `MOVED`; no host startup orchestration, UI,
+  and `MOVED`. C8 supplies a host-callable bounded startup entry point in the
+  existing assembly; no executable host, UI,
   subject service, collection transport,
   operator/quarantine recovery, receipt, cleanup or Android runtime
   exists.
@@ -267,8 +268,14 @@ at startup, preserving any valid orphan commit record's bytes and audit fields.
 Committed packages require fresh evidence checks, with retained confirmation
 observations and no state revision increase. Startup replay also revalidates
 current evidence. HC-REP-RUNTIME-077–087 pass (87 repository tests total).
-See HC-CHG-20260912-012 and HC-VR-I0-4B-C7-001. Host lifecycle orchestration,
-automatic MOVED-to-CATALOGED publication and receipt integration remain open.
+See HC-CHG-20260912-012 and HC-VR-I0-4B-C7-001.
+C8 implements RunStartupPass: compatibility/open, Windows identity, one bounded
+candidate page, per-item recovery/error results and cancellation between
+transactions. The approved C8 engineering scope uses the accepted design,
+requirements, roles/governance and preliminary India baseline recorded in
+HC-CHG-20260912-013. HC-REP-RUNTIME-088–095 pass (95 runtime tests total);
+see HC-VR-I0-4B-C8-001. There is still no executable host or capture startup gate.
+Automatic MOVED-to-CATALOGED publication and receipt integration remain open.
 
 - Android capture node: Kotlin, Camera2, MediaCodec/MediaMuxer, IMU, local master, RTP preview, control and resumable transfer services.
 - Windows coordinator: .NET/Avalonia, headless coordinator host, SQLite operational catalog, subject/session/trial repository, transfer/verification/quality services.
