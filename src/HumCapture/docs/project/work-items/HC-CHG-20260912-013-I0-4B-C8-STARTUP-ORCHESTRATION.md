@@ -2,7 +2,7 @@
 
 **Change ID:** HC-CHG-20260912-013  
 **Title:** C8 bounded Coordinator startup entry point  
-**State:** Local implementation verified; CI and independent review pending  
+**State:** Local and remote implementation verified; independent review pending  
 **Date:** 2026-09-12
 
 User authorization: "lets do it" following the proposal to connect recovery
@@ -38,3 +38,6 @@ No independent or regulatory approval is implied.
 HC-REP-RUNTIME-088–095 pass; total 95 runtime tests, 91 contract tests and
 6 SBOM tests. Release build passes with zero warnings/errors. No new dependency.
 See HC-VR-I0-4B-C8-001 for limitations and CI evidence.
+
+Implementation commit: `00a2618ec67b9d42bd1828289f7274777a685bc7`.
+CI push `34688563084` and PR `34688565521` passed on this source.
