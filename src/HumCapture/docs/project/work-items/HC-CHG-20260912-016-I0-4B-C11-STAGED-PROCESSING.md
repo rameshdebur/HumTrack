@@ -2,7 +2,7 @@
 
 **ID:** HC-CHG-20260912-016  
 **Date:** 2026-09-12  
-**State:** Local engineering verification passed; CI/independent review pending
+**State:** Local and remote engineering verification passed; independent review pending
 
 User authorized connecting normal staged-package processing to the host.
 Primary owner: Coordinator/repository engineer. Affected: Architect, QA,
@@ -25,3 +25,6 @@ AI contribution: implementation, tests, review and documentation.
 
 HC-REP-RUNTIME-110–117 and all 117 runtime tests pass; 91 contract tests,
 six SBOM tests and Release build/static checks pass. See HC-VR-I0-4B-C11-001.
+
+Implementation: `bdd02bc3abea0415f1a6c0c9dc017a16c3aabb00`.
+Push CI `34696499739` and PR CI `34696502341` passed on this source.
