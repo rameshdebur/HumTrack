@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** Prior accepted slices and I0.4B-C1–C9 are implemented at their recorded evidence levels  
-**Tags:** I0.4B-C9 | WINDOWS COORDINATOR | EXECUTABLE HOST | STARTUP  
+**Status:** Prior accepted slices and I0.4B-C1–C10 are implemented at their recorded evidence levels  
+**Tags:** I0.4B-C10 | REPOSITORY RECOVERY | AUTOMATIC CATALOGING  
 **Last meaningful update:** 2026-09-12
 
 ## Objective
@@ -13,6 +13,9 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C10 automatic cataloging is authorized within the existing engineering baseline;
+  scope and architecture review are recorded in HC-CHG-20260912-015.
 
 - ARD discussion: agreed.
 - PRD discussion: agreed.
@@ -279,7 +282,12 @@ under ADR-0023 and HC-CHG-20260912-014, using the existing engineering
 design/requirements/governance baseline. HC-REP-RUNTIME-096–102 pass as child
 processes; all 102 runtime tests pass. There is no resident host, capture startup
 gate or UI. See HC-VR-I0-4B-C9-001.
-Automatic MOVED-to-CATALOGED publication and receipt integration remain open.
+C10 adds automatic MOVED-to-CATALOGED publication with six retained observations
+and STARTUP reconciliation in the same database transaction. Later finalization
+verifies that publication history; exact startup replay rechecks current evidence.
+The host performs one action per package per pass. HC-REP-RUNTIME-103–109 pass
+(109 runtime tests total); see HC-VR-I0-4B-C10-001. Receipt integration and
+normal move continuation from STAGED_VERIFIED remain separate work.
 
 - Android capture node: Kotlin, Camera2, MediaCodec/MediaMuxer, IMU, local master, RTP preview, control and resumable transfer services.
 - Windows coordinator: .NET/Avalonia, headless coordinator host, SQLite operational catalog, subject/session/trial repository, transfer/verification/quality services.

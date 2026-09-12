@@ -234,9 +234,17 @@ public sealed partial class RepositoryService
                 {
                     RevalidateRetainedCommit(opened, catalogPath, request.TransactionId);
                 }
+                else if (replay.ResultState == "CATALOGED")
+                {
+                    RevalidateStartupCatalog(opened, catalogPath, request.TransactionId);
+                }
                 return replay;
             }
             var context = RepositoryCatalog.ReadCommitContext(catalogPath, request.TransactionId, opened.Descriptor.RepositoryId);
+            if (context.State == "MOVED" && request.ResultTransitionId is not null)
+            {
+                return CompleteStartupCatalog(opened, catalogPath, context, request);
+            }
             if (context.State is "CATALOGED" or "COMMITTED")
             {
                 return ReconcileLaterStartup(opened, catalogPath, context, request);

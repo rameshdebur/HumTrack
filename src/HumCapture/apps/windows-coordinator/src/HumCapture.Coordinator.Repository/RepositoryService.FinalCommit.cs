@@ -39,9 +39,7 @@ public sealed partial class RepositoryService
             }
             var replay = context.State == "COMMITTED";
             var catalogRevision = context.Revision - (replay ? 1 : 0);
-            RepositoryCatalog.RequireExactNormalTransition(database, new(publication.TransactionId,
-                catalogRevision - 1, catalogRevision, "MOVED", "CATALOGED", publication.TransitionId,
-                publication.OperationId, publication.ActorWindowsAccount, Utc(publication.RecordedAt)));
+            RepositoryCatalog.RequirePublicationHistory(database, context, publication, catalogRevision);
             RepositoryCatalog.RequirePublishedCatalog(database, context, publication, forFinalization: true);
             RequireMovedPackage(opened.RootPath, context);
             var relative = $"subjects/{Id(context.SubjectId)}/sessions/{Id(context.SessionId)}/records/commits/{Id(request.CommitRecordId)}.json";

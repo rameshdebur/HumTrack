@@ -94,7 +94,7 @@ public sealed partial class RepositoryService
     {
         try
         {
-            var changesState = candidate.State is "COMMITTING" or "CATALOGED";
+            var changesState = candidate.State is "COMMITTING" or "MOVED" or "CATALOGED";
             var now = DateTimeOffset.UtcNow;
             var result = ReconcileStartupTransaction(root, new()
             {

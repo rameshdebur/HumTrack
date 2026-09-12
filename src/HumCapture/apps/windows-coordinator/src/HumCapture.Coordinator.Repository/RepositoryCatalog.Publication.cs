@@ -5,7 +5,8 @@ namespace HumCapture.Coordinator.Repository;
 internal static partial class RepositoryCatalog
 {
     public static void PublishCatalog(string databasePath, JournalCommitContext context,
-        RepositoryCatalogPublicationRequest request, JournalNormalTransition transition)
+        RepositoryCatalogPublicationRequest request, JournalNormalTransition transition,
+        JournalStartupReconciliation? startup = null)
     {
         try
         {
@@ -59,6 +60,15 @@ internal static partial class RepositoryCatalog
                     throw InvalidCatalog("Catalog publication did not resolve one transaction.");
                 }
             }
+            if (startup is not null)
+            {
+                InsertReconciliation(connection, transaction, startup);
+                foreach (var observation in startup.Observations)
+                {
+                    InsertObservation(connection, transaction, startup.ReconciliationId, observation);
+                }
+                InsertReconciliationTransition(connection, transaction, startup);
+            }
             using (var update = connection.CreateCommand())
             {
                 update.Transaction = transaction;
@@ -73,7 +83,16 @@ internal static partial class RepositoryCatalog
                       $to_state, $operation_id, 'NORMAL', 'SYSTEM', $actor_windows_account, $recorded_utc);
                     """;
                 AddTransitionParameters(update, transition);
-                if (update.ExecuteNonQuery() != 2)
+                if (startup is not null)
+                {
+                    update.CommandText = """
+                        UPDATE repository_transactions SET state = $to_state, revision = $next_revision,
+                          state_changed_utc = $recorded_utc, last_reconciliation_id = $reconciliation_id
+                        WHERE transaction_id = $transaction_id AND state = $from_state AND revision = $expected_revision;
+                        """;
+                    update.Parameters.AddWithValue("$reconciliation_id", Id(startup.ReconciliationId));
+                }
+                if (update.ExecuteNonQuery() != (startup is null ? 2 : 1))
                 {
                     throw new RepositoryException(RepositoryErrorCode.JournalConflict, "Catalog state changed during publication.");
                 }

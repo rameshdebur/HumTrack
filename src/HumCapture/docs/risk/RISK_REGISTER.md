@@ -1,5 +1,14 @@
 # HumCapture Preliminary Risk Register
 
+C10 control update (2026-09-12), HC-RISK-022/030/031: automatic cataloging verifies
+exact moved evidence and absent catalog/commit authority before atomically saving
+catalog, six observations, reconciliation and transition. Unexpected commit
+material is retained and rejected. Later finalization verifies recovered history
+and observations; replay after final commit verifies final evidence too.
+HC-REP-RUNTIME-103–109 pass, including rollback and synthetic history corruption.
+The corruption test deliberately bypasses the append-only trigger only in its
+temporary fixture. One-action-per-pass and all receipt/cleanup limits remain.
+
 C9 control update (2026-09-12), HC-RISK-022/030/031: executable startup requires
 an explicit existing root, emits controlled output/exit codes and never creates
 missing repositories. A named same-session mutex refuses overlapping cooperating

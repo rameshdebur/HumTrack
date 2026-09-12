@@ -29,7 +29,7 @@ internal static partial class RepositoryCatalog
             SELECT c.catalog_entry_id, x.transition_id, x.operation_id, x.actor_windows_account, x.recorded_utc
             FROM repository_package_catalog c JOIN repository_transitions x ON x.transaction_id = c.transaction_id
             WHERE c.transaction_id = $id AND x.from_state = 'MOVED' AND x.to_state = 'CATALOGED'
-              AND x.trigger = 'NORMAL' AND x.actor_kind = 'SYSTEM';
+              AND x.trigger IN ('NORMAL', 'STARTUP') AND x.actor_kind = 'SYSTEM';
             """;
         command.Parameters.AddWithValue("$id", Id(transactionId));
         using var reader = command.ExecuteReader();

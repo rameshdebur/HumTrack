@@ -74,8 +74,8 @@ Exact reconciliation replay still checks current committed evidence.
 An interrupted unindexed commit retains its original bytes and audit fields;
 the new recovery audit records the current actor/time separately. Ambiguous,
 malformed or conflicting records block recovery and are preserved. Missing
-committed records are never recreated. Host startup orchestration, automatic
-MOVED-to-CATALOGED publication and receipts remain separate integration work.
+committed records are never recreated. C8/C9 add host startup orchestration and
+C10 adds automatic MOVED-to-CATALOGED publication. Receipts remain separate work.
 
 C8 supplies `RunStartupPass(root, afterTransactionId, maxTransactions,
 cancellationToken)` as the host-callable startup entry point in this assembly.
@@ -144,6 +144,25 @@ not protect against direct library writers, other sessions or path aliases.
 Do not run concurrent writers through these other routes.
 No installer, background service, capture-readiness gate or controlled release
 is supplied. See ADR-0023 and HC-VR-I0-4B-C9-001.
+
+## Automatic catalog recovery (C10)
+
+The host now advances a directly verified MOVED package to CATALOGED using
+COMPLETE_CATALOGING. Catalog row, six pre-action observations, STARTUP
+reconciliation and state transition are atomic. A later fresh pass can finalize
+the CATALOGED package, and another can confirm COMMITTED. One pass still performs
+only one action per package; Completed remains scan exhaustion, not final commit.
+
+Direct ReconcileStartupTransaction callers select MOVED catalog recovery by
+supplying both result transition and operation IDs. Existing calls with neither
+retain their observation-only NO_ACTION behavior. Exact request replay rechecks
+the catalog, history and package; if already COMMITTED it also rechecks final
+evidence. Normal PublishMovedPackage replay semantics remain unchanged.
+Recovered STARTUP publication history is not relabelled NORMAL.
+
+Unexpected matching commit files, catalog conflict, changed/missing evidence
+and unsafe paths block recovery without overwrite or deletion. STAGED_VERIFIED
+still needs normal move continuation. No receipt or source cleanup is authorized.
 
 C5 adds `PublishMovedPackage`: it revalidates the final package and verification
 record, then inserts the immutable package catalog row and advances the journal

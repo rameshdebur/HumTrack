@@ -109,7 +109,14 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-099 host process reports bounded continuation", HostContinuation),
     ("HC-REP-RUNTIME-100 host process reports inspection only", HostReadOnly),
     ("HC-REP-RUNTIME-101 host process preserves malformed evidence", HostFailure),
-    ("HC-REP-RUNTIME-102 host process refuses overlapping instance", HostBusy)
+    ("HC-REP-RUNTIME-102 host process refuses overlapping instance", HostBusy),
+    ("HC-REP-RUNTIME-103 startup cataloging persists six observations and replays", StartupCatalogCompletes),
+    ("HC-REP-RUNTIME-104 host catalog recovery continues through final commit", StartupCatalogHostChain),
+    ("HC-REP-RUNTIME-105 startup cataloging rolls back all database writes", StartupCatalogRollback),
+    ("HC-REP-RUNTIME-106 changed moved package blocks catalog recovery", StartupCatalogTamper),
+    ("HC-REP-RUNTIME-107 unexpected commit file blocks catalog recovery", StartupCatalogUnexpectedCommit),
+    ("HC-REP-RUNTIME-108 altered catalog recovery observations block final commit", StartupCatalogHistoryTamper),
+    ("HC-REP-RUNTIME-109 catalog recovery replay rechecks final evidence", StartupCatalogReplayAfterCommit)
 };
 
 var failures = 0;
@@ -138,6 +145,141 @@ static RepositoryStartupReconciliationRequest LaterStartup(RepositoryFinalCommit
     StartedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 0, TimeSpan.Zero),
     FinishedAt = new DateTimeOffset(2026, 9, 12, 12, 0, 1, TimeSpan.Zero)
 };
+
+static StagedVerifiedPackageRegistration PrepareMoved(string root, RepositoryService service)
+{
+    var fixture = CreateStagedFixture(root);
+    service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+    service.MoveStagedVerifiedPackage(root, CreateMoveRequest(fixture.Registration));
+    return fixture.Registration;
+}
+
+static void StartupCatalogCompletes()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = PrepareMoved(root, service);
+        var request = CreateReconciliationRequest(registration, true);
+        var result = service.ReconcileStartupTransaction(root, request);
+        Equal("COMPLETE_CATALOGING", result.ActionCode);
+        Equal("CATALOGED", result.ResultState);
+        Equal(4L, result.Revision);
+        Equal(6, result.Observations.Count);
+        Equal(1L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+        var before = DirectoryFingerprint(root);
+        Equal(true, new RepositoryService().ReconcileStartupTransaction(root, request).WasAlreadyRecorded);
+        Equal(before, DirectoryFingerprint(root));
+    });
+}
+
+static void StartupCatalogHostChain()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareMoved(root, service);
+        foreach (var expected in new[] { "COMPLETE_CATALOGING", "FINALIZE_COMMIT", "CONFIRM_IDEMPOTENT_COMMIT" })
+        {
+            var run = RunHost("startup", "--root", root);
+            using var output = run.Output;
+            Equal(0, run.ExitCode);
+            Equal(expected, output.RootElement.GetProperty("items")[0].GetProperty("action").GetString()!);
+        }
+        Equal(5L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+    });
+}
+
+static void StartupCatalogRollback()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = PrepareMoved(root, service);
+        AddTransitionAbortTrigger(root, "CATALOGED");
+        var request = CreateReconciliationRequest(registration, true);
+        Throws(RepositoryErrorCode.CatalogWriteFailed, () => service.ReconcileStartupTransaction(root, request));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_reconciliations"));
+        Equal(3L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite))
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText = "DROP TRIGGER test_abort_cataloged";
+            command.ExecuteNonQuery();
+        }
+        Equal("CATALOGED", service.ReconcileStartupTransaction(root, request).ResultState);
+    });
+}
+
+static void StartupCatalogTamper()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = PrepareMoved(root, service);
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly))
+        {
+            File.AppendAllText(Path.Combine(Absolute(root, ScalarText(connection,
+                "SELECT destination_relative_path FROM repository_transactions")), "events.json"), "changed");
+        }
+        Throws(RepositoryErrorCode.EvidenceMismatch,
+            () => service.ReconcileStartupTransaction(root, CreateReconciliationRequest(registration, true)));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+    });
+}
+
+static void StartupCatalogUnexpectedCommit()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = PrepareMoved(root, service);
+        var id = TestId(9991).ToString("D");
+        var directory = Path.Combine(root, "subjects", registration.SubjectId.ToString("D"), "sessions",
+            registration.SessionId.ToString("D"), "records", "commits");
+        Directory.CreateDirectory(directory);
+        var path = Path.Combine(directory, id + ".json");
+        File.WriteAllText(path, JsonSerializer.Serialize(new { transaction_id = registration.TransactionId.ToString("D"), commit_record_id = id }));
+        var before = Hash(path);
+        Throws(RepositoryErrorCode.CommitRecoveryRequired,
+            () => service.ReconcileStartupTransaction(root, CreateReconciliationRequest(registration, true)));
+        Equal(before, Hash(path));
+        Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_package_catalog"));
+    });
+}
+
+static void StartupCatalogHistoryTamper()
+{
+    WithRepository((root, service) =>
+    {
+        PrepareMoved(root, service);
+        service.RunStartupPass(root);
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadWrite))
+        {
+            using var command = connection.CreateCommand();
+            command.CommandText = "DROP TRIGGER repository_observation_no_update; UPDATE repository_reconciliation_observations SET disposition = 'MISMATCH' WHERE authority = 'JOURNAL'";
+            command.ExecuteNonQuery();
+        }
+        var result = service.RunStartupPass(root);
+        Equal(true, result.RequiresOperatorAttention);
+        Equal(RepositoryErrorCode.JournalConflict, result.Items[0].ErrorCode!.Value);
+        Equal(4L, ScalarLongAtRoot(root, "SELECT revision FROM repository_transactions"));
+    });
+}
+
+static void StartupCatalogReplayAfterCommit()
+{
+    WithRepository((root, service) =>
+    {
+        var registration = PrepareMoved(root, service);
+        var request = CreateReconciliationRequest(registration, true);
+        service.ReconcileStartupTransaction(root, request);
+        Equal(false, service.RunStartupPass(root).RequiresOperatorAttention);
+        Equal(true, service.ReconcileStartupTransaction(root, request).WasAlreadyRecorded);
+        using (var connection = OpenCatalog(root, SqliteOpenMode.ReadOnly))
+        {
+            File.Delete(Absolute(root, ScalarText(connection,
+                "SELECT record_relative_path FROM repository_record_index WHERE record_kind = 'commits'")));
+        }
+        Throws(RepositoryErrorCode.CommitRecoveryRequired, () => service.ReconcileStartupTransaction(root, request));
+    });
+}
 
 static (int ExitCode, JsonDocument Output) RunHost(params string[] arguments)
 {
