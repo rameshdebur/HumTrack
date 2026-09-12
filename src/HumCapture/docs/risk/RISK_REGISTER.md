@@ -1,5 +1,15 @@
 # HumCapture Preliminary Risk Register
 
+C6 control update (2026-09-12), HC-RISK-022/030/031: final commit requires
+exact package, verification, catalog, immutable record, index, and journal
+agreement. Index/reconciliation/observations/final transition commit atomically.
+HC-REP-RUNTIME-064–076 cover completion, replay, interrupted publication,
+missing/altered evidence, incompatible state, conflicting identities, read-only
+mode, and isolation from startup replay. Failure preserves material and returns
+a recovery error; persistent operator disposition remains open. Caller request
+retention is required for retry. No receipt, source deletion, HIL or power-loss
+qualification is conferred.
+
 C5 control update (2026-09-12), HC-RISK-022/030/031: publication revalidates the
 destination and immutable verification evidence, then atomically writes the
 catalog row, contiguous transition and current state. HC-REP-RUNTIME-057–063

@@ -1,7 +1,7 @@
 # HumCapture Project State
 
-**Status:** I0.1A-I, I0.2A, I0.3A-C, I0.4A, I0.4B-A/B1/B2/B3A/B3B/B3C and I0.4B-C1/C2/C3/C4/C5 are implemented/accepted at their recorded evidence levels  
-**Tags:** I0.4B-C5 | WINDOWS COORDINATOR | REPOSITORY CORE | CATALOG PUBLICATION  
+**Status:** Prior accepted slices and I0.4B-C1–C6 are implemented at their recorded evidence levels  
+**Tags:** I0.4B-C6 | WINDOWS COORDINATOR | REPOSITORY CORE | COMMIT RECORD | FINAL RECONCILIATION  
 **Last meaningful update:** 2026-09-12
 
 ## Objective
@@ -28,11 +28,11 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 - Application source implementation: the approved Windows Coordinator
   I0.4B-C1 initialize/open, I0.4B-C2 verified-staging journal, I0.4B-C3
   durable commit-intent/atomic-move and I0.4B-C4 bounded startup reconciliation
-  slices exist, with C5 normal catalog publication through `CATALOGED`.
+  slices exist, with C5 catalog publication and C6 final commit through `COMMITTED`.
   C4 startup reconciliation supports `STAGED_VERIFIED`, `COMMITTING`
   and `MOVED`; no UI,
-  subject service, collection transport, final
-  `COMMITTED` decision, operator/quarantine recovery, receipt, cleanup or Android runtime
+  subject service, collection transport,
+  operator/quarantine recovery, receipt, cleanup or Android runtime
   exists.
 - P0.2K evidence integration: completed. Nine pre-integration P0.2A-J report files are hashed;
   both retained P0.2J runs verify in the controlled vault. Earlier P0.2 primary
@@ -254,8 +254,14 @@ and exact replay after reopening. HC-REP-RUNTIME-057–063 cover publication,
 rollback, wrong-state, tampering, existing-conflict, replay-conflict and
 read-only cases; all 63 repository tests and 91 contract tests pass locally.
 See HC-CHG-20260912-010 and HC-VR-I0-4B-C5-001 for scope and evidence.
-Final commit publication/reconciliation and startup support for later states
-remain the next repository implementation work.
+C6 now publishes the immutable commit record and atomically records its index,
+six authority observations, PRE_RECEIPT reconciliation, and COMMITTED transition.
+Exact replay revalidates the package, verification, catalog, record, index and
+journal. Missing committed evidence is refused without reconstruction.
+HC-REP-RUNTIME-064–076 pass, bringing repository coverage to 76 tests.
+See HC-CHG-20260912-011 and HC-VR-I0-4B-C6-001.
+The caller must retain the complete request for retry; automatic startup
+enumeration/recovery of later states and receipt integration remain open.
 
 - Android capture node: Kotlin, Camera2, MediaCodec/MediaMuxer, IMU, local master, RTP preview, control and resumable transfer services.
 - Windows coordinator: .NET/Avalonia, headless coordinator host, SQLite operational catalog, subject/session/trial repository, transfer/verification/quality services.

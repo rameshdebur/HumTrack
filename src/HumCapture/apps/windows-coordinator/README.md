@@ -55,6 +55,15 @@ receipts, backup/restore, UI, or migration.
 
 ## Verification
 
+C6 adds `CompleteCatalogedPackage`, taking the original catalog publication
+and retained finalization identities/timestamps. It publishes a versioned
+immutable commit record, verifies its bytes and package evidence, then saves
+the index, six observations, PRE_RECEIPT reconciliation and COMMITTED transition
+atomically. Exact retry reuses a retained file after a database rollback.
+Replay revalidates existing evidence and never recreates a missing committed
+record. Callers must retain the request across interruption; automatic startup
+discovery and receipts remain later integration work.
+
 C5 adds `PublishMovedPackage`: it revalidates the final package and verification
 record, then inserts the immutable package catalog row and advances the journal
 from `MOVED` to `CATALOGED` in one SQLite transaction. Exact replay checks the

@@ -74,4 +74,5 @@ internal sealed record JournalStartupReconciliation(
     string StartedUtc,
     string FinishedUtc,
     string Explanation,
-    IReadOnlyList<RepositoryAuthorityObservation> Observations);
+    IReadOnlyList<RepositoryAuthorityObservation> Observations,
+    string Trigger = "STARTUP");

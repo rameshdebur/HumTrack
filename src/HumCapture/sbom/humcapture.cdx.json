@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:73f8f6af-cdc9-50ad-955d-34c2ba208df1",
+  "serialNumber": "urn:uuid:15f459ef-e360-5598-b569-7c91ca319c68",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-12T07:16:40.526Z",
+    "timestamp": "2026-09-12T09:22:10.421Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-i0.4b-c5",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c5",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c5",
+      "version": "0.1.0-i0.4b-c6",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c6",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c6",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -105,9 +105,9 @@
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-i0.4b-c5",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c5",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c5",
+      "version": "0.1.0-i0.4b-c6",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c6",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c6",
       "scope": "excluded",
       "hashes": [
         {
@@ -1076,7 +1076,7 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c5",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c6",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
@@ -1123,10 +1123,10 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c5",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c6",
       "dependsOn": [
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c5",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c6",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
         "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",

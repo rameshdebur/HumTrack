@@ -16,7 +16,7 @@ internal static partial class RepositoryCatalog
         command.CommandText = """
             SELECT r.transaction_id, r.prior_state, r.result_state, r.action_code,
                    r.actor_windows_account, r.started_utc, r.finished_utc,
-                   r.result_transition_id, t.revision, x.operation_id
+                   r.result_transition_id, t.revision, x.operation_id, r.trigger
               FROM repository_reconciliations r
               JOIN repository_transactions t ON t.transaction_id = r.transaction_id
               LEFT JOIN repository_transitions x ON x.transition_id = r.result_transition_id
@@ -30,7 +30,8 @@ internal static partial class RepositoryCatalog
         }
         var transitionId = reader.IsDBNull(7) ? null : reader.GetString(7);
         var operationId = reader.IsDBNull(9) ? null : reader.GetString(9);
-        if (reader.GetString(0) != Id(request.TransactionId)
+        if (reader.GetString(10) != "STARTUP"
+            || reader.GetString(0) != Id(request.TransactionId)
             || reader.GetString(4) != request.ActorWindowsAccount
             || reader.GetString(5) != FormatUtc(request.StartedAt)
             || reader.GetString(6) != FormatUtc(request.FinishedAt)
@@ -150,7 +151,7 @@ internal static partial class RepositoryCatalog
               reconciliation_id, schema_version, transaction_id, trigger, started_utc,
               finished_utc, actor_kind, actor_windows_account, prior_state, result_state,
               action_code, automatic, blocking_reason_codes_json, explanation, result_transition_id
-            ) VALUES ($reconciliation_id, '1.0.0', $transaction_id, 'STARTUP', $started_utc,
+            ) VALUES ($reconciliation_id, '1.0.0', $transaction_id, $trigger, $started_utc,
               $finished_utc, 'SYSTEM', $actor, $prior_state, $result_state,
               $action_code, 1, '[]', $explanation, $result_transition_id);
             """;
@@ -194,7 +195,7 @@ internal static partial class RepositoryCatalog
               from_state, to_state, operation_id, trigger, actor_kind,
               actor_windows_account, reconciliation_id, reason_code, reason, recorded_utc
             ) VALUES ($result_transition_id, '1.0.0', $transaction_id, $next_revision,
-              $prior_state, $result_state, $result_operation_id, 'STARTUP', 'SYSTEM',
+              $prior_state, $result_state, $result_operation_id, $trigger, 'SYSTEM',
               $actor, $reconciliation_id, 'EXACT_EVIDENCE_RECONCILED', $explanation, $finished_utc);
             """;
         AddReconciliationParameters(command, value);
@@ -279,6 +280,7 @@ internal static partial class RepositoryCatalog
     private static void AddReconciliationParameters(SqliteCommand command, JournalStartupReconciliation value)
     {
         command.Parameters.AddWithValue("$reconciliation_id", Id(value.ReconciliationId));
+        command.Parameters.AddWithValue("$trigger", value.Trigger);
         command.Parameters.AddWithValue("$transaction_id", Id(value.TransactionId));
         command.Parameters.AddWithValue("$expected_revision", value.ExpectedRevision);
         command.Parameters.AddWithValue("$prior_state", value.PriorState);

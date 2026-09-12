@@ -89,7 +89,7 @@ internal static partial class RepositoryCatalog
     }
 
     public static void RequirePublishedCatalog(string databasePath, JournalCommitContext context,
-        RepositoryCatalogPublicationRequest request)
+        RepositoryCatalogPublicationRequest request, bool forFinalization = false)
     {
         using var connection = new SqliteConnection(new SqliteConnectionStringBuilder
         {
@@ -100,7 +100,7 @@ internal static partial class RepositoryCatalog
         command.CommandText = """
             SELECT count(*) FROM repository_package_catalog c
             JOIN repository_transactions t ON c.transaction_id = t.transaction_id
-            WHERE t.transaction_id = $transaction_id AND t.state = 'CATALOGED'
+            WHERE t.transaction_id = $transaction_id AND (t.state = 'CATALOGED' OR ($finalization = 1 AND t.state = 'COMMITTED'))
               AND c.catalog_entry_id = $entry_id AND c.schema_version = '1.0.0'
               AND c.repository_id = t.repository_id AND c.subject_id = t.subject_id
               AND c.session_id = t.session_id AND c.trial_id = t.trial_id
@@ -112,12 +112,13 @@ internal static partial class RepositoryCatalog
               AND c.verification_record_id = t.verification_record_id
               AND c.verification_record_content_sha256 = t.verification_record_content_sha256
               AND c.catalog_revision = 1 AND c.cataloged_utc = $recorded_utc
-              AND t.commit_record_id IS NULL AND t.commit_record_content_sha256 IS NULL
-              AND NOT EXISTS (SELECT 1 FROM repository_record_index r WHERE r.record_kind = 'commits' AND r.package_id = t.package_id);
+              AND ($finalization = 1 OR (t.commit_record_id IS NULL AND t.commit_record_content_sha256 IS NULL
+              AND NOT EXISTS (SELECT 1 FROM repository_record_index r WHERE r.record_kind = 'commits' AND r.package_id = t.package_id)));
             """;
         command.Parameters.AddWithValue("$transaction_id", Id(context.TransactionId));
         command.Parameters.AddWithValue("$entry_id", Id(request.CatalogEntryId));
         command.Parameters.AddWithValue("$recorded_utc", FormatUtc(request.RecordedAt));
+        command.Parameters.AddWithValue("$finalization", forFinalization ? 1 : 0);
         if ((long)(command.ExecuteScalar() ?? 0L) != 1)
         {
             throw new RepositoryException(RepositoryErrorCode.JournalConflict, "Catalog entry does not exactly match the publication request and journal.");
