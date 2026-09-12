@@ -1,0 +1,5 @@
+{
+  "fixture_kind": "repository-transaction",
+  "mutation": "destination_relative_path",
+  "invalid_value": "C:\\Subjects\\capture"
+}

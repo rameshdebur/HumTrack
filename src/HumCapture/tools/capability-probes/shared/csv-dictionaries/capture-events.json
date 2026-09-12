@@ -1,0 +1,16 @@
+{
+  "dictionary_name": "capture-events",
+  "evidence_format_version": "1.0.0",
+  "columns": [
+    { "name": "run_id", "type": "uuid", "required": true, "unit": null, "description": "Owning probe run." },
+    { "name": "sequence", "type": "uint64", "required": true, "unit": "count", "description": "Probe-assigned event sequence." },
+    { "name": "timestamp", "type": "int64", "required": true, "unit": "declared", "description": "Event timestamp." },
+    { "name": "timestamp_domain", "type": "enum:device_monotonic|host_qpc|host_arrival|unknown", "required": true, "unit": null, "description": "Event clock domain." },
+    { "name": "timestamp_unit", "type": "enum:ns|us|ms|s|ticks_100ns", "required": true, "unit": null, "description": "Unit of timestamp." },
+    { "name": "stream_id", "type": "string", "required": true, "unit": null, "description": "Affected capture stream." },
+    { "name": "event_type", "type": "enum:capture_started|device_disconnected|pre_disconnect_finalized|device_reconnected|post_reconnect_capture_started|post_reconnect_finalized", "required": true, "unit": null, "description": "Required disconnect/reconnect lifecycle event." },
+    { "name": "artifact_relative_path", "type": "string", "required": false, "unit": null, "description": "Finalized media artifact for finalization events." },
+    { "name": "status", "type": "enum:ok|failed|unknown", "required": true, "unit": null, "description": "Observed event result." },
+    { "name": "notes", "type": "string", "required": false, "unit": null, "description": "Synthetic-test annotation or limitation." }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "capture_attempt_id": "10000000-0000-4000-8000-000000000001",
+  "camera_stream_id": "10000000-0000-4000-8000-000000000002",
+  "camera_type": "WINDOWS_UVC",
+  "identity": {
+    "manufacturer": "Synthetic test manufacturer",
+    "model": "Fixed-rate UVC fixture",
+    "humcapture_device_id": "50000000-0000-4000-8000-000000000001",
+    "humcapture_camera_id": "50000000-0000-4000-8000-000000000002",
+    "usb_vendor_id": "046D",
+    "usb_product_id": "082D",
+    "driver_name": "Synthetic fixture driver",
+    "driver_version": "1.0.0"
+  },
+  "selected_mode": {
+    "width": 1920,
+    "height": 1080,
+    "pixel_format": "H264",
+    "codec": "avc1",
+    "advertised_fps_numerator": 30,
+    "advertised_fps_denominator": 1,
+    "rate_control_class": "FIXED"
+  },
+  "negotiated_mode": {
+    "width": 1920,
+    "height": 1080,
+    "pixel_format": "H264",
+    "codec": "avc1",
+    "advertised_fps_numerator": 30,
+    "advertised_fps_denominator": 1,
+    "rate_control_class": "FIXED"
+  },
+  "observed_timing": {
+    "record_count": 3,
+    "accepted_frame_count": 3,
+    "observed_hz": 30.0000003,
+    "timestamp_regressions": 0,
+    "sequence_gaps": 0,
+    "duplicates": 0,
+    "p95_interval_ms": 33.333333,
+    "max_interval_ms": 33.333333
+  },
+  "timestamp_provenance": "MF_DEVICE_TIMESTAMP",
+  "timestamp_source_detail": "UVC_DEVICE",
+  "orientation": {
+    "sensor_orientation_degrees": 0,
+    "display_rotation_degrees": 0,
+    "lens_facing": "EXTERNAL",
+    "preview_mirrored": false,
+    "recorded_video_rotation_degrees": 0
+  },
+  "lens": {
+    "zoom_ratio": 1,
+    "calibration_provenance": "REPORTED"
+  },
+  "unavailable_fields": [
+    { "field": "lens.focal_length_mm", "reason": "NOT_EXPOSED" },
+    { "field": "lens.physical_sensor_width_mm", "reason": "NOT_EXPOSED" }
+  ]
+}

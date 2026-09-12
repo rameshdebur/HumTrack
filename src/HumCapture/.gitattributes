@@ -1,0 +1,17 @@
+# Preserve deterministic source, schemas, fixtures, reports and hash-bound files.
+* text=auto eol=lf
+
+# Future binary capture/test assets must never receive text conversion.
+*.mp4 binary
+*.mov binary
+*.avi binary
+*.mkv binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+
+# Markdown uses two trailing spaces for deliberate hard line breaks. Existing
+# baseline documents also contain harmless blank lines at EOF.
+*.md whitespace=-blank-at-eol,-blank-at-eof
+*.vcxproj whitespace=-blank-at-eof

@@ -1,0 +1,5 @@
+{
+  "fixture_kind": "repository-reconciliation",
+  "mutation": "remove-authority",
+  "invalid_value": "COMMIT_RECORD"
+}

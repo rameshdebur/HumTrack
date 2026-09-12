@@ -1,0 +1,18 @@
+{
+  "name": "@humcapture/evidence-control",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Controlled local evidence vault and engineering release identity for HumCapture Phase 0.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "npm run test:contracts && npm run test:repository-runtime",
+    "test:contracts": "node --experimental-sqlite --test",
+    "test:repository-runtime": "dotnet run --project ../../apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj --configuration Release",
+    "vault": "node src/cli.js"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  }
+}

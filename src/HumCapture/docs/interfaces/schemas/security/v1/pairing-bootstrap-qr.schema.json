@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/security/v1/pairing-bootstrap-qr.schema.json",
+  "title": "HumCapture attended pairing QR bootstrap",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_id", "pairing_session_id", "device_id", "endpoint", "bootstrap_spki_sha256", "bootstrap_secret_b64url", "pairing_nonce_b64url", "issued_utc", "expires_utc", "manual_code"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "contract_id": { "const": "HC-IF-SEC-001" },
+    "pairing_session_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "device_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "endpoint": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "bootstrap_spki_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "bootstrap_secret_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{22,86}$" },
+    "pairing_nonce_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{22,86}$" },
+    "issued_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "expires_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "manual_code": { "type": "string", "pattern": "^[A-Z2-7]{4}(?:-[A-Z2-7]{4}){6}$" }
+  }
+}

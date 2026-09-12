@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/repository/v1/common.schema.json",
+  "title": "HumCapture repository common definitions",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "u64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$",
+      "maxLength": 20
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?![A-Za-z]:)(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*[<>:\"|?*\\u0000-\\u001f])[^/]+(?:/[^/]+)*$"
+    },
+    "windows_account": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\r\\n]+$"
+    },
+    "repository_state": {
+      "enum": [
+        "STAGED_VERIFIED",
+        "COMMITTING",
+        "MOVED",
+        "CATALOGED",
+        "COMMITTED",
+        "RECOVERY_REQUIRED",
+        "QUARANTINED"
+      ]
+    },
+    "trigger": {
+      "enum": ["NORMAL", "STARTUP", "RETRY", "PRE_RECEIPT", "OPERATOR"]
+    },
+    "actor_kind": {
+      "enum": ["SYSTEM", "OPERATOR"]
+    },
+    "observation_authority": {
+      "enum": [
+        "JOURNAL",
+        "STAGING_PACKAGE",
+        "DESTINATION_PACKAGE",
+        "CATALOG_LINKAGE",
+        "VERIFICATION_RECORD",
+        "COMMIT_RECORD"
+      ]
+    },
+    "observation_disposition": {
+      "enum": ["ABSENT", "MATCH", "MISMATCH", "UNREADABLE", "UNSAFE", "NOT_APPLICABLE"]
+    },
+    "action_code": {
+      "enum": [
+        "NO_ACTION",
+        "RETRY_FROM_STAGED",
+        "RESUME_AFTER_MOVE",
+        "COMPLETE_CATALOGING",
+        "FINALIZE_COMMIT",
+        "CONFIRM_IDEMPOTENT_COMMIT",
+        "RETRY_RECONCILIATION",
+        "QUARANTINE_CONFLICT",
+        "RETAIN_FOR_INVESTIGATION",
+        "EXPORT_DIAGNOSTICS"
+      ]
+    },
+    "reason_code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]{0,63}$"
+    },
+    "bounded_reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!.*(?:[A-Za-z]:\\\\|/Users/|/home/|authorization:[ ]*bearer|BEGIN[ ]+(?:RSA[ ]+|EC[ ]+|OPENSSH[ ]+)?PRIVATE[ ]+KEY)).*$"
+    }
+  }
+}

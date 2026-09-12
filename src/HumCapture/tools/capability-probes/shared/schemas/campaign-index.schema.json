@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humcapture.local/schemas/phase-0/1.0.0/campaign-index.schema.json",
+  "title": "HumCapture Phase 0 campaign index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format_name", "evidence_format_version", "campaign_id", "title", "created_utc", "probe_source_revisions", "runs"],
+  "properties": {
+    "format_name": { "const": "humcapture-phase0-campaign-index" },
+    "evidence_format_version": { "const": "1.0.0" },
+    "campaign_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$" },
+    "title": { "type": "string", "minLength": 1 },
+    "created_utc": { "type": "string", "format": "date-time" },
+    "probe_source_revisions": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } },
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["run_id", "procedure_id", "hardware_qualification", "evidence_reference", "manifest_sha256", "disposition"],
+        "properties": {
+          "run_id": { "type": "string", "format": "uuid" },
+          "procedure_id": { "type": "string", "pattern": "^HC-P0-[A-Z]+-[0-9]{3}$" },
+          "hardware_qualification": { "type": "boolean" },
+          "evidence_reference": { "$ref": "common.schema.json#/$defs/safeRelativePath" },
+          "manifest_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+          "disposition": { "type": "string", "enum": ["PASS", "CONDITIONAL", "FAIL", "INCONCLUSIVE"] }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "dictionary_name": "thermal-power-storage",
+  "evidence_format_version": "1.0.0",
+  "columns": [
+    { "name": "run_id", "type": "uuid", "required": true, "unit": null, "description": "Owning probe run." },
+    { "name": "sequence", "type": "uint64", "required": true, "unit": "count", "description": "Probe-assigned observation sequence." },
+    { "name": "timestamp", "type": "int64", "required": true, "unit": "declared", "description": "Observation timestamp." },
+    { "name": "timestamp_domain", "type": "enum:device_monotonic|android_elapsed_realtime|host_qpc|host_arrival|unknown", "required": true, "unit": null, "description": "Observation clock domain." },
+    { "name": "timestamp_unit", "type": "enum:ns|us|ms|s|ticks_100ns", "required": true, "unit": null, "description": "Unit of timestamp." },
+    { "name": "thermal_status", "type": "string", "required": true, "unit": null, "description": "Raw platform thermal-status label or code." },
+    { "name": "temperature_c", "type": "float64", "required": false, "minimum": -100, "maximum": 200, "unit": "degC", "description": "Measured temperature when exposed." },
+    { "name": "battery_percent", "type": "float64", "required": false, "minimum": 0, "maximum": 100, "unit": "percent", "description": "Battery state of charge." },
+    { "name": "battery_charging", "type": "boolean", "required": false, "unit": null, "description": "Whether external charging is reported." },
+    { "name": "available_storage_bytes", "type": "uint64", "required": true, "unit": "bytes", "description": "Available target storage." },
+    { "name": "write_latency_ms", "type": "float64", "required": false, "minimum": 0, "unit": "ms", "description": "Observed evidence or media write latency." },
+    { "name": "notes", "type": "string", "required": false, "unit": null, "description": "Synthetic-test annotation." }
+  ]
+}

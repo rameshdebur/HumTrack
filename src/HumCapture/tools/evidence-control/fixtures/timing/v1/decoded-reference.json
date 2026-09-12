@@ -1,0 +1,343 @@
+{
+  "schema_version": "1.0.0",
+  "vectors": [
+    {
+      "id": "HC-TIM-VEC-001",
+      "header": {
+        "major": 1,
+        "minor": 0,
+        "headerSize": 64,
+        "recordSize": 96,
+        "flags": 1,
+        "finalized": true,
+        "streamId": "10000000-0000-4000-8000-000000000002",
+        "captureId": "10000000-0000-4000-8000-000000000001",
+        "recordCount": "3"
+      },
+      "records": [
+        {
+          "sequence": "0",
+          "nativeTicks": "1000000000",
+          "sourceFrameNumber": "100",
+          "hostArrivalTicks": "2000000000",
+          "mappedSessionTicks": "5000000000",
+          "encodedPtsTicks": "0",
+          "videoFrameIndex": "0",
+          "clockModelId": 1,
+          "uncertaintyNs": 250000,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 127,
+          "statusFlags": 0,
+          "exposureDurationNs": "8000000",
+          "rollingShutterSkewNs": "12000000"
+        },
+        {
+          "sequence": "1",
+          "nativeTicks": "1033333333",
+          "sourceFrameNumber": "101",
+          "hostArrivalTicks": "2033400000",
+          "mappedSessionTicks": "5033333340",
+          "encodedPtsTicks": "3000",
+          "videoFrameIndex": "1",
+          "clockModelId": 1,
+          "uncertaintyNs": 250000,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 127,
+          "statusFlags": 0,
+          "exposureDurationNs": "8000000",
+          "rollingShutterSkewNs": "12000000"
+        },
+        {
+          "sequence": "2",
+          "nativeTicks": "1066666666",
+          "sourceFrameNumber": "102",
+          "hostArrivalTicks": "2066800000",
+          "mappedSessionTicks": "5066666680",
+          "encodedPtsTicks": "6000",
+          "videoFrameIndex": "2",
+          "clockModelId": 1,
+          "uncertaintyNs": 250000,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 127,
+          "statusFlags": 0,
+          "exposureDurationNs": "8000000",
+          "rollingShutterSkewNs": "12000000"
+        }
+      ]
+    },
+    {
+      "id": "HC-TIM-VEC-002",
+      "header": {
+        "major": 1,
+        "minor": 0,
+        "headerSize": 64,
+        "recordSize": 80,
+        "flags": 1,
+        "finalized": true,
+        "streamId": "10000000-0000-4000-8000-000000000003",
+        "captureId": "10000000-0000-4000-8000-000000000001",
+        "recordCount": "3"
+      },
+      "records": [
+        {
+          "sequence": "0",
+          "nativeTicks": "1000000000",
+          "hostArrivalTicks": "2000100000",
+          "mappedSessionTicks": "5000000000",
+          "x": 0.009999999776482582,
+          "y": 0.019999999552965164,
+          "z": 9.800000190734863,
+          "clockModelId": 1,
+          "uncertaintyNs": 100000,
+          "segmentId": 0,
+          "sensorStreamId": 1,
+          "sensorKind": 1,
+          "accuracy": 3,
+          "presence": 11,
+          "statusFlags": 0,
+          "batchId": 1
+        },
+        {
+          "sequence": "1",
+          "nativeTicks": "1010000000",
+          "hostArrivalTicks": "2010100000",
+          "mappedSessionTicks": "5010000002",
+          "x": 0.019999999552965164,
+          "y": 0.029999999329447746,
+          "z": 9.789999961853027,
+          "clockModelId": 1,
+          "uncertaintyNs": 100000,
+          "segmentId": 0,
+          "sensorStreamId": 1,
+          "sensorKind": 1,
+          "accuracy": 3,
+          "presence": 11,
+          "statusFlags": 0,
+          "batchId": 1
+        },
+        {
+          "sequence": "0",
+          "nativeTicks": "1001000000",
+          "hostArrivalTicks": "2001100000",
+          "mappedSessionTicks": "5001000000",
+          "x": 0.10000000149011612,
+          "y": -0.20000000298023224,
+          "z": 0.30000001192092896,
+          "clockModelId": 1,
+          "uncertaintyNs": 100000,
+          "segmentId": 0,
+          "sensorStreamId": 2,
+          "sensorKind": 2,
+          "accuracy": 3,
+          "presence": 11,
+          "statusFlags": 0,
+          "batchId": 1
+        }
+      ]
+    },
+    {
+      "id": "HC-TIM-VEC-003",
+      "header": {
+        "major": 1,
+        "minor": 0,
+        "headerSize": 64,
+        "recordSize": 96,
+        "flags": 1,
+        "finalized": true,
+        "streamId": "10000000-0000-4000-8000-000000000004",
+        "captureId": "10000000-0000-4000-8000-000000000001",
+        "recordCount": "2"
+      },
+      "records": [
+        {
+          "sequence": "0",
+          "nativeTicks": "3000000",
+          "hostArrivalTicks": "4000000",
+          "videoFrameIndex": "0",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 18,
+          "statusFlags": 0
+        },
+        {
+          "sequence": "1",
+          "nativeTicks": "3333333",
+          "hostArrivalTicks": "4334000",
+          "videoFrameIndex": "1",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 18,
+          "statusFlags": 0
+        }
+      ]
+    },
+    {
+      "id": "HC-TIM-VEC-004",
+      "header": {
+        "major": 1,
+        "minor": 0,
+        "headerSize": 64,
+        "recordSize": 96,
+        "flags": 1,
+        "finalized": true,
+        "streamId": "10000000-0000-4000-8000-000000000005",
+        "captureId": "10000000-0000-4000-8000-000000000001",
+        "recordCount": "4"
+      },
+      "records": [
+        {
+          "sequence": "0",
+          "nativeTicks": "0",
+          "videoFrameIndex": "0",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 16,
+          "statusFlags": 0
+        },
+        {
+          "sequence": "1",
+          "nativeTicks": "31000000",
+          "videoFrameIndex": "1",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 16,
+          "statusFlags": 0
+        },
+        {
+          "sequence": "2",
+          "nativeTicks": "67000000",
+          "videoFrameIndex": "2",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 16,
+          "statusFlags": 0
+        },
+        {
+          "sequence": "3",
+          "nativeTicks": "99000000",
+          "videoFrameIndex": "3",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 16,
+          "statusFlags": 0
+        }
+      ]
+    },
+    {
+      "id": "HC-TIM-VEC-005",
+      "header": {
+        "major": 1,
+        "minor": 0,
+        "headerSize": 64,
+        "recordSize": 96,
+        "flags": 1,
+        "finalized": true,
+        "streamId": "10000000-0000-4000-8000-000000000006",
+        "captureId": "10000000-0000-4000-8000-000000000001",
+        "recordCount": "3"
+      },
+      "records": [
+        {
+          "sequence": "0",
+          "nativeTicks": "100",
+          "videoFrameIndex": "0",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 16,
+          "statusFlags": 0
+        },
+        {
+          "sequence": "1",
+          "nativeTicks": "200",
+          "videoFrameIndex": "1",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 0,
+          "disposition": 1,
+          "presence": 16,
+          "statusFlags": 0
+        },
+        {
+          "sequence": "0",
+          "nativeTicks": "50",
+          "videoFrameIndex": "2",
+          "clockModelId": 0,
+          "uncertaintyNs": 0,
+          "segmentId": 1,
+          "disposition": 1,
+          "presence": 16,
+          "statusFlags": 0
+        }
+      ]
+    },
+    {
+      "id": "HC-TIM-VEC-006",
+      "header": {
+        "major": 1,
+        "minor": 0,
+        "headerSize": 64,
+        "recordSize": 80,
+        "flags": 1,
+        "finalized": true,
+        "streamId": "10000000-0000-4000-8000-000000000007",
+        "captureId": "10000000-0000-4000-8000-000000000001",
+        "recordCount": "2"
+      },
+      "records": [
+        {
+          "sequence": "0",
+          "nativeTicks": "1000000000",
+          "hostArrivalTicks": "2000100000",
+          "mappedSessionTicks": "5000000000",
+          "x": 0.009999999776482582,
+          "y": 0.019999999552965164,
+          "z": 9.800000190734863,
+          "clockModelId": 1,
+          "uncertaintyNs": 100000,
+          "segmentId": 0,
+          "sensorStreamId": 1,
+          "sensorKind": 1,
+          "accuracy": 3,
+          "presence": 11,
+          "statusFlags": 0,
+          "batchId": 1
+        },
+        {
+          "sequence": "1",
+          "nativeTicks": "1010000000",
+          "hostArrivalTicks": "2010100000",
+          "mappedSessionTicks": "5010000002",
+          "x": 0.019999999552965164,
+          "y": 0.029999999329447746,
+          "z": 9.789999961853027,
+          "clockModelId": 1,
+          "uncertaintyNs": 100000,
+          "segmentId": 0,
+          "sensorStreamId": 1,
+          "sensorKind": 1,
+          "accuracy": 3,
+          "presence": 11,
+          "statusFlags": 0,
+          "batchId": 1
+        }
+      ]
+    }
+  ]
+}

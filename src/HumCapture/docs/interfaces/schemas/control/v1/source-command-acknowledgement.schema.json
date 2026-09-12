@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/source-command-acknowledgement.schema.json",
+  "title": "HumCapture source command acknowledgement",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version", "message_id", "acknowledgement_id", "command_id",
+    "session_id", "trial_id", "source_id", "capture_attempt_id", "source_boot_id",
+    "disposition", "actual_source_state", "actual_source_revision",
+    "recorded_source_time", "recorded_utc"
+  ],
+  "properties": {
+    "contract_version": { "$ref": "common.schema.json#/$defs/contractVersion" },
+    "message_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "acknowledgement_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "command_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "trial_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "capture_attempt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_boot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "disposition": { "$ref": "common.schema.json#/$defs/acknowledgementDisposition" },
+    "actual_source_state": { "$ref": "common.schema.json#/$defs/sourceState" },
+    "actual_source_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "recorded_source_time": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+    "result_event_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "error": {
+      "type": "object", "additionalProperties": false,
+      "required": ["code", "summary", "retry_class", "actual_state", "expected_states"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "retry_class": { "$ref": "common.schema.json#/$defs/retryClass" },
+        "actual_state": { "$ref": "common.schema.json#/$defs/sourceState" },
+        "expected_states": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/sourceState" } }
+      }
+    },
+    "recorded_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "disposition": { "const": "REJECTED" } } },
+      "then": { "properties": { "error": {} }, "required": ["error"] },
+      "else": { "not": { "required": ["error"] } }
+    },
+    {
+      "if": { "properties": { "disposition": { "const": "ALREADY_APPLIED" } } },
+      "then": { "properties": { "result_event_id": {} }, "required": ["result_event_id"] }
+    }
+  ]
+}

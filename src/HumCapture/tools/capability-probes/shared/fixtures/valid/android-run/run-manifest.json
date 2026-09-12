@@ -1,0 +1,198 @@
+{
+  "format_name": "humcapture-phase0-run-manifest",
+  "evidence_format_version": "1.0.0",
+  "run_id": "018f6f5e-6b1a-7c23-8d45-0123456789ab",
+  "campaign_id": "synthetic-campaign-001",
+  "created_utc": "2026-08-27T08:00:00Z",
+  "timing": {
+    "start_monotonic_ns": "10000000000000000",
+    "end_monotonic_ns": "10000002000000000",
+    "duration_ns": "2000000000"
+  },
+  "probe": {
+    "name": "humcapture-phase0-synthetic-probe",
+    "version": "0.1.0",
+    "source_revision": "synthetic-fixture",
+    "platform": "synthetic"
+  },
+  "environment": {
+    "hardware_id": "SYNTHETIC-ANDROID-001",
+    "manufacturer": "HumCapture",
+    "model": "Synthetic Phone",
+    "os_name": "Synthetic Android",
+    "os_version": "1",
+    "driver_versions": {},
+    "connection": "synthetic-local",
+    "power_mode": "synthetic-stable",
+    "network_profile": null
+  },
+  "procedure": {
+    "procedure_id": "HC-P0-SYN-001",
+    "registry_version": "1.0.0",
+    "mode": "diagnostic",
+    "required_duration_ns": "2000000000",
+    "actual_duration_ns": "2000000000"
+  },
+  "configuration": {
+    "source_id": "camera.back.wide",
+    "streams": [
+      {
+        "stream_id": "master",
+        "purpose": "master",
+        "requested": {
+          "width_px": 1920,
+          "height_px": 1080,
+          "fps": 60,
+          "codec": "video/avc",
+          "pixel_format": null,
+          "bitrate_bps": 12000000
+        },
+        "reported": {
+          "width_px": 1920,
+          "height_px": 1080,
+          "fps": 60,
+          "codec": "video/avc",
+          "pixel_format": "YUV_420_888",
+          "bitrate_bps": 12000000
+        },
+        "negotiated": {
+          "width_px": 1920,
+          "height_px": 1080,
+          "fps": 60,
+          "codec": "video/avc",
+          "pixel_format": "YUV_420_888",
+          "bitrate_bps": 12000000
+        },
+        "measured": {
+          "width_px": 1920,
+          "height_px": 1080,
+          "fps": 60,
+          "codec": "video/avc",
+          "pixel_format": "YUV_420_888",
+          "bitrate_bps": 11950000
+        }
+      }
+    ]
+  },
+  "timestamp_provenance": [
+    {
+      "channel_type": "stream",
+      "channel_id": "master",
+      "timestamp_field": "source_timestamp",
+      "domain": "sensor_monotonic",
+      "source": "sensor",
+      "unit": "ns",
+      "frequency_hz": 1000000000,
+      "mapping_method": null,
+      "uncertainty_ns": null,
+      "notes": "Synthetic fixture only."
+    },
+    {
+      "channel_type": "stream",
+      "channel_id": "master",
+      "timestamp_field": "presentation_timestamp",
+      "domain": "media_presentation",
+      "source": "device",
+      "unit": "us",
+      "frequency_hz": 1000000,
+      "mapping_method": null,
+      "uncertainty_ns": null,
+      "notes": "Synthetic fixture only."
+    },
+    {
+      "channel_type": "stream",
+      "channel_id": "master",
+      "timestamp_field": "host_arrival_timestamp",
+      "domain": "device_monotonic",
+      "source": "host_arrival",
+      "unit": "ns",
+      "frequency_hz": 1000000000,
+      "mapping_method": null,
+      "uncertainty_ns": null,
+      "notes": "Synthetic fixture only."
+    },
+    {
+      "channel_type": "sensor",
+      "channel_id": "rotation-vector-0",
+      "timestamp_field": "timestamp",
+      "domain": "sensor_monotonic",
+      "source": "sensor",
+      "unit": "ns",
+      "frequency_hz": 1000000000,
+      "mapping_method": null,
+      "uncertainty_ns": null,
+      "notes": "Synthetic fixture only."
+    },
+    {
+      "channel_type": "system",
+      "channel_id": "thermal-power-storage",
+      "timestamp_field": "timestamp",
+      "domain": "device_monotonic",
+      "source": "device",
+      "unit": "ns",
+      "frequency_hz": 1000000000,
+      "mapping_method": null,
+      "uncertainty_ns": null,
+      "notes": "Synthetic fixture only."
+    }
+  ],
+  "finalization": {
+    "completed": true,
+    "artifact_readable": true,
+    "notes": "Synthetic fixture only."
+  },
+  "artifacts": [
+    {
+      "relative_path": "capability-report.json",
+      "media_type": "application/json",
+      "role": "capability",
+      "byte_length": 1932,
+      "sha256": "b5c7c1faff345970dd4cb48db4526aa198d1a17c7a4fa0b649c671b60f9e7d1f"
+    },
+    {
+      "relative_path": "logs/probe.log",
+      "media_type": "text/plain",
+      "role": "log",
+      "byte_length": 50,
+      "sha256": "9570dc054cf73ac22447f0118af1b1ed8e6be489c0889598d233c6d803037f3b"
+    },
+    {
+      "relative_path": "measurements/frames.csv",
+      "media_type": "text/csv",
+      "role": "measurement",
+      "csv_dictionary": "frames",
+      "byte_length": 606,
+      "sha256": "0c1d6c5baa9bbfef2f11d9a42f65bd055c9771b048dbb4d69932c8ed942a95ab"
+    },
+    {
+      "relative_path": "measurements/sensors.csv",
+      "media_type": "text/csv",
+      "role": "measurement",
+      "csv_dictionary": "sensors",
+      "byte_length": 286,
+      "sha256": "17cb982524c5d39ffbfbd90b3192bc940c12d9c1fea570c2ff2319557bf09136"
+    },
+    {
+      "relative_path": "measurements/thermal-power-storage.csv",
+      "media_type": "text/csv",
+      "role": "measurement",
+      "csv_dictionary": "thermal-power-storage",
+      "byte_length": 297,
+      "sha256": "738a887cfab27cba912b1bc565404a0bdaecf119a001ee2f9edd1b8af4219299"
+    },
+    {
+      "relative_path": "summary.md",
+      "media_type": "text/markdown",
+      "role": "summary",
+      "byte_length": 142,
+      "sha256": "b207d0014373dfa71a59c02a2a17716795e7c694f408068e694daf4fe7620e77"
+    }
+  ],
+  "disposition": "INCONCLUSIVE",
+  "operator_windows_account": "SYNTHETIC\\operator",
+  "reviewer": null,
+  "limitations": [
+    "Synthetic fixture is not hardware evidence."
+  ],
+  "deviations": []
+}

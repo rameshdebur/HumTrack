@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/repository/v1/repository-record-index-entry.schema.json",
+  "title": "HumCapture immutable milestone index entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "index_entry_id", "repository_id", "record_kind",
+    "record_id", "record_revision", "record_content_sha256", "subject_id",
+    "session_id", "package_id", "record_relative_path", "indexed_utc"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "index_entry_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "repository_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "record_kind": {
+      "enum": [
+        "protocol-snapshots", "verifications", "commits", "receipts",
+        "quality-assessments", "completions", "handoffs"
+      ]
+    },
+    "record_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "record_revision": { "type": "integer", "minimum": 1 },
+    "record_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "subject_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "package_id": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/uuid" }, { "type": "null" }]
+    },
+    "record_relative_path": { "$ref": "common.schema.json#/$defs/relative_path" },
+    "indexed_utc": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/timing/v1/timing-metadata.schema.json",
+  "title": "HumCapture timing metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "capture_attempt_id", "session_clock_id", "clocks", "clock_models", "streams"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "capture_attempt_id": { "type": "string", "format": "uuid" },
+    "session_clock_id": { "type": "string", "format": "uuid" },
+    "clocks": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["clock_id", "epoch_id", "ticks_per_second", "provenance", "authority"],
+        "properties": {
+          "clock_id": { "type": "string", "format": "uuid" },
+          "epoch_id": { "type": "string", "format": "uuid" },
+          "ticks_per_second": { "type": "integer", "minimum": 1, "maximum": 10000000000 },
+          "provenance": { "enum": ["ANDROID_SENSOR_EVENT", "ANDROID_SENSOR_TIMESTAMP", "MF_DEVICE_TIMESTAMP", "MF_SAMPLE_TIME", "QPC_HOST_ARRIVAL", "ENCODER_PTS", "SESSION_MONOTONIC", "UTC_AUDIT"] },
+          "authority": { "enum": ["SENSOR", "DEVICE", "HOST_SAMPLE", "HOST_ARRIVAL", "PRESENTATION", "AUDIT_ONLY"] },
+          "description": { "type": "string", "minLength": 1, "maxLength": 500 }
+        }
+      }
+    },
+    "clock_models": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["model_id", "source_clock_id", "target_clock_id", "kind", "quality", "valid_from_ticks", "valid_through_ticks", "scale", "offset_ticks", "uncertainty_ns", "method", "anchor_count", "residual_rms_ns"],
+        "properties": {
+          "model_id": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+          "source_clock_id": { "type": "string", "format": "uuid" },
+          "target_clock_id": { "type": "string", "format": "uuid" },
+          "kind": { "enum": ["IDENTITY", "OFFSET", "AFFINE"] },
+          "quality": { "enum": ["VALID", "DEGRADED", "UNAVAILABLE"] },
+          "valid_from_ticks": { "$ref": "#/$defs/u64" },
+          "valid_through_ticks": { "$ref": "#/$defs/u64" },
+          "scale": { "type": "number" },
+          "offset_ticks": { "type": "string", "pattern": "^(0|-?[1-9][0-9]{0,18})$" },
+          "uncertainty_ns": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+          "method": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "anchor_count": { "type": "integer", "minimum": 0 },
+          "residual_rms_ns": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "streams": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["stream_id", "kind", "native_clock_id", "relative_path", "binary_format_version"],
+        "properties": {
+          "stream_id": { "type": "string", "format": "uuid" },
+          "kind": { "enum": ["FRAME_TIMESTAMPS", "IMU_SAMPLES"] },
+          "native_clock_id": { "type": "string", "format": "uuid" },
+          "host_arrival_clock_id": { "type": "string", "format": "uuid" },
+          "presentation_clock_id": { "type": "string", "format": "uuid" },
+          "relative_path": { "type": "string", "pattern": "^(timing|imu)/[A-Za-z0-9._/-]+\\.bin$" },
+          "binary_format_version": { "const": "1.0" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "u64": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" }
+  }
+}

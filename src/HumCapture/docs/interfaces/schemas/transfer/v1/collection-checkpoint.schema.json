@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/transfer/v1/collection-checkpoint.schema.json",
+  "title": "HumCapture resumable package collection checkpoint",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "checkpoint_id", "revision", "package_id", "package_content_sha256", "source_id", "collection_method", "artifacts", "created_utc", "updated_utc"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "checkpoint_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "revision": { "$ref": "../../control/v1/common.schema.json#/$defs/positiveRevision" },
+    "package_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "package_content_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "source_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "collection_method": { "enum": ["HTTPS_RANGE", "USB_MTP", "COORDINATOR_LOCAL"] },
+    "created_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "updated_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "artifacts": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["artifact_id", "relative_path", "expected_byte_length", "expected_sha256", "state", "received_ranges", "staged_byte_length", "attempt_count", "restart_count"],
+        "properties": {
+          "artifact_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+          "relative_path": { "type": "string", "minLength": 1, "maxLength": 1024 },
+          "expected_byte_length": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+          "expected_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+          "strong_etag": { "type": "string", "pattern": "^\"sha256-[a-f0-9]{64}\"$" },
+          "state": { "enum": ["PENDING", "RECEIVING", "STAGED", "VERIFIED", "RETRY_REQUIRED", "QUARANTINED"] },
+          "received_ranges": {
+            "type": "array",
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["start", "end_exclusive"],
+              "properties": {
+                "start": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+                "end_exclusive": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" }
+              }
+            }
+          },
+          "staged_byte_length": { "$ref": "../../control/v1/common.schema.json#/$defs/unsignedDecimal64" },
+          "attempt_count": { "type": "integer", "minimum": 0 },
+          "restart_count": { "type": "integer", "minimum": 0 },
+          "last_restart_reason": { "enum": ["REPRESENTATION_CHANGED", "PARTIAL_CORRUPT", "OPERATOR_RETRY"] },
+          "artifact_verification_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+          "last_error_code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" }
+        }
+      }
+    }
+  }
+}

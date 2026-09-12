@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/repository/v1/repository-reconciliation.schema.json",
+  "title": "HumCapture append-only repository reconciliation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "reconciliation_id", "transaction_id", "trigger",
+    "started_utc", "finished_utc", "actor_kind", "actor_windows_account",
+    "observations", "prior_state", "result_state", "action_code", "automatic",
+    "blocking_reason_codes", "explanation", "result_transition_id"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "reconciliation_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "transaction_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "trigger": { "$ref": "common.schema.json#/$defs/trigger" },
+    "started_utc": { "type": "string", "format": "date-time" },
+    "finished_utc": { "type": "string", "format": "date-time" },
+    "actor_kind": { "$ref": "common.schema.json#/$defs/actor_kind" },
+    "actor_windows_account": { "$ref": "common.schema.json#/$defs/windows_account" },
+    "observations": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/observation" }
+    },
+    "prior_state": { "$ref": "common.schema.json#/$defs/repository_state" },
+    "result_state": { "$ref": "common.schema.json#/$defs/repository_state" },
+    "action_code": { "$ref": "common.schema.json#/$defs/action_code" },
+    "automatic": { "type": "boolean" },
+    "blocking_reason_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "common.schema.json#/$defs/reason_code" }
+    },
+    "explanation": { "$ref": "common.schema.json#/$defs/bounded_reason" },
+    "result_transition_id": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/uuid" }, { "type": "null" }]
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "automatic": { "const": true } }, "required": ["automatic"] },
+      "then": {
+        "properties": {
+          "actor_kind": { "const": "SYSTEM" },
+          "action_code": {
+            "enum": [
+              "NO_ACTION", "RETRY_FROM_STAGED", "RESUME_AFTER_MOVE",
+              "COMPLETE_CATALOGING", "FINALIZE_COMMIT", "CONFIRM_IDEMPOTENT_COMMIT"
+            ]
+          },
+          "blocking_reason_codes": { "type": "array", "maxItems": 0 }
+        }
+      },
+      "else": {
+        "properties": {
+          "actor_kind": { "const": "OPERATOR" },
+          "action_code": {
+            "enum": [
+              "RETRY_RECONCILIATION", "QUARANTINE_CONFLICT",
+              "RETAIN_FOR_INVESTIGATION", "EXPORT_DIAGNOSTICS"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "nullable_uuid": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/uuid" }, { "type": "null" }]
+    },
+    "nullable_sha256": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/sha256" }, { "type": "null" }]
+    },
+    "nullable_u64": {
+      "oneOf": [{ "$ref": "common.schema.json#/$defs/u64" }, { "type": "null" }]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority", "disposition", "expected_package_id", "observed_package_id",
+        "expected_content_sha256", "observed_content_sha256",
+        "expected_byte_length", "observed_byte_length", "evidence_relative_paths"
+      ],
+      "properties": {
+        "authority": { "$ref": "common.schema.json#/$defs/observation_authority" },
+        "disposition": { "$ref": "common.schema.json#/$defs/observation_disposition" },
+        "expected_package_id": { "$ref": "#/$defs/nullable_uuid" },
+        "observed_package_id": { "$ref": "#/$defs/nullable_uuid" },
+        "expected_content_sha256": { "$ref": "#/$defs/nullable_sha256" },
+        "observed_content_sha256": { "$ref": "#/$defs/nullable_sha256" },
+        "expected_byte_length": { "$ref": "#/$defs/nullable_u64" },
+        "observed_byte_length": { "$ref": "#/$defs/nullable_u64" },
+        "evidence_relative_paths": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "$ref": "common.schema.json#/$defs/relative_path" }
+        }
+      }
+    }
+  }
+}

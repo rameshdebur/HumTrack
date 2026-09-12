@@ -1,0 +1,2 @@
+run_id,sensor_id,sensor_type,sequence,timestamp,timestamp_domain,timestamp_unit,accuracy,x,y,z,w,coordinate_frame,discontinuity,notes
+018f6f5e-6b1a-7c23-8d45-0123456789ab,rotation-vector-0,rotation_vector,0,1000000000,sensor_monotonic,ns,3,0.0,0.0,0.0,1.0,android_device,none,synthetic

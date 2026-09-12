@@ -1,0 +1,13 @@
+{
+  "name": "@humcapture/sbom-tool",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deterministic CycloneDX SBOM generator and project policy validator for HumCapture.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "generate": "node src/cli.js generate",
+    "validate": "node src/cli.js validate",
+    "test": "node --test"
+  }
+}

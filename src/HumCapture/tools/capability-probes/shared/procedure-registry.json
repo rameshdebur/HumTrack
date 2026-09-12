@@ -1,0 +1,127 @@
+{
+  "registry_name": "humcapture-phase0-procedures",
+  "registry_version": "1.0.0",
+  "evidence_format_version": "1.0.0",
+  "procedures": [
+    {
+      "procedure_id": "HC-P0-SYN-001",
+      "kind": "capture",
+      "hardware_qualification": false,
+      "allowed_probe_platforms": ["synthetic"],
+      "allowed_device_platforms": ["synthetic"],
+      "allowed_camera_stacks": ["synthetic"],
+      "minimum_qualification_duration_ns": "1800000000000",
+      "profile_policy": "synthetic_any",
+      "required_streams": [{ "purpose": "master", "width_px": null, "height_px": null, "fps": null, "codec": null }],
+      "required_measurements": ["frames", "thermal-power-storage"],
+      "required_sensor_types": []
+    },
+    {
+      "procedure_id": "HC-P0-AND-001",
+      "kind": "capture",
+      "hardware_qualification": true,
+      "allowed_probe_platforms": ["android"],
+      "allowed_device_platforms": ["android"],
+      "allowed_camera_stacks": ["android_camera2"],
+      "minimum_qualification_duration_ns": "1800000000000",
+      "profile_policy": "exact",
+      "required_streams": [{ "purpose": "master", "width_px": 1920, "height_px": 1080, "fps": 60, "codec": "video/avc" }],
+      "required_measurements": ["frames", "thermal-power-storage"],
+      "required_sensor_types": []
+    },
+    {
+      "procedure_id": "HC-P0-AND-002",
+      "kind": "capture",
+      "hardware_qualification": true,
+      "allowed_probe_platforms": ["android"],
+      "allowed_device_platforms": ["android"],
+      "allowed_camera_stacks": ["android_camera2"],
+      "minimum_qualification_duration_ns": "1800000000000",
+      "profile_policy": "exact",
+      "required_streams": [
+        { "purpose": "master", "width_px": 1920, "height_px": 1080, "fps": 60, "codec": "video/avc" },
+        { "purpose": "preview", "width_px": 1280, "height_px": 720, "fps": 15, "codec": "video/avc" }
+      ],
+      "required_measurements": ["frames", "sensors", "thermal-power-storage"],
+      "required_sensor_types": ["rotation_vector"]
+    },
+    {
+      "procedure_id": "HC-P0-AND-003",
+      "kind": "capture",
+      "hardware_qualification": true,
+      "allowed_probe_platforms": ["android"],
+      "allowed_device_platforms": ["android"],
+      "allowed_camera_stacks": ["android_camera2"],
+      "minimum_qualification_duration_ns": "1800000000000",
+      "profile_policy": "exact",
+      "required_streams": [{ "purpose": "master", "width_px": 1920, "height_px": 1080, "fps": 120, "codec": "video/avc" }],
+      "required_measurements": ["frames", "thermal-power-storage"],
+      "required_sensor_types": []
+    },
+    {
+      "procedure_id": "HC-P0-UVC-001",
+      "kind": "capture",
+      "hardware_qualification": true,
+      "allowed_probe_platforms": ["windows"],
+      "allowed_device_platforms": ["windows_uvc"],
+      "allowed_camera_stacks": ["windows_media_capture", "windows_media_foundation"],
+      "minimum_qualification_duration_ns": "1800000000000",
+      "profile_policy": "exact",
+      "required_streams": [{ "purpose": "master", "width_px": 1920, "height_px": 1080, "fps": 60, "codec": "video/avc" }],
+      "required_measurements": ["frames", "thermal-power-storage"],
+      "required_sensor_types": []
+    },
+    {
+      "procedure_id": "HC-P0-UVC-002",
+      "kind": "capture",
+      "hardware_qualification": true,
+      "allowed_probe_platforms": ["windows"],
+      "allowed_device_platforms": ["windows_uvc"],
+      "allowed_camera_stacks": ["windows_media_capture", "windows_media_foundation"],
+      "minimum_qualification_duration_ns": "1",
+      "profile_policy": "exact",
+      "required_streams": [{ "purpose": "master", "width_px": 1920, "height_px": 1080, "fps": 60, "codec": "video/avc" }],
+      "required_measurements": ["frames", "thermal-power-storage", "capture-events"],
+      "required_sensor_types": []
+    },
+    {
+      "procedure_id": "HC-P0-NET-001",
+      "kind": "network",
+      "hardware_qualification": true,
+      "allowed_probe_platforms": ["network"],
+      "allowed_device_platforms": ["network"],
+      "allowed_camera_stacks": ["network_only"],
+      "minimum_qualification_duration_ns": "1",
+      "profile_policy": "none",
+      "required_streams": [],
+      "required_measurements": ["network"],
+      "required_sensor_types": []
+    },
+    {
+      "procedure_id": "HC-P0-NET-002",
+      "kind": "network",
+      "hardware_qualification": true,
+      "allowed_probe_platforms": ["network"],
+      "allowed_device_platforms": ["network"],
+      "allowed_camera_stacks": ["network_only"],
+      "minimum_qualification_duration_ns": "1",
+      "profile_policy": "none",
+      "required_streams": [],
+      "required_measurements": ["network"],
+      "required_sensor_types": []
+    },
+    {
+      "procedure_id": "HC-P0-COMP-001",
+      "kind": "compatibility",
+      "hardware_qualification": true,
+      "allowed_probe_platforms": ["windows"],
+      "allowed_device_platforms": ["windows_host"],
+      "allowed_camera_stacks": ["network_only", "windows_media_capture", "windows_media_foundation"],
+      "minimum_qualification_duration_ns": "1",
+      "profile_policy": "none",
+      "required_streams": [],
+      "required_measurements": ["compatibility"],
+      "required_sensor_types": []
+    }
+  ]
+}
