@@ -2,7 +2,7 @@
 
 **ID:** HC-CHG-20260912-015  
 **Date:** 2026-09-12  
-**State:** Local engineering verification passed; CI/independent review pending
+**State:** Local and remote engineering verification passed; independent review pending
 
 User authorized the next automatic catalog-recovery step. Primary owner:
 Coordinator/repository engineer. Affected: Architect, QA, Risk/Regulatory and
@@ -27,3 +27,6 @@ AI contribution: implementation, tests, architecture/source review and records.
 
 HC-REP-RUNTIME-103–109 pass; total 109 runtime tests, 91 contracts and six
 SBOM tests. Release build has zero warnings/errors. See HC-VR-I0-4B-C10-001.
+
+Implementation: `94e9242cad2c64c80958d2c7581fbc7fa3d45566`.
+Push CI `34692584529` and PR CI `34692586207` passed on that source.
