@@ -2,7 +2,7 @@
 
 **ID:** HC-VR-I0-4B-C12-001  
 **Date:** 2026-09-12  
-**Disposition:** Local engineering verification passed; hosted CI pending
+**Disposition:** Local and hosted engineering verification passed
 
 Objective: expose existing C2 admission through a bounded versioned request and
 host command without fabricating verifier evidence or conflating admission with
@@ -41,7 +41,15 @@ tests and 6/6 SBOM tests pass. Project SBOM validation passes. The evidence-cont
 production npm audit reports zero vulnerabilities; host transitive NuGet queries
 report no known vulnerable or deprecated packages from the configured sources.
 The dependency-free SBOM tool has no lockfile, so its npm audit is unavailable
-(`ENOLOCK`), not a passed audit. Runtime suite and hosted CI results follow below.
+(`ENOLOCK`), not a passed audit.
+
+Implementation commit: `74d4d4c7e34d208e3e403b79bfa047fcb10983ea`.
+Both hosted workflows completed successfully for that source revision:
+[push run](https://github.com/rameshdebur/HumTrack/actions/runs/34697777735)
+and [PR run](https://github.com/rameshdebur/HumTrack/actions/runs/34697779828).
+Their retained workflow logs are the hosted test/build evidence. A subsequent
+documentation-only commit records these results; these links attest the source
+revision above, not an untested release or hardware acceptance.
 
 Source/build/automated evidence concerns synthetic Windows process/filesystem/
 SQLite behavior only. Verifier records are test fixtures, not independently

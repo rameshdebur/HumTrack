@@ -2,7 +2,7 @@
 
 **ID:** HC-CHG-20260912-017  
 **Date:** 2026-09-12  
-**State:** Implemented; local verification passed; hosted CI pending
+**State:** Implemented; local and hosted engineering verification passed
 
 User authorized connecting finalized-package intake to the host. Bounded C12
 scope is admission of an already-collected, verified staging package through C2,
@@ -23,3 +23,7 @@ human/qualified regulatory review remains pending.
 Local evidence: 125/125 runtime, 91/91 contract and 6/6 SBOM tests pass;
 Release build has zero warnings/errors. Detailed evidence and exclusions:
 `../../verification/I0_4B_C12_STAGED_ADMISSION_REPORT.md`.
+
+Source commit `74d4d4c7e34d208e3e403b79bfa047fcb10983ea`; hosted push
+34697777735 and PR 34697779828 both passed. No independent human acceptance,
+field qualification, or certification claim is implied.
