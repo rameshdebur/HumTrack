@@ -2,7 +2,7 @@
 
 ID: HC-CHG-20260915-002. Date: 2026-09-15.
 Status: C14 objective and prerequisite choices approved; C14A contract baseline
-implemented. Runtime verifier implementation not started.
+and C14B engineering decoder probe implemented. Production runtime verifier not started.
 
 Approved: independently decode collected video, check timing/camera/events/
 finalization and applicable IMU evidence, preserve measured fixed/variable cadence,
@@ -15,7 +15,7 @@ Classification: cross-component artifact contract and runtime dependency decisio
 Existing HC-IF-XFR-001, HC-IF-TIM-001 and HC-RISK-022/030/031 apply.
 No regulatory applicability change or conformity claim.
 
-## Inspection evidence
+## Historical prerequisite inspection (before C14A)
 
 - The verification-record schema defines required check names and dispositions,
   but does not specify the contents of every input artifact.
@@ -57,5 +57,16 @@ Evidence: ../../verification/I0_4B_C14A_VERIFIER_BASELINE_REPORT.md.
 C14A local and hosted engineering verification passed: 101 contract, 7 SBOM and
 135 repository runtime tests; zero-warning/error build. Source
 dcd6bd87901602450020747726b0653529722ac3 passed CI 34975585870 and 34975589810.
-C14B remains: obtain/verify exact decoder binaries, implement the bounded worker
-and independent verifier, and test actual media. C14 overall is not complete.
+C14B now supplies downloaded archive/executable identity and seven synthetic media
+checks plus four guard regressions. This bounded engineering slice does not implement
+the production worker. C14C next: asynchronous bounded decoder worker with cancellation
+and failure tests, then independent scientific artifact integration. Full C14 remains
+incomplete; no automatic verification, admission, commit or cleanup is introduced.
+
+Primary owner: Coordinator engineer; affected Release/SBOM and QA. Scope: isolated
+probe, disabled decoder lock observation, SBOM evidence and documentation under
+HumCapture. Classification: local engineering qualification under ADR-0027, no
+application interface/persistence/claim change. Risk controls HC-RISK-022/030/031
+remain unfulfilled until all required runtime package checks are integrated.
+Evidence: ../../verification/I0_4B_C14B_DECODER_REPORT.md. AI implemented and tested
+this slice; independent human review remains open.

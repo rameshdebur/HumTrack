@@ -1,5 +1,10 @@
 # HumCapture Traceability Matrix
 
+C14B: HC-DATA-REQ-001/002/009 and HC-RISK-022/030/031 map to
+HC-DEC-TEST-001–007 (local real-decoder/synthetic-media evidence) and
+HC-DEC-GUARD-001–004 (automated harness guards). Evidence HC-VR-I0-4B-C14B-001.
+No full requirement closure: independent package verification remains pending.
+
 C14A: HC-DATA-REQ-001–003/009–012, HC-US-XFR-001–014 and HC-RISK-022/030/031
 map to HC-ART-TEST-001–010 under HC-IF-ART-001 1.0.0. Seven SBOM controls include
 the planned decoder lock. This is contract/tooling evidence; C14 runtime verifier

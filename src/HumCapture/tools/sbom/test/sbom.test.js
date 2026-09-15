@@ -48,10 +48,17 @@ test("decoder candidate requires immutable archive identity and cannot silently 
   assert.throws(() => parseDecoderLock("null"), /Decoder lock/);
   const baseline = JSON.parse(await readFile(path.join(repoRoot, "apps/windows-coordinator/decoder/decoder-lock.json"), "utf8"));
   assert.equal(parseDecoderLock(JSON.stringify(baseline)).scope, "excluded");
+  const unobserved = { ...baseline, binary_verification: "NOT_DOWNLOADED_OR_VERIFIED" };
+  delete unobserved.executable_sha256;
+  assert.equal(parseDecoderLock(JSON.stringify(unobserved)).scope, "excluded");
+  assert.ok(parseDecoderLock(JSON.stringify(baseline)).properties.some(p => p.name === "humcapture:executable-sha256"));
   for (const change of [
     { version: "latest" }, { archive_sha256: "" }, { runtime_enabled: true },
     { redistribution_approved: true }, { archive_url: "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" },
-    { license_review: "APPROVED" }
+    { license_review: "APPROVED" }, { binary_verification: "QUALIFIED" },
+    { executable_sha256: undefined }, { executable_sha256: {} },
+    { executable_sha256: { ...baseline.executable_sha256, "ffmpeg.exe": "missing" } },
+    { binary_verification: "NOT_DOWNLOADED_OR_VERIFIED" }
   ]) assert.throws(() => parseDecoderLock(JSON.stringify({ ...baseline, ...change })), /Decoder lock/);
 });
 

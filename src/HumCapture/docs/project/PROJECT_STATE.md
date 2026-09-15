@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** I0.4B-C14A | VERIFIER | ARTIFACT + DECODER BASELINE
+**Tags:** I0.4B-C14B | VERIFIER | DECODER CANDIDATE EVIDENCE
 **Last meaningful update:** 2026-09-15
 
 ## Objective
@@ -14,14 +14,23 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
+- C14B verifies the pinned archive and executable identities and adds a repeatable
+  engineering-only decoder probe. Seven synthetic fixed/variable H.264/MP4 media
+  checks and four process/hash guard regressions pass locally. Runtime remains
+  disabled and the SBOM component excluded; no package is marked VERIFIED.
+  See HC-VR-I0-4B-C14B-001. Next: C14C production bounded decoder worker and its
+  cancellation/resource/failure tests, followed by independent scientific artifact
+  integration. Library/vulnerability/licence review and redistribution remain open.
+
 - C14 package-verifier objective and prerequisite choices are user-approved.
   C14A adds HC-IF-ART-001 1.0.0, schemas and executable contract checks, and a
   disabled FFmpeg 9.0.1 archive candidate pin under ADR-0027. C14 runtime verifier
-  implementation, binary validation and redistribution approval remain open.
+  implementation and redistribution approval remain open; C14B supplies the
+  initial downloaded-binary and synthetic media evidence, not runtime qualification.
   C13 remains the latest completed application implementation slice.
   C14A evidence: 101 contract, 7 SBOM and 135 repository regressions pass;
   both hosted runs passed for dcd6bd87901602450020747726b0653529722ac3.
-  See HC-VR-I0-4B-C14A-001. C14B decoder binary/worker verification is next.
+  See HC-VR-I0-4B-C14A-001. Production worker verification is still pending.
 
 - C13 local-folder collection is user-authorized (2026-09-15). Existing ARD,
   PRD, stories, requirements, roles, governance and preliminary India engineering

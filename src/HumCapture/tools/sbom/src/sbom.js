@@ -110,11 +110,19 @@ export function parseDecoderLock(text, sourceManifest = "apps/windows-coordinato
     || lock.schema_version !== "1.0.0" || !/^\d+\.\d+\.\d+$/.test(lock.version ?? "")
     || !/^[a-f0-9]{64}$/.test(lock.archive_sha256 ?? "") || lock.platform !== "windows-x64"
     || lock.runtime_enabled !== false || lock.redistribution_approved !== false
-    || lock.license_review !== "PENDING" || lock.binary_verification !== "NOT_DOWNLOADED_OR_VERIFIED"
+    || lock.license_review !== "PENDING"
+    || !["NOT_DOWNLOADED_OR_VERIFIED", "ARCHIVE_AND_EXECUTABLE_HASHES_VERIFIED"].includes(lock.binary_verification)
     || lock.publisher_license_declaration !== "GPLv3"
     || lock.archive_url !== `https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-${lock.version}-essentials_build.zip`
     || lock.checksum_source !== `${lock.archive_url}.sha256`) {
     throw new SbomError("Decoder lock must pin the exact candidate archive; runtime/redistribution promotion requires reviewed policy changes.");
+  }
+  const observed = lock.binary_verification === "ARCHIVE_AND_EXECUTABLE_HASHES_VERIFIED";
+  if (observed ? (!lock.executable_sha256 || typeof lock.executable_sha256 !== "object"
+    || Array.isArray(lock.executable_sha256) || Object.keys(lock.executable_sha256).length !== 3
+    || !["ffmpeg.exe", "ffprobe.exe", "ffplay.exe"].every(name => /^[a-f0-9]{64}$/.test(lock.executable_sha256[name] ?? "")))
+    : lock.executable_sha256 !== undefined) {
+    throw new SbomError("Decoder lock binary observation requires all three exact executable SHA-256 identities.");
   }
   const ref = `pkg:generic/gyan/ffmpeg-essentials-archive@${lock.version}?arch=x86_64&os=windows`;
   return {
@@ -125,9 +133,10 @@ export function parseDecoderLock(text, sourceManifest = "apps/windows-coordinato
     externalReferences: [{ type: "distribution", url: lock.archive_url }, { type: "website", url: lock.checksum_source }],
     properties: [
       { name: "humcapture:source-manifest", value: sourceManifest },
-      { name: "humcapture:dependency-status", value: "planned-disabled-not-downloaded-not-distributed" },
-      { name: "humcapture:hash-status", value: "publisher-declared-archive-sha256; downloaded-bytes-not-verified" },
-      { name: "humcapture:known-unknown", value: "executable hashes; embedded libraries; runtime qualification; vulnerability and licence review" },
+      { name: "humcapture:dependency-status", value: observed ? "engineering-local-only-runtime-disabled-not-distributed" : "planned-disabled-not-downloaded-not-distributed" },
+      { name: "humcapture:hash-status", value: observed ? "downloaded-archive-and-executable-sha256-verified" : "publisher-declared-archive-sha256; downloaded-bytes-not-verified" },
+      ...(observed ? [{ name: "humcapture:executable-sha256", value: JSON.stringify(lock.executable_sha256) }] : []),
+      { name: "humcapture:known-unknown", value: `${observed ? "" : "executable hashes; "}embedded libraries; runtime qualification; vulnerability and licence review` },
       { name: "humcapture:not-distributed", value: "true" }
     ]
   };

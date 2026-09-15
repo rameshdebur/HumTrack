@@ -1,5 +1,13 @@
 # HumCapture Preliminary Risk Register
 
+C14B update (2026-09-15), HC-RISK-022/030/031: exact archive and executable hashes
+verified locally; seven synthetic media checks reject tested corruption/truncation
+and preserve variable intervals. Four guard regressions cover mismatch, diagnostics,
+timeout/output overflow and no nominal cadence override. This is isolated engineering
+evidence, not the common package verifier or a completed risk control. Production
+cancellation, scientific artifact integration, embedded-library/advisory/licence
+review and redistribution remain open. See HC-VR-I0-4B-C14B-001.
+
 C14A update (2026-09-15), HC-RISK-022/030/031: source-event archive and summary
 are identity/hash bound without a recursive package-hash dependency. Required
 gaps, invalid source time and false terminal claims fail contract checks.

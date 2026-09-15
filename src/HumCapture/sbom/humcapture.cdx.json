@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:80f5c1ef-cce0-55ae-89e4-17f5a864a19e",
+  "serialNumber": "urn:uuid:a6b50ebf-a3e6-5802-aad2-01be41336540",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-15T13:29:39.883Z",
+    "timestamp": "2026-09-15T14:23:19.094Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-i0.4b-c14a",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14a",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14a",
+      "version": "0.1.0-i0.4b-c14b",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14b",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14b",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -138,15 +138,19 @@
         },
         {
           "name": "humcapture:dependency-status",
-          "value": "planned-disabled-not-downloaded-not-distributed"
+          "value": "engineering-local-only-runtime-disabled-not-distributed"
         },
         {
           "name": "humcapture:hash-status",
-          "value": "publisher-declared-archive-sha256; downloaded-bytes-not-verified"
+          "value": "downloaded-archive-and-executable-sha256-verified"
+        },
+        {
+          "name": "humcapture:executable-sha256",
+          "value": "{\"ffmpeg.exe\":\"72a489eccd008c2ec2c0a5856c5c75bc3d8bbfa90166c4566865c246445e6aa3\",\"ffprobe.exe\":\"19202b23c0043f15ad1b7bce2344f406fd52bd6efd8f995ce02e7392a1cec52f\",\"ffplay.exe\":\"39a9ba4f207fe9eecfb094e632998c29e1da88a5d5d23d0b8b71a357a7c47eb5\"}"
         },
         {
           "name": "humcapture:known-unknown",
-          "value": "executable hashes; embedded libraries; runtime qualification; vulnerability and licence review"
+          "value": "embedded libraries; runtime qualification; vulnerability and licence review"
         },
         {
           "name": "humcapture:not-distributed",
@@ -158,9 +162,9 @@
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-i0.4b-c14a",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14a",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14a",
+      "version": "0.1.0-i0.4b-c14b",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14b",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14b",
       "scope": "excluded",
       "hashes": [
         {
@@ -1169,7 +1173,7 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14a",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14b",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
@@ -1226,11 +1230,11 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14a",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14b",
       "dependsOn": [
         "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14a",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14b",
         "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",

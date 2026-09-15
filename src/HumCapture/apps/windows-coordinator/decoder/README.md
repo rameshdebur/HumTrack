@@ -1,16 +1,36 @@
-# Planned decoder dependency
+# Engineering decoder candidate (runtime disabled)
 
-C14A selects an exact FFmpeg/ffprobe archive identity, not an enabled worker.
-decoder-lock.json pins Gyan Windows x64 essentials 9.0.1 and the publisher-declared
-archive SHA-256. No binary has been downloaded/verified/installed by this change.
-The SBOM component is explicitly excluded/planned and records these limitations.
+C14A selected an exact FFmpeg/ffprobe archive identity. C14B downloaded that archive,
+verified its SHA-256 before extraction, and recorded all three included executable
+hashes in decoder-lock.json. ffmpeg/ffprobe version/build output and seven passing
+synthetic media checks are retained in docs/verification/I0_4B_C14B_DECODER_PROBE_RESULTS.json.
+ffplay is inventoried but was not executed. No system installation or PATH change.
+SBOM scope remains excluded: local engineering use is not Coordinator activation.
 
-Before worker activation: obtain the pinned archive, verify bytes before extraction,
-record executable hashes and version/build configuration, retain licences/source
-provenance and embedded-library inventory, run valid/corrupt/truncated synthetic
-media tests, and add bounded cancellation/output/time/resource handling. The worker
+Before worker activation: complete embedded-library inventory/review and implement
+bounded cancellation/output/time/resource handling in the actual worker. The worker
 must use explicit validated executable paths, never arbitrary PATH resolution.
 Use software decoding first; hardware decoding is a separate qualification.
+
+## Reproduce the isolated engineering probe
+
+Download the exact archive_url from decoder-lock.json into the ignored
+evidence-vault/decoder-c14b folder. Compare its SHA-256 to archive_sha256 BEFORE
+extracting to a new empty directory. Retain the included LICENSE and README.txt.
+Do not use a partial download or silently substitute another release.
+
+Run `node apps/windows-coordinator/decoder/probe.mjs ABS_ARCHIVE ABS_EXTRACTED_BIN_DIRECTORY`.
+The probe rechecks archive/executable hashes, uses explicit paths, and writes only
+new synthetic files/report beneath evidence-vault/decoder-c14b/probe-*.
+It uses a synchronous, 30-second/1-MiB-bounded subprocess helper for this short
+engineering probe only. It is NOT a production asynchronous/cancellable worker,
+and does not read capture packages, change journal state or issue verification records.
+Guard regressions are included in evidence-control test:contracts; actual binary
+execution requires the locally downloaded candidate and is not part of hosted CI.
+
+Tested profile: synthetic H.264/MP4, 160x120, 30 fixed-interval frames plus 20
+variable-interval frames; software decode, invalid/truncated rejection, unchanged
+valid input. No general codec, Windows 10, phone, camera or clinical qualification.
 
 Runtime integration and redistribution are different gates. The publisher labels
 these builds GPLv3; this is not a legal determination that redistribution with
