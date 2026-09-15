@@ -8,6 +8,7 @@ const discoveryExclusions = new Set([".git", "node_modules", "bin", "obj", "x64"
 
 function isDependencyManifest(name) {
   return name === "package-lock.json"
+    || name === "decoder-lock.json"
     || name === "packages.lock.json"
     || name.endsWith(".csproj")
     || name.endsWith(".vcxproj")
@@ -100,6 +101,36 @@ function integrityHash(integrity) {
 
 function componentHash(content) {
   return [{ alg: "SHA-256", content: sha256(content) }];
+}
+
+export function parseDecoderLock(text, sourceManifest = "apps/windows-coordinator/decoder/decoder-lock.json") {
+  let lock;
+  try { lock = JSON.parse(text); } catch { throw new SbomError("Decoder lock is not JSON."); }
+  if (!lock || typeof lock !== "object" || Array.isArray(lock)
+    || lock.schema_version !== "1.0.0" || !/^\d+\.\d+\.\d+$/.test(lock.version ?? "")
+    || !/^[a-f0-9]{64}$/.test(lock.archive_sha256 ?? "") || lock.platform !== "windows-x64"
+    || lock.runtime_enabled !== false || lock.redistribution_approved !== false
+    || lock.license_review !== "PENDING" || lock.binary_verification !== "NOT_DOWNLOADED_OR_VERIFIED"
+    || lock.publisher_license_declaration !== "GPLv3"
+    || lock.archive_url !== `https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-${lock.version}-essentials_build.zip`
+    || lock.checksum_source !== `${lock.archive_url}.sha256`) {
+    throw new SbomError("Decoder lock must pin the exact candidate archive; runtime/redistribution promotion requires reviewed policy changes.");
+  }
+  const ref = `pkg:generic/gyan/ffmpeg-essentials-archive@${lock.version}?arch=x86_64&os=windows`;
+  return {
+    type: "application", name: "FFmpeg Windows essentials archive", version: lock.version,
+    "bom-ref": ref, purl: ref, scope: "excluded",
+    hashes: [{ alg: "SHA-256", content: lock.archive_sha256 }],
+    licenses: [{ license: { name: "Publisher-declared GPLv3; legal review pending" } }],
+    externalReferences: [{ type: "distribution", url: lock.archive_url }, { type: "website", url: lock.checksum_source }],
+    properties: [
+      { name: "humcapture:source-manifest", value: sourceManifest },
+      { name: "humcapture:dependency-status", value: "planned-disabled-not-downloaded-not-distributed" },
+      { name: "humcapture:hash-status", value: "publisher-declared-archive-sha256; downloaded-bytes-not-verified" },
+      { name: "humcapture:known-unknown", value: "executable hashes; embedded libraries; runtime qualification; vulnerability and licence review" },
+      { name: "humcapture:not-distributed", value: "true" }
+    ]
+  };
 }
 
 export function parsePinnedGitHubActions(workflowText, sourceManifest = ".github/workflows/humcapture-ci.yml") {
@@ -280,6 +311,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   const coordinatorSelfTestProjectPath = "apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj";
   const coordinatorSelfTestLockPath = "apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json";
   const handledDependencyManifests = [
+    "apps/windows-coordinator/decoder/decoder-lock.json",
     ...npmLocks,
     hostProjectPath,
     hostLockPath,
@@ -300,6 +332,8 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   const coordinatorNuget = await nugetSurface(absoluteRoot, coordinatorLockPath);
   const hostNuget = await nugetSurface(absoluteRoot, hostLockPath);
   const coordinatorSelfTestNuget = await nugetSurface(absoluteRoot, coordinatorSelfTestLockPath, "excluded");
+  const decoderLockText = await readFile(path.join(absoluteRoot, "apps/windows-coordinator/decoder/decoder-lock.json"), "utf8");
+  const decoderComponent = parseDecoderLock(decoderLockText);
 
   const managedProjectPath = "tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj";
   const nativeCaptureProjectPath = "tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj";
@@ -409,7 +443,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
 
   const firstParty = [...npmSurfaces.map((surface) => surface.firstParty), managed.component, nativeCapture.component, nativeEnumerator.component, coordinator.component, host.component, coordinatorSelfTest.component, sbomTool.component, workflowComponent];
   const thirdPartyByRef = new Map();
-  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...coordinatorSelfTestNuget.packages, ...coordinatorNuget.packages, ...hostNuget.packages, ...platformComponents, ...githubActions, ...chocolateyPackages]) thirdPartyByRef.set(component["bom-ref"], component);
+  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...coordinatorSelfTestNuget.packages, ...coordinatorNuget.packages, ...hostNuget.packages, ...platformComponents, ...githubActions, ...chocolateyPackages, decoderComponent]) thirdPartyByRef.set(component["bom-ref"], component);
   const rootRef = `pkg:generic/humcapture/HumCapture@${encodeURIComponent(productVersion)}`;
   const rootComponent = {
     type: "application",
@@ -427,7 +461,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     ]
   };
   const dependencies = [
-    { ref: rootRef, dependsOn: firstParty.map((item) => item["bom-ref"]).sort() },
+    { ref: rootRef, dependsOn: [...firstParty.map((item) => item["bom-ref"]), decoderComponent["bom-ref"]].sort() },
     ...npmSurfaces.flatMap((surface) => surface.dependencies),
     ...coordinatorNuget.dependencies,
     ...hostNuget.dependencies,
@@ -442,7 +476,7 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     { ref: workflowRef, dependsOn: [...githubActions, ...chocolateyPackages].map((component) => component["bom-ref"]).sort() }
   ];
   for (const component of thirdPartyByRef.values()) if (!dependencies.some((item) => item.ref === component["bom-ref"])) dependencies.push({ ref: component["bom-ref"], dependsOn: [] });
-  const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), host.manifestHash, hostNuget.manifestHash, coordinatorNuget.manifestHash, coordinatorSelfTestNuget.manifestHash, managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, coordinator.manifestHash, coordinatorSelfTest.manifestHash, sbomTool.manifestHash, sha256(workflowText), productVersion, generatedAt.toISOString() ].join("\n"));
+  const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), host.manifestHash, hostNuget.manifestHash, coordinatorNuget.manifestHash, coordinatorSelfTestNuget.manifestHash, managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, coordinator.manifestHash, coordinatorSelfTest.manifestHash, sbomTool.manifestHash, sha256(workflowText), sha256(decoderLockText), productVersion, generatedAt.toISOString() ].join("\n"));
   const bom = {
     "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
     bomFormat: "CycloneDX",

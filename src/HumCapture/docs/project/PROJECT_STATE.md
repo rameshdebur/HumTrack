@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** I0.4B-C13 | COORDINATOR | LOCAL COLLECTION
+**Tags:** I0.4B-C14A | VERIFIER | ARTIFACT + DECODER BASELINE
 **Last meaningful update:** 2026-09-15
 
 ## Objective
@@ -13,6 +13,12 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C14 package-verifier objective and prerequisite choices are user-approved.
+  C14A adds HC-IF-ART-001 1.0.0, schemas and executable contract checks, and a
+  disabled FFmpeg 9.0.1 archive candidate pin under ADR-0027. C14 runtime verifier
+  implementation, binary validation and redistribution approval remain open.
+  C13 remains the latest completed application implementation slice.
 
 - C13 local-folder collection is user-authorized (2026-09-15). Existing ARD,
   PRD, stories, requirements, roles, governance and preliminary India engineering

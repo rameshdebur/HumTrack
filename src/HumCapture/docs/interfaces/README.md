@@ -2,6 +2,10 @@
 
 ## Current interface work
 
+`CAPTURE_ARTIFACT_CONTRACT.md` defines HC-IF-ART-001 1.0.0, two capture artifact
+schemas and ten HC-ART-TEST cases. C14A checks event/finalization relationships;
+it is not an independent runtime media verifier and produces no VERIFIED record.
+
 `LOCAL_COLLECTION_CONTRACT.md` defines HC-IF-COL-LOCAL-001 1.0.0 for the
 C13 ordinary-folder collection command, existing checkpoint schema, and explicit
 COLLECTED_UNVERIFIED boundary. Direct MTP/HTTPS and scientific verifier remain open.

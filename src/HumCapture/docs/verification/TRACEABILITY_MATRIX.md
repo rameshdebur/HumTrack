@@ -1,5 +1,10 @@
 # HumCapture Traceability Matrix
 
+C14A: HC-DATA-REQ-001–003/009–012, HC-US-XFR-001–014 and HC-RISK-022/030/031
+map to HC-ART-TEST-001–010 under HC-IF-ART-001 1.0.0. Seven SBOM controls include
+the planned decoder lock. This is contract/tooling evidence; C14 runtime verifier
+and scientific verification remain open.
+
 **Status:** Preliminary; C1–C13 implement repository admission/commit/recovery, bounded host commands and ordinary-folder byte collection. Direct MTP/HTTPS, production verification, broader application implementation and hardware qualification remain open.
 
 C13: HC-US-XFR-001–014 / HC-DATA-REQ-001–003/009–012 / HC-RISK-022/030/031

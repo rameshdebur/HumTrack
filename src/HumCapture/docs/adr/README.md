@@ -32,3 +32,4 @@ Current records:
 - ADR-0024 — Explicit staged-package processing command.
 - ADR-0025 — Explicit verified-staging admission.
 - ADR-0026 — Local-folder collection into unverified staging.
+- ADR-0027 — Verifier artifact formats and controlled decoder baseline.

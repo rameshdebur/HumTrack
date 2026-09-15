@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { discoverDependencyManifests, generateSbom, parsePinnedChocolateyPackages, parsePinnedGitHubActions, validateSbomFile } from "../src/sbom.js";
+import { discoverDependencyManifests, generateSbom, parseDecoderLock, parsePinnedChocolateyPackages, parsePinnedGitHubActions, validateSbomFile } from "../src/sbom.js";
 
 const toolRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = path.resolve(toolRoot, "..", "..");
@@ -22,6 +22,10 @@ test("generates a valid CycloneDX 1.7 inventory with all declared surfaces", asy
   const validated = await validateSbomFile(output);
   assert.equal(validated.componentCount, generated.componentCount);
   const bom = JSON.parse(await readFile(output, "utf8"));
+  const decoder = bom.components.find((item) => item.name === "FFmpeg Windows essentials archive");
+  assert.equal(decoder.scope, "excluded");
+  assert.equal(decoder.version, "9.0.1");
+  assert.equal(decoder.hashes[0].content, "fec81ae03971d9dd4be3ebe02e263bd2ec1d789483f931bdba5f5715e65da2e9");
   const host = bom.components.find((item) => item.name === "HumCapture.Coordinator.Host");
   assert.ok(host);
   const repository = bom.components.find((item) => item.name === "HumCapture.Coordinator.Repository");
@@ -38,6 +42,17 @@ test("generates a valid CycloneDX 1.7 inventory with all declared surfaces", asy
   assert.ok(bom.components.some((item) => item.name === "setup-node" && item.group === "actions"));
   assert.ok(bom.components.some((item) => item.name === "setup-dotnet" && item.group === "actions"));
   assert.ok(bom.components.some((item) => item.name === "windows-sdk-10-version-2004-all" && item.version === "10.0.19041.685"));
+});
+
+test("decoder candidate requires immutable archive identity and cannot silently become enabled", async () => {
+  assert.throws(() => parseDecoderLock("null"), /Decoder lock/);
+  const baseline = JSON.parse(await readFile(path.join(repoRoot, "apps/windows-coordinator/decoder/decoder-lock.json"), "utf8"));
+  assert.equal(parseDecoderLock(JSON.stringify(baseline)).scope, "excluded");
+  for (const change of [
+    { version: "latest" }, { archive_sha256: "" }, { runtime_enabled: true },
+    { redistribution_approved: true }, { archive_url: "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" },
+    { license_review: "APPROVED" }
+  ]) assert.throws(() => parseDecoderLock(JSON.stringify({ ...baseline, ...change })), /Decoder lock/);
 });
 
 test("generation is deterministic for fixed inputs version and timestamp", async (t) => {

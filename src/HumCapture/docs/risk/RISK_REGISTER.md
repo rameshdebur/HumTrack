@@ -1,5 +1,12 @@
 # HumCapture Preliminary Risk Register
 
+C14A update (2026-09-15), HC-RISK-022/030/031: source-event archive and summary
+are identity/hash bound without a recursive package-hash dependency. Required
+gaps, invalid source time and false terminal claims fail contract checks.
+HC-ART-TEST-001–010 are synthetic only, not media/finalization proof. Planned
+FFmpeg archive identity enters SBOM as excluded/disabled; binary/library, licence,
+advisory and runtime qualification are open before worker activation/distribution.
+
 C13 update (2026-09-15), HC-RISK-022/030/031: local folder collection retains
 originals, refuses overlap/conflicts, binds manifests, rehashes reusable files,
 and restarts only owned partials. No collection/checkpoint authorizes admission

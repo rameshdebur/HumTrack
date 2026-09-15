@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:80ffd5c4-5a9d-5be6-843e-660431e9f88f",
+  "serialNumber": "urn:uuid:80f5c1ef-cce0-55ae-89e4-17f5a864a19e",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-15T12:17:56.075Z",
+    "timestamp": "2026-09-15T13:29:39.883Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-i0.4b-c13",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c13",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c13",
+      "version": "0.1.0-i0.4b-c14a",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14a",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14a",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -103,11 +103,64 @@
     },
     {
       "type": "application",
+      "name": "FFmpeg Windows essentials archive",
+      "version": "9.0.1",
+      "bom-ref": "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
+      "purl": "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
+      "scope": "excluded",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fec81ae03971d9dd4be3ebe02e263bd2ec1d789483f931bdba5f5715e65da2e9"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "Publisher-declared GPLv3; legal review pending"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0.1-essentials_build.zip"
+        },
+        {
+          "type": "website",
+          "url": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0.1-essentials_build.zip.sha256"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "apps/windows-coordinator/decoder/decoder-lock.json"
+        },
+        {
+          "name": "humcapture:dependency-status",
+          "value": "planned-disabled-not-downloaded-not-distributed"
+        },
+        {
+          "name": "humcapture:hash-status",
+          "value": "publisher-declared-archive-sha256; downloaded-bytes-not-verified"
+        },
+        {
+          "name": "humcapture:known-unknown",
+          "value": "executable hashes; embedded libraries; runtime qualification; vulnerability and licence review"
+        },
+        {
+          "name": "humcapture:not-distributed",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-i0.4b-c13",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c13",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c13",
+      "version": "0.1.0-i0.4b-c14a",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14a",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14a",
       "scope": "excluded",
       "hashes": [
         {
@@ -1112,7 +1165,11 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c13",
+      "ref": "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14a",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
@@ -1169,10 +1226,11 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c13",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14a",
       "dependsOn": [
+        "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c13",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14a",
         "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
@@ -1311,7 +1369,7 @@
     },
     {
       "name": "humcapture:declared-manifests",
-      "value": "tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
+      "value": "apps/windows-coordinator/decoder/decoder-lock.json;tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
     }
   ]
 }
