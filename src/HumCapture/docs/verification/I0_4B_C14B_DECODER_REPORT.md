@@ -1,9 +1,17 @@
 # C14B Decoder Candidate Engineering Evidence
 
-HC-VR-I0-4B-C14B-001, 2026-09-15. Local candidate checks passed; hosted guard CI pending.
+HC-VR-I0-4B-C14B-001, 2026-09-15. Local candidate checks and hosted regression CI passed.
 Scope: isolated engineering qualification under ADR-0027, not a production worker.
 Primary owner: Coordinator engineer; affected Release/SBOM and QA; independent
 human review open. No regulatory applicability or claims change.
+
+Source revision: 20299681cc485eb5b9ebda0030d818c0fc731839.
+[Push CI](https://github.com/rameshdebur/HumTrack/actions/runs/34981598252) and
+[PR CI](https://github.com/rameshdebur/HumTrack/actions/runs/34981605120) both passed.
+Hosted runs exercise probe guards and existing regressions, NOT downloaded decoder
+execution. Actual decoder behavior is attested by the local synthetic-media report.
+A documentation-only follow-up records these outcomes; CI links attest the source
+revision above, not that subsequent documentation commit.
 
 ## Observations and provenance
 

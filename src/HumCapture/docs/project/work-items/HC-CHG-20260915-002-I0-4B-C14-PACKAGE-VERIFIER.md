@@ -70,3 +70,8 @@ application interface/persistence/claim change. Risk controls HC-RISK-022/030/03
 remain unfulfilled until all required runtime package checks are integrated.
 Evidence: ../../verification/I0_4B_C14B_DECODER_REPORT.md. AI implemented and tested
 this slice; independent human review remains open.
+
+C14B source 20299681cc485eb5b9ebda0030d818c0fc731839 passed push CI34981598252
+and PR CI34981605120. Local real-decoder/synthetic-media proof remains separate
+from hosted guard/regression tests. Source, SBOM and evidence changes are confined
+to HumCapture; the candidate is not installed into or enabled by the Coordinator.

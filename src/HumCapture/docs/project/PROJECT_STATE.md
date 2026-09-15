@@ -21,6 +21,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   See HC-VR-I0-4B-C14B-001. Next: C14C production bounded decoder worker and its
   cancellation/resource/failure tests, followed by independent scientific artifact
   integration. Library/vulnerability/licence review and redistribution remain open.
+  C14B source 20299681cc485eb5b9ebda0030d818c0fc731839 passed both hosted runs
+  34981598252/34981605120: 105 contract/guard, 7 SBOM and 135 repository regressions.
+  Actual decoder execution is local synthetic evidence, not hosted/hardware evidence.
 
 - C14 package-verifier objective and prerequisite choices are user-approved.
   C14A adds HC-IF-ART-001 1.0.0, schemas and executable contract checks, and a
