@@ -2,12 +2,19 @@
 
 HC-VR-I0-4B-C13-001, 2026-09-15. Local runtime: 135/135 passed.
 Build: zero warnings/errors. Contract tests: 91/91. SBOM tests: 6/6.
-Project and official CycloneDX 0.33.1 validators pass. Hosted CI pending.
+Project and official CycloneDX 0.33.1 validators pass. Hosted CI passed.
 SBOM 0.1.0-i0.4b-c13: 32 components/33 graph nodes, unchanged dependencies;
 generated 2026-09-15T12:17:56.075Z; SHA-256
 48a7808a54cd658acca15b2b64309e472c84ffc7cc090258106dcc737b9c47eb.
 Evidence-control production npm audit and host transitive NuGet advisory query
 report no known vulnerabilities from configured sources; no VEX/licence approval.
+
+Source revision: `64121a53f09b970d004eaaafcbd4bfa5d141f3d1`.
+[Push CI](https://github.com/rameshdebur/HumTrack/actions/runs/34968227193) and
+[PR CI](https://github.com/rameshdebur/HumTrack/actions/runs/34968233021) both
+completed successfully for this revision. Retained workflow logs provide the
+hosted build/test evidence. This subsequent documentation-only update records
+those results; they attest the source revision above, not a controlled release.
 
 | Test (HC-REP-RUNTIME-) | Objective | Result |
 |---|---|---|

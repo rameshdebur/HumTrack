@@ -18,6 +18,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   PRD, stories, requirements, roles, governance and preliminary India engineering
   baseline apply; ADR-0026 defines this bounded implementation gate. No direct
   MTP/HTTPS, media verifier, receipt, cleanup, UI or medical claim is authorized.
+  Implemented collect-local / CollectLocalFolder stops at COLLECTED_UNVERIFIED.
+  HC-VR-I0-4B-C13-001 records 135 runtime, 91 contract and 6 SBOM passes and
+  both successful hosted source-revision runs; real-device acceptance remains open.
 
 - C12 host admission of already-collected verified staging is authorized under
   HC-CHG-20260912-017 and ADR-0025; collection/verifier implementation is excluded.
