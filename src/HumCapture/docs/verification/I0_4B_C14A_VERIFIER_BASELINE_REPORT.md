@@ -1,8 +1,15 @@
 # C14A Verifier Baseline Verification
 
-HC-VR-I0-4B-C14A-001, 2026-09-15. Local engineering verification passed; CI pending.
+HC-VR-I0-4B-C14A-001, 2026-09-15. Local and hosted engineering verification passed.
 
 Repository regression: 135/135 passed. Release build: zero warnings/errors.
+
+Source revision: dcd6bd87901602450020747726b0653529722ac3.
+[Push CI](https://github.com/rameshdebur/HumTrack/actions/runs/34975585870) and
+[PR CI](https://github.com/rameshdebur/HumTrack/actions/runs/34975589810) both
+completed successfully for this revision. Their retained logs are hosted
+build/test evidence. A subsequent documentation-only commit records the result;
+these runs attest the source revision above, not decoder/runtime qualification.
 
 101/101 contract tests and 7/7 SBOM tests pass. Project and official CycloneDX
 0.33.1 validators pass: 33 components/34 nodes, including a planned excluded

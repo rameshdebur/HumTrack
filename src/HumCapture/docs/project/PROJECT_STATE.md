@@ -19,6 +19,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   disabled FFmpeg 9.0.1 archive candidate pin under ADR-0027. C14 runtime verifier
   implementation, binary validation and redistribution approval remain open.
   C13 remains the latest completed application implementation slice.
+  C14A evidence: 101 contract, 7 SBOM and 135 repository regressions pass;
+  both hosted runs passed for dcd6bd87901602450020747726b0653529722ac3.
+  See HC-VR-I0-4B-C14A-001. C14B decoder binary/worker verification is next.
 
 - C13 local-folder collection is user-authorized (2026-09-15). Existing ARD,
   PRD, stories, requirements, roles, governance and preliminary India engineering

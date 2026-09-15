@@ -53,3 +53,9 @@ No camera access or capture-data mutation occurred. AI contribution: inspection,
 design, schemas/conformance tests and documentation; independent review is open.
 
 Evidence: ../../verification/I0_4B_C14A_VERIFIER_BASELINE_REPORT.md.
+
+C14A local and hosted engineering verification passed: 101 contract, 7 SBOM and
+135 repository runtime tests; zero-warning/error build. Source
+dcd6bd87901602450020747726b0653529722ac3 passed CI 34975585870 and 34975589810.
+C14B remains: obtain/verify exact decoder binaries, implement the bounded worker
+and independent verifier, and test actual media. C14 overall is not complete.
