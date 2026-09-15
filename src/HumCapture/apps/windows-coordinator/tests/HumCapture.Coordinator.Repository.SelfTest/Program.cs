@@ -132,7 +132,17 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-122 admission retains changed package and refuses it", AdmissionPackageTamper),
     ("HC-REP-RUNTIME-123 admission refuses missing staging and unsupported root", AdmissionUnavailable),
     ("HC-REP-RUNTIME-124 admission shares host guard and rejects incompatible CLI options", AdmissionHostGuard),
-    ("HC-REP-RUNTIME-125 admission rejects changed verifier bytes", AdmissionVerifierTamper)
+    ("HC-REP-RUNTIME-125 admission rejects changed verifier bytes", AdmissionVerifierTamper),
+    ("HC-REP-RUNTIME-126 local collection preserves source and reuses exact files", LocalCollectionReplay),
+    ("HC-REP-RUNTIME-127 local collection restarts owned partial bytes", LocalCollectionPartial),
+    ("HC-REP-RUNTIME-128 local collection rejects changed destination", LocalCollectionConflict),
+    ("HC-REP-RUNTIME-129 local collection refuses damaged source", LocalCollectionDamagedSource),
+    ("HC-REP-RUNTIME-130 local collection rejects overlapping trees", LocalCollectionOverlap),
+    ("HC-REP-RUNTIME-131 local collection pre-cancellation has no staging writes", LocalCollectionCancelled),
+    ("HC-REP-RUNTIME-132 local collection host command and guard", LocalCollectionHost),
+    ("HC-REP-RUNTIME-133 local collection refuses changed manifest binding", LocalCollectionBinding),
+    ("HC-REP-RUNTIME-134 local collection refuses cross-attempt identity conflict", LocalCollectionIdentityConflict),
+    ("HC-REP-RUNTIME-135 admitted packages cannot be recollected", LocalCollectionAdmitted)
 };
 
 var failures = 0;
@@ -152,6 +162,119 @@ foreach (var (name, body) in tests)
 
 await Console.Out.WriteLineAsync($"SUMMARY total={tests.Length} passed={tests.Length - failures} failed={failures}");
 return failures == 0 ? 0 : 1;
+
+static void WithLocalCollection(Action<string, RepositoryService, string, Guid> body)
+{
+    WithRepository((root, service) => WithTemporaryRoot(external =>
+    {
+        var fixture = CreateStagedFixture(external);
+        body(root, service, Path.Combine(external, fixture.StagingRelativePath), TestId(97001));
+    }));
+}
+
+static void LocalCollectionReplay() => WithLocalCollection((root, service, source, attempt) =>
+{
+    var before = DirectoryFingerprint(source);
+    var first = service.CollectLocalFolder(root, source, attempt);
+    Equal("COLLECTED_UNVERIFIED", first.State);
+    Equal(2, first.CopiedFiles);
+    var second = service.CollectLocalFolder(root, source, attempt);
+    Equal(0, second.CopiedFiles); Equal(2, second.ReusedFiles);
+    Equal(before, DirectoryFingerprint(source));
+    Equal(0L, ScalarLongAtRoot(root, "SELECT count(*) FROM repository_transactions"));
+    using var checkpoint = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(root, "staging", attempt.ToString("D"), "collection-checkpoint.json")));
+    foreach (var entry in checkpoint.RootElement.GetProperty("artifacts").EnumerateArray())
+    { Equal("STAGED", entry.GetProperty("state").GetString()!); True(!entry.TryGetProperty("artifact_verification_id", out _)); }
+});
+
+static void LocalCollectionPartial() => WithLocalCollection((root, service, source, attempt) =>
+{
+    var first = service.CollectLocalFolder(root, source, attempt);
+    var payload = Path.Combine(root, first.StagingRelativePath);
+    using var manifest = JsonDocument.Parse(File.ReadAllBytes(Path.Combine(source, "package-manifest.json")));
+    var artifact = manifest.RootElement.GetProperty("artifacts")[0];
+    var relative = artifact.GetProperty("relative_path").GetString()!;
+    var partial = Path.Combine(root, "staging", attempt.ToString("D"), "partials", artifact.GetProperty("artifact_id").GetString()!);
+    File.Move(Path.Combine(payload, relative), partial);
+    File.WriteAllText(partial, "interrupted bytes");
+    var retry = service.CollectLocalFolder(root, source, attempt);
+    Equal(1, retry.CopiedFiles); Equal(1, retry.ReusedFiles);
+    Equal(Hash(Path.Combine(source, relative)), Hash(Path.Combine(payload, relative)));
+});
+
+static void LocalCollectionConflict() => WithLocalCollection((root, service, source, attempt) =>
+{
+    var first = service.CollectLocalFolder(root, source, attempt);
+    var target = Path.Combine(root, first.StagingRelativePath, "events.json");
+    File.AppendAllText(target, "changed"); var before = Hash(target);
+    Throws(RepositoryErrorCode.EvidenceMismatch, () => service.CollectLocalFolder(root, source, attempt));
+    Equal(before, Hash(target));
+});
+
+static void LocalCollectionDamagedSource() => WithLocalCollection((root, service, source, attempt) =>
+{
+    File.AppendAllText(Path.Combine(source, "events.json"), "changed");
+    var before = DirectoryFingerprint(root);
+    Throws(RepositoryErrorCode.EvidenceMismatch, () => service.CollectLocalFolder(root, source, attempt));
+    Equal(before, DirectoryFingerprint(root));
+});
+
+static void LocalCollectionOverlap() => WithLocalCollection((root, service, _, attempt) =>
+{
+    Throws(RepositoryErrorCode.EvidenceMismatch, () => service.CollectLocalFolder(root, root, attempt));
+    Throws(RepositoryErrorCode.EvidenceMismatch, () => service.CollectLocalFolder(root, Path.Combine(root, "staging"), attempt));
+});
+
+static void LocalCollectionCancelled() => WithLocalCollection((root, service, source, attempt) =>
+{
+    var before = DirectoryFingerprint(root);
+    try { service.CollectLocalFolder(root, source, attempt, new CancellationToken(true)); throw new InvalidOperationException("Expected cancellation."); }
+    catch (OperationCanceledException) { /* Expected before staging mutations. */ }
+    Equal(before, DirectoryFingerprint(root));
+});
+
+static void LocalCollectionHost() => WithLocalCollection((root, _, source, attempt) =>
+{
+    var run = RunHost("collect-local", "--root", root, "--source", source, "--attempt", attempt.ToString("D"));
+    using var output = run.Output; Equal(0, run.ExitCode);
+    Equal("COLLECTED_UNVERIFIED", output.RootElement.GetProperty("status").GetString()!);
+    using var guard = new Mutex(true, HumCapture.Coordinator.Host.Program.StartupMutexName(root));
+    try
+    {
+        var blocked = RunHost("collect-local", "--root", root, "--source", source, "--attempt", attempt.ToString("D"));
+        using var blockedOutput = blocked.Output; Equal(7, blocked.ExitCode);
+    }
+    finally { guard.ReleaseMutex(); }
+});
+
+static void LocalCollectionBinding() => WithLocalCollection((root, service, source, attempt) =>
+{
+    _ = service.CollectLocalFolder(root, source, attempt);
+    var binding = Path.Combine(root, "staging", attempt.ToString("D"), "collection-manifest.json");
+    File.AppendAllText(binding, "changed"); var before = DirectoryFingerprint(root);
+    Throws(RepositoryErrorCode.EvidenceMismatch, () => service.CollectLocalFolder(root, source, attempt));
+    Equal(before, DirectoryFingerprint(root));
+});
+
+static void LocalCollectionIdentityConflict() => WithLocalCollection((root, service, source, attempt) =>
+{
+    _ = service.CollectLocalFolder(root, source, attempt);
+    var binding = Path.Combine(root, "staging", attempt.ToString("D"), "collection-manifest.json");
+    var node = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllBytes(binding))!;
+    node["package_content_sha256"] = new string('0', 64);
+    File.WriteAllText(binding, node.ToJsonString()); var before = DirectoryFingerprint(root);
+    Throws(RepositoryErrorCode.EvidenceMismatch, () => service.CollectLocalFolder(root, source, TestId(97002)));
+    Equal(before, DirectoryFingerprint(root));
+});
+
+static void LocalCollectionAdmitted() => WithLocalCollection((root, service, source, attempt) =>
+{
+    var fixture = CreateStagedFixture(root);
+    _ = service.RegisterStagedVerifiedPackage(root, fixture.Registration);
+    var before = DirectoryFingerprint(root);
+    Throws(RepositoryErrorCode.JournalConflict, () => service.CollectLocalFolder(root, source, attempt));
+    Equal(before, DirectoryFingerprint(root));
+});
 
 static RepositoryStartupReconciliationRequest LaterStartup(RepositoryFinalCommitRequest final, bool change) => new()
 {

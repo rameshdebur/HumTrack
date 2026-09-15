@@ -1,8 +1,8 @@
 # HumCapture Project State
 
-**Status:** Prior accepted slices and I0.4B-C1–C12 are implemented at their recorded evidence levels  
-**Tags:** I0.4B-C12 | COORDINATOR HOST | VERIFIED-STAGING ADMISSION  
-**Last meaningful update:** 2026-09-12
+**Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
+**Tags:** I0.4B-C13 | COORDINATOR | LOCAL COLLECTION
+**Last meaningful update:** 2026-09-15
 
 ## Objective
 
@@ -13,6 +13,11 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C13 local-folder collection is user-authorized (2026-09-15). Existing ARD,
+  PRD, stories, requirements, roles, governance and preliminary India engineering
+  baseline apply; ADR-0026 defines this bounded implementation gate. No direct
+  MTP/HTTPS, media verifier, receipt, cleanup, UI or medical claim is authorized.
 
 - C12 host admission of already-collected verified staging is authorized under
   HC-CHG-20260912-017 and ADR-0025; collection/verifier implementation is excluded.

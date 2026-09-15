@@ -2,6 +2,10 @@
 
 ## Current interface work
 
+`LOCAL_COLLECTION_CONTRACT.md` defines HC-IF-COL-LOCAL-001 1.0.0 for the
+C13 ordinary-folder collection command, existing checkpoint schema, and explicit
+COLLECTED_UNVERIFIED boundary. Direct MTP/HTTPS and scientific verifier remain open.
+
 `CONTROL_STATE_MACHINE.md` is accepted engineering interface baseline
 `HC-IF-CTRL-001` version `1.3.0`. It consolidates explicitly accepted I0.1A-I
 and I0.2A decisions. ADR-0010 records immutable session protocol snapshots;

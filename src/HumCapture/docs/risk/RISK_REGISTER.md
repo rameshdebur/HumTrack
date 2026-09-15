@@ -1,5 +1,11 @@
 # HumCapture Preliminary Risk Register
 
+C13 update (2026-09-15), HC-RISK-022/030/031: local folder collection retains
+originals, refuses overlap/conflicts, binds manifests, rehashes reusable files,
+and restarts only owned partials. No collection/checkpoint authorizes admission
+or cleanup. HC-REP-RUNTIME-126–135 pass with synthetic evidence; hardware,
+power-loss, live capture load and operator conflict resolution remain unverified.
+
 C12 control update (2026-09-12), HC-RISK-022/030/031: host admission reads a
 bounded strict request, supplies the current Windows identity, preserves exact
 verifier bytes and invokes existing package/evidence checks. It does not create

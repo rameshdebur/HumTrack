@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using HumCapture.Coordinator.Repository;
+using Microsoft.Data.Sqlite;
 
 namespace HumCapture.Coordinator.Host;
 
@@ -12,6 +13,7 @@ public static class Program
     /// <summary>Runs a single explicitly requested repository pass.</summary>
     public static int Main(string[] args)
     {
+        if (args.FirstOrDefault() == "collect-local") { return RunLocalCollection(args); }
         if (!TryParse(args, out var root, out var limit, out var after, out var requestPath))
         {
             WriteError("INVALID_ARGUMENTS");
@@ -98,6 +100,51 @@ public static class Program
 
     private static void WriteError(string code) =>
         Console.WriteLine(JsonSerializer.Serialize(new { schema_version = "1.2.0", status = "Failed", error_code = code }));
+
+    private static int RunLocalCollection(string[] args)
+    {
+        var options = new Dictionary<string, string>(StringComparer.Ordinal);
+        if (args.Length == 7)
+        {
+            for (var i = 1; i < args.Length; i += 2)
+            {
+                if (!options.TryAdd(args[i], args[i + 1])) { WriteError("INVALID_ARGUMENTS"); return 2; }
+            }
+        }
+        if (options.Count != 3 || !options.TryGetValue("--root", out var root)
+            || !options.TryGetValue("--source", out var source) || !options.TryGetValue("--attempt", out var text)
+            || !Path.IsPathFullyQualified(root) || !Path.IsPathFullyQualified(source)
+            || !Guid.TryParseExact(text, "D", out var attempt) || attempt == Guid.Empty)
+        { WriteError("INVALID_ARGUMENTS"); return 2; }
+        try
+        {
+            using var guard = new Mutex(false, StartupMutexName(root));
+            var acquired = false;
+            try
+            {
+                try { acquired = guard.WaitOne(0); } catch (AbandonedMutexException) { acquired = true; }
+                if (!acquired) { WriteError("STARTUP_ALREADY_RUNNING"); return 7; }
+                using var cancellation = new CancellationTokenSource();
+                ConsoleCancelEventHandler handler = (_, e) => { e.Cancel = true; cancellation.Cancel(); };
+                Console.CancelKeyPress += handler;
+                try
+                {
+                var result = new RepositoryService().CollectLocalFolder(root, source, attempt, cancellation.Token);
+                Console.WriteLine(JsonSerializer.Serialize(new { schema_version = "1.2.0", status = result.State,
+                    copied_files = result.CopiedFiles, reused_files = result.ReusedFiles }));
+                return 0;
+                }
+                finally { Console.CancelKeyPress -= handler; }
+            }
+            finally { if (acquired) { guard.ReleaseMutex(); } }
+        }
+        catch (OperationCanceledException) { WriteError("COLLECTION_CANCELLED"); return 130; }
+        catch (RepositoryException exception) { WriteError(exception.Code.ToString()); return 3; }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException
+            or InvalidOperationException or JsonException or FormatException or OverflowException or KeyNotFoundException
+            or SqliteException or System.Security.SecurityException)
+        { WriteError("COLLECTION_FAILED"); return 3; }
+    }
 
     private static int RunAdmission(string root, string requestPath)
     {

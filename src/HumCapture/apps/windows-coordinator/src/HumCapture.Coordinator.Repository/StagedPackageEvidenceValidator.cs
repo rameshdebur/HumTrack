@@ -29,7 +29,26 @@ internal static partial class StagedPackageEvidenceValidator
 
     public static ValidatedStagedEvidence Validate(
         string stagingDirectory,
-        StagedPackageEvidenceExpectation expectation)
+        StagedPackageEvidenceExpectation expectation) => ValidateCore(stagingDirectory, expectation, true);
+
+    internal static void ValidateCollectedBytes(string directory)
+    {
+        RepositoryPathSafety.RequireSafeDirectoryTree(directory);
+        var path = Path.Combine(directory, ManifestFileName);
+        RepositoryPathSafety.RequireSingleLinkFile(path);
+        using var document = Parse(File.ReadAllBytes(path), "collection manifest");
+        var manifest = document.RootElement;
+        var expectation = new StagedPackageEvidenceExpectation(
+            Guid.Parse(CanonicalUuid(manifest, "subject_id")), Guid.Parse(CanonicalUuid(manifest, "session_id")),
+            Guid.Parse(CanonicalUuid(manifest, "trial_id")), Guid.Parse(CanonicalUuid(manifest, "source_id")),
+            Guid.Parse(CanonicalUuid(manifest, "capture_attempt_id")), Guid.Parse(CanonicalUuid(manifest, "package_id")),
+            Sha256(manifest, "package_content_sha256"), Sha256(manifest, "artifact_set_sha256"),
+            Guid.Empty, "", U64(manifest, "package_byte_length"), Integer(manifest, "artifact_count"), default);
+        _ = ValidateCore(directory, expectation, false);
+    }
+
+    private static ValidatedStagedEvidence ValidateCore(
+        string stagingDirectory, StagedPackageEvidenceExpectation expectation, bool requireVerification)
     {
         RepositoryPathSafety.RequireSafeDirectoryTree(stagingDirectory);
         var manifestPath = Path.Combine(stagingDirectory, ManifestFileName);
@@ -175,6 +194,8 @@ internal static partial class StagedPackageEvidenceValidator
 
         Equal(expectation.PackageContentSha256, ComputeCanonicalManifestHash(manifest), "Computed package-content SHA-256");
 
+        // Byte collection is deliberately not a scientific verification milestone.
+        if (!requireVerification) { return new ValidatedStagedEvidence(0); }
         var verificationBytes = expectation.VerificationRecordUtf8.ToArray();
         Equal(expectation.VerificationRecordContentSha256,
             Convert.ToHexStringLower(SHA256.HashData(verificationBytes)),

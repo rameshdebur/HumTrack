@@ -1,5 +1,19 @@
 # HumCapture Windows Coordinator
 
+## C13 ordinary-folder collection
+
+```powershell
+dotnet run --project src/HumCapture.Coordinator.Host -c Release -- collect-local --root C:\CaptureRepository --source D:\FinalizedPackage --attempt 11111111-1111-4111-8111-111111111111
+```
+
+Root must already be initialized. Use a new stable attempt UUID per collection;
+reuse it for retry. Output COLLECTED_UNVERIFIED means only byte collection, not
+capture completion or safe source deletion. Originals are retained. Complete
+staged files are rehashed before reuse; owned partials restart from zero.
+Conflicts stop with retained evidence. Already-admitted packages must use recovery.
+Direct MTP, HTTPS, independent video verification, receipt and cleanup are absent.
+See ../../docs/interfaces/LOCAL_COLLECTION_CONTRACT.md for recovery/exit codes.
+
 This subtree contains the dedicated Windows Coordinator application and its
 headless services. It borrows HumTrack's Windows engineering principles but
 does not reference HumTrack application internals.
