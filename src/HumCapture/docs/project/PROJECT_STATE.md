@@ -20,7 +20,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Implemented: pinned ffprobe plus full ffmpeg decode, file hash/length, exact PTS/
   rational time base, frame dimensions and presentation order. Local checks pass:
   148 runtime, 105 contract, 7 SBOM and four real-media cases; clean Release build.
-  Hosted CI pending. Evidence HC-VR-I0-4B-C14D-001. Next C14E: compare decoded
+  Source 1732f943bcf4edab8016723271c3fcb815d04932 passed hosted runs
+  35099627316/35099632477. Evidence HC-VR-I0-4B-C14D-001. Next C14E: compare decoded
   evidence with source-frame/timing/camera metadata before later IMU/events/finalization
   integration. Full C14 and deployment remain incomplete.
 

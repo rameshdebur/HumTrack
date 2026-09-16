@@ -1,8 +1,15 @@
 # C14D Decoded Media Evidence Verification
 
-HC-VR-I0-4B-C14D-001, 2026-09-16. Local checks passed; hosted CI pending.
+HC-VR-I0-4B-C14D-001, 2026-09-16. Local checks and hosted CI passed.
 Scope ADR-0029 / HC-CHG-20260915-002. Coordinator engineer/Architect; affected timing,
 QA, Release/SBOM and risk. Independent human review pending. No deployment approval.
+
+Source 1732f943bcf4edab8016723271c3fcb815d04932 passed
+[push CI](https://github.com/rameshdebur/HumTrack/actions/runs/35099627316) and
+[PR CI](https://github.com/rameshdebur/HumTrack/actions/runs/35099632477).
+These runs attest hosted automated regressions for that source revision; actual
+pinned-binary inspection remains separate local synthetic evidence. A subsequent
+documentation-only commit records these results and is not the attested revision.
 
 ## Implemented boundary
 

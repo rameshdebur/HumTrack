@@ -117,3 +117,7 @@ revisited before any supported protocol exceeds it; it is not a camera rejection
 pass locally. Full source-time/camera/IMU/event/finalization integration and package
 verification remain open. Evidence: ../../verification/I0_4B_C14D_MEDIA_EVIDENCE_REPORT.md.
 AI implementation/testing/documentation; independent human review pending.
+
+C14D source 1732f943bcf4edab8016723271c3fcb815d04932 passed push35099627316
+and PR35099632477. Actual FFmpeg/ffprobe synthetic tests remain local evidence;
+no device, field, medical or deployment qualification occurred.
