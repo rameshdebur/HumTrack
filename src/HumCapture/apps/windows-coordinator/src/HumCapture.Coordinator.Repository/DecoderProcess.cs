@@ -24,7 +24,7 @@ internal static class DecoderProcess
             throw new ArgumentOutOfRangeException(nameof(timeout));
         }
 
-        if (outputLimit < 1 || outputLimit > 1024 * 1024)
+        if (outputLimit < 1 || outputLimit > 16 * 1024 * 1024)
         {
             throw new ArgumentOutOfRangeException(nameof(outputLimit));
         }

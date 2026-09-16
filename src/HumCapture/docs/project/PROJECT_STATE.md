@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** I0.4B-C14C | VERIFIER | BOUNDED WORKER
+**Tags:** I0.4B-C14D | VERIFIER | STREAM + FRAME EVIDENCE
 **Last meaningful update:** 2026-09-16
 
 ## Objective
@@ -14,6 +14,16 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
+- C14D is authorized under ADR-0029 and the existing C14 design/governance baseline:
+  implement internal hash-bound stream/frame evidence extraction, not host activation
+  or package verification. Scientific artifact association remains subsequent work.
+  Implemented: pinned ffprobe plus full ffmpeg decode, file hash/length, exact PTS/
+  rational time base, frame dimensions and presentation order. Local checks pass:
+  148 runtime, 105 contract, 7 SBOM and four real-media cases; clean Release build.
+  Hosted CI pending. Evidence HC-VR-I0-4B-C14D-001. Next C14E: compare decoded
+  evidence with source-frame/timing/camera metadata before later IMU/events/finalization
+  integration. Full C14 and deployment remain incomplete.
+
 - C14C engineering is user-authorized (2026-09-16) under ADR-0028 and the existing
   C14 design/requirements/roles/governance/interface/risk baseline. Scope is an
   internal bounded decoder worker plus tests; host integration/deployment remain
@@ -24,8 +34,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   and four actual .NET-worker synthetic media cases passed. Source revision
   f267ee1716bb1612f2342aa4ae849e6eb4f0fb25 passed hosted runs
   35097073099/35097076289. Actual FFmpeg tests are local evidence only.
-  See HC-VR-I0-4B-C14C-001. Next C14D: stream/frame evidence and scientific artifact
-  integration. Full C14, deployment review and package-verifier activation remain open.
+  See HC-VR-I0-4B-C14C-001. C14D now supplies stream/frame observations; scientific
+  artifact integration, deployment review and package-verifier activation remain open.
 
 - C14B verifies the pinned archive and executable identities and adds a repeatable
   engineering-only decoder probe. Seven synthetic fixed/variable H.264/MP4 media

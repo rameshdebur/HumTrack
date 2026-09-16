@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace HumCapture.Coordinator.Repository;
 
-internal static class PinnedDecoderWorker
+internal static partial class PinnedDecoderWorker
 {
     private static readonly SemaphoreSlim SingleWorker = new(1, 1);
     private static bool cleanupBlocked;

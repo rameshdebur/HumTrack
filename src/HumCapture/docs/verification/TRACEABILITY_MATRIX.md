@@ -1,5 +1,9 @@
 # HumCapture Traceability Matrix
 
+C14D: HC-DATA-REQ-001/002/009, HC-IF-TIM-001 provenance and HC-RISK-022/030/031
+map to HC-REP-RUNTIME-143–148 and four HC-MEDIA-REAL cases in HC-VR-I0-4B-C14D-001.
+Exact decoded observations only; source/metadata and package verification are open.
+
 C14C: HC-DATA-REQ-001/002/009, HC-UVC-REQ-005 and HC-RISK-022/030/031 map to
 HC-REP-RUNTIME-136–142 and HC-DEC-WORKER-REAL cases in HC-VR-I0-4B-C14C-001.
 Internal execution boundary only; no package-verification requirement closure.

@@ -1,5 +1,13 @@
 # HumCapture Preliminary Risk Register
 
+C14D update (2026-09-16), HC-RISK-022/030/031: decoded stream/frame observations
+are hash-bound to the leased input and obtained from pinned binaries. No nominal
+FPS, inferred timestamp, sorting or padding substitutes for observed PTS. Missing/
+ambiguous/oversized evidence fails without a partial result. HC-REP-RUNTIME-143–148
+and four real-media cases pass locally. Source/metadata association remains open;
+no scientific-conformance, package-VERIFIED, hardware or regulatory claim follows.
+See ADR-0029 / HC-VR-I0-4B-C14D-001.
+
 C14C update (2026-09-16), HC-RISK-022/030/031: internal pinned .NET decoder worker
 adds cancellable serial execution, bounded diagnostics/deadline, read-only leases
 and explicit failure outcomes. HC-REP-RUNTIME-136–142 plus four synthetic actual

@@ -17,6 +17,11 @@ if (args.Length == 3 && args[0] == "--decoder-real")
     return await DecoderWorkerTests.RealAsync(args[1], args[2]);
 }
 
+if (args.Length == 3 && args[0] == "--inspect-real")
+{
+    return await MediaInspectionTests.RealAsync(args[1], args[2]);
+}
+
 var tests = new (string Name, Action Body)[]
 {
     ("HC-REP-RUNTIME-001 initialize creates exact repository surface", InitializeCreatesSurface),
@@ -160,7 +165,13 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-139 decoder cancellation before/during execution", DecoderWorkerTests.Cancellation),
     ("HC-REP-RUNTIME-140 decoder missing executable fails", DecoderWorkerTests.MissingExecutable),
     ("HC-REP-RUNTIME-141 decoder pin/path refusal releases leases", DecoderWorkerTests.PinAndPathRefusal),
-    ("HC-REP-RUNTIME-142 decoder arguments preserve source cadence", DecoderWorkerTests.ArgumentsPreserveCadence)
+    ("HC-REP-RUNTIME-142 decoder arguments preserve source cadence", DecoderWorkerTests.ArgumentsPreserveCadence),
+    ("HC-REP-RUNTIME-143 inspection preserves exact PTS order and geometry", MediaInspectionTests.ExactEvidence),
+    ("HC-REP-RUNTIME-144 inspection rejects invalid or multiple video streams", MediaInspectionTests.StreamRefusals),
+    ("HC-REP-RUNTIME-145 inspection rejects missing malformed or foreign frames", MediaInspectionTests.FrameRefusals),
+    ("HC-REP-RUNTIME-146 inspection frame envelope and cancellation", MediaInspectionTests.EnvelopeAndCancellation),
+    ("HC-REP-RUNTIME-147 inspection pin or cancellation produces no evidence", MediaInspectionTests.PinAndFailureEvidence),
+    ("HC-REP-RUNTIME-148 inspection requests observed not inferred PTS", MediaInspectionTests.ArgumentsUseObservedPts)
 };
 
 var failures = 0;

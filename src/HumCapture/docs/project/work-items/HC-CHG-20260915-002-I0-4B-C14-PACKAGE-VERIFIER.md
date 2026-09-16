@@ -2,8 +2,8 @@
 
 ID: HC-CHG-20260915-002. Date: 2026-09-15.
 Status: C14 objective and prerequisite choices approved; C14A contract baseline
-and C14B engineering decoder probe implemented. C14C internal bounded worker now
-implemented and locally verified; full runtime package verifier remains incomplete.
+and C14B engineering decoder probe implemented. C14C internal bounded worker and
+C14D stream/frame inspection implemented; full runtime package verifier remains incomplete.
 
 Approved: independently decode collected video, check timing/camera/events/
 finalization and applicable IMU evidence, preserve measured fixed/variable cadence,
@@ -97,3 +97,23 @@ AI implementation/testing/documentation; independent human review pending.
 C14C source f267ee1716bb1612f2342aa4ae849e6eb4f0fb25 passed push35097073099
 and PR35097076289. Local real-decoder results, hosted subprocess controls and
 hardware/field evidence remain separate; no hardware or field qualification occurred.
+
+## C14D — hash-bound stream/frame evidence, 2026-09-16
+
+User continuation authorizes the next internal verifier step. ADR-0029 records the
+exact presentation-time/provenance boundary and bounded inspection trade-off.
+Primary Coordinator engineer/Architect; affected timing, QA, Release/SBOM and Risk.
+No new external schema, persistence, dependency version, deployment or medical claim.
+Use existing HC-IF-TIM-001/HC-DATA-REQ-001/002/009 and HC-RISK-022/030/031.
+
+Pinned ffprobe and ffmpeg now share file leases, identity checks, serial gate and
+deadline. Extract exact signed PTS, rational time base, geometry and decoded index;
+retain unusual ordering/dimensions rather than silently correcting source evidence.
+No passing evidence for malformed/missing/foreign frames, unsupported multi-video
+structure, failed process or limits. The 16-MiB/100,000-frame envelope must be
+revisited before any supported protocol exceeds it; it is not a camera rejection rule.
+
+148 runtime, 105 contract and 7 SBOM tests plus four actual synthetic-media cases
+pass locally. Full source-time/camera/IMU/event/finalization integration and package
+verification remain open. Evidence: ../../verification/I0_4B_C14D_MEDIA_EVIDENCE_REPORT.md.
+AI implementation/testing/documentation; independent human review pending.
