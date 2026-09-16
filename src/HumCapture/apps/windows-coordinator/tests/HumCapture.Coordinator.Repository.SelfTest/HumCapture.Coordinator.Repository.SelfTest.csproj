@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="../../../../tools/evidence-control/fixtures/timing/v1/*" Link="TimingVectors/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <ProjectReference Include="../../src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj" />
     <ProjectReference Include="..\..\src\HumCapture.Coordinator.Repository\HumCapture.Coordinator.Repository.csproj" />
   </ItemGroup>

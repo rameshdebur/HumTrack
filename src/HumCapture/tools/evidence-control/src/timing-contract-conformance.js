@@ -359,6 +359,7 @@ export function validateFrameAssociation(records, decodedVideoFrameCount, transf
   const generatedIndices = generated.map((event) => parseU64Text(event.video_frame_index, "video_frame_index"));
   if (new Set([...indices, ...generatedIndices].map(String)).size !== indices.length + generatedIndices.length) reject("VIDEO_FRAME_INDEX_DUPLICATE", "Source and generated video indices must be unique.");
   if (accepted.length + generated.length !== decodedVideoFrameCount) reject("VIDEO_FRAME_COUNT_MISMATCH", "Accepted source frames plus declared generated frames differ from complete decoded video-frame count.");
+  if ([...indices, ...generatedIndices].some((index) => index < 0n || index >= BigInt(decodedVideoFrameCount))) reject("VIDEO_FRAME_INDEX_OUT_OF_RANGE", "Every association must refer to an existing decoded presentation-order frame.");
   return true;
 }
 

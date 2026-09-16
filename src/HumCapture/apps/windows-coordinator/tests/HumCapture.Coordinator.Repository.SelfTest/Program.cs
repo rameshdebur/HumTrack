@@ -171,7 +171,13 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-145 inspection rejects missing malformed or foreign frames", MediaInspectionTests.FrameRefusals),
     ("HC-REP-RUNTIME-146 inspection frame envelope and cancellation", MediaInspectionTests.EnvelopeAndCancellation),
     ("HC-REP-RUNTIME-147 inspection pin or cancellation produces no evidence", MediaInspectionTests.PinAndFailureEvidence),
-    ("HC-REP-RUNTIME-148 inspection requests observed not inferred PTS", MediaInspectionTests.ArgumentsUseObservedPts)
+    ("HC-REP-RUNTIME-148 inspection requests observed not inferred PTS", MediaInspectionTests.ArgumentsUseObservedPts),
+    ("HC-REP-RUNTIME-149 finalized frame and IMU golden vectors", TimingEvidenceTests.GoldenVectors),
+    ("HC-REP-RUNTIME-150 timing header count version bounds and cancellation", TimingEvidenceTests.HeaderGuards),
+    ("HC-REP-RUNTIME-151 frame flags mapping absent fields and exact integers", TimingEvidenceTests.FrameGuardsAndPrecision),
+    ("HC-REP-RUNTIME-152 IMU CRC flags identity finite values and mapping", TimingEvidenceTests.ImuGuards),
+    ("HC-REP-RUNTIME-153 exact rational presentation association", TimingEvidenceTests.ExactAssociation),
+    ("HC-REP-RUNTIME-154 frame coverage ambiguity and missing generated PTS", TimingEvidenceTests.AssociationGuards)
 };
 
 var failures = 0;

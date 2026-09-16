@@ -1,5 +1,10 @@
 # HumCapture Traceability Matrix
 
+C14E batch: HC-IF-TIM-001 finalized binary/PTS association, HC-DATA-REQ-001/002/009
+and HC-RISK-022/030/031 map to HC-REP-RUNTIME-149–154, nine existing golden vectors
+and expanded HC-TIM-TEST-012. Evidence HC-VR-I0-4B-C14E-001. Internal primitives
+only; metadata/schema/clock/geometry and package verification remain open.
+
 C14D: HC-DATA-REQ-001/002/009, HC-IF-TIM-001 provenance and HC-RISK-022/030/031
 map to HC-REP-RUNTIME-143–148 and four HC-MEDIA-REAL cases in HC-VR-I0-4B-C14D-001.
 Exact decoded observations only; source/metadata and package verification are open.

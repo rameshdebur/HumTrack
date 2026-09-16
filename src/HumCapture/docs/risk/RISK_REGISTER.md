@@ -1,5 +1,13 @@
 # HumCapture Preliminary Risk Register
 
+C14E batch update (2026-09-16), HC-RISK-022/030/031: finalized binary readers
+reject corrupt/unknown/hidden evidence; exact rational PTS comparison and dense
+index coverage prevent count-only false associations. Generated duplicate timing
+and ambiguous restart references cannot become fabricated PASS evidence. Tests
+HC-REP-RUNTIME-149–154 and expanded HC-TIM-TEST-012 pass locally. Schema/identity,
+clock/geometry/cadence semantics and common package verification remain open;
+no risk closure or hardware/regulatory acceptance. ADR-0030 and C14E report apply.
+
 C14D update (2026-09-16), HC-RISK-022/030/031: decoded stream/frame observations
 are hash-bound to the leased input and obtained from pinned binaries. No nominal
 FPS, inferred timestamp, sorting or padding substitutes for observed PTS. Missing/

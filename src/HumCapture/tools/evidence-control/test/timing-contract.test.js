@@ -144,6 +144,9 @@ test("HC-TIM-TEST-012 accepted source frames require unique complete video assoc
   const unmatched = structuredClone(records); unmatched[1].videoFrameIndex = undefined; unmatched[1].presence &= ~FRAME_PRESENCE.VIDEO_FRAME_INDEX;
   throwsCode(() => validateFrameAssociation(unmatched, 3), "ACCEPTED_FRAME_UNMATCHED");
   throwsCode(() => validateFrameAssociation(records, 2), "VIDEO_FRAME_COUNT_MISMATCH");
+  const outside = structuredClone(records); outside[2].videoFrameIndex = 3n;
+  throwsCode(() => validateFrameAssociation(outside, 3), "VIDEO_FRAME_INDEX_OUT_OF_RANGE");
+  throwsCode(() => validateFrameAssociation(records, 4, [{ kind: "GENERATED_DUPLICATE", video_frame_index: "18446744073709551615", source_frame_sequence: "2", reason: "CFR output" }]), "VIDEO_FRAME_INDEX_OUT_OF_RANGE");
 
   const packageProfile = {
     source_kind: "ANDROID", interface_profiles: ["HC-IF-TIM-001@1.0.0"], artifacts: [

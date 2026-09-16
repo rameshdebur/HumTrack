@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** I0.4B-C14D | VERIFIER | STREAM + FRAME EVIDENCE
+**Tags:** I0.4B-C14E | VERIFIER | TIMING + IMU | METADATA DECISION
 **Last meaningful update:** 2026-09-16
 
 ## Objective
@@ -13,6 +13,18 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- User-approved multi-step batch now implements finalized frame/IMU binary readers
+  and exact rational frame-association primitives under ADR-0030. All nine existing
+  cross-language binary vectors match their accepted/rejected outcomes; internal
+  association closes out-of-range coverage and preserves missing generated-PTS
+  evidence. Local build and 154 runtime / 105 contract tests pass. Metadata/schema,
+  camera geometry, clock binding and full package verification remain incomplete.
+  Next genuine gate: HC-DECISION-20260916-METADATA-VALIDATION.md in work-items;
+  proposed .NET schema dependency has binary licence terms requiring owner review.
+  No dependency installed, host activation or camera access in this batch.
+  See HC-CHG-20260916-001 and HC-VR-I0-4B-C14E-001. Short local UVC captures remain
+  authorized when relevant; no NDI source is assumed. No per-slice reapproval needed.
 
 - C14D is authorized under ADR-0029 and the existing C14 design/governance baseline:
   implement internal hash-bound stream/frame evidence extraction, not host activation
