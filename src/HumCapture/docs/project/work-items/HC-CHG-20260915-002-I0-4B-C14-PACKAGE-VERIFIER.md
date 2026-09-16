@@ -93,3 +93,7 @@ regenerated because the Coordinator project embeds the lock. Full scientific pac
 verification, deployment/library/licence review and activation remain open for C14D+.
 Evidence: ../../verification/I0_4B_C14C_DECODER_WORKER_REPORT.md.
 AI implementation/testing/documentation; independent human review pending.
+
+C14C source f267ee1716bb1612f2342aa4ae849e6eb4f0fb25 passed push35097073099
+and PR35097076289. Local real-decoder results, hosted subprocess controls and
+hardware/field evidence remain separate; no hardware or field qualification occurred.

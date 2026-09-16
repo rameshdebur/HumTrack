@@ -21,7 +21,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Source implemented: asynchronous bounded execution, embedded executable pin,
   read-only leases, single-worker gate and explicit software/passthrough arguments.
   Local evidence: 142 runtime tests, 105 contract tests, 7 SBOM tests, clean build,
-  and four actual .NET-worker synthetic media cases passed. Hosted CI pending.
+  and four actual .NET-worker synthetic media cases passed. Source revision
+  f267ee1716bb1612f2342aa4ae849e6eb4f0fb25 passed hosted runs
+  35097073099/35097076289. Actual FFmpeg tests are local evidence only.
   See HC-VR-I0-4B-C14C-001. Next C14D: stream/frame evidence and scientific artifact
   integration. Full C14, deployment review and package-verifier activation remain open.
 

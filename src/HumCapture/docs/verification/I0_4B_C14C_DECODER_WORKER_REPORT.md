@@ -1,8 +1,16 @@
 # C14C Bounded Decoder Worker Verification
 
-HC-VR-I0-4B-C14C-001, 2026-09-16. Local engineering tests passed; hosted CI pending.
+HC-VR-I0-4B-C14C-001, 2026-09-16. Local engineering tests and hosted CI passed.
 Scope ADR-0028 / HC-CHG-20260915-002. Primary Coordinator engineer; QA verification;
 independent human review pending. No conformity or deployment approval.
+
+Source revision f267ee1716bb1612f2342aa4ae849e6eb4f0fb25 passed
+[push CI](https://github.com/rameshdebur/HumTrack/actions/runs/35097073099) and
+[PR CI](https://github.com/rameshdebur/HumTrack/actions/runs/35097076289).
+Hosted runs test the worker's subprocess controls and all existing regressions.
+Actual pinned FFmpeg execution remains separate local evidence. A subsequent
+documentation-only commit records these outcomes; these CI links attest the source
+revision above, not the follow-up documentation commit.
 
 ## Source and behavior
 
