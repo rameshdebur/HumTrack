@@ -4,7 +4,18 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using HumCapture.Coordinator.Repository;
+using HumCapture.Coordinator.Repository.SelfTest;
 using Microsoft.Data.Sqlite;
+
+if (args.Length == 2 && args[0] == "--decoder-child")
+{
+    return await DecoderWorkerTests.ChildAsync(args[1]);
+}
+
+if (args.Length == 3 && args[0] == "--decoder-real")
+{
+    return await DecoderWorkerTests.RealAsync(args[1], args[2]);
+}
 
 var tests = new (string Name, Action Body)[]
 {
@@ -142,7 +153,14 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-132 local collection host command and guard", LocalCollectionHost),
     ("HC-REP-RUNTIME-133 local collection refuses changed manifest binding", LocalCollectionBinding),
     ("HC-REP-RUNTIME-134 local collection refuses cross-attempt identity conflict", LocalCollectionIdentityConflict),
-    ("HC-REP-RUNTIME-135 admitted packages cannot be recollected", LocalCollectionAdmitted)
+    ("HC-REP-RUNTIME-135 admitted packages cannot be recollected", LocalCollectionAdmitted),
+    ("HC-REP-RUNTIME-136 decoder clean/nonzero/diagnostic exits", DecoderWorkerTests.ExitSemantics),
+    ("HC-REP-RUNTIME-137 decoder drains dual pipes and bounds output", DecoderWorkerTests.PipeBounds),
+    ("HC-REP-RUNTIME-138 decoder deadline terminates running child", DecoderWorkerTests.Timeout),
+    ("HC-REP-RUNTIME-139 decoder cancellation before/during execution", DecoderWorkerTests.Cancellation),
+    ("HC-REP-RUNTIME-140 decoder missing executable fails", DecoderWorkerTests.MissingExecutable),
+    ("HC-REP-RUNTIME-141 decoder pin/path refusal releases leases", DecoderWorkerTests.PinAndPathRefusal),
+    ("HC-REP-RUNTIME-142 decoder arguments preserve source cadence", DecoderWorkerTests.ArgumentsPreserveCadence)
 };
 
 var failures = 0;

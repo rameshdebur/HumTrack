@@ -1,5 +1,14 @@
 # Engineering decoder candidate (runtime disabled)
 
+C14C adds internal PinnedDecoderWorker/DecoderProcess in the Coordinator repository
+assembly (ADR-0028). It is not called by the host and cannot admit a package. It
+embeds this lock, checks the ffmpeg executable, holds read-only input/executable
+leases, serializes decoder work, and bounds deadline/output with cancellation and
+termination handling. It does not invoke this Node probe. Real .NET-worker tests
+are available only in the self-test executable via `--decoder-real ABS_BIN ABS_SYNTHETIC_MEDIA_DIRECTORY`.
+The media directory must contain the four named files produced by probe.mjs.
+Production deployment remains disabled; complete package verification is pending.
+
 C14A selected an exact FFmpeg/ffprobe archive identity. C14B downloaded that archive,
 verified its SHA-256 before extraction, and recorded all three included executable
 hashes in decoder-lock.json. ffmpeg/ffprobe version/build output and seven passing
@@ -7,8 +16,9 @@ synthetic media checks are retained in docs/verification/I0_4B_C14B_DECODER_PROB
 ffplay is inventoried but was not executed. No system installation or PATH change.
 SBOM scope remains excluded: local engineering use is not Coordinator activation.
 
-Before worker activation: complete embedded-library inventory/review and implement
-bounded cancellation/output/time/resource handling in the actual worker. The worker
+Before worker activation: complete embedded-library inventory/review, full verifier
+integration and capture-priority scheduling. C14C bounds process time/diagnostic bytes,
+not OS-level CPU/RAM or adversarial descendant processes. The worker
 must use explicit validated executable paths, never arbitrary PATH resolution.
 Use software decoding first; hardware decoding is a separate qualification.
 

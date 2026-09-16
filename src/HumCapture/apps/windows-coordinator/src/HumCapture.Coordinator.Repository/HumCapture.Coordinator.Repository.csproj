@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\decoder\decoder-lock.json" LogicalName="HumCapture.Decoder.lock.json" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
     <EmbeddedResource Include="..\..\..\..\docs\interfaces\sqlite\repository-v1.sql"
                       Link="Contracts\repository-v1.sql"

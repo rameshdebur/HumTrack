@@ -1,5 +1,13 @@
 # HumCapture Preliminary Risk Register
 
+C14C update (2026-09-16), HC-RISK-022/030/031: internal pinned .NET decoder worker
+adds cancellable serial execution, bounded diagnostics/deadline, read-only leases
+and explicit failure outcomes. HC-REP-RUNTIME-136–142 plus four synthetic actual
+decoder cases pass locally. This does not close package-verification controls.
+No host wiring, OS hard-memory quota, acquisition scheduling, complete scientific
+artifact verification, Windows10/HIL/field qualification or medical claim.
+See ADR-0028 / HC-VR-I0-4B-C14C-001; deployment/licence review remains open.
+
 C14B update (2026-09-15), HC-RISK-022/030/031: exact archive and executable hashes
 verified locally; seven synthetic media checks reject tested corruption/truncation
 and preserve variable intervals. Four guard regressions cover mismatch, diagnostics,

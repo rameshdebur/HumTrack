@@ -2,7 +2,8 @@
 
 ID: HC-CHG-20260915-002. Date: 2026-09-15.
 Status: C14 objective and prerequisite choices approved; C14A contract baseline
-and C14B engineering decoder probe implemented. Production runtime verifier not started.
+and C14B engineering decoder probe implemented. C14C internal bounded worker now
+implemented and locally verified; full runtime package verifier remains incomplete.
 
 Approved: independently decode collected video, check timing/camera/events/
 finalization and applicable IMU evidence, preserve measured fixed/variable cadence,
@@ -75,3 +76,20 @@ C14B source 20299681cc485eb5b9ebda0030d818c0fc731839 passed push CI34981598252
 and PR CI34981605120. Local real-decoder/synthetic-media proof remains separate
 from hosted guard/regression tests. Source, SBOM and evidence changes are confined
 to HumCapture; the candidate is not installed into or enabled by the Coordinator.
+
+## C14C — internal bounded worker, 2026-09-16
+
+Continuation authorizes the next planned engineering step. ADR-0028 records the
+internal execution boundary, trade-offs and owner review scope. Primary Coordinator
+engineer; affected Architect, QA, Release/SBOM and Risk. No new external protocol,
+persistence format, dependency version, intended use or regulatory claim. Existing
+India preliminary baseline remains applicable; this is not a medically positioned release.
+
+Internal source implemented, no host entry point: embedded pinned identity, read-only
+leases, serial queue, asynchronous pipe drain, deadline/cancellation/overflow outcomes,
+bounded cleanup and conservative success predicate. Seven new subprocess/guard cases
+bring runtime tests to 142. Four real pinned-decoder synthetic cases passed. SBOM
+regenerated because the Coordinator project embeds the lock. Full scientific package
+verification, deployment/library/licence review and activation remain open for C14D+.
+Evidence: ../../verification/I0_4B_C14C_DECODER_WORKER_REPORT.md.
+AI implementation/testing/documentation; independent human review pending.

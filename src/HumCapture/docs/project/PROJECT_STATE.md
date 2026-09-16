@@ -1,8 +1,8 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** I0.4B-C14B | VERIFIER | DECODER CANDIDATE EVIDENCE
-**Last meaningful update:** 2026-09-15
+**Tags:** I0.4B-C14C | VERIFIER | BOUNDED WORKER
+**Last meaningful update:** 2026-09-16
 
 ## Objective
 
@@ -14,13 +14,24 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
+- C14C engineering is user-authorized (2026-09-16) under ADR-0028 and the existing
+  C14 design/requirements/roles/governance/interface/risk baseline. Scope is an
+  internal bounded decoder worker plus tests; host integration/deployment remain
+  disabled. No package verification or commit state change is authorized by this slice.
+  Source implemented: asynchronous bounded execution, embedded executable pin,
+  read-only leases, single-worker gate and explicit software/passthrough arguments.
+  Local evidence: 142 runtime tests, 105 contract tests, 7 SBOM tests, clean build,
+  and four actual .NET-worker synthetic media cases passed. Hosted CI pending.
+  See HC-VR-I0-4B-C14C-001. Next C14D: stream/frame evidence and scientific artifact
+  integration. Full C14, deployment review and package-verifier activation remain open.
+
 - C14B verifies the pinned archive and executable identities and adds a repeatable
   engineering-only decoder probe. Seven synthetic fixed/variable H.264/MP4 media
   checks and four process/hash guard regressions pass locally. Runtime remains
   disabled and the SBOM component excluded; no package is marked VERIFIED.
-  See HC-VR-I0-4B-C14B-001. Next: C14C production bounded decoder worker and its
-  cancellation/resource/failure tests, followed by independent scientific artifact
-  integration. Library/vulnerability/licence review and redistribution remain open.
+  See HC-VR-I0-4B-C14B-001. C14C now supplies the internal worker; independent
+  scientific artifact integration is still pending. Library/vulnerability/licence
+  review and redistribution remain open.
   C14B source 20299681cc485eb5b9ebda0030d818c0fc731839 passed both hosted runs
   34981598252/34981605120: 105 contract/guard, 7 SBOM and 135 repository regressions.
   Actual decoder execution is local synthetic evidence, not hosted/hardware evidence.
@@ -30,10 +41,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   disabled FFmpeg 9.0.1 archive candidate pin under ADR-0027. C14 runtime verifier
   implementation and redistribution approval remain open; C14B supplies the
   initial downloaded-binary and synthetic media evidence, not runtime qualification.
-  C13 remains the latest completed application implementation slice.
+  C13 remains the latest host-exposed application implementation slice.
   C14A evidence: 101 contract, 7 SBOM and 135 repository regressions pass;
   both hosted runs passed for dcd6bd87901602450020747726b0653529722ac3.
-  See HC-VR-I0-4B-C14A-001. Production worker verification is still pending.
+  See HC-VR-I0-4B-C14A-001. Worker deployment/integration qualification remains pending.
 
 - C13 local-folder collection is user-authorized (2026-09-15). Existing ARD,
   PRD, stories, requirements, roles, governance and preliminary India engineering

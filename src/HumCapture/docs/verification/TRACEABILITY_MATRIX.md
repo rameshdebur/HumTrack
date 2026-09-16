@@ -1,5 +1,9 @@
 # HumCapture Traceability Matrix
 
+C14C: HC-DATA-REQ-001/002/009, HC-UVC-REQ-005 and HC-RISK-022/030/031 map to
+HC-REP-RUNTIME-136–142 and HC-DEC-WORKER-REAL cases in HC-VR-I0-4B-C14C-001.
+Internal execution boundary only; no package-verification requirement closure.
+
 C14B: HC-DATA-REQ-001/002/009 and HC-RISK-022/030/031 map to
 HC-DEC-TEST-001–007 (local real-decoder/synthetic-media evidence) and
 HC-DEC-GUARD-001–004 (automated harness guards). Evidence HC-VR-I0-4B-C14B-001.
