@@ -76,7 +76,7 @@
     "JsonSchema-binary": {
       "licence": "MIT source; published binary OSMF agreement requires separate consideration",
       "cost": "Publisher tiers checked 2026-09-17: USD 10/month (<20 employees), 25/month (20-100), 50/month (>100), conditional on applicability. Annual equivalents 120/300/600; tax/FX excluded. Not a quote or accepted purchase.",
-      "obligations": "Agreement covers qualifying revenue-generating users with annual gross revenue >= USD 10,000, with stated exemptions. Do not assume HumCapture MVP/no sales means exemption. Owner must confirm applicability and terms before binary use. Self-compiling MIT source is an alternative, not selected here. Preserve notices; review transitive packages independently.",
+      "obligations": "User authorized the published-package engineering route on 2026-09-17 after the terms decision. This is not evidence of payment or fee exemption. Owner must establish applicable maintenance entitlement for use and release. JsonSchema.Net, JsonPointer.Net and Json.More.Net contain the identical OSMF agreement (SHA-256 5c805ac94dfdb4a3be55547f04a2f4b9f1bb87d7e9ee6d6fe54b0e72093900c3). Retain MIT notices and agreement; review each resolved dependency. No purchase made.",
       "sources": [
         "https://www.nuget.org/packages/JsonSchema.Net/9.4.0/License",
         "https://github.com/sponsors/gregsdennis"
@@ -144,7 +144,7 @@
   },
   "entries": [
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14e",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14h",
       "profile": "First-party",
       "use": "First-party acquisition subsystem",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
@@ -176,7 +176,7 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14e",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14h",
       "profile": "First-party",
       "use": "Development/test/CI",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
@@ -498,18 +498,52 @@
       "evidence": [
         "https://api.nuget.org/v3-flatcontainer/sqlitepclraw.provider.e_sqlite3/2.1.12/sqlitepclraw.provider.e_sqlite3.nuspec"
       ]
-    }
-  ],
-  "candidates": [
+    },
     {
-      "name": "JsonSchema.Net",
-      "version": "9.4.0",
+      "ref": "pkg:nuget/JsonSchema.Net@9.4.0",
       "profile": "JsonSchema-binary",
-      "use": "Selected by user 2026-09-17; NOT INSTALLED; publisher binary route pending terms/applicability confirmation",
-      "review_status": "SELECTED_NOT_INSTALLED_NOT_COMMERCIALLY_APPROVED",
-      "next_action": "Record owner terms/applicability decision before binary installation; then resolve all transitive versions and add exact SBOM/register rows. No payment or licence acceptance recorded."
+      "use": "Coordinator internal metadata validation; resolved published package in locked build",
+      "review_status": "USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED",
+      "next_action": "Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/jsonschema.net/9.4.0/jsonschema.net.nuspec",
+        "https://www.nuget.org/packages/JsonSchema.Net/9.4.0/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/JsonPointer.Net@7.0.2",
+      "profile": "JsonSchema-binary",
+      "use": "Coordinator internal metadata validation; resolved published package in locked build",
+      "review_status": "USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED",
+      "next_action": "Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/jsonpointer.net/7.0.2/jsonpointer.net.nuspec",
+        "https://www.nuget.org/packages/JsonPointer.Net/7.0.2/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Json.More.Net@3.0.1",
+      "profile": "JsonSchema-binary",
+      "use": "Coordinator internal metadata validation; resolved published package in locked build",
+      "review_status": "USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED",
+      "next_action": "Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/json.more.net/3.0.1/json.more.net.nuspec",
+        "https://www.nuget.org/packages/Json.More.Net/3.0.1/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Humanizer.Core@3.0.10",
+      "profile": "MIT",
+      "use": "Coordinator internal metadata validation; resolved published package in locked build",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain MIT notices at redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/humanizer.core/3.0.10/humanizer.core.nuspec"
+      ]
     }
   ],
+  "candidates": [],
   "supplemental": [
     {
       "name": "Node.js",

@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:52f1ef11-6125-53ca-b7db-cae1eb67fc9f",
+  "serialNumber": "urn:uuid:e76460a2-f3f7-5da0-bc34-69b326484d5c",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-16T13:31:01.932Z",
+    "timestamp": "2026-09-17T12:00:00.000Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-i0.4b-c14e",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14e",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14e",
+      "version": "0.1.0-i0.4b-c14h",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14h",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14h",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -162,9 +162,9 @@
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-i0.4b-c14e",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14e",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14e",
+      "version": "0.1.0-i0.4b-c14h",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14h",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14h",
       "scope": "excluded",
       "hashes": [
         {
@@ -277,7 +277,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "c120d2152e9cb8e8678180366cbadf0dc364a55ecc7b49b19f5ebf5f286415cf"
+          "content": "587a32bb145640f04f96704c9036e91ce41068e1040ab0ea94d67719685576c3"
         }
       ],
       "properties": [
@@ -908,6 +908,134 @@
     },
     {
       "type": "library",
+      "name": "Humanizer.Core",
+      "version": "3.0.10",
+      "bom-ref": "pkg:nuget/Humanizer.Core@3.0.10",
+      "purl": "pkg:nuget/Humanizer.Core@3.0.10",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "c99221b70f2c62ebec38dcd06d9c56a51eb4b4c5981d7a28d032fa9f23aa485894e4f3a3053484c961694d0b49119bb2fa8aa26135ca5d8fcc8f1eca9ea21017"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Json.More.Net",
+      "version": "3.0.1",
+      "bom-ref": "pkg:nuget/Json.More.Net@3.0.1",
+      "purl": "pkg:nuget/Json.More.Net@3.0.1",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "7d172d1762764882d81bac2a3f6d5dae6784383982564550fdbdcc9dd0eed9f4f5b307f24b2520abb78f0a4f9a10d1a50dc226d397f27e387dbdcbaa0c47efdf"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "JsonPointer.Net",
+      "version": "7.0.2",
+      "bom-ref": "pkg:nuget/JsonPointer.Net@7.0.2",
+      "purl": "pkg:nuget/JsonPointer.Net@7.0.2",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "a029581efda8a1e46bb4f6720bdb1bfd96bf89ee691a18d36cd1e5032160e17382c94fbad3a15da19292ed475a5afb6c3e5ac5f94db0d096b74d1be7e7eb29c8"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "JsonSchema.Net",
+      "version": "9.4.0",
+      "bom-ref": "pkg:nuget/JsonSchema.Net@9.4.0",
+      "purl": "pkg:nuget/JsonSchema.Net@9.4.0",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "9ae1389cfbb36c3f71e570359a45c936a5f89a1cf8ee8177118f2a14b635a72518ee585714aabae6dfdd48a20778d48b055d7bcf066eab6e0c0f57a6f74acc36"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
       "name": "Microsoft.CodeAnalysis.NetAnalyzers",
       "version": "8.0.0",
       "bom-ref": "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
@@ -1173,7 +1301,7 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14e",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14h",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
@@ -1204,6 +1332,7 @@
       "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
       "dependsOn": [
         "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
+        "pkg:nuget/JsonSchema.Net@9.4.0",
         "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
         "pkg:nuget/Microsoft.Data.Sqlite@10.0.12",
         "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167"
@@ -1230,11 +1359,11 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14e",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14h",
       "dependsOn": [
         "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14e",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14h",
         "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
@@ -1321,6 +1450,27 @@
     {
       "ref": "pkg:npm/require-from-string@2.0.2",
       "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Humanizer.Core@3.0.10",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Json.More.Net@3.0.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/JsonPointer.Net@7.0.2",
+      "dependsOn": [
+        "pkg:nuget/Humanizer.Core@3.0.10",
+        "pkg:nuget/Json.More.Net@3.0.1"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/JsonSchema.Net@9.4.0",
+      "dependsOn": [
+        "pkg:nuget/JsonPointer.Net@7.0.2"
+      ]
     },
     {
       "ref": "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",

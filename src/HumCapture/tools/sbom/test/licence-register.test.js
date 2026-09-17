@@ -3,8 +3,14 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { generateSbom } from "../src/sbom.js";
+import { generateSbom, nugetLockSerialHash } from "../src/sbom.js";
 import { documentPath, readInputs, renderRegister, repoRoot, validateRegister } from "../src/licence-register.js";
+
+test("NuGet serial seed is stable across restored CRLF and checked-out LF without hiding content changes", () => {
+  const lf = '{\n  "resolved": "9.4.0"\n}\n';
+  assert.equal(nugetLockSerialHash(lf), nugetLockSerialHash(lf.replaceAll("\n", "\r\n")));
+  assert.notEqual(nugetLockSerialHash(lf), nugetLockSerialHash(lf.replace("9.4.0", "9.4.1")));
+});
 
 test("licence register covers every exact SBOM identity and rendered document is current", async () => {
   const { bom, register } = await readInputs();

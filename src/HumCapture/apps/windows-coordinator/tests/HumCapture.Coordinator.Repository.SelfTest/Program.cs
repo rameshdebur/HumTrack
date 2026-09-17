@@ -177,7 +177,13 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-151 frame flags mapping absent fields and exact integers", TimingEvidenceTests.FrameGuardsAndPrecision),
     ("HC-REP-RUNTIME-152 IMU CRC flags identity finite values and mapping", TimingEvidenceTests.ImuGuards),
     ("HC-REP-RUNTIME-153 exact rational presentation association", TimingEvidenceTests.ExactAssociation),
-    ("HC-REP-RUNTIME-154 frame coverage ambiguity and missing generated PTS", TimingEvidenceTests.AssociationGuards)
+    ("HC-REP-RUNTIME-154 frame coverage ambiguity and missing generated PTS", TimingEvidenceTests.AssociationGuards),
+    ("HC-REP-RUNTIME-155 metadata schema shared Ajv vectors", MetadataSchemaTests.SharedVectors),
+    ("HC-REP-RUNTIME-156 metadata schema input guards", MetadataSchemaTests.InputGuards),
+    ("HC-REP-RUNTIME-157 metadata schema repeated parallel evaluation", MetadataSchemaTests.RepeatAndParallel),
+    ("HC-REP-RUNTIME-158 frame metadata bindings preserve cadence classes", FrameMetadataTests.Bindings),
+    ("HC-REP-RUNTIME-159 frame metadata clock identity and range guards", FrameMetadataTests.ClockGuards),
+    ("HC-REP-RUNTIME-160 frame metadata count geometry and integer guards", FrameMetadataTests.CameraGuards)
 };
 
 var failures = 0;

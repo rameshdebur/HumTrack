@@ -11,6 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" Version="9.4.0" />
+    <EmbeddedResource Include="../../../../docs/interfaces/schemas/timing/v1/*.schema.json;../../../../docs/interfaces/schemas/capture/v1/*.schema.json;../../../../docs/interfaces/schemas/control/v1/common.schema.json" LogicalName="HumCapture.Metadata.%(Filename)%(Extension)" />
     <EmbeddedResource Include="..\..\decoder\decoder-lock.json" LogicalName="HumCapture.Decoder.lock.json" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
     <EmbeddedResource Include="..\..\..\..\docs\interfaces\sqlite\repository-v1.sql"

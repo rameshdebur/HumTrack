@@ -4,14 +4,13 @@ HC-GOV-LIC-001 | Living engineering register | NOT legal/distribution approval
 
 Publisher/metadata review date: 2026-09-17. Owner: Release/SBOM owner; package owner updates; commercial/legal owner approves terms.
 
-Coverage: 33 SBOM components plus HumCapture product; 1 selected-not-installed candidate(s); 13 supplemental tooling/composition items.
-SBOM baseline: 0.1.0-i0.4b-c14e, generated 2026-09-16T13:31:01.932Z.
+Coverage: 37 SBOM components plus HumCapture product; 0 selected-not-installed candidate(s); 13 supplemental tooling/composition items.
+SBOM baseline: 0.1.0-i0.4b-c14h, generated 2026-09-17T12:00:00.000Z.
 
 Scope is src/HumCapture, not the wider HumTrack repository or all software installed on this machine. Direct and transitive package identities follow the SBOM dependency graph. This is source/lockfile coverage, NOT a complete binary-composition audit.
 
 ## Read this first
 
-- JsonSchema.Net: Selected by user 2026-09-17; NOT INSTALLED; publisher binary route pending terms/applicability confirmation. Record owner terms/applicability decision before binary installation; then resolve all transitive versions and add exact SBOM/register rows. No payment or licence acceptance recorded.
 - Gyan FFmpeg 9.0.1 is engineering-only, runtime disabled, redistribution unapproved. GPL/build notices and codec patent questions remain open.
 - The pinned Sonar analyzer declares LGPL-3.0-only. It is build tooling, not an intended application runtime component.
 - No mandatory licence fee identified is NOT no legal obligations, no total cost, or clearance to distribute. Fees exclude tax/FX and optional support unless stated.
@@ -107,7 +106,7 @@ Licence: MIT source; published binary OSMF agreement requires separate considera
 
 Potential charges: Publisher tiers checked 2026-09-17: USD 10/month (<20 employees), 25/month (20-100), 50/month (>100), conditional on applicability. Annual equivalents 120/300/600; tax/FX excluded. Not a quote or accepted purchase.
 
-Obligations / implications: Agreement covers qualifying revenue-generating users with annual gross revenue >= USD 10,000, with stated exemptions. Do not assume HumCapture MVP/no sales means exemption. Owner must confirm applicability and terms before binary use. Self-compiling MIT source is an alternative, not selected here. Preserve notices; review transitive packages independently.
+Obligations / implications: User authorized the published-package engineering route on 2026-09-17 after the terms decision. This is not evidence of payment or fee exemption. Owner must establish applicable maintenance entitlement for use and release. JsonSchema.Net, JsonPointer.Net and Json.More.Net contain the identical OSMF agreement (SHA-256 5c805ac94dfdb4a3be55547f04a2f4b9f1bb87d7e9ee6d6fe54b0e72093900c3). Retain MIT notices and agreement; review each resolved dependency. No purchase made.
 
 Sources: [1](https://www.nuget.org/packages/JsonSchema.Net/9.4.0/License), [2](https://github.com/sponsors/gregsdennis).
 
@@ -187,10 +186,10 @@ Review states are recorded per row; a declaration is not legal approval. Version
 
 | Component / version | Use | Licence / cost profile | Evidence | Outstanding action |
 |---|---|---|---|---|
-| HumTrack/HumCapture **0.1.0-i0.4b-c14e** | First-party acquisition subsystem | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
+| HumTrack/HumCapture **0.1.0-i0.4b-c14h** | First-party acquisition subsystem | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
 | windows-sdk-10-version-2004-all **10.0.19041.685** | Build-time SDK/installer | [Windows](#windows) | [1](https://www.microsoft.com/useterms) [2](https://visualstudio.microsoft.com/license-terms/) [3](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Check exact Microsoft entitlement/redistributable terms; host composition remains open. |
 | FFmpeg Windows essentials archive **9.0.1** | Local engineering only; runtime disabled; redistribution not approved | [Gyan-GPL](#gyan-gpl) | [1](../../apps/windows-coordinator/decoder/decoder-lock.json) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Close embedded-library, corresponding-source and distribution review before activation/shipping. |
-| HumCapture/HumCapture CI **0.1.0-i0.4b-c14e** | Development/test/CI | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
+| HumCapture/HumCapture CI **0.1.0-i0.4b-c14h** | Development/test/CI | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
 | HumCapture/HumCapture.Coordinator.Host **0.1.0** | First-party acquisition subsystem | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
 | HumCapture/HumCapture.Coordinator.Repository.SelfTest **0.1.0** | Development/test/CI | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
 | HumCapture/HumCapture.Coordinator.Repository **0.1.0** | First-party acquisition subsystem | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
@@ -213,6 +212,10 @@ Review states are recorded per row; a declaration is not legal approval. Version
 | fast-uri **3.1.6** | Node development/contract-test dependency (not Coordinator runtime) | [BSD-3-Clause](#bsd-3-clause) | [1](../../tools/evidence-control/package-lock.json) [2](../../tools/capability-probes/shared/package-lock.json) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Retain notices if tooling is distributed; declaration from locked npm metadata. |
 | json-schema-traverse **1.0.0** | Node development/contract-test dependency (not Coordinator runtime) | [MIT](#mit) | [1](../../tools/evidence-control/package-lock.json) [2](../../tools/capability-probes/shared/package-lock.json) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Retain notices if tooling is distributed; declaration from locked npm metadata. |
 | require-from-string **2.0.2** | Node development/contract-test dependency (not Coordinator runtime) | [MIT](#mit) | [1](../../tools/evidence-control/package-lock.json) [2](../../tools/capability-probes/shared/package-lock.json) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Retain notices if tooling is distributed; declaration from locked npm metadata. |
+| Humanizer.Core **3.0.10** | Coordinator internal metadata validation; resolved published package in locked build | [MIT](#mit) | [1](https://api.nuget.org/v3-flatcontainer/humanizer.core/3.0.10/humanizer.core.nuspec) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Retain MIT notices at redistribution. |
+| Json.More.Net **3.0.1** | Coordinator internal metadata validation; resolved published package in locked build | [JsonSchema-binary](#jsonschema-binary) | [1](https://api.nuget.org/v3-flatcontainer/json.more.net/3.0.1/json.more.net.nuspec) [2](https://www.nuget.org/packages/Json.More.Net/3.0.1/License) | USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED: Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release. |
+| JsonPointer.Net **7.0.2** | Coordinator internal metadata validation; resolved published package in locked build | [JsonSchema-binary](#jsonschema-binary) | [1](https://api.nuget.org/v3-flatcontainer/jsonpointer.net/7.0.2/jsonpointer.net.nuspec) [2](https://www.nuget.org/packages/JsonPointer.Net/7.0.2/License) | USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED: Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release. |
+| JsonSchema.Net **9.4.0** | Coordinator internal metadata validation; resolved published package in locked build | [JsonSchema-binary](#jsonschema-binary) | [1](https://api.nuget.org/v3-flatcontainer/jsonschema.net/9.4.0/jsonschema.net.nuspec) [2](https://www.nuget.org/packages/JsonSchema.Net/9.4.0/License) | USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED: Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release. |
 | Microsoft.CodeAnalysis.NetAnalyzers **8.0.0** | Build-time analyzer; not intended for shipping | [MIT](#mit) | [1](https://api.nuget.org/v3-flatcontainer/microsoft.codeanalysis.netanalyzers/8.0.0/microsoft.codeanalysis.netanalyzers.nuspec) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Verify notices against resolved package archive before redistribution. |
 | Microsoft.Data.Sqlite.Core **10.0.12** | Coordinator runtime direct/transitive dependency; see SBOM graph | [MIT](#mit) | [1](https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite.core/10.0.12/microsoft.data.sqlite.core.nuspec) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Verify notices against resolved package archive before redistribution. |
 | Microsoft.Data.Sqlite **10.0.12** | Coordinator runtime direct/transitive dependency; see SBOM graph | [MIT](#mit) | [1](https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite/10.0.12/microsoft.data.sqlite.nuspec) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Verify notices against resolved package archive before redistribution. |
@@ -226,7 +229,6 @@ Review states are recorded per row; a declaration is not legal approval. Version
 
 | Item / version | Use | Licence / costs | Status and next action |
 |---|---|---|---|
-| JsonSchema.Net — 9.4.0 | Selected by user 2026-09-17; NOT INSTALLED; publisher binary route pending terms/applicability confirmation | [JsonSchema-binary](#jsonschema-binary) | SELECTED_NOT_INSTALLED_NOT_COMMERCIALLY_APPROVED: Record owner terms/applicability decision before binary installation; then resolve all transitive versions and add exact SBOM/register rows. No payment or licence acceptance recorded. |
 
 ## Supplemental tools and unresolved composition
 

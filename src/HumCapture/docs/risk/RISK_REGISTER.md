@@ -1,5 +1,14 @@
 # HumCapture Preliminary Risk Register
 
+C14F-H update (2026-09-17), HC-RISK-018/022/030/031: locked published schema
+dependency, embedded local schemas, required formats, duplicate/depth/size guards,
+43 shared structural parity cases, and internal frame identity/clock/range/count/
+geometry checks. Tests HC-REP-RUNTIME-155-160 and HC-META-001 pass locally.
+Clock-model references are checked but mapped integer times are NOT recomputed:
+quantization policy is a recorded contract decision, not inferred by code.
+Schema success cannot confer VERIFIED; full verifier/host and release gates remain.
+Exact dependencies/licence declarations are in the updated living register.
+
 HC-RISK-018 update (2026-09-17): live licence/cost register HC-GOV-LIC-001 now
 reconciles every retained SBOM identity with reviewed publisher declarations,
 fee implications, outstanding obligations and explicit tooling/binary gaps.

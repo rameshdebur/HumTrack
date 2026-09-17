@@ -58,8 +58,12 @@ async function nugetSurface(repoRoot, relativeLockPath, scope = "required") {
     });
     if (item.type === "Direct") direct.push(ref);
   }
-  return { packages, dependencies, direct: direct.sort(), manifestHash: sha256(text) };
+  return { packages, dependencies, direct: direct.sort(), manifestHash: nugetLockSerialHash(text) };
 }
+
+// NuGet restore emits host line endings; Git stores LF. Normalize only this
+// serial-number seed, never package/archive integrity hashes or retained BOM bytes.
+export function nugetLockSerialHash(text) { return sha256(text.replaceAll("\r\n", "\n")); }
 
 export async function discoverDependencyManifests(root, current = root) {
   const found = [];

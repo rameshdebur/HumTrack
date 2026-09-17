@@ -1,5 +1,12 @@
 # HumCapture Traceability Matrix
 
+C14F-H: HC-DATA-REQ-001/002/009, HC-IF-TIM-001/ART-001 and risks
+HC-RISK-018/022/030/031 map to HC-REP-RUNTIME-155-160, HC-META-001 (43 shared
+schema vectors), and 13 SBOM/register controls including CRLF/LF serial-seed
+regression. Evidence:
+HC-VR-I0-4B-C14FGH-001. Schema + partial frame metadata integration only;
+mapped-time quantization decision, full scientific verification and host remain open.
+
 HC-RISK-018 / HC-GOV-SBOM-001 revision 1.1 / HC-GOV-LIC-001 map to five
 licence-register controls in tools/sbom/test/licence-register.test.js and
 HC-VR-LIC-001: exact inventory coverage, dependency/version drift, mandatory

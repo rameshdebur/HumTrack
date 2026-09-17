@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** GOV | DEPENDENCY LICENCES + COSTS | JSONSCHEMA SELECTED
+**Tags:** C14F-C14H | VERIFIER | EMBEDDED SCHEMAS + FRAME METADATA | CLOCK CONTRACT GATE
 **Last meaningful update:** 2026-09-17
 
 ## Objective
@@ -14,14 +14,24 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
-- JsonSchema.Net selected in principle by user on 2026-09-17; not installed and
-  no commercial acceptance/payment or distribution approval recorded. Before
-  resuming features, HC-CHG-20260917-001 adds the living dependency licence/cost
-  register with 33 SBOM components plus product, one candidate and explicit
-  tooling/composition gaps. SBOM policy 1.1 mandates same-change maintenance;
-  existing CI runs the new drift checks. Local 12 SBOM/register tests pass.
-  Publisher declarations are not legal approval; FFmpeg and paid-term gates remain.
-  See docs/governance/DEPENDENCY_LICENSE_REGISTER.md and HC-VR-LIC-001.
+- User authorized the published JsonSchema.Net route and a related sprint batch
+  on 2026-09-17. HC-CHG-20260917-002 / ADR-0031 implement C14F embedded schema
+  validation, C14G shared Ajv/.NET parity and C14H internal frame-metadata binding.
+  Published 9.4.0 and three transitive dependencies are locked/inventoried; SBOM
+  now has 37 components plus product, no selected-not-installed schema candidate.
+  User engineering authorization is not payment/exemption or release clearance.
+  Local 160 runtime / 106 contract / 13 SBOM tests pass. No known vulnerable
+  packages reported by current NuGet advisory sources for the test-project graph.
+  See HC-VR-I0-4B-C14FGH-001 and the living dependency licence register.
+  Existing baseline ARD/PRD/SRS/roles/governance/India/interface/risk authority
+  applies; no public contract version or intended-use change introduced.
+  Next genuine decision: HC-DECISION-20260917-CLOCK-QUANTIZATION.md. Native/master
+  values remain immutable; mapped-time recomputation is explicitly incomplete.
+  Full package verifier, IMU/event semantic integration, canonical-byte checks,
+  remaining camera/cadence checks and host activation are NOT complete.
+  Prior governance commit 4af6648 hosted runs 35200971957/35200976056 failed
+  because NuGet CRLF/LF affected only the SBOM serial seed. This batch normalizes
+  that seed and adds a regression; package/archive integrity hashes are unchanged.
 
 - User-approved multi-step batch now implements finalized frame/IMU binary readers
   and exact rational frame-association primitives under ADR-0030. All nine existing
@@ -29,9 +39,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   association closes out-of-range coverage and preserves missing generated-PTS
   evidence. Local build and 154 runtime / 105 contract tests pass. Metadata/schema,
   camera geometry, clock binding and full package verification remain incomplete.
-  JsonSchema.Net approach is now selected (see current governance entry); its
-  binary licence terms still require owner applicability/acceptance review.
-  No dependency installed, host activation or camera access in this batch.
+  Subsequent C14F-H now add the schema dependency and partial frame metadata
+  bindings. C14E itself introduced no dependency, host activation or camera access.
   See HC-CHG-20260916-001 and HC-VR-I0-4B-C14E-001. Short local UVC captures remain
   authorized when relevant; no NDI source is assumed. No per-slice reapproval needed.
   Source 0acc42526875cf7a1e040b9dc46e71931739f657 passed hosted push35102593789
