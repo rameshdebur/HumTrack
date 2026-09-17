@@ -204,6 +204,11 @@ evidence.
 
 ## Compatibility
 
+Opt-in successor profile 1.1.0 is defined in
+[Clock quantization supplement](CLOCK_QUANTIZATION_V1_1.md). It adds explicit
+exact-decimal integer mapping semantics without rewriting this 1.0 baseline,
+changing binary layouts or retrospectively assigning a policy to old captures.
+
 Version 1.0.0 adds package artifacts previously listed generically by
 HC-IF-XFR-001 without changing transfer mechanics. Existing pre-contract
 packages remain historical artifacts and are not silently upgraded. Consumers

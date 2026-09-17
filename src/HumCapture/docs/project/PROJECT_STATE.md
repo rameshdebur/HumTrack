@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C14F-C14H | VERIFIER | EMBEDDED SCHEMAS + FRAME METADATA | CLOCK CONTRACT GATE
+**Tags:** C14I-C14K | TIMING | EXACT CLOCK QUANTIZATION | INTERNAL VERIFIER
 **Last meaningful update:** 2026-09-17
 
 ## Objective
@@ -14,6 +14,17 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
+- C14I-K is implemented after user acceptance of the clock-quantization recommendation
+  on 2026-09-17. Contract/design baseline ADR-0032 and CLOCK_QUANTIZATION_V1_1.md
+  apply under existing approved ARD/PRD/SRS/roles/governance/India/risk authority.
+  Opt-in timing 1.1, exact nearest/ties-even arithmetic and frame verifier
+  comparisons pass 164 runtime / 108 contract / 13 SBOM tests locally, including
+  30 shared arithmetic vectors and 1,000 halfway parity checks. No new dependency.
+  Historical/native bytes remain immutable; no new deployment claim. See
+  HC-VR-I0-4B-C14IJK-001. IMU mapped-value integration, event/finalization/canonical
+  checks and complete package verification remain subsequent batch work; this
+  arithmetic consistency check does not establish synchronization accuracy.
+
 - User authorized the published JsonSchema.Net route and a related sprint batch
   on 2026-09-17. HC-CHG-20260917-002 / ADR-0031 implement C14F embedded schema
   validation, C14G shared Ajv/.NET parity and C14H internal frame-metadata binding.
@@ -25,8 +36,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   See HC-VR-I0-4B-C14FGH-001 and the living dependency licence register.
   Existing baseline ARD/PRD/SRS/roles/governance/India/interface/risk authority
   applies; no public contract version or intended-use change introduced.
-  Next genuine decision: HC-DECISION-20260917-CLOCK-QUANTIZATION.md. Native/master
-  values remain immutable; mapped-time recomputation is explicitly incomplete.
+  The clock-quantization decision was subsequently accepted and implemented for
+  explicit 1.1 frame metadata in C14I-K. Native/master values remain immutable;
+  legacy 1.0 mapped-time recomputation remains explicitly incomplete.
   Full package verifier, IMU/event semantic integration, canonical-byte checks,
   remaining camera/cadence checks and host activation are NOT complete.
   Prior governance commit 4af6648 hosted runs 35200971957/35200976056 failed

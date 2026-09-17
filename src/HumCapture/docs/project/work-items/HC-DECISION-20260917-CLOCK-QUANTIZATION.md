@@ -1,4 +1,8 @@
-# Decision required: affine clock mapping to integer ticks
+# Accepted decision: affine clock mapping to integer ticks
+
+Status: recommendation accepted by user 2026-09-17. Implemented for opt-in timing
+profile 1.1 under ADR-0032 / HC-CHG-20260917-003. Original decision context follows;
+legacy 1.0 arithmetic remains unassessed rather than silently reinterpreted.
 
 2026-09-17. HC-IF-TIM-001 specifies target = scale * source + offset, but the
 binary master stores mapped ticks as uint64 and v1 does not define quantization
@@ -24,5 +28,6 @@ Recommended next contract refinement for owner/architecture approval:
 
 Alternative: explicitly support a producer-declared rounding policy. This improves
 legacy flexibility but expands profile/schema/test scope beyond the simpler MVP.
-No policy has been implemented or assumed by this batch. Independent human and
-regulatory review remain distinct from engineering approval.
+The initial C14F-H batch did not implement a policy. The subsequent C14I-K batch
+implements the accepted recommendation. Independent human and regulatory review
+remain distinct from engineering approval.

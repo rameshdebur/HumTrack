@@ -1,5 +1,11 @@
 # HumCapture Traceability Matrix
 
+C14I-K: HC-DATA-REQ-001/002/009, timing 1.1 supplement, ADR-0032 and risks
+HC-RISK-022/030/031 map to HC-REP-RUNTIME-161-164, HC-CLK-001/002 and
+HC-VR-I0-4B-C14IJK-001. Evidence: 30 shared exact arithmetic boundary vectors,
+1,000 half-even parity checks, explicit schema/profile dispatch and mapped frame
+comparison. No automatic upgrade, mutation or complete package PASS.
+
 C14F-H: HC-DATA-REQ-001/002/009, HC-IF-TIM-001/ART-001 and risks
 HC-RISK-018/022/030/031 map to HC-REP-RUNTIME-155-160, HC-META-001 (43 shared
 schema vectors), and 13 SBOM/register controls including CRLF/LF serial-seed

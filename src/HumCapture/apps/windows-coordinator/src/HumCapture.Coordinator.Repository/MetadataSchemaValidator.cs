@@ -4,7 +4,7 @@ using Json.Schema;
 
 namespace HumCapture.Coordinator.Repository;
 
-internal enum MetadataKind { Timing, Camera, Imu, CaptureEvents, Finalization }
+internal enum MetadataKind { Timing, Camera, Imu, CaptureEvents, Finalization, TimingExact }
 
 // Structural gate only. Does not establish canonical bytes, identities or scientific validity.
 internal sealed class MetadataSchemaValidator
@@ -31,6 +31,7 @@ internal sealed class MetadataSchemaValidator
         }
         Load("common");
         schemas.Add(MetadataKind.Timing, Load("timing-metadata"));
+        schemas.Add(MetadataKind.TimingExact, Load("timing-metadata-v1.1"));
         schemas.Add(MetadataKind.Camera, Load("camera-metadata"));
         schemas.Add(MetadataKind.Imu, Load("imu-metadata"));
         schemas.Add(MetadataKind.CaptureEvents, Load("capture-event-archive"));

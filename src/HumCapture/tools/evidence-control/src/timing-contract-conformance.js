@@ -376,10 +376,12 @@ export function evaluateProtocolConditions(conditions) {
 }
 
 export function validateTimingPackageProfile(manifest) {
-  if (!manifest.interface_profiles?.includes("HC-IF-TIM-001@1.0.0")) reject("TIMING_PROFILE_MISSING", "Package does not declare HC-IF-TIM-001@1.0.0.");
+  const profiles = (manifest.interface_profiles ?? []).filter(value => value.startsWith("HC-IF-TIM-001@"));
+  if (profiles.length !== 1 || !["HC-IF-TIM-001@1.0.0", "HC-IF-TIM-001@1.1.0"].includes(profiles[0])) reject("TIMING_PROFILE_MISSING", "Package must declare exactly one supported timing profile.");
+  const timingVersion = profiles[0].endsWith("@1.1.0") ? "1.1.0" : "1.0.0";
   const expected = [
     ["FRAME_TIMESTAMPS", "application/vnd.humcapture.frame-timestamps", "1.0", "timing/frame-timestamps.bin"],
-    ["TIMING_METADATA", "application/json", "1.0.0", "metadata/timing-metadata.json"],
+    ["TIMING_METADATA", "application/json", timingVersion, "metadata/timing-metadata.json"],
     ["CAMERA_METADATA", "application/json", "1.0.0", "metadata/camera-metadata.json"]
   ];
   if (manifest.source_kind === "ANDROID") expected.push(

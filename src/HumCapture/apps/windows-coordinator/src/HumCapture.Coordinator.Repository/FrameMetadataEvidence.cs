@@ -3,7 +3,8 @@ using System.Text.Json;
 
 namespace HumCapture.Coordinator.Repository;
 
-internal sealed record FrameMetadataResult(FrameAssociationEvidence Association, bool MappedTimesRecomputed);
+internal enum TimingMetadataVersion { LegacyV1, ExactV1_1 }
+internal sealed record FrameMetadataResult(FrameAssociationEvidence Association, bool MappedTimesRecomputed, int MappedFramesCompared = 0);
 
 // Reads only caller-supplied finalized bytes/evidence. File/hash/manifest admission remains separate.
 internal sealed class FrameMetadataEvidence
@@ -11,9 +12,16 @@ internal sealed class FrameMetadataEvidence
     private readonly MetadataSchemaValidator schemas = new();
 
     internal FrameMetadataResult Compare(ReadOnlyMemory<byte> timingBytes, ReadOnlyMemory<byte> cameraBytes,
-        TimingStream<SourceFrame> frames, DecodedVideo video, CancellationToken token = default)
+        TimingStream<SourceFrame> frames, DecodedVideo video, CancellationToken token = default,
+        TimingMetadataVersion version = TimingMetadataVersion.LegacyV1)
     {
-        var timing = schemas.Validate(MetadataKind.Timing, timingBytes, token);
+        var kind = version switch
+        {
+            TimingMetadataVersion.LegacyV1 => MetadataKind.Timing,
+            TimingMetadataVersion.ExactV1_1 => MetadataKind.TimingExact,
+            _ => throw new InvalidDataException("Unsupported timing metadata version.")
+        };
+        var timing = schemas.Validate(kind, timingBytes, token);
         var camera = schemas.Validate(MetadataKind.Camera, cameraBytes, token);
         Require(Id(timing, "capture_attempt_id") == frames.CaptureAttemptId
             && Id(camera, "capture_attempt_id") == frames.CaptureAttemptId
@@ -33,6 +41,7 @@ internal sealed class FrameMetadataEvidence
             }
         }
         var models = new Dictionary<uint, JsonElement>();
+        var exactModels = new Dictionary<uint, (ExactClockScale Scale, long Offset)>();
         foreach (var model in timing.GetProperty("clock_models").EnumerateArray())
         {
             token.ThrowIfCancellationRequested();
@@ -41,15 +50,24 @@ internal sealed class FrameMetadataEvidence
             Require(U64(model, "valid_from_ticks") <= U64(model, "valid_through_ticks"), "Reversed model interval.");
             Require(long.TryParse(model.GetProperty("offset_ticks").GetString(), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var offset), "Model offset overflow.");
             Require(double.IsFinite(model.GetProperty("scale").GetDouble()), "Nonfinite model scale.");
+            var unitScale = model.GetProperty("scale").GetDouble().Equals(1d);
+            if (version == TimingMetadataVersion.ExactV1_1)
+            {
+                var scale = ClockQuantization.ParseScale(model.GetProperty("scale").GetRawText());
+                exactModels.Add(model.GetProperty("model_id").GetUInt32(), (scale, offset));
+                unitScale = scale.IsOne;
+                if (model.GetProperty("kind").GetString() == "OFFSET") { Require(unitScale, "OFFSET requires exact unit scale."); }
+            }
             if (model.GetProperty("kind").GetString() == "IDENTITY")
             {
                 var source = clocks[Id(model, "source_clock_id")]; var target = clocks[Id(model, "target_clock_id")];
                 Require(Id(source, "epoch_id") == Id(target, "epoch_id")
                     && source.GetProperty("ticks_per_second").GetUInt64() == target.GetProperty("ticks_per_second").GetUInt64()
-                    && model.GetProperty("scale").GetDouble().Equals(1d) && offset == 0, "Unproven identity model.");
+                    && unitScale && offset == 0, "Unproven identity model.");
             }
         }
         Require(stream.TryGetProperty("presentation_clock_id", out var presentation), "Missing presentation clock.");
+        var mappedFramesCompared = 0;
         foreach (var frame in frames.Records)
         {
             token.ThrowIfCancellationRequested();
@@ -62,6 +80,13 @@ internal sealed class FrameMetadataEvidence
                 && model.GetProperty("quality").GetString() != "UNAVAILABLE"
                 && frame.NativeTicks >= U64(model, "valid_from_ticks") && frame.NativeTicks <= U64(model, "valid_through_ticks")
                 && frame.UncertaintyNs >= model.GetProperty("uncertainty_ns").GetUInt32(), "Frame model binding/range/uncertainty mismatch.");
+            if (version == TimingMetadataVersion.ExactV1_1)
+            {
+                var exact = exactModels[frame.ClockModelId];
+                Require(ClockQuantization.Map(exact.Scale, frame.NativeTicks, exact.Offset) == frame.MappedSessionTicks.Value,
+                    "Recorded mapped frame time differs from exact quantization.");
+                mappedFramesCompared++;
+            }
         }
         var observed = camera.GetProperty("observed_timing");
         Require(observed.GetProperty("record_count").GetInt64() == frames.Records.Count
@@ -77,9 +102,8 @@ internal sealed class FrameMetadataEvidence
         }
         var association = FrameEvidenceAssociation.Compare(frames.Records, video,
             clocks[presentation.GetGuid()].GetProperty("ticks_per_second").GetUInt64(), generated, token);
-        // Model references are checked, but v1 has no exact affine-to-integer rounding rule.
-        // Do not promote this evidence into a completed scientific verification.
-        return new FrameMetadataResult(association, false);
+        // Legacy or absent mapped evidence is not promoted to a successful comparison.
+        return new FrameMetadataResult(association, mappedFramesCompared > 0, mappedFramesCompared);
     }
 
     private static Dictionary<Guid, JsonElement> Unique(JsonElement array, string key)

@@ -71,4 +71,62 @@ internal static class FrameMetadataTests
             n => n["video_transform_events"] = JsonNode.Parse("""[{"video_frame_index":"18446744073709551616","kind":"GENERATED_DUPLICATE","source_frame_sequence":"0","reason":"test"}]""")
         }) { var camera = Camera(); change(camera); Reject(() => Run(Timing(), camera)); }
     }
+
+    private static JsonNode ExactTiming()
+    {
+        var timing = Timing(); timing["schema_version"] = "1.1.0";
+        timing["mapping_policy"] = "EXACT_DECIMAL_NEAREST_TIES_EVEN";
+        return timing;
+    }
+    private static TimingStream<SourceFrame> ExactFrames()
+    {
+        var original = Frames(); ulong[] mapped = [5000000002, 5033333335, 5066666668];
+        return original with { Records = original.Records.Select((f, i) => f with { MappedSessionTicks = mapped[i] }).ToArray() };
+    }
+    private static FrameMetadataResult RunExact(JsonNode timing, TimingStream<SourceFrame> frames,
+        TimingMetadataVersion version = TimingMetadataVersion.ExactV1_1) => new FrameMetadataEvidence().Compare(
+        JsonSerializer.SerializeToUtf8Bytes(timing), JsonSerializer.SerializeToUtf8Bytes(Camera()), frames, Video(), version: version);
+
+    internal static void ExactMappedValues()
+    {
+        var frames = ExactFrames();
+        var result = RunExact(ExactTiming(), frames);
+        if (!result.MappedTimesRecomputed || result.MappedFramesCompared != 3 || frames.Records[0].NativeTicks != 1000000000)
+        { throw new InvalidOperationException("Mapped comparison or native preservation failed."); }
+        Reject(() => RunExact(ExactTiming(), Frames())); // Preserve/reject old mismatched observations, never repair them.
+        var changed = frames.Records.ToArray(); changed[0] = changed[0] with { MappedSessionTicks = 5000000003, UncertaintyNs = uint.MaxValue };
+        Reject(() => RunExact(ExactTiming(), frames with { Records = changed }));
+        var absent = frames with { Records = frames.Records.Select(f => f with { MappedSessionTicks = null, ClockModelId = 0, UncertaintyNs = 0 }).ToArray() };
+        var noEvidence = RunExact(ExactTiming(), absent);
+        if (noEvidence.MappedTimesRecomputed || noEvidence.MappedFramesCompared != 0)
+        { throw new InvalidOperationException("Absent mapped evidence became PASS."); }
+    }
+
+    internal static void ExactCompatibility()
+    {
+        Reject(() => RunExact(Timing(), ExactFrames()));
+        Reject(() => RunExact(ExactTiming(), ExactFrames(), TimingMetadataVersion.LegacyV1));
+        Reject(() => RunExact(ExactTiming(), ExactFrames(), (TimingMetadataVersion)99));
+        var badPolicy = ExactTiming(); badPolicy["mapping_policy"] = "FLOOR";
+        Reject(() => RunExact(badPolicy, ExactFrames()));
+        var offset = ExactTiming(); offset["clock_models"]![0]!["kind"] = "OFFSET";
+        Reject(() => RunExact(offset, ExactFrames()));
+        var text = System.Text.Encoding.UTF8.GetString(JsonSerializer.SerializeToUtf8Bytes(offset))
+            .Replace("1.000000002", "1.0000000000000000001", StringComparison.Ordinal);
+        Reject(() => new FrameMetadataEvidence().Compare(System.Text.Encoding.UTF8.GetBytes(text),
+            JsonSerializer.SerializeToUtf8Bytes(Camera()), ExactFrames(), Video(), version: TimingMetadataVersion.ExactV1_1));
+        var legacy = Run(Timing(), Camera());
+        if (legacy.MappedTimesRecomputed) { throw new InvalidOperationException("Legacy mappings implicitly upgraded."); }
+        var precise = ExactTiming();
+        precise["clock_models"]![0]!["valid_from_ticks"] = "10000000000000000";
+        precise["clock_models"]![0]!["valid_through_ticks"] = "10000000000000002";
+        precise["clock_models"]![0]!["offset_ticks"] = "0";
+        var raw = System.Text.Encoding.UTF8.GetString(JsonSerializer.SerializeToUtf8Bytes(precise))
+            .Replace("1.000000002", "1.0000000000000001", StringComparison.Ordinal);
+        var large = Frames() with { Records = Frames().Records.Select((f, i) => f with
+            { NativeTicks = 10000000000000000UL + (ulong)i, MappedSessionTicks = 10000000000000001UL + (ulong)i }).ToArray() };
+        var exactResult = new FrameMetadataEvidence().Compare(System.Text.Encoding.UTF8.GetBytes(raw),
+            JsonSerializer.SerializeToUtf8Bytes(Camera()), large, Video(), version: TimingMetadataVersion.ExactV1_1);
+        if (exactResult.MappedFramesCompared != 3) { throw new InvalidOperationException("Serialized scale precision lost."); }
+    }
 }

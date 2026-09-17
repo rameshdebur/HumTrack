@@ -183,7 +183,11 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-157 metadata schema repeated parallel evaluation", MetadataSchemaTests.RepeatAndParallel),
     ("HC-REP-RUNTIME-158 frame metadata bindings preserve cadence classes", FrameMetadataTests.Bindings),
     ("HC-REP-RUNTIME-159 frame metadata clock identity and range guards", FrameMetadataTests.ClockGuards),
-    ("HC-REP-RUNTIME-160 frame metadata count geometry and integer guards", FrameMetadataTests.CameraGuards)
+    ("HC-REP-RUNTIME-160 frame metadata count geometry and integer guards", FrameMetadataTests.CameraGuards),
+    ("HC-REP-RUNTIME-161 exact clock shared boundary vectors", ClockQuantizationTests.SharedVectors),
+    ("HC-REP-RUNTIME-162 exact clock halfway parity and unit precision", ClockQuantizationTests.HalfwayProperties),
+    ("HC-REP-RUNTIME-163 mapped frame comparison and absent evidence", FrameMetadataTests.ExactMappedValues),
+    ("HC-REP-RUNTIME-164 timing profile compatibility and exact scale", FrameMetadataTests.ExactCompatibility)
 };
 
 var failures = 0;

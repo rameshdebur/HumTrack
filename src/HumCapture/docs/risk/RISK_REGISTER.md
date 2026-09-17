@@ -1,5 +1,13 @@
 # HumCapture Preliminary Risk Register
 
+C14I-K update (2026-09-17), HC-RISK-022/030/031: opt-in timing profile 1.1
+requires exact decimal scale arithmetic and nearest/ties-even quantization;
+overflow, invalid policy/version and mapped-value mismatch cannot pass. No
+uncertainty tolerance hides an arithmetic error. Tests HC-REP-RUNTIME-161-164,
+HC-CLK-001/002 cover precision, halfway cases, version dispatch and legacy
+non-upgrade. Native data unchanged. Full package/IMU integration, model accuracy,
+field and regulatory evidence remain open; no risk closure is claimed.
+
 C14F-H update (2026-09-17), HC-RISK-018/022/030/031: locked published schema
 dependency, embedded local schemas, required formats, duplicate/depth/size guards,
 43 shared structural parity cases, and internal frame identity/clock/range/count/
