@@ -1,5 +1,11 @@
 # HumCapture Traceability Matrix
 
+HC-RISK-018 / HC-GOV-SBOM-001 revision 1.1 / HC-GOV-LIC-001 map to five
+licence-register controls in tools/sbom/test/licence-register.test.js and
+HC-VR-LIC-001: exact inventory coverage, dependency/version drift, mandatory
+licence/cost/evidence fields, candidate reconciliation and live-manifest freshness.
+Engineering governance consistency only; no legal or distribution approval.
+
 C14E batch: HC-IF-TIM-001 finalized binary/PTS association, HC-DATA-REQ-001/002/009
 and HC-RISK-022/030/031 map to HC-REP-RUNTIME-149–154, nine existing golden vectors
 and expanded HC-TIM-TEST-012. Evidence HC-VR-I0-4B-C14E-001. Internal primitives

@@ -1,7 +1,7 @@
 # HumCapture Software Bill of Materials Policy
 
 **Policy ID:** HC-GOV-SBOM-001  
-**Revision:** 1.0  
+**Revision:** 1.1
 **Effective date:** 2026-08-31  
 **Status:** Active for Phase 0 engineering and future releases
 
@@ -75,6 +75,32 @@ SBOM production does not replace vulnerability or licence analysis. Each release
 gate shall separately run applicable ecosystem audits and review newly added,
 removed, or changed components. Vulnerability findings, VEX decisions, accepted
 risks, and licence approvals are separate controlled records linked to the SBOM.
+
+## Living licence, cost and legal-obligation register (2026-09-17)
+
+Maintain [DEPENDENCY_LICENSE_REGISTER.md](DEPENDENCY_LICENSE_REGISTER.md), generated
+from `sbom/dependency-licences.json` and the retained CycloneDX SBOM. It covers every
+current SBOM component/product identity, selected-not-installed candidates, and
+explicit supplemental tooling/binary-composition gaps. Do not describe declaration
+coverage as binary or legal clearance. The SBOM retains its original declarations;
+this complementary register records reviewed publisher metadata and pending tasks.
+
+Every dependency addition/removal/version/scope/distribution change must update
+the SBOM and this register in the same change. Exact licences, potential fees,
+obligations, source evidence, review status and next actions are required. Refresh
+publisher terms/prices at selection, upgrade and release review; record the date.
+No automatic purchase, commercial acceptance, web polling or approval is implied.
+
+Run `node tools/sbom/src/licence-register.js --write` from HumCapture after review.
+Existing `npm.cmd test --prefix tools/sbom` / scoped CI now checks identity coverage,
+missing fields, stale Markdown and source-manifest drift against the retained SBOM.
+It does not prove licence correctness, owner entitlement or legal compatibility.
+
+Release/SBOM owner maintains inventory; package owners propose changes; commercial
+owner confirms fee applicability/entitlements; qualified counsel addresses legal
+interpretation/distribution questions. Record approvals with person, date, exact
+scope and evidence. No open-source licence, tool or subscription conveys CDSCO
+approval; the existing qualified India review remains separate.
 
 ## Current known unknowns
 

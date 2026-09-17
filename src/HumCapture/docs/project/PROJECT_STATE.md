@@ -1,8 +1,8 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** I0.4B-C14E | VERIFIER | TIMING + IMU | METADATA DECISION
-**Last meaningful update:** 2026-09-16
+**Tags:** GOV | DEPENDENCY LICENCES + COSTS | JSONSCHEMA SELECTED
+**Last meaningful update:** 2026-09-17
 
 ## Objective
 
@@ -14,17 +14,28 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
+- JsonSchema.Net selected in principle by user on 2026-09-17; not installed and
+  no commercial acceptance/payment or distribution approval recorded. Before
+  resuming features, HC-CHG-20260917-001 adds the living dependency licence/cost
+  register with 33 SBOM components plus product, one candidate and explicit
+  tooling/composition gaps. SBOM policy 1.1 mandates same-change maintenance;
+  existing CI runs the new drift checks. Local 12 SBOM/register tests pass.
+  Publisher declarations are not legal approval; FFmpeg and paid-term gates remain.
+  See docs/governance/DEPENDENCY_LICENSE_REGISTER.md and HC-VR-LIC-001.
+
 - User-approved multi-step batch now implements finalized frame/IMU binary readers
   and exact rational frame-association primitives under ADR-0030. All nine existing
   cross-language binary vectors match their accepted/rejected outcomes; internal
   association closes out-of-range coverage and preserves missing generated-PTS
   evidence. Local build and 154 runtime / 105 contract tests pass. Metadata/schema,
   camera geometry, clock binding and full package verification remain incomplete.
-  Next genuine gate: HC-DECISION-20260916-METADATA-VALIDATION.md in work-items;
-  proposed .NET schema dependency has binary licence terms requiring owner review.
+  JsonSchema.Net approach is now selected (see current governance entry); its
+  binary licence terms still require owner applicability/acceptance review.
   No dependency installed, host activation or camera access in this batch.
   See HC-CHG-20260916-001 and HC-VR-I0-4B-C14E-001. Short local UVC captures remain
   authorized when relevant; no NDI source is assumed. No per-slice reapproval needed.
+  Source 0acc42526875cf7a1e040b9dc46e71931739f657 passed hosted push35102593789
+  and PR35102597788, checked 2026-09-17; C14E evidence remains engineering only.
 
 - C14D is authorized under ADR-0029 and the existing C14 design/governance baseline:
   implement internal hash-bound stream/frame evidence extraction, not host activation

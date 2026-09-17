@@ -1,6 +1,12 @@
 # Decision required — Coordinator metadata validation dependency
 
-Status: proposed, not approved or installed. Checked 2026-09-16.
+Status: JsonSchema.Net approach selected by user 2026-09-17; NOT INSTALLED.
+Commercial terms/applicability, payment and distribution approval remain open.
+User requested the living licence/cost register before implementation resumes;
+see HC-CHG-20260917-001 and docs/governance/DEPENDENCY_LICENSE_REGISTER.md.
+The following comparison is retained as decision history, not a new request to
+choose the library again. Source-build versus publisher-binary entitlement is not
+resolved by technical selection alone.
 
 The next C14 integration step must validate the accepted draft-2020-12 timing,
 camera, IMU, event and finalization schemas before semantic verification. Existing

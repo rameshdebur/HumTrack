@@ -1,5 +1,13 @@
 # HumCapture Preliminary Risk Register
 
+HC-RISK-018 update (2026-09-17): live licence/cost register HC-GOV-LIC-001 now
+reconciles every retained SBOM identity with reviewed publisher declarations,
+fee implications, outstanding obligations and explicit tooling/binary gaps.
+Five automated register/drift regressions supplement seven SBOM controls under
+HC-VR-LIC-001. This detects missing/stale records, not legal correctness or
+complete binary composition. Commercial/redistribution and qualified review
+remain open; no risk closure or licence/CDSCO approval is claimed.
+
 C14E batch update (2026-09-16), HC-RISK-022/030/031: finalized binary readers
 reject corrupt/unknown/hidden evidence; exact rational PTS comparison and dense
 index coverage prevent count-only false associations. Generated duplicate timing
