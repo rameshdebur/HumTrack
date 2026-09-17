@@ -1,5 +1,17 @@
 # HumCapture Windows Coordinator
 
+## C14L-N internal evidence checks (not activated)
+
+Repository-internal `InternalCaptureEvidence` combines frame/IMU metadata and
+capture archive/finalization consistency checks. It accepts a trusted manifest
+projection, finalized bytes and separately obtained decoded observations. It
+does not read a package folder, admit a manifest, create verifier records or
+alter repository state. No host command exposes it. UVC has no added IMU
+requirement; Android complete evidence includes its declared IMU artifacts.
+Incomplete captures and unassessed checks remain explicit in the result.
+See `../../docs/verification/I0_4B_C14LMN_EVIDENCE_REPORT.md` for synthetic
+test evidence and remaining production integration gates.
+
 ## C13 ordinary-folder collection
 
 ```powershell

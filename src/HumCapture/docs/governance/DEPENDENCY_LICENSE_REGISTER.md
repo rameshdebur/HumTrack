@@ -5,7 +5,7 @@ HC-GOV-LIC-001 | Living engineering register | NOT legal/distribution approval
 Publisher/metadata review date: 2026-09-17. Owner: Release/SBOM owner; package owner updates; commercial/legal owner approves terms.
 
 Coverage: 37 SBOM components plus HumCapture product; 0 selected-not-installed candidate(s); 13 supplemental tooling/composition items.
-SBOM baseline: 0.1.0-i0.4b-c14k, generated 2026-09-17T12:20:20.000Z.
+SBOM baseline: 0.1.0-i0.4b-c14n, generated 2026-09-17T13:22:00.000Z.
 
 Scope is src/HumCapture, not the wider HumTrack repository or all software installed on this machine. Direct and transitive package identities follow the SBOM dependency graph. This is source/lockfile coverage, NOT a complete binary-composition audit.
 
@@ -186,10 +186,10 @@ Review states are recorded per row; a declaration is not legal approval. Version
 
 | Component / version | Use | Licence / cost profile | Evidence | Outstanding action |
 |---|---|---|---|---|
-| HumTrack/HumCapture **0.1.0-i0.4b-c14k** | First-party acquisition subsystem | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
+| HumTrack/HumCapture **0.1.0-i0.4b-c14n** | First-party acquisition subsystem | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
 | windows-sdk-10-version-2004-all **10.0.19041.685** | Build-time SDK/installer | [Windows](#windows) | [1](https://www.microsoft.com/useterms) [2](https://visualstudio.microsoft.com/license-terms/) [3](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Check exact Microsoft entitlement/redistributable terms; host composition remains open. |
 | FFmpeg Windows essentials archive **9.0.1** | Local engineering only; runtime disabled; redistribution not approved | [Gyan-GPL](#gyan-gpl) | [1](../../apps/windows-coordinator/decoder/decoder-lock.json) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Close embedded-library, corresponding-source and distribution review before activation/shipping. |
-| HumCapture/HumCapture CI **0.1.0-i0.4b-c14k** | Development/test/CI | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
+| HumCapture/HumCapture CI **0.1.0-i0.4b-c14n** | Development/test/CI | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
 | HumCapture/HumCapture.Coordinator.Host **0.1.0** | First-party acquisition subsystem | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
 | HumCapture/HumCapture.Coordinator.Repository.SelfTest **0.1.0** | Development/test/CI | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |
 | HumCapture/HumCapture.Coordinator.Repository **0.1.0** | First-party acquisition subsystem | [First-party](#first-party) | [1](SBOM_POLICY.md) | DECLARATION_RECORDED_NOT_LEGAL_APPROVAL: Baseline producer/distribution licence before release; not covered by third-party permission. |

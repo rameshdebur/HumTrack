@@ -7,7 +7,7 @@ namespace HumCapture.Coordinator.Repository.SelfTest;
 internal static class FrameMetadataTests
 {
     private static byte[] Fixture(string name) => File.ReadAllBytes(Path.Combine(AppContext.BaseDirectory, "TimingVectors", name));
-    private static JsonNode Timing()
+    internal static JsonNode Timing()
     {
         var timing = JsonNode.Parse(Fixture("valid-timing-metadata.json"))!;
         var clock = timing["clocks"]![0]!.DeepClone();
@@ -19,7 +19,7 @@ internal static class FrameMetadataTests
     }
     private static JsonNode Camera() => JsonNode.Parse(Fixture("valid-camera-metadata.json"))!;
     private static TimingStream<SourceFrame> Frames() => TimingBinaryReader.Frames(Fixture("valid-frame-timestamps.bin"));
-    private static DecodedVideo Video() => new(0, "h264", 1920, 1080, 1, 90000,
+    internal static DecodedVideo Video() => new(0, "h264", 1920, 1080, 1, 90000,
         [new(0, 0, 1920, 1080), new(1, 3000, 1920, 1080), new(2, 6000, 1920, 1080)]);
     private static FrameMetadataResult Run(JsonNode timing, JsonNode camera) => new FrameMetadataEvidence().Compare(
         JsonSerializer.SerializeToUtf8Bytes(timing), JsonSerializer.SerializeToUtf8Bytes(camera), Frames(), Video());

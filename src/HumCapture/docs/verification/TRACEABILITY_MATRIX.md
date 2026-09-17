@@ -1,5 +1,17 @@
 # HumCapture Traceability Matrix
 
+C14L-N: HC-DATA-REQ-001/002/009, HC-IF-TIM-001 (1.0 plus explicit 1.1),
+HC-IF-ART-001, ADR-0033 and HC-RISK-022/030/031 map to:
+
+- HC-REP-RUNTIME-165-168: IMU identity/units/clock/model/association bindings,
+  exact versus legacy mappings, missing sensors and preserved anomalies.
+- HC-REP-RUNTIME-169-170 and HC-ART-PARITY-001/002: 22 shared finalization vectors,
+  canonical Unicode, exact hashes/lengths, terminal history and rejection paths.
+- HC-REP-RUNTIME-171-172: internal synthetic UVC/Android/incomplete composition,
+  decoder hash association, missing inputs, foreign captures and cancellation.
+- HC-VR-I0-4B-C14LMN-001: raw results, initial fixture failure and resolution,
+  explicit unassessed boundaries; existing 13 SBOM/register controls maintained.
+
 C14I-K: HC-DATA-REQ-001/002/009, timing 1.1 supplement, ADR-0032 and risks
 HC-RISK-022/030/031 map to HC-REP-RUNTIME-161-164, HC-CLK-001/002 and
 HC-VR-I0-4B-C14IJK-001. Evidence: 30 shared exact arithmetic boundary vectors,

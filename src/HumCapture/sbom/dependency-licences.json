@@ -144,7 +144,7 @@
   },
   "entries": [
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14k",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14n",
       "profile": "First-party",
       "use": "First-party acquisition subsystem",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
@@ -176,7 +176,7 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14k",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14n",
       "profile": "First-party",
       "use": "Development/test/CI",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",

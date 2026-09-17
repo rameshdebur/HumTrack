@@ -56,6 +56,11 @@ Hosted source-revision evidence is recorded after CI completes; local success
 does not itself establish hosted success. No standalone official CycloneDX CLI,
 fresh licence interpretation or full vulnerability review was performed here.
 
+Hosted evidence checked 2026-09-17: implementation
+433309957f8205d302fa278679a7b9ab950f9de1 passed push 35220978752 and PR
+35220984585. Subsequent C14L-N addresses internal IMU/finalization composition;
+the remaining-boundaries section below records the original C14I-K endpoint.
+
 ## Explicit remaining boundaries
 
 This checks arithmetic consistency, not clock calibration/uncertainty accuracy or

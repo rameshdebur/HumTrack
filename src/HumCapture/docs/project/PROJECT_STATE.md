@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C14I-C14K | TIMING | EXACT CLOCK QUANTIZATION | INTERNAL VERIFIER
+**Tags:** C14L-C14N | IMU + FINALIZATION | INTERNAL EVIDENCE COMPOSITION
 **Last meaningful update:** 2026-09-17
 
 ## Objective
@@ -14,6 +14,19 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
+- C14L-N is implemented under user-approved ADR-0033 / HC-CHG-20260917-004 and
+  the existing requirements, roles, India baseline, interfaces and risks.
+  Local Release build has zero warnings/errors; 172 runtime, 110 contract and
+  13 SBOM/register checks pass. Internal IMU binding/exact 1.1 arithmetic,
+  canonical event/finalization checks and synthetic combined composition now
+  exist. Missing/legacy evidence and incomplete finalization remain explicit.
+  No new dependency; SBOM/register refreshed to c14n. See HC-VR-I0-4B-C14LMN-001.
+  Full manifest/file-lease/protocol admission, model segment continuity,
+  decoder provenance, remaining camera/cadence checks and production activation
+  remain open. No automatic VERIFIED/commit/receipt or source cleanup follows.
+  Prior source 433309957f8205d302fa278679a7b9ab950f9de1 passed hosted push
+  35220978752 and PR 35220984585, checked 2026-09-17.
+
 - C14I-K is implemented after user acceptance of the clock-quantization recommendation
   on 2026-09-17. Contract/design baseline ADR-0032 and CLOCK_QUANTIZATION_V1_1.md
   apply under existing approved ARD/PRD/SRS/roles/governance/India/risk authority.
@@ -21,8 +34,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   comparisons pass 164 runtime / 108 contract / 13 SBOM tests locally, including
   30 shared arithmetic vectors and 1,000 halfway parity checks. No new dependency.
   Historical/native bytes remain immutable; no new deployment claim. See
-  HC-VR-I0-4B-C14IJK-001. IMU mapped-value integration, event/finalization/canonical
-  checks and complete package verification remain subsequent batch work; this
+  HC-VR-I0-4B-C14IJK-001. Internal IMU mapped-value and event/finalization/canonical
+  checks were subsequently added in C14L-N; complete package verification remains
+  open. This
   arithmetic consistency check does not establish synchronization accuracy.
 
 - User authorized the published JsonSchema.Net route and a related sprint batch

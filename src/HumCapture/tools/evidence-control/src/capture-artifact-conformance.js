@@ -8,8 +8,9 @@ const fail = (code, text) => { throw new ContractConformanceError(code, text); }
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 function canonical(value) {
+  if (typeof value === "string" && !value.isWellFormed()) fail("CAPTURE_CANONICAL_INVALID", "Invalid Unicode surrogate in capture artifact.");
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
-  if (value !== null && typeof value === "object") return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
+  if (value !== null && typeof value === "object") return `{${Object.keys(value).sort().map((key) => `${canonical(key)}:${canonical(value[key])}`).join(",")}}`;
   return JSON.stringify(value);
 }
 

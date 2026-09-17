@@ -187,7 +187,15 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-161 exact clock shared boundary vectors", ClockQuantizationTests.SharedVectors),
     ("HC-REP-RUNTIME-162 exact clock halfway parity and unit precision", ClockQuantizationTests.HalfwayProperties),
     ("HC-REP-RUNTIME-163 mapped frame comparison and absent evidence", FrameMetadataTests.ExactMappedValues),
-    ("HC-REP-RUNTIME-164 timing profile compatibility and exact scale", FrameMetadataTests.ExactCompatibility)
+    ("HC-REP-RUNTIME-164 timing profile compatibility and exact scale", FrameMetadataTests.ExactCompatibility),
+    ("HC-REP-RUNTIME-165 IMU metadata and exact versus legacy mappings", ImuEvidenceTests.Bindings),
+    ("HC-REP-RUNTIME-166 IMU sensor identity units and rotation guards", ImuEvidenceTests.SensorGuards),
+    ("HC-REP-RUNTIME-167 IMU clock bindings and cancellation", ImuEvidenceTests.ClockGuards),
+    ("HC-REP-RUNTIME-168 missing sensors and acquisition anomalies preserved", ImuEvidenceTests.MissingAndAnomalousEvidence),
+    ("HC-REP-RUNTIME-169 shared finalization vectors", CaptureEvidenceTests.SharedFinalizationVectors),
+    ("HC-REP-RUNTIME-170 capture canonical byte and hash guards", CaptureEvidenceTests.CanonicalAndBindingGuards),
+    ("HC-REP-RUNTIME-171 combined synthetic UVC Android and incomplete evidence", CaptureEvidenceTests.CombinedSyntheticEvidence),
+    ("HC-REP-RUNTIME-172 combined evidence failure paths", CaptureEvidenceTests.CombinedFailurePaths)
 };
 
 var failures = 0;

@@ -1,5 +1,16 @@
 # HumCapture Preliminary Risk Register
 
+C14L-N update (2026-09-17), HC-RISK-022/030/031: shared frame/IMU clock bindings,
+sensor identity/kind/units, declared rotation checks, exact 1.1 IMU arithmetic,
+canonical event/summary bytes, event continuity and bound terminal outcome now
+have internal automated checks. HC-REP-RUNTIME-165-172 and HC-ART-PARITY-001/002
+exercise missing sensors, anomalies, false completion, altered bytes and
+cross-language canonical/event cases. No acquisition rate is inferred from a
+requested period; missing evidence and legacy arithmetic remain unassessed.
+Incomplete results cannot authorize completion. This is internal composition,
+not full manifest/protocol admission, physical calibration, segment/model
+continuity validation, decoder provenance, HIL, host activation or risk closure.
+
 C14I-K update (2026-09-17), HC-RISK-022/030/031: opt-in timing profile 1.1
 requires exact decimal scale arithmetic and nearest/ties-even quantization;
 overflow, invalid policy/version and mapped-value mismatch cannot pass. No
