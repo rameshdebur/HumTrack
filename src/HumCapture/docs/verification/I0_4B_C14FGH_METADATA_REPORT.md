@@ -55,6 +55,13 @@ dotnet list apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.Sel
 
 ## Defects found and disposition
 
+Hosted confirmation (2026-09-17): implementation source
+`479fcf0ff56699ed498f252ba54bffe1afbcaad4` passed both
+[push run 35203687827](https://github.com/rameshdebur/HumTrack/actions/runs/35203687827)
+and [PR run 35203691943](https://github.com/rameshdebur/HumTrack/actions/runs/35203691943).
+This confirms scoped hosted software checks, including the repaired SBOM drift
+check; it does not extend hardware, field or regulatory evidence.
+
 1. Compiled schemas retain JsonElements. Disposing their source document caused
    ObjectDisposedException during evaluation. Clone schema elements before build;
    shared fixtures and repeated/parallel tests now pass. No operator data involved.

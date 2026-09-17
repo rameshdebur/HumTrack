@@ -32,6 +32,8 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Prior governance commit 4af6648 hosted runs 35200971957/35200976056 failed
   because NuGet CRLF/LF affected only the SBOM serial seed. This batch normalizes
   that seed and adds a regression; package/archive integrity hashes are unchanged.
+  Implementation 479fcf0ff56699ed498f252ba54bffe1afbcaad4 passed hosted push
+  35203687827 and PR 35203691943 on 2026-09-17; evidence recorded in the report.
 
 - User-approved multi-step batch now implements finalized frame/IMU binary readers
   and exact rational frame-association primitives under ADR-0030. All nine existing
