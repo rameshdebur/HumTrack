@@ -1,5 +1,11 @@
 # Engineering decoder candidate (runtime disabled)
 
+C14R connects the internal package adapter to InspectAsync under retained
+package read leases. `--package-decode-real ABS_BIN ABS_SYNTHETIC_MEDIA_DIRECTORY`
+checks matching three-frame media, mismatched PTS, corrupt media and geometry
+mismatch. See HC-VR-I0-4B-C14R-001 for fixture generation and measured results.
+This is engineering integration, not host activation or redistribution approval.
+
 C14D adds internal InspectAsync: pinned ffprobe observations plus full ffmpeg decode
 under the same input lease/deadline/serial gate. It returns file SHA-256/length,
 single video-stream identity, dimensions, exact rational time base and signed PTS
@@ -7,7 +13,8 @@ per decoded frame; no nominal-rate inference or timestamp normalization. The sel
 `--inspect-real ABS_BIN ABS_SYNTHETIC_MEDIA_DIRECTORY` verifies four C14B fixtures.
 Inspection has a 16-MiB output/100,000-frame engineering envelope; oversize fails
 without partial evidence. This is not a camera capability or capture-duration rule.
-Stream/source timing/camera/IMU/event/finalization association is still pending.
+Existing internal comparisons now bind source timing/camera/IMU/events/finalization
+to admitted packages; remaining scientific acceptance and activation stay pending.
 
 C14C adds internal PinnedDecoderWorker/DecoderProcess in the Coordinator repository
 assembly (ADR-0028). It is not called by the host and cannot admit a package. It

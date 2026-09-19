@@ -9,7 +9,7 @@ namespace HumCapture.Coordinator.Repository.SelfTest;
 
 internal static class PackageInputTests
 {
-    private static void WithFixture(Action<string> action, string name = "uvc-legacy")
+    internal static void WithFixture(Action<string> action, string name = "uvc-legacy")
     {
         var parent = Path.Combine(AppContext.BaseDirectory, "package-input-tests", Guid.NewGuid().ToString("N"));
         var root = Path.Combine(parent, "package"); Directory.CreateDirectory(root);
@@ -37,7 +37,7 @@ internal static class PackageInputTests
         manifest["package_content_sha256"] = PackageInputManifest.Hash(Encode(manifest));
         File.WriteAllBytes(Path.Combine(root, "package-manifest.json"), Encode(manifest));
     }
-    private static void Rebind(string root)
+    internal static void Rebind(string root)
     {
         var manifest = Manifest(root); ulong total = 0;
         foreach (var item in manifest["artifacts"]!.AsArray())

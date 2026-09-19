@@ -1,5 +1,16 @@
 # HumCapture Windows Coordinator
 
+## C14R leased pinned decode (internal, not activated)
+
+`PackageInputEvidence.EvaluateAsync` awaits the pinned decoder while retaining
+the admitted package's read leases. Successful actual decode discharges decoder
+provenance only after byte binding and existing metadata comparisons. Failed
+inspection returns a typed outcome and no package result; no-master survivors
+remain partial with no inspection. Admission/comparison errors throw; caller
+cancellation outside the worker throws. The decoder timeout covers its work,
+not all admission. Scientific acceptance, host wiring and record production
+remain pending. See ADR-0035 and HC-VR-I0-4B-C14R-001.
+
 ## C14O-Q package-file adapter (internal, not activated)
 
 `PackageInputEvidence.Evaluate` reads a finalized local Windows package directory,

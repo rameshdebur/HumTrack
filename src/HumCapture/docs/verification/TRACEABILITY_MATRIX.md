@@ -1,5 +1,11 @@
 # HumCapture Traceability Matrix
 
+C14R: HC-DATA-REQ-001/002/009, ADR-0035, HC-RISK-022/030/031 map to
+HC-REP-RUNTIME-181-184 plus HC-PACKAGE-DECODE-REAL (four local synthetic cases).
+Pinned decoder connection retains input leases, distinguishes absent from failed
+decode and cannot issue completion. Existing 173-180 guard observation provenance
+and lease behavior. Evidence: HC-VR-I0-4B-C14R-001. Scientific quality remains open.
+
 C14O-Q: HC-DATA-REQ-001/002/008/009, XFR-001@1.2, ART-001@1.0 and TIM-001@1.0/1.1,
 ADR-0034, HC-RISK-022/030/031 map to HC-REP-RUNTIME-173-180 and HC-PKG-INPUT-001.
 Controls: schema/canonical/profile/role admission; streamed integrity and stable

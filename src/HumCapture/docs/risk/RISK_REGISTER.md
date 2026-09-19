@@ -1,5 +1,12 @@
 # HumCapture Preliminary Risk Register
 
+C14R (2026-09-19), HC-RISK-022/030/031: existing pinned inspection runs within
+the admitted package lease. Decoder failure yields no package result; missing
+master stays explicitly unassessed. Only actual pinned decoding discharges
+decoder provenance. Four synthetic media cases and automated guard checks
+provide engineering evidence, not scientific/protocol acceptance, independent
+review or release qualification. See ADR-0035 / HC-VR-I0-4B-C14R-001.
+
 C14O-Q (2026-09-19), HC-RISK-022/030/031: internal manifest/profile admission,
 exact leased-file size/hash binding, long-path support and final inventory checks
 are exercised by HC-REP-RUNTIME-173-180 and HC-PKG-INPUT-001. Existing writers,

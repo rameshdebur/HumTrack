@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C14O-C14Q | PACKAGE INPUT | MANIFEST + READ LEASES
+**Tags:** C14R | PACKAGE INPUT | PINNED DECODER INTEGRATION
 **Last meaningful update:** 2026-09-19
 
 ## Objective
@@ -14,6 +14,17 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
+- C14R is user-authorized and design/governance baselined before implementation
+  under ADR-0035 / HC-CHG-20260919-002, with existing requirements, roles, India,
+  interface and risk baselines. Internal leased decoder integration only;
+  C14S/T scientific acceptance and production activation remain separate.
+  Implemented: clean Release build, 12 focused runtime groups, four real pinned
+  synthetic-media cases, 111 contract and 13 SBOM/register tests pass locally.
+  See HC-VR-I0-4B-C14R-001. Full source regression is a hosted gate. SBOM/register
+  refreshed to c14r; no new dependency, hardware or regulatory qualification.
+  C14O-Q source 10b4e5e24e5a9a6d43f503e863fcea2926277023 passed hosted push
+  35429696528 and PR 35429699911: 180 runtime, 111 contract, 13 SBOM tests.
+
 - C14O-Q is user-approved and design/governance baselined under ADR-0034 and
   HC-CHG-20260919-001, with existing ARD/PRD/SRS, roles, India baseline, risks and
   XFR/TIM/ART contracts. Internal local-folder input admission implemented with
@@ -22,8 +33,9 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   111 contract and 13 SBOM/register tests pass. Full corrected-source regression
   is a hosted gate; do not claim the superseded local partial run as acceptance.
   See HC-VR-I0-4B-C14OPQ-001. No journal mutation, VERIFIED, host activation or
-  cleanup. Decoder provenance, protocol/scientific acceptance and record production
-  remain subsequent batches. SBOM/register refreshed to c14q; no new dependency.
+  cleanup. Decoder provenance was subsequently connected internally in C14R;
+  protocol/scientific acceptance and record production remain later work.
+  SBOM/register refreshed to c14q at that slice; no new dependency.
   Prior afbed422acaaebb4ae2c5ba29253b82e809b5272 passed hosted push 35227124741
   and PR 35227130907 as recorded at completion of C14L-N.
 

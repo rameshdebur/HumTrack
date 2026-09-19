@@ -5,19 +5,42 @@ namespace HumCapture.Coordinator.Repository;
 internal sealed record PackageInputResult(string PackageId, string PackageContentSha256, int BoundArtifactCount,
     InternalCaptureEvidenceResult Evidence);
 
-// File input admission only. Actual pinned decoder invocation/quality/record production
-// belong to subsequent batches. The observation callback is internal, not a host API.
+internal sealed record PackageDecodeResult(PackageInputResult? Input, MediaInspectionResult? Inspection);
+
+// Internal engineering composition only, not a host API or verification record.
 internal static class PackageInputEvidence
 {
+    internal static async Task<PackageDecodeResult> EvaluateAsync(string directory, string binaryDirectory,
+        TimeSpan decoderTimeout, CancellationToken token = default)
+    {
+        if (decoderTimeout <= TimeSpan.Zero || decoderTimeout > TimeSpan.FromHours(24))
+        { throw new ArgumentOutOfRangeException(nameof(decoderTimeout)); }
+        using var lease = PackageInputLease.Open(directory, token);
+        var master = lease.Manifest.Find("SCIENTIFIC_MASTER_VIDEO");
+        if (master is null) { return new(EvaluateLease(lease, null, false, token), null); }
+        var inspection = await PinnedDecoderWorker.InspectAsync(binaryDirectory, lease.MasterPath(master), decoderTimeout, token)
+            .ConfigureAwait(false);
+        if (inspection.Outcome != DecoderExit.Decoded || inspection.Evidence is null)
+        { return new(null, inspection); }
+        return new(EvaluateLease(lease, (_, _) => inspection.Evidence, true, token), inspection);
+    }
+
     internal static PackageInputResult Evaluate(string directory,
         Func<string, CancellationToken, DecodedMediaEvidence?>? observe = null, CancellationToken token = default)
     {
         using var lease = PackageInputLease.Open(directory, token);
+        return EvaluateLease(lease, observe, false, token);
+    }
+
+    private static PackageInputResult EvaluateLease(PackageInputLease lease,
+        Func<string, CancellationToken, DecodedMediaEvidence?>? observe, bool pinnedDecoder, CancellationToken token)
+    {
         var manifest = lease.Manifest; var expected = manifest.Finalization;
         ReadOnlyMemory<byte> Read(string role) => lease.ReadArtifact(manifest.Find(role)!, token);
         var finalization = new CaptureFinalizationEvidence().Compare(expected, Read("CAPTURE_EVENTS"), Read("FINALIZATION_RECORD"), token);
         var missing = new List<string> { "PROTOCOL_ADMISSION", "PHYSICAL_CALIBRATION_AND_SYNCHRONIZATION", "CADENCE_ACCEPTANCE",
-            "DECODER_PROVENANCE", "CLOCK_MODEL_SEGMENT_CONTINUITY" };
+            "CLOCK_MODEL_SEGMENT_CONTINUITY" };
+        if (!pinnedDecoder) { missing.Add("DECODER_PROVENANCE"); }
         var schema = new MetadataSchemaValidator();
         JsonElement? Metadata(string role, MetadataKind kind)
         {

@@ -22,6 +22,11 @@ if (args.Length == 3 && args[0] == "--inspect-real")
     return await MediaInspectionTests.RealAsync(args[1], args[2]);
 }
 
+if (args.Length == 3 && args[0] == "--package-decode-real")
+{
+    return PackageDecodeTests.Real(args[1], args[2]);
+}
+
 var tests = new (string Name, Action Body)[]
 {
     ("HC-REP-RUNTIME-001 initialize creates exact repository surface", InitializeCreatesSurface),
@@ -203,11 +208,16 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-177 cancellation and callback failure release leases", PackageInputTests.CancellationAndFailureRelease),
     ("HC-REP-RUNTIME-178 incomplete survivors and streaming limits", PackageInputTests.SurvivorsAndStreaming),
     ("HC-REP-RUNTIME-179 hard-linked input is rejected", PackageInputTests.HardLinks),
-    ("HC-REP-RUNTIME-180 reparse path refusal and optional survivors", PackageInputTests.ReparsePathsAndSurvivorSidecars)
+    ("HC-REP-RUNTIME-180 reparse path refusal and optional survivors", PackageInputTests.ReparsePathsAndSurvivorSidecars),
+    ("HC-REP-RUNTIME-181 missing decoder cannot return package evidence", PackageDecodeTests.MissingDecoder),
+    ("HC-REP-RUNTIME-182 package decoder pin refusal releases input", PackageDecodeTests.PinRefusal),
+    ("HC-REP-RUNTIME-183 absent master remains partial", PackageDecodeTests.MissingMaster),
+    ("HC-REP-RUNTIME-184 package decode cancellation and deadline guards", PackageDecodeTests.CancellationAndDeadline)
 };
 
 var selectedTests = args.SequenceEqual(["--package-input"])
-    ? tests.Where(test => test.Body.Method.DeclaringType == typeof(PackageInputTests)).ToArray() : tests;
+    ? tests.Where(test => test.Body.Method.DeclaringType == typeof(PackageInputTests)
+        || test.Body.Method.DeclaringType == typeof(PackageDecodeTests)).ToArray() : tests;
 var failures = 0;
 foreach (var (name, body) in selectedTests)
 {
