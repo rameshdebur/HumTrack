@@ -6,67 +6,67 @@ TAP version 13
 # Subtest: NuGet serial seed is stable across restored CRLF and checked-out LF without hiding content changes
 ok 1 - NuGet serial seed is stable across restored CRLF and checked-out LF without hiding content changes
   ---
-  duration_ms: 1.1449
+  duration_ms: 1.3665
   ...
 # Subtest: licence register covers every exact SBOM identity and rendered document is current
 ok 2 - licence register covers every exact SBOM identity and rendered document is current
   ---
-  duration_ms: 7.7988
+  duration_ms: 9.3733
   ...
 # Subtest: licence coverage rejects added removed upgraded or duplicate dependencies
 ok 3 - licence coverage rejects added removed upgraded or duplicate dependencies
   ---
-  duration_ms: 5.3956
+  duration_ms: 10.533
   ...
 # Subtest: licence register requires cost obligations evidence and explicit review state
 ok 4 - licence register requires cost obligations evidence and explicit review state
   ---
-  duration_ms: 4.0393
+  duration_ms: 3.3418
   ...
 # Subtest: selected candidate cannot remain not-installed after entering the SBOM
 ok 5 - selected candidate cannot remain not-installed after entering the SBOM
   ---
-  duration_ms: 2.9182
+  duration_ms: 2.0179
   ...
 # Subtest: retained SBOM and licence baseline match current source manifests
 ok 6 - retained SBOM and licence baseline match current source manifests
   ---
-  duration_ms: 156.6189
+  duration_ms: 137.7928
   ...
 # Subtest: generates a valid CycloneDX 1.7 inventory with all declared surfaces
 ok 7 - generates a valid CycloneDX 1.7 inventory with all declared surfaces
   ---
-  duration_ms: 163.9678
+  duration_ms: 149.2352
   ...
 # Subtest: decoder candidate requires immutable archive identity and cannot silently become enabled
 ok 8 - decoder candidate requires immutable archive identity and cannot silently become enabled
   ---
-  duration_ms: 2.0345
+  duration_ms: 2.7483
   ...
 # Subtest: generation is deterministic for fixed inputs version and timestamp
 ok 9 - generation is deterministic for fixed inputs version and timestamp
   ---
-  duration_ms: 210.3252
+  duration_ms: 198.7698
   ...
 # Subtest: dependency graph has complete closure
 ok 10 - dependency graph has complete closure
   ---
-  duration_ms: 103.2083
+  duration_ms: 104.3771
   ...
 # Subtest: manifest discovery detects a future Android dependency surface
 ok 11 - manifest discovery detects a future Android dependency surface
   ---
-  duration_ms: 6.3166
+  duration_ms: 6.1506
   ...
 # Subtest: GitHub Actions must use immutable commit pins
 ok 12 - GitHub Actions must use immutable commit pins
   ---
-  duration_ms: 0.4325
+  duration_ms: 0.3822
   ...
 # Subtest: Chocolatey build packages must use exact versions
 ok 13 - Chocolatey build packages must use exact versions
   ---
-  duration_ms: 0.2538
+  duration_ms: 0.252
   ...
 1..13
 # tests 13
@@ -76,4 +76,4 @@ ok 13 - Chocolatey build packages must use exact versions
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 611.7719
+# duration_ms 567.1009

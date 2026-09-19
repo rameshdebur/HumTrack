@@ -68,7 +68,9 @@ Retained SHA-256:
 | corrupt.mp4 | f600eca824e84a43f0691b267bd620e462c50da165c5b80e17aecb7a924f1fa8 |
 
 SBOM 0.1.0-i0.4b-c14r: 37 components plus product, SHA-256
-6db9a78f3efb6d26cbdaaaf64ed331f20b7dc7dd38124e213a46c69efd7a622b.
+c87ce0a5ffcecb83a6bcdb5d4594dcfe04a25db17929780fc04330abfd8c1bf9.
+The initial fixed SBOM timestamp was ahead of the actual UTC generation time;
+it was corrected to the measured 2026-09-19T09:45:33Z and SBOM tests rerun.
 No dependency/version/licence selection changed. Decoder remains excluded from
 production runtime and redistribution; prior engineering-use review gates remain.
 

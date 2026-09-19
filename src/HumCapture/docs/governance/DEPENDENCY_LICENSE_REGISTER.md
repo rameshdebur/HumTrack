@@ -5,7 +5,7 @@ HC-GOV-LIC-001 | Living engineering register | NOT legal/distribution approval
 Publisher/metadata review date: 2026-09-17. Owner: Release/SBOM owner; package owner updates; commercial/legal owner approves terms.
 
 Coverage: 37 SBOM components plus HumCapture product; 0 selected-not-installed candidate(s); 13 supplemental tooling/composition items.
-SBOM baseline: 0.1.0-i0.4b-c14r, generated 2026-09-19T12:00:00.000Z.
+SBOM baseline: 0.1.0-i0.4b-c14r, generated 2026-09-19T09:45:33.000Z.
 
 Scope is src/HumCapture, not the wider HumTrack repository or all software installed on this machine. Direct and transitive package identities follow the SBOM dependency graph. This is source/lockfile coverage, NOT a complete binary-composition audit.
 
