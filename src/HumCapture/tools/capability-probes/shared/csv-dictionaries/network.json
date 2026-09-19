@@ -1,0 +1,24 @@
+{
+  "dictionary_name": "network",
+  "evidence_format_version": "1.0.0",
+  "columns": [
+    { "name": "run_id", "type": "uuid", "required": true, "unit": null, "description": "Owning probe run." },
+    { "name": "sequence", "type": "uint64", "required": true, "unit": "count", "description": "Probe-assigned observation sequence." },
+    { "name": "timestamp", "type": "int64", "required": true, "unit": "declared", "description": "Observation timestamp." },
+    { "name": "timestamp_domain", "type": "enum:device_monotonic|android_elapsed_realtime|host_qpc|host_arrival|unknown", "required": true, "unit": null, "description": "Observation clock domain." },
+    { "name": "timestamp_unit", "type": "enum:ns|us|ms|s|ticks_100ns", "required": true, "unit": null, "description": "Unit of timestamp." },
+    { "name": "test_type", "type": "enum:discovery|preview_load|clock_exchange|transfer|reconnect|manual_fallback", "required": true, "unit": null, "description": "Network test family." },
+    { "name": "direction", "type": "enum:android_to_windows|windows_to_android|bidirectional|local", "required": true, "unit": null, "description": "Measurement direction." },
+    { "name": "endpoint_id", "type": "string", "required": true, "unit": null, "description": "Stable endpoint or preview identity within the run." },
+    { "name": "payload_bytes", "type": "uint64", "required": false, "unit": "bytes", "description": "Payload size for the observation." },
+    { "name": "rtt_ms", "type": "float64", "required": false, "minimum": 0, "unit": "ms", "description": "Round-trip latency." },
+    { "name": "jitter_ms", "type": "float64", "required": false, "minimum": 0, "unit": "ms", "description": "Jitter measured by the stated procedure." },
+    { "name": "packet_loss_percent", "type": "float64", "required": false, "minimum": 0, "maximum": 100, "unit": "percent", "description": "Packet loss for the observation window." },
+    { "name": "throughput_bps", "type": "float64", "required": false, "minimum": 0, "unit": "bit/s", "description": "Application-level throughput." },
+    { "name": "transfer_interrupted", "type": "boolean", "required": true, "unit": null, "description": "Whether the transfer was deliberately interrupted for resume testing." },
+    { "name": "byte_range_resume_verified", "type": "boolean", "required": true, "unit": null, "description": "Whether resumption continued from a verified byte range rather than restarting silently." },
+    { "name": "completion_verified", "type": "boolean", "required": true, "unit": null, "description": "Whether the observation group reached its required completion condition." },
+    { "name": "status", "type": "enum:ok|degraded|failed|unknown", "required": true, "unit": null, "description": "Observed event status, not an overall qualification." },
+    { "name": "notes", "type": "string", "required": false, "unit": null, "description": "Synthetic-test annotation." }
+  ]
+}

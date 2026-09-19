@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/timing/v1/imu-metadata.schema.json",
+  "title": "HumCapture IMU metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "capture_attempt_id", "imu_file_stream_id", "device_coordinate_frame", "sensor_streams"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "capture_attempt_id": { "type": "string", "format": "uuid" },
+    "imu_file_stream_id": { "type": "string", "format": "uuid" },
+    "device_coordinate_frame": { "const": "ANDROID_NATURAL_DEVICE_X_RIGHT_Y_TOP_Z_OUT_OF_SCREEN" },
+    "display_rotation_degrees": { "enum": [0, 90, 180, 270] },
+    "sensor_streams": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["sensor_stream_id", "sensor_uuid", "sensor_kind", "vendor", "version", "units", "requested_period_us", "requested_max_report_latency_us", "availability", "used_by_platform_fusion"],
+        "properties": {
+          "sensor_stream_id": { "type": "integer", "minimum": 1, "maximum": 65535 },
+          "sensor_uuid": { "type": "string", "format": "uuid" },
+          "sensor_kind": { "enum": ["ACCELEROMETER", "GYROSCOPE", "ROTATION_VECTOR", "GRAVITY", "LINEAR_ACCELERATION", "MAGNETOMETER"] },
+          "vendor": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "version": { "type": "integer", "minimum": 0 },
+          "units": { "enum": ["M_PER_S2", "RAD_PER_S", "UNIT_QUATERNION", "MICROTESLA"] },
+          "requested_period_us": { "type": "integer", "minimum": 1 },
+          "requested_max_report_latency_us": { "type": "integer", "minimum": 0 },
+          "availability": { "enum": ["AVAILABLE", "NOT_AVAILABLE", "NOT_SUPPORTED", "PERMISSION_LIMITED"] },
+          "used_by_platform_fusion": { "type": "boolean" },
+          "actual_observed_hz": { "type": "number", "exclusiveMinimum": 0 },
+          "accuracy_semantics": { "type": "string", "minLength": 1, "maxLength": 500 }
+        }
+      }
+    },
+    "camera_associations": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["camera_stream_id", "association_quality", "calibration_provenance", "valid_from_segment", "imu_to_camera_rotation_row_major"],
+        "properties": {
+          "camera_stream_id": { "type": "string", "format": "uuid" },
+          "association_quality": { "enum": ["VALID", "DEGRADED", "UNAVAILABLE"] },
+          "calibration_provenance": { "enum": ["PLATFORM_FACTORY", "OPERATOR_CALIBRATION", "DOCUMENTED_MOUNT", "UNAVAILABLE"] },
+          "valid_from_segment": { "type": "integer", "minimum": 0 },
+          "valid_through_segment": { "type": "integer", "minimum": 0 },
+          "imu_to_camera_rotation_row_major": {
+            "type": "array", "minItems": 9, "maxItems": 9,
+            "items": { "type": "number", "minimum": -1.000001, "maximum": 1.000001 }
+          },
+          "uncertainty_degrees": { "type": "number", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

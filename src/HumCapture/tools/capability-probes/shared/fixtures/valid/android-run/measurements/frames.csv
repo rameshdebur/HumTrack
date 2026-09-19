@@ -1,0 +1,3 @@
+run_id,stream_id,sequence,source_timestamp,source_timestamp_domain,source_timestamp_unit,presentation_timestamp,presentation_timestamp_unit,host_arrival_timestamp,host_arrival_timestamp_domain,host_arrival_timestamp_unit,discontinuity,dropped_before,width_px,height_px,encoded_size_bytes,queue_depth,notes
+018f6f5e-6b1a-7c23-8d45-0123456789ab,master,0,1000000000,sensor_monotonic,ns,0,us,1000100000,device_monotonic,ns,none,0,1920,1080,24000,0,synthetic
+018f6f5e-6b1a-7c23-8d45-0123456789ab,master,1,1016666667,sensor_monotonic,ns,16667,us,1016766667,device_monotonic,ns,none,0,1920,1080,22000,0,synthetic

@@ -1,0 +1,653 @@
+{
+  "schema_version": "1.0.0",
+  "reviewed_on": "2026-09-17",
+  "owner": "Release/SBOM owner; package owner updates; commercial/legal owner approves terms",
+  "profiles": {
+    "MIT": {
+      "licence": "MIT",
+      "cost": "No mandatory copyright-licence fee stated; optional support/services are separate.",
+      "obligations": "Retain copyright and permission notices with distributed copies/substantial portions. No warranty. Assess bundled third-party notices separately.",
+      "sources": [
+        "https://opensource.org/license/mit"
+      ]
+    },
+    "BSD-3-Clause": {
+      "licence": "BSD-3-Clause",
+      "cost": "No mandatory copyright-licence fee stated.",
+      "obligations": "Retain copyright, conditions and disclaimer in source/binary distribution; do not imply endorsement by contributors.",
+      "sources": [
+        "https://opensource.org/license/bsd-3-clause"
+      ]
+    },
+    "Apache-2.0": {
+      "licence": "Apache-2.0",
+      "cost": "No mandatory copyright-licence fee stated; paid support is optional.",
+      "obligations": "Supply licence; preserve relevant attribution/NOTICE; mark modified files. Patent grant has conditions; no trademark licence or warranty. Check package contents before redistribution.",
+      "sources": [
+        "https://www.apache.org/licenses/LICENSE-2.0"
+      ]
+    },
+    "LGPL-3.0-only": {
+      "licence": "LGPL-3.0-only (pinned analyzer package declaration)",
+      "cost": "No mandatory copyright-licence fee identified; separate Sonar commercial services not included.",
+      "obligations": "Build-only use is not the same as shipping this library. Do not assume analyzer use makes all application code LGPL. If distributing/modifying/linking the analyzer, review LGPL/GPL notice, source and relinking obligations with counsel.",
+      "sources": [
+        "https://licenses.nuget.org/LGPL-3.0-only",
+        "https://www.gnu.org/licenses/lgpl-3.0.html"
+      ]
+    },
+    "Gyan-GPL": {
+      "licence": "Publisher-declared GPLv3 build; embedded components not fully inventoried",
+      "cost": "No decoder subscription identified. Codec patent/royalty exposure and compliance effort are separate, unresolved costs.",
+      "obligations": "Distribution blocked pending matching source/build/configuration and embedded-library notice review. Running a separate process is not by itself legal clearance; application/decoder relationship needs review. Evaluate codec patents for intended territories/use. Do not relabel this build LGPL.",
+      "sources": [
+        "https://www.gyan.dev/ffmpeg/builds/",
+        "https://ffmpeg.org/legal.html"
+      ]
+    },
+    "Windows": {
+      "licence": "Microsoft proprietary product/SDK terms; exact entitlement review open",
+      "cost": "Windows/toolchain entitlement or subscription may cost money; actual edition, agreement and amount unknown.",
+      "obligations": "Verify licensed host and applicable SDK/redistributable terms; installed SDK/API availability is not redistribution permission. Do not ship arbitrary OS/SDK binaries.",
+      "sources": [
+        "https://www.microsoft.com/useterms",
+        "https://visualstudio.microsoft.com/license-terms/",
+        "https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/"
+      ]
+    },
+    "Dotnet": {
+      "licence": ".NET open-source components (MIT plus third-party notices)",
+      "cost": "Microsoft states no .NET licence charge, including commercial use; support and host licences separate.",
+      "obligations": "Retain notices for redistributed runtime/SDK portions. Record actual deployed patch and deployment method; framework minimum is not a measured installed version.",
+      "sources": [
+        "https://dotnet.microsoft.com/en-us/platform/free",
+        "https://github.com/dotnet/runtime/blob/main/LICENSE.TXT",
+        "https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT"
+      ]
+    },
+    "First-party": {
+      "licence": "HumCapture first-party licence/producer rights not baselined",
+      "cost": "Not a third-party package fee; producer commercial terms and legal-review costs not determined.",
+      "obligations": "Owner must establish producer identity, contributor rights and distribution licence before release. Repository visibility is not permission to apply an open-source licence.",
+      "sources": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    "JsonSchema-binary": {
+      "licence": "MIT source; published binary OSMF agreement requires separate consideration",
+      "cost": "Publisher tiers checked 2026-09-17: USD 10/month (<20 employees), 25/month (20-100), 50/month (>100), conditional on applicability. Annual equivalents 120/300/600; tax/FX excluded. Not a quote or accepted purchase.",
+      "obligations": "User authorized the published-package engineering route on 2026-09-17 after the terms decision. This is not evidence of payment or fee exemption. Owner must establish applicable maintenance entitlement for use and release. JsonSchema.Net, JsonPointer.Net and Json.More.Net contain the identical OSMF agreement (SHA-256 5c805ac94dfdb4a3be55547f04a2f4b9f1bb87d7e9ee6d6fe54b0e72093900c3). Retain MIT notices and agreement; review each resolved dependency. No purchase made.",
+      "sources": [
+        "https://www.nuget.org/packages/JsonSchema.Net/9.4.0/License",
+        "https://github.com/sponsors/gregsdennis"
+      ]
+    },
+    "Node": {
+      "licence": "MIT core plus bundled third-party licences",
+      "cost": "No mandatory Node copyright-licence fee identified; hosting/support separate.",
+      "obligations": "Preserve bundled notices if redistributed; track exact tool version. Node is development tooling here, not an approved Coordinator runtime.",
+      "sources": [
+        "https://github.com/nodejs/node/blob/v22.12.0/LICENSE"
+      ]
+    },
+    "npm": {
+      "licence": "Artistic-2.0 CLI plus bundled licences; registry service terms separate",
+      "cost": "CLI licence not a package-use fee; paid registry/organization features may incur charges if selected.",
+      "obligations": "Retain applicable notices; distinguish local CLI licensing from registry account terms. Exact CLI dependency inventory not included in current application SBOM.",
+      "sources": [
+        "https://github.com/npm/cli/blob/latest/LICENSE",
+        "https://docs.npmjs.com/policies/terms"
+      ]
+    },
+    "Git": {
+      "licence": "Git GPLv2; Git for Windows distribution contains additional components",
+      "cost": "No mandatory Git licence fee identified.",
+      "obligations": "Development tool only; redistribution of Git/tool bundles requires their own notices/source review. Not an application runtime dependency.",
+      "sources": [
+        "https://git-scm.com/about/free-and-open-source"
+      ]
+    },
+    "GitHub-service": {
+      "licence": "GitHub service terms; separate from MIT-licensed action code",
+      "cost": "Runner minutes/storage/caches may cost money according to plan, repository visibility and runner type. Account entitlements and actual charges not inspected.",
+      "obligations": "Review organization billing and data/service terms; do not confuse free action source with free hosted execution. No new paid service authorized.",
+      "sources": [
+        "https://docs.github.com/en/billing/concepts/product-billing/github-actions",
+        "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service"
+      ]
+    },
+    "Chocolatey": {
+      "licence": "Chocolatey CLI Apache-2.0; hosted service/business terms and installed package EULAs separate",
+      "cost": "Community CLI versus optional business offerings; SDK package does not establish Microsoft entitlement. Actual CLI edition unknown.",
+      "obligations": "Check installer scripts/package provenance and upstream software terms. Tooling only, not application redistribution.",
+      "sources": [
+        "https://github.com/chocolatey/choco/blob/develop/LICENSE",
+        "https://chocolatey.org/terms"
+      ]
+    },
+    "SQLite-native": {
+      "licence": "SQLite upstream public-domain dedication; wrapper packages separately Apache-2.0",
+      "cost": "No upstream SQLite licence fee required; optional warranty-of-title/support may cost money.",
+      "obligations": "Confirm exact embedded native SQLite revision and provenance; public-domain recognition/indemnity needs qualified review if relevant. Do not confuse NuGet bundle version with SQLite engine version.",
+      "sources": [
+        "https://www.sqlite.org/copyright.html"
+      ]
+    },
+    "Unknown": {
+      "licence": "Unresolved exact binary/licence composition",
+      "cost": "Unknown, not zero.",
+      "obligations": "Identify exact source/version, terms and bundled components before distribution approval.",
+      "sources": [
+        "SBOM_POLICY.md"
+      ]
+    }
+  },
+  "entries": [
+    {
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14r",
+      "profile": "First-party",
+      "use": "First-party acquisition subsystem",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
+      "profile": "Windows",
+      "use": "Build-time SDK/installer",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Check exact Microsoft entitlement/redistributable terms; host composition remains open.",
+      "evidence": [
+        "https://www.microsoft.com/useterms",
+        "https://visualstudio.microsoft.com/license-terms/",
+        "https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/"
+      ]
+    },
+    {
+      "ref": "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
+      "profile": "Gyan-GPL",
+      "use": "Local engineering only; runtime disabled; redistribution not approved",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Close embedded-library, corresponding-source and distribution review before activation/shipping.",
+      "evidence": [
+        "../../apps/windows-coordinator/decoder/decoder-lock.json"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14r",
+      "profile": "First-party",
+      "use": "Development/test/CI",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
+      "profile": "First-party",
+      "use": "First-party acquisition subsystem",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
+      "profile": "First-party",
+      "use": "Development/test/CI",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
+      "profile": "First-party",
+      "use": "First-party acquisition subsystem",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.ManagedCameraProbe@0.1.0-p0",
+      "profile": "First-party",
+      "use": "Exploratory/test tooling",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.MfCapture@0.1.0-p0",
+      "profile": "First-party",
+      "use": "Exploratory/test tooling",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.MfEnumerator@0.1.0-p0",
+      "profile": "First-party",
+      "use": "Exploratory/test tooling",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
+      "profile": "First-party",
+      "use": "Development/test/CI",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
+      "profile": "Dotnet",
+      "use": "Host-resolved framework minimum; actual patch not inventoried",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Record deployed runtime patch and notices before release.",
+      "evidence": [
+        "https://dotnet.microsoft.com/en-us/platform/free",
+        "https://github.com/dotnet/runtime/blob/main/LICENSE.TXT",
+        "https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT"
+      ]
+    },
+    {
+      "ref": "pkg:generic/microsoft/Microsoft.NETCore.App@8.0.0",
+      "profile": "Dotnet",
+      "use": "Host-resolved framework minimum; actual patch not inventoried",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Record deployed runtime patch and notices before release.",
+      "evidence": [
+        "https://dotnet.microsoft.com/en-us/platform/free",
+        "https://github.com/dotnet/runtime/blob/main/LICENSE.TXT",
+        "https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT"
+      ]
+    },
+    {
+      "ref": "pkg:generic/microsoft/Windows-Media-Foundation-COM-Shell@host-provided",
+      "profile": "Windows",
+      "use": "Host-provided runtime APIs",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Check exact Microsoft entitlement/redistributable terms; host composition remains open.",
+      "evidence": [
+        "https://www.microsoft.com/useterms",
+        "https://visualstudio.microsoft.com/license-terms/",
+        "https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/"
+      ]
+    },
+    {
+      "ref": "pkg:generic/microsoft/Windows-SDK@10.0.19041.0",
+      "profile": "Windows",
+      "use": "Build-time SDK/installer",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Check exact Microsoft entitlement/redistributable terms; host composition remains open.",
+      "evidence": [
+        "https://www.microsoft.com/useterms",
+        "https://visualstudio.microsoft.com/license-terms/",
+        "https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/"
+      ]
+    },
+    {
+      "ref": "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+      "profile": "MIT",
+      "use": "CI action source; hosted execution billed separately",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if redistributing action; review service costs separately.",
+      "evidence": [
+        "https://github.com/actions/checkout/blob/de0fac2e4500dabe0009e67214ff5f5447ce83dd/LICENSE"
+      ]
+    },
+    {
+      "ref": "pkg:github/actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7",
+      "profile": "MIT",
+      "use": "CI action source; hosted execution billed separately",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if redistributing action; review service costs separately.",
+      "evidence": [
+        "https://github.com/actions/setup-dotnet/blob/c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7/LICENSE"
+      ]
+    },
+    {
+      "ref": "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "profile": "MIT",
+      "use": "CI action source; hosted execution billed separately",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if redistributing action; review service costs separately.",
+      "evidence": [
+        "https://github.com/actions/setup-node/blob/820762786026740c76f36085b0efc47a31fe5020/LICENSE"
+      ]
+    },
+    {
+      "ref": "pkg:npm/%40humcapture/evidence-control@0.1.0",
+      "profile": "First-party",
+      "use": "Development/test/CI",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:npm/%40humcapture/phase0-evidence@0.1.0",
+      "profile": "First-party",
+      "use": "Exploratory/test tooling",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Baseline producer/distribution licence before release; not covered by third-party permission.",
+      "evidence": [
+        "SBOM_POLICY.md"
+      ]
+    },
+    {
+      "ref": "pkg:npm/ajv-formats@3.0.1",
+      "profile": "MIT",
+      "use": "Node development/contract-test dependency (not Coordinator runtime)",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if tooling is distributed; declaration from locked npm metadata.",
+      "evidence": [
+        "../../tools/evidence-control/package-lock.json",
+        "../../tools/capability-probes/shared/package-lock.json"
+      ]
+    },
+    {
+      "ref": "pkg:npm/ajv@8.20.0",
+      "profile": "MIT",
+      "use": "Node development/contract-test dependency (not Coordinator runtime)",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if tooling is distributed; declaration from locked npm metadata.",
+      "evidence": [
+        "../../tools/evidence-control/package-lock.json",
+        "../../tools/capability-probes/shared/package-lock.json"
+      ]
+    },
+    {
+      "ref": "pkg:npm/fast-deep-equal@3.1.3",
+      "profile": "MIT",
+      "use": "Node development/contract-test dependency (not Coordinator runtime)",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if tooling is distributed; declaration from locked npm metadata.",
+      "evidence": [
+        "../../tools/evidence-control/package-lock.json",
+        "../../tools/capability-probes/shared/package-lock.json"
+      ]
+    },
+    {
+      "ref": "pkg:npm/fast-uri@3.1.6",
+      "profile": "BSD-3-Clause",
+      "use": "Node development/contract-test dependency (not Coordinator runtime)",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if tooling is distributed; declaration from locked npm metadata.",
+      "evidence": [
+        "../../tools/evidence-control/package-lock.json",
+        "../../tools/capability-probes/shared/package-lock.json"
+      ]
+    },
+    {
+      "ref": "pkg:npm/json-schema-traverse@1.0.0",
+      "profile": "MIT",
+      "use": "Node development/contract-test dependency (not Coordinator runtime)",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if tooling is distributed; declaration from locked npm metadata.",
+      "evidence": [
+        "../../tools/evidence-control/package-lock.json",
+        "../../tools/capability-probes/shared/package-lock.json"
+      ]
+    },
+    {
+      "ref": "pkg:npm/require-from-string@2.0.2",
+      "profile": "MIT",
+      "use": "Node development/contract-test dependency (not Coordinator runtime)",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain notices if tooling is distributed; declaration from locked npm metadata.",
+      "evidence": [
+        "../../tools/evidence-control/package-lock.json",
+        "../../tools/capability-probes/shared/package-lock.json"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
+      "profile": "MIT",
+      "use": "Build-time analyzer; not intended for shipping",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Verify notices against resolved package archive before redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/microsoft.codeanalysis.netanalyzers/8.0.0/microsoft.codeanalysis.netanalyzers.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Data.Sqlite.Core@10.0.12",
+      "profile": "MIT",
+      "use": "Coordinator runtime direct/transitive dependency; see SBOM graph",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Verify notices against resolved package archive before redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite.core/10.0.12/microsoft.data.sqlite.core.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Microsoft.Data.Sqlite@10.0.12",
+      "profile": "MIT",
+      "use": "Coordinator runtime direct/transitive dependency; see SBOM graph",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Verify notices against resolved package archive before redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/microsoft.data.sqlite/10.0.12/microsoft.data.sqlite.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167",
+      "profile": "LGPL-3.0-only",
+      "use": "Build-time analyzer; not intended for shipping",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Verify notices against resolved package archive before redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/sonaranalyzer.csharp/9.32.0.97167/sonaranalyzer.csharp.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SQLitePCLRaw.bundle_e_sqlite3@2.1.12",
+      "profile": "Apache-2.0",
+      "use": "Coordinator runtime direct/transitive dependency; see SBOM graph",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Verify notices against resolved package archive before redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/sqlitepclraw.bundle_e_sqlite3/2.1.12/sqlitepclraw.bundle_e_sqlite3.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SQLitePCLRaw.core@2.1.12",
+      "profile": "Apache-2.0",
+      "use": "Coordinator runtime direct/transitive dependency; see SBOM graph",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Verify notices against resolved package archive before redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/sqlitepclraw.core/2.1.12/sqlitepclraw.core.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SQLitePCLRaw.lib.e_sqlite3@2.1.12",
+      "profile": "Apache-2.0",
+      "use": "Coordinator runtime direct/transitive dependency; see SBOM graph",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain package notices; identify embedded SQLite version/source before release.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/sqlitepclraw.lib.e_sqlite3/2.1.12/sqlitepclraw.lib.e_sqlite3.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SQLitePCLRaw.provider.e_sqlite3@2.1.12",
+      "profile": "Apache-2.0",
+      "use": "Coordinator runtime direct/transitive dependency; see SBOM graph",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Verify notices against resolved package archive before redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/sqlitepclraw.provider.e_sqlite3/2.1.12/sqlitepclraw.provider.e_sqlite3.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/JsonSchema.Net@9.4.0",
+      "profile": "JsonSchema-binary",
+      "use": "Coordinator internal metadata validation; resolved published package in locked build",
+      "review_status": "USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED",
+      "next_action": "Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/jsonschema.net/9.4.0/jsonschema.net.nuspec",
+        "https://www.nuget.org/packages/JsonSchema.Net/9.4.0/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/JsonPointer.Net@7.0.2",
+      "profile": "JsonSchema-binary",
+      "use": "Coordinator internal metadata validation; resolved published package in locked build",
+      "review_status": "USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED",
+      "next_action": "Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/jsonpointer.net/7.0.2/jsonpointer.net.nuspec",
+        "https://www.nuget.org/packages/JsonPointer.Net/7.0.2/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Json.More.Net@3.0.1",
+      "profile": "JsonSchema-binary",
+      "use": "Coordinator internal metadata validation; resolved published package in locked build",
+      "review_status": "USER_AUTHORIZED_ENGINEERING_PAYMENT_OR_EXEMPTION_NOT_EVIDENCED",
+      "next_action": "Owner records applicable fee/support entitlement or exemption; retain licence/notice bundle before release.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/json.more.net/3.0.1/json.more.net.nuspec",
+        "https://www.nuget.org/packages/Json.More.Net/3.0.1/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Humanizer.Core@3.0.10",
+      "profile": "MIT",
+      "use": "Coordinator internal metadata validation; resolved published package in locked build",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Retain MIT notices at redistribution.",
+      "evidence": [
+        "https://api.nuget.org/v3-flatcontainer/humanizer.core/3.0.10/humanizer.core.nuspec"
+      ]
+    }
+  ],
+  "candidates": [],
+  "supplemental": [
+    {
+      "name": "Node.js",
+      "version": "CI 22.12.0; local version not qualified here",
+      "profile": "Node",
+      "use": "CI/development",
+      "next_action": "CI workflow pins Node; no production JavaScript runtime authorized.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": ".NET SDK",
+      "version": "CI 10.0.303; local build version separately recorded",
+      "profile": "Dotnet",
+      "use": "Build tool",
+      "next_action": "CI workflow pin; SDK bundled components not fully inventoried by current SBOM.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "Visual Studio / MSBuild / MSVC",
+      "version": "CI windows-2025-vs2026; native toolset v145; exact installed build/edition unresolved",
+      "profile": "Windows",
+      "use": "Native build toolchain",
+      "next_action": "Check edition eligibility and compiler/runtime redistributables before release; do not infer Community eligibility.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "npm CLI",
+      "version": "CI bundled with Node; exact CLI version unresolved",
+      "profile": "npm",
+      "use": "Dependency installation/test tooling",
+      "next_action": "Record precise release-build CLI version and applicable terms.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "PowerShell",
+      "version": "CI pwsh / local shell; exact version unresolved",
+      "profile": "MIT",
+      "use": "Build/test shell",
+      "next_action": "PowerShell 7 source is MIT; distinguish Windows PowerShell OS terms and bundled components before redistribution.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "Git / Git for Windows",
+      "version": "Exact local/runner version unresolved",
+      "profile": "Git",
+      "use": "Source-control tooling",
+      "next_action": "Not shipped with HumCapture; version and bundled licence scan open.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "GitHub CLI",
+      "version": "Exact local version unresolved",
+      "profile": "MIT",
+      "use": "Repository/CI management tool",
+      "next_action": "Source MIT; GitHub service/billing terms separate.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "GitHub Actions hosting",
+      "version": "Plan, runner billing class and entitlements unresolved",
+      "profile": "GitHub-service",
+      "use": "External build service",
+      "next_action": "Read-only cost assessment only; not permission to enable paid usage.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "Chocolatey CLI",
+      "version": "CI host-provided version/edition unresolved",
+      "profile": "Chocolatey",
+      "use": "Build installer",
+      "next_action": "Pinned SDK installer is already in the SBOM; CLI/service separate.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "CycloneDX CLI",
+      "version": "0.33.1 local validation tool; binary provenance review pending",
+      "profile": "Apache-2.0",
+      "use": "SBOM format validation",
+      "next_action": "Local tool path hc-cyclonedx-0331; not a shipped application library.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "Embedded SQLite engine",
+      "version": "Native revision unresolved inside SQLitePCLRaw.lib.e_sqlite3 2.1.12",
+      "profile": "SQLite-native",
+      "use": "Indirect runtime binary",
+      "next_action": "Resolve native version and build provenance before binary-composition closure.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "Historical PATH FFmpeg / ffprobe",
+      "version": "Earlier probe evidence reports 7.1.1; current PATH identity not requalified",
+      "profile": "Unknown",
+      "use": "Exploratory probes only",
+      "next_action": "Not the pinned 9.0.1 decoder; identify actual build/licence before any reuse. Never silently promote PATH binaries.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    },
+    {
+      "name": "FFmpeg embedded libraries/codecs",
+      "version": "Exact versions and complete notices unresolved",
+      "profile": "Gyan-GPL",
+      "use": "Embedded engineering decoder dependencies",
+      "next_action": "Archive identity does not enumerate embedded licences; detailed binary composition remains open.",
+      "review_status": "INVENTORY_GAP_OR_TOOLING_NOT_LEGAL_APPROVAL"
+    }
+  ]
+}

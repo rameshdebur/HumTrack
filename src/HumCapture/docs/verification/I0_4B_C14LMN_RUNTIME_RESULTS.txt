@@ -1,0 +1,173 @@
+PASS HC-REP-RUNTIME-001 initialize creates exact repository surface
+PASS HC-REP-RUNTIME-002 supported repository reopens for mutation
+PASS HC-REP-RUNTIME-003 descriptor and catalog metadata agree
+PASS HC-REP-RUNTIME-004 initialization never overwrites
+PASS HC-REP-RUNTIME-005 nonempty root is refused
+PASS HC-REP-RUNTIME-006 relative root is refused
+PASS HC-REP-RUNTIME-007 unsupported major is read-only without writes
+PASS HC-REP-RUNTIME-008 older version requires explicit migration
+PASS HC-REP-RUNTIME-009 unknown required feature is read-only
+PASS HC-REP-RUNTIME-010 unknown field on supported descriptor is invalid
+PASS HC-REP-RUNTIME-011 missing catalog is refused
+PASS HC-REP-RUNTIME-012 corrupt catalog is refused
+PASS HC-REP-RUNTIME-013 metadata mismatch is refused
+PASS HC-REP-RUNTIME-014 descriptor publication leaves no temporary file
+PASS HC-REP-RUNTIME-015 empty repository UUID is refused
+PASS HC-REP-RUNTIME-016 hard-linked catalog is refused
+PASS HC-REP-RUNTIME-017 retained initialization lock is not removed
+PASS HC-REP-RUNTIME-018 verified stage creates atomic journal and index
+PASS HC-REP-RUNTIME-019 exact stage admission replay is idempotent
+PASS HC-REP-RUNTIME-020 missing staged package is refused
+PASS HC-REP-RUNTIME-021 existing final destination is refused
+PASS HC-REP-RUNTIME-022 changed staged bytes are refused
+PASS HC-REP-RUNTIME-023 false verified aggregate is refused
+PASS HC-REP-RUNTIME-024 artifact verification mismatch is refused
+PASS HC-REP-RUNTIME-025 verification record hash mismatch is refused
+PASS HC-REP-RUNTIME-026 unknown verification field is refused
+PASS HC-REP-RUNTIME-027 journal identity conflict is refused
+PASS HC-REP-RUNTIME-028 immutable verification collision is refused
+PASS HC-REP-RUNTIME-029 read-only repository refuses journal mutation
+PASS HC-REP-RUNTIME-030 hard-linked staged artifact is refused
+PASS HC-REP-RUNTIME-031 failed index insert rolls back journal rows
+PASS HC-REP-RUNTIME-032 durable intent precedes exact atomic package move
+PASS HC-REP-RUNTIME-033 C3 transitions are contiguous and content-bound
+PASS HC-REP-RUNTIME-034 exact completed move replay is idempotent
+PASS HC-REP-RUNTIME-035 changed staged bytes block intent
+PASS HC-REP-RUNTIME-036 destination material blocks intent without overwrite
+PASS HC-REP-RUNTIME-037 failed COMMITTING insert rolls back current state
+PASS HC-REP-RUNTIME-038 failed MOVED insert retains moved package and durable intent
+PASS HC-REP-RUNTIME-039 interrupted pre-move intent requires reconciliation
+PASS HC-REP-RUNTIME-040 moved location with COMMITTING state requires reconciliation
+PASS HC-REP-RUNTIME-041 moved package tampering blocks idempotent replay
+PASS HC-REP-RUNTIME-042 conflicting move operation replay is refused
+PASS HC-REP-RUNTIME-043 absent transaction cannot begin commit
+PASS HC-REP-RUNTIME-044 read-only repository refuses package movement
+PASS HC-REP-RUNTIME-045 current state must agree with contiguous history
+PASS HC-REP-RUNTIME-046 startup records six-authority staged no-action
+PASS HC-REP-RUNTIME-047 startup returns interrupted pre-move intent to staged
+PASS HC-REP-RUNTIME-048 startup proves interrupted post-move intent as moved
+PASS HC-REP-RUNTIME-049 startup records six-authority moved no-action
+PASS HC-REP-RUNTIME-050 exact startup reconciliation replay is idempotent
+PASS HC-REP-RUNTIME-051 conflicting reconciliation identity is refused
+PASS HC-REP-RUNTIME-052 dual-path material requires operator handling
+PASS HC-REP-RUNTIME-053 changed package requires operator handling
+PASS HC-REP-RUNTIME-054 unexpected catalog linkage blocks automatic action
+PASS HC-REP-RUNTIME-055 reconciliation rollback is atomic
+PASS HC-REP-RUNTIME-056 reconciled staged package can retry the C3 move
+PASS HC-REP-RUNTIME-057 catalog publication retains exact linkage and replays
+PASS HC-REP-RUNTIME-058 catalog transition failure rolls back all publication
+PASS HC-REP-RUNTIME-059 catalog publication rejects staged packages
+PASS HC-REP-RUNTIME-060 catalog publication rejects destination tampering
+PASS HC-REP-RUNTIME-061 catalog publication refuses existing catalog conflict
+PASS HC-REP-RUNTIME-062 catalog publication rejects changed replay identity
+PASS HC-REP-RUNTIME-063 catalog publication respects read-only compatibility
+PASS HC-REP-RUNTIME-064 final commit binds record index and six observations
+PASS HC-REP-RUNTIME-065 final commit replay revalidates without mutation
+PASS HC-REP-RUNTIME-066 final transaction rollback retains record for retry
+PASS HC-REP-RUNTIME-067 missing committed record is never recreated
+PASS HC-REP-RUNTIME-068 changed committed record is rejected
+PASS HC-REP-RUNTIME-069 changed package blocks final commit
+PASS HC-REP-RUNTIME-070 final commit cannot skip catalog boundary
+PASS HC-REP-RUNTIME-071 conflicting final identities are rejected
+PASS HC-REP-RUNTIME-072 read-only repository blocks final commit
+PASS HC-REP-RUNTIME-073 changed verification blocks final commit
+PASS HC-REP-RUNTIME-074 conflicting existing record is preserved
+PASS HC-REP-RUNTIME-075 damaged commit index blocks replay
+PASS HC-REP-RUNTIME-076 startup replay cannot reuse final reconciliation
+PASS HC-REP-RUNTIME-077 startup discovery paginates without mutation
+PASS HC-REP-RUNTIME-078 startup finalizes cataloged package without original request
+PASS HC-REP-RUNTIME-079 startup reuses orphan commit bytes and original audit fields
+PASS HC-REP-RUNTIME-080 committed confirmations retain final replay
+PASS HC-REP-RUNTIME-081 startup never recreates missing committed record
+PASS HC-REP-RUNTIME-082 confirmation replay checks current record bytes
+PASS HC-REP-RUNTIME-083 malformed orphan blocks startup
+PASS HC-REP-RUNTIME-084 duplicate orphan evidence is refused
+PASS HC-REP-RUNTIME-085 interrupted startup finalization retries retained bytes
+PASS HC-REP-RUNTIME-086 unsupported repository refuses discovery
+PASS HC-REP-RUNTIME-087 startup finalization replay rechecks media
+PASS HC-REP-RUNTIME-088 empty startup pass does not mutate
+PASS HC-REP-RUNTIME-089 startup pass uses Windows identity and confirms after restart
+PASS HC-REP-RUNTIME-090 startup pass bounds and resumes discovery
+PASS HC-REP-RUNTIME-091 startup pass isolates bad package and preserves evidence
+PASS HC-REP-RUNTIME-092 cancelled startup pass preserves repository
+PASS HC-REP-RUNTIME-093 startup pass leaves unsupported repository read only
+PASS HC-REP-RUNTIME-094 startup pass handles committing without forcing completion
+PASS HC-REP-RUNTIME-095 startup pass rejects invalid bounds before mutation
+PASS HC-REP-RUNTIME-096 host process opens empty repository
+PASS HC-REP-RUNTIME-097 host rejects arguments and missing root
+PASS HC-REP-RUNTIME-098 host process finalizes and rechecks
+PASS HC-REP-RUNTIME-099 host process reports bounded continuation
+PASS HC-REP-RUNTIME-100 host process reports inspection only
+PASS HC-REP-RUNTIME-101 host process preserves malformed evidence
+PASS HC-REP-RUNTIME-102 host process refuses overlapping instance
+PASS HC-REP-RUNTIME-103 startup cataloging persists six observations and replays
+PASS HC-REP-RUNTIME-104 host catalog recovery continues through final commit
+PASS HC-REP-RUNTIME-105 startup cataloging rolls back all database writes
+PASS HC-REP-RUNTIME-106 changed moved package blocks catalog recovery
+PASS HC-REP-RUNTIME-107 unexpected commit file blocks catalog recovery
+PASS HC-REP-RUNTIME-108 altered catalog recovery observations block final commit
+PASS HC-REP-RUNTIME-109 catalog recovery replay rechecks final evidence
+PASS HC-REP-RUNTIME-110 host processes staged package and skips repeat
+PASS HC-REP-RUNTIME-111 explicit processing and startup reach final commit
+PASS HC-REP-RUNTIME-112 interrupted processing resumes after move
+PASS HC-REP-RUNTIME-113 pending intent requires recovery before processing
+PASS HC-REP-RUNTIME-114 staged evidence tamper is retained and refused
+PASS HC-REP-RUNTIME-115 staged processing is paginated
+PASS HC-REP-RUNTIME-116 staged processing respects cancellation and read only
+PASS HC-REP-RUNTIME-117 staged processing shares host exclusion
+PASS HC-REP-RUNTIME-118 host admits exact staged evidence and replays
+PASS HC-REP-RUNTIME-119 admitted package completes existing host pipeline
+PASS HC-REP-RUNTIME-120 admission request rejects malformed unknown duplicate and caller actor fields
+PASS HC-REP-RUNTIME-121 admission rejects oversized request
+PASS HC-REP-RUNTIME-122 admission retains changed package and refuses it
+PASS HC-REP-RUNTIME-123 admission refuses missing staging and unsupported root
+PASS HC-REP-RUNTIME-124 admission shares host guard and rejects incompatible CLI options
+PASS HC-REP-RUNTIME-125 admission rejects changed verifier bytes
+PASS HC-REP-RUNTIME-126 local collection preserves source and reuses exact files
+PASS HC-REP-RUNTIME-127 local collection restarts owned partial bytes
+PASS HC-REP-RUNTIME-128 local collection rejects changed destination
+PASS HC-REP-RUNTIME-129 local collection refuses damaged source
+PASS HC-REP-RUNTIME-130 local collection rejects overlapping trees
+PASS HC-REP-RUNTIME-131 local collection pre-cancellation has no staging writes
+PASS HC-REP-RUNTIME-132 local collection host command and guard
+PASS HC-REP-RUNTIME-133 local collection refuses changed manifest binding
+PASS HC-REP-RUNTIME-134 local collection refuses cross-attempt identity conflict
+PASS HC-REP-RUNTIME-135 admitted packages cannot be recollected
+PASS HC-REP-RUNTIME-136 decoder clean/nonzero/diagnostic exits
+PASS HC-REP-RUNTIME-137 decoder drains dual pipes and bounds output
+PASS HC-REP-RUNTIME-138 decoder deadline terminates running child
+PASS HC-REP-RUNTIME-139 decoder cancellation before/during execution
+PASS HC-REP-RUNTIME-140 decoder missing executable fails
+PASS HC-REP-RUNTIME-141 decoder pin/path refusal releases leases
+PASS HC-REP-RUNTIME-142 decoder arguments preserve source cadence
+PASS HC-REP-RUNTIME-143 inspection preserves exact PTS order and geometry
+PASS HC-REP-RUNTIME-144 inspection rejects invalid or multiple video streams
+PASS HC-REP-RUNTIME-145 inspection rejects missing malformed or foreign frames
+PASS HC-REP-RUNTIME-146 inspection frame envelope and cancellation
+PASS HC-REP-RUNTIME-147 inspection pin or cancellation produces no evidence
+PASS HC-REP-RUNTIME-148 inspection requests observed not inferred PTS
+PASS HC-REP-RUNTIME-149 finalized frame and IMU golden vectors
+PASS HC-REP-RUNTIME-150 timing header count version bounds and cancellation
+PASS HC-REP-RUNTIME-151 frame flags mapping absent fields and exact integers
+PASS HC-REP-RUNTIME-152 IMU CRC flags identity finite values and mapping
+PASS HC-REP-RUNTIME-153 exact rational presentation association
+PASS HC-REP-RUNTIME-154 frame coverage ambiguity and missing generated PTS
+PASS HC-REP-RUNTIME-155 metadata schema shared Ajv vectors
+PASS HC-REP-RUNTIME-156 metadata schema input guards
+PASS HC-REP-RUNTIME-157 metadata schema repeated parallel evaluation
+PASS HC-REP-RUNTIME-158 frame metadata bindings preserve cadence classes
+PASS HC-REP-RUNTIME-159 frame metadata clock identity and range guards
+PASS HC-REP-RUNTIME-160 frame metadata count geometry and integer guards
+PASS HC-REP-RUNTIME-161 exact clock shared boundary vectors
+PASS HC-REP-RUNTIME-162 exact clock halfway parity and unit precision
+PASS HC-REP-RUNTIME-163 mapped frame comparison and absent evidence
+PASS HC-REP-RUNTIME-164 timing profile compatibility and exact scale
+PASS HC-REP-RUNTIME-165 IMU metadata and exact versus legacy mappings
+PASS HC-REP-RUNTIME-166 IMU sensor identity units and rotation guards
+PASS HC-REP-RUNTIME-167 IMU clock bindings and cancellation
+PASS HC-REP-RUNTIME-168 missing sensors and acquisition anomalies preserved
+PASS HC-REP-RUNTIME-169 shared finalization vectors
+PASS HC-REP-RUNTIME-170 capture canonical byte and hash guards
+PASS HC-REP-RUNTIME-171 combined synthetic UVC Android and incomplete evidence
+PASS HC-REP-RUNTIME-172 combined evidence failure paths
+SUMMARY total=172 passed=172 failed=0

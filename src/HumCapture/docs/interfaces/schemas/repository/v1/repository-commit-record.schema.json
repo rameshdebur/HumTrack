@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/repository/v1/repository-commit-record.schema.json",
+  "title": "HumCapture immutable repository commit record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "commit_record_id", "record_revision", "repository_id",
+    "transaction_id", "subject_id", "session_id", "package_id",
+    "package_content_sha256", "artifact_set_sha256", "package_byte_length",
+    "artifact_count", "package_relative_path", "verification_record_id",
+    "verification_record_content_sha256", "catalog_entry_id", "catalog_revision",
+    "committed_by_windows_account", "committed_utc"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "commit_record_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "record_revision": { "const": 1 },
+    "repository_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "transaction_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "subject_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "package_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "package_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "artifact_set_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "package_byte_length": { "$ref": "common.schema.json#/$defs/u64" },
+    "artifact_count": { "type": "integer", "minimum": 1 },
+    "package_relative_path": { "$ref": "common.schema.json#/$defs/relative_path" },
+    "verification_record_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "verification_record_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "catalog_entry_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "catalog_revision": { "type": "integer", "minimum": 1 },
+    "committed_by_windows_account": { "$ref": "common.schema.json#/$defs/windows_account" },
+    "committed_utc": { "type": "string", "format": "date-time" }
+  }
+}

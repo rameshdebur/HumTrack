@@ -1,0 +1,20 @@
+{
+  "name": "@humcapture/phase0-evidence",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Non-production Phase 0 capability-probe evidence validator and hash generator.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "validate": "node src/cli.js validate",
+    "validate:campaign": "node src/cli.js validate-campaign",
+    "hash": "node src/cli.js hash",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  }
+}

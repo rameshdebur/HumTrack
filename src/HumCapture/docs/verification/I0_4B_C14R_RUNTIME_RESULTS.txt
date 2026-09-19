@@ -1,0 +1,13 @@
+PASS HC-REP-RUNTIME-173 finalized files to bound evidence
+PASS HC-REP-RUNTIME-174 manifest schema identity profile and canonical guards
+PASS HC-REP-RUNTIME-175 package inventory and content failure paths
+PASS HC-REP-RUNTIME-176 live package lease mutation and writer exclusion
+PASS HC-REP-RUNTIME-177 cancellation and callback failure release leases
+PASS HC-REP-RUNTIME-178 incomplete survivors and streaming limits
+PASS HC-REP-RUNTIME-179 hard-linked input is rejected
+PASS HC-REP-RUNTIME-180 reparse path refusal and optional survivors
+PASS HC-REP-RUNTIME-181 missing decoder cannot return package evidence
+PASS HC-REP-RUNTIME-182 package decoder pin refusal releases input
+PASS HC-REP-RUNTIME-183 absent master remains partial
+PASS HC-REP-RUNTIME-184 package decode cancellation and deadline guards
+SUMMARY total=12 passed=12 failed=0

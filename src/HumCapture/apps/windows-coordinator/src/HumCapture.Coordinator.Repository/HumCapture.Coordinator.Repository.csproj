@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
+    <Version>0.1.0</Version>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode>true</RestoreLockedMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" Version="9.4.0" />
+    <EmbeddedResource Include="../../../../docs/interfaces/schemas/transfer/v1/package-manifest.schema.json" LogicalName="HumCapture.Metadata.package-manifest.schema.json" />
+    <EmbeddedResource Include="../../../../docs/interfaces/schemas/timing/v1.1/timing-metadata.schema.json" LogicalName="HumCapture.Metadata.timing-metadata-v1.1.schema.json" />
+    <EmbeddedResource Include="../../../../docs/interfaces/schemas/timing/v1/*.schema.json;../../../../docs/interfaces/schemas/capture/v1/*.schema.json;../../../../docs/interfaces/schemas/control/v1/common.schema.json" LogicalName="HumCapture.Metadata.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\..\decoder\decoder-lock.json" LogicalName="HumCapture.Decoder.lock.json" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+    <EmbeddedResource Include="..\..\..\..\docs\interfaces\sqlite\repository-v1.sql"
+                      Link="Contracts\repository-v1.sql"
+                      LogicalName="HumCapture.Contracts.repository-v1.sql" />
+  </ItemGroup>
+</Project>

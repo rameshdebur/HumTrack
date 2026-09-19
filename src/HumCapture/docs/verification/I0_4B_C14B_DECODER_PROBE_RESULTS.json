@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "ENGINEERING_DECODER_PROBE",
+  "created_utc": "2026-09-15T14:22:55.608Z",
+  "archive_sha256": "fec81ae03971d9dd4be3ebe02e263bd2ec1d789483f931bdba5f5715e65da2e9",
+  "probe_source_sha256": "80be4256a23f2e59581e611a7b156563c22180e07accfd8ddf61553d733cf492",
+  "lock_sha256": "1c7342d058774c6d22b3d9492d6456b48697c9dd3839183fa060e8c96e39ea4d",
+  "environment": {
+    "platform": "win32",
+    "architecture": "x64",
+    "os_release": "10.0.26200",
+    "node": "v22.12.0"
+  },
+  "binaries": {
+    "ffmpeg.exe": {
+      "sha256": "72a489eccd008c2ec2c0a5856c5c75bc3d8bbfa90166c4566865c246445e6aa3",
+      "version": "ffmpeg version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers\r\nbuilt with gcc 16.1.0 (Rev2, Built by MSYS2 project)\r\nconfiguration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-cairo --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-dxva2 --enable-d3d11va --enable-d3d12va --enable-ffnvcodec --enable-libvpl --enable-nvdec --enable-nvenc --enable-vaapi --enable-openal --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband\r\nlibavutil      61.  1.101 / 61.  1.101\r\nlibavcodec     63.  1.101 / 63.  1.101\r\nlibavformat    63.  1.101 / 63.  1.101\r\nlibavdevice    63.  1.101 / 63.  1.101\r\nlibavfilter    12.  1.101 / 12.  1.101\r\nlibswscale     10.  1.101 / 10.  1.101\r\nlibswresample   7.  1.101 /  7.  1.101\r\n\r\nExiting with exit code 0\r\n"
+    },
+    "ffprobe.exe": {
+      "sha256": "19202b23c0043f15ad1b7bce2344f406fd52bd6efd8f995ce02e7392a1cec52f",
+      "version": "ffprobe version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers\r\nbuilt with gcc 16.1.0 (Rev2, Built by MSYS2 project)\r\nconfiguration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-cairo --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-dxva2 --enable-d3d11va --enable-d3d12va --enable-ffnvcodec --enable-libvpl --enable-nvdec --enable-nvenc --enable-vaapi --enable-openal --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband\r\nlibavutil      61.  1.101 / 61.  1.101\r\nlibavcodec     63.  1.101 / 63.  1.101\r\nlibavformat    63.  1.101 / 63.  1.101\r\nlibavdevice    63.  1.101 / 63.  1.101\r\nlibavfilter    12.  1.101 / 12.  1.101\r\nlibswscale     10.  1.101 / 10.  1.101\r\nlibswresample   7.  1.101 /  7.  1.101\r\n"
+    }
+  },
+  "results": [
+    {
+      "id": "HC-DEC-TEST-001",
+      "passed": true,
+      "evidence": {
+        "status": 0,
+        "error": null,
+        "signal": null,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "HC-DEC-TEST-002",
+      "passed": true,
+      "evidence": {
+        "status": 0,
+        "error": null,
+        "signal": null,
+        "stdout": "{\r\n    \"programs\": [\r\n\r\n    ],\r\n    \"stream_groups\": [\r\n\r\n    ],\r\n    \"streams\": [\r\n        {\r\n            \"codec_name\": \"h264\",\r\n            \"width\": 160,\r\n            \"height\": 120,\r\n            \"nb_read_frames\": \"30\"\r\n        }\r\n    ]\r\n}\r\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "HC-DEC-TEST-003",
+      "passed": true,
+      "evidence": {
+        "status": 0,
+        "error": null,
+        "signal": null,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "HC-DEC-TEST-004",
+      "passed": true,
+      "evidence": {
+        "status": 3199971767,
+        "error": null,
+        "signal": null,
+        "stdout": "",
+        "stderr": "[h264 @ 0000022875635900] Invalid NAL unit size (1325 > 882).\r\n[h264 @ 0000022875635900] missing picture in access unit with size 886\r\n[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 0000022875554040] corrupt input packet in stream 0\r\n[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 0000022875554040] Task finished with error code: -1094995529 (Invalid data found when processing input)\r\n[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 0000022875554040] Terminating thread with return code -1094995529 (Invalid data found when processing input)\r\n"
+      }
+    },
+    {
+      "id": "HC-DEC-TEST-005",
+      "passed": true,
+      "evidence": {
+        "status": 3199971767,
+        "error": null,
+        "signal": null,
+        "stdout": "",
+        "stderr": "[in#0 @ 00000290811a4c40] moov atom not found\r\n[in#0 @ 00000290811a9980] Error opening input: Invalid data found when processing input\r\nError opening input file C:\\Users\\rams2\\AppData\\Local\\Temp\\hcwt-i03a-20260905\\src\\HumCapture\\evidence-vault\\decoder-c14b\\probe-Ttk8JK\\corrupt.mp4.\r\nError opening input files: Invalid data found when processing input\r\n"
+      }
+    },
+    {
+      "id": "HC-DEC-TEST-006",
+      "passed": true,
+      "evidence": {
+        "original_sha256": "e9cad19c15dc3ff7b8b802096d8f4b8984fa8f4a8348da2650f1c79231f68074",
+        "byte_length": 25599
+      }
+    },
+    {
+      "id": "HC-DEC-TEST-007",
+      "passed": true,
+      "evidence": {
+        "generation": {
+          "status": 0,
+          "error": null,
+          "signal": null,
+          "stdout": "",
+          "stderr": ""
+        },
+        "inspection": {
+          "status": 0,
+          "error": null,
+          "signal": null,
+          "stdout": "{\r\n    \"frames\": [\r\n        {\r\n            \"pts\": 0,\r\n            \"side_data_list\": [\r\n                {\r\n                    \"side_data_type\": \"H.26[45] User Data Unregistered SEI message\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"pts\": 2048\r\n        },\r\n        {\r\n            \"pts\": 3072\r\n        },\r\n        {\r\n            \"pts\": 5120\r\n        },\r\n        {\r\n            \"pts\": 6144\r\n        },\r\n        {\r\n            \"pts\": 8192\r\n        },\r\n        {\r\n            \"pts\": 9216\r\n        },\r\n        {\r\n            \"pts\": 11264\r\n        },\r\n        {\r\n            \"pts\": 12288\r\n        },\r\n        {\r\n            \"pts\": 14336\r\n        },\r\n        {\r\n            \"pts\": 15360\r\n        },\r\n        {\r\n            \"pts\": 17408\r\n        },\r\n        {\r\n            \"pts\": 18432\r\n        },\r\n        {\r\n            \"pts\": 20480\r\n        },\r\n        {\r\n            \"pts\": 21504\r\n        },\r\n        {\r\n            \"pts\": 23552\r\n        },\r\n        {\r\n            \"pts\": 24576\r\n        },\r\n        {\r\n            \"pts\": 26624\r\n        },\r\n        {\r\n            \"pts\": 27648\r\n        },\r\n        {\r\n            \"pts\": 29696\r\n        }\r\n    ]\r\n}\r\n",
+          "stderr": ""
+        },
+        "decode": {
+          "status": 0,
+          "error": null,
+          "signal": null,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "package_verification": "NOT_ASSESSED",
+  "runtime_enabled": false,
+  "limitations": [
+    "Synthetic fixed and variable H.264/MP4 only",
+    "No hardware or field qualification",
+    "No package timing/IMU/metadata verification",
+    "No production worker cancellation qualification",
+    "Embedded library, vulnerability and licence reviews remain open"
+  ]
+}

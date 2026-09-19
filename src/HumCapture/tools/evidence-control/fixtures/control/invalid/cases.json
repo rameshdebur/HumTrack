@@ -1,0 +1,91 @@
+[
+  {
+    "name": "fixed protocol source count mismatch",
+    "kind": "protocol",
+    "operations": [
+      { "op": "set", "path": "/protocol_snapshot/selected_source_count", "value": 2 },
+      { "op": "set", "path": "/protocol_snapshot/source_roles/1", "value": { "role_id": "30000000-0000-4000-8000-000000000002", "name": "Frontal view", "completion_role": "SUPPLEMENTARY", "allowed_source_kinds": ["WINDOWS_UVC"] } }
+    ],
+    "expected_error_code": "SOURCE_COUNT_FIXED_MISMATCH"
+  },
+  {
+    "name": "protocol replacement after a master sample",
+    "kind": "transition",
+    "transition_index": 3,
+    "operations": [
+      { "op": "set", "path": "/transitions/3/next/protocol_snapshot_id", "value": "20000000-0000-4000-8000-000000000099" }
+    ],
+    "expected_error_code": "PROTOCOL_CHANGE_AFTER_CAPTURE"
+  },
+  {
+    "name": "false completion with unsatisfied required slot",
+    "kind": "transition",
+    "transition_index": 4,
+    "operations": [
+      { "op": "set", "path": "/transitions/4/next/slot_progress/0/state", "value": "UNSATISFIED" },
+      { "op": "remove", "path": "/transitions/4/next/slot_progress/0/accepted_trial_id" }
+    ],
+    "expected_error_code": "REQUIRED_SLOT_UNSATISFIED"
+  },
+  {
+    "name": "false completion with active trial",
+    "kind": "transition",
+    "transition_index": 4,
+    "operations": [
+      { "op": "set", "path": "/transitions/4/next/active_trial_ids", "value": ["90000000-0000-4000-8000-000000000001"] }
+    ],
+    "expected_error_code": "ACTIVE_TRIAL_AT_COMPLETION"
+  },
+  {
+    "name": "completion bundle uses another session",
+    "kind": "bundle",
+    "operations": [
+      { "op": "set", "path": "/completion_record/session_id", "value": "50000000-0000-4000-8000-000000000099" }
+    ],
+    "expected_error_code": "SESSION_IDENTITY_MISMATCH"
+  },
+  {
+    "name": "completion record omits the accepted required trial",
+    "kind": "bundle",
+    "operations": [
+      { "op": "set", "path": "/completion_record/accepted_trial_ids", "value": ["90000000-0000-4000-8000-000000000099"] }
+    ],
+    "expected_error_code": "COMPLETION_TRIAL_SET_MISMATCH"
+  },
+  {
+    "name": "handoff destination names another session folder",
+    "kind": "bundle",
+    "operations": [
+      { "op": "set", "path": "/handoff_manifest/repository_relative_session_path", "value": "subjects/60000000-0000-4000-8000-000000000001/sessions/50000000-0000-4000-8000-000000000099" }
+    ],
+    "expected_error_code": "HANDOFF_DESTINATION_MISMATCH"
+  },
+  {
+    "name": "protocol has no required source role",
+    "kind": "protocol",
+    "operations": [
+      { "op": "set", "path": "/protocol_snapshot/source_roles/0/completion_role", "value": "SUPPLEMENTARY" }
+    ],
+    "expected_error_code": "MISSING_REQUIRED_SOURCE_ROLE"
+  },
+  {
+    "name": "handoff path escapes repository",
+    "kind": "schema",
+    "schema": "session-handoff-manifest.schema.json",
+    "instance_path": "/handoff_manifest",
+    "operations": [
+      { "op": "set", "path": "/handoff_manifest/repository_relative_session_path", "value": "../outside" }
+    ],
+    "expected_schema_invalid": true
+  },
+  {
+    "name": "unknown session field fails closed",
+    "kind": "schema",
+    "schema": "session-state.schema.json",
+    "instance_path": "/transitions/4/next",
+    "operations": [
+      { "op": "set", "path": "/transitions/4/next/inferred_success", "value": true }
+    ],
+    "expected_schema_invalid": true
+  }
+]

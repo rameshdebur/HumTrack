@@ -1,0 +1,9 @@
+[
+  { "name": "uint64 overflow", "expected_error_code": "MONOTONIC_TIME_INVALID" },
+  { "name": "command id conflict", "expected_error_code": "COMMAND_ID_CONFLICT" },
+  { "name": "attempt continued across boot", "expected_error_code": "ATTEMPT_CONTINUED_ACROSS_BOOT" },
+  { "name": "readiness false ready", "expected_error_code": "READINESS_FALSE_READY" },
+  { "name": "receipt before commit", "expected_error_code": "RECEIPT_BEFORE_COMMIT" },
+  { "name": "quality false pass", "expected_error_code": "QUALITY_FALSE_PASS" },
+  { "name": "custody identity changed", "expected_error_code": "CUSTODY_IDENTITY_CHANGED" }
+]

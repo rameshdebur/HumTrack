@@ -1,0 +1,380 @@
+{
+  "asyncapi": "3.1.0",
+  "id": "urn:humtrack:humcapture:control:v1",
+  "info": {
+    "title": "HumCapture coordinator session control",
+    "version": "1.3.0",
+    "description": "Coordinator-authoritative session execution, receipt acknowledgement and operator-controlled cleanup over HC-IF-SEC-001 mutually authenticated WSS."
+  },
+  "defaultContentType": "application/json",
+  "servers": {
+    "pairedCaptureNode": {
+      "host": "{captureNode}",
+      "pathname": "/control/v1",
+      "protocol": "wss",
+      "description": "A previously enrolled Android capture node. Discovery data is never trusted as identity.",
+      "variables": { "captureNode": { "default": "capture-node.invalid" } },
+      "security": [{ "$ref": "#/components/securitySchemes/HumCaptureMutualTLS" }],
+      "x-humcapture-security-binding": "HC-IF-SEC-001@1.0.0",
+      "x-humcapture-tls-profiles": ["HC-TLS-13-001", "HC-TLS-12-W10-001"]
+    }
+  },
+  "channels": {
+    "sessionCommands": {
+      "address": "humcapture/control/v1/sessions/{sessionId}/commands",
+      "parameters": {
+        "sessionId": { "description": "Stable session UUID." }
+      },
+      "messages": {
+        "sessionCommand": { "$ref": "#/components/messages/sessionCommand" }
+      }
+    },
+    "commandAcknowledgements": {
+      "address": "humcapture/control/v1/sessions/{sessionId}/acknowledgements",
+      "parameters": {
+        "sessionId": { "description": "Stable session UUID." }
+      },
+      "messages": {
+        "commandAcknowledgement": { "$ref": "#/components/messages/commandAcknowledgement" }
+      }
+    },
+    "sessionStateEvents": {
+      "address": "humcapture/control/v1/sessions/{sessionId}/events",
+      "parameters": {
+        "sessionId": { "description": "Stable session UUID." }
+      },
+      "messages": {
+        "sessionStateEvent": { "$ref": "#/components/messages/sessionStateEvent" }
+      }
+    },
+    "sessionStateSnapshots": {
+      "address": "humcapture/control/v1/sessions/{sessionId}/snapshots",
+      "parameters": {
+        "sessionId": { "description": "Stable session UUID." }
+      },
+      "messages": {
+        "sessionStateSnapshot": { "$ref": "#/components/messages/sessionStateSnapshot" }
+      }
+    },
+    "sourceCommands": {
+      "address": "humcapture/control/v1/sources/{sourceId}/commands",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceCommand": { "$ref": "#/components/messages/sourceCommand" } }
+    },
+    "sourceConfigurations": {
+      "address": "humcapture/control/v1/sources/{sourceId}/configurations",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceConfiguration": { "$ref": "#/components/messages/sourceConfiguration" } }
+    },
+    "sourceCommandAcknowledgements": {
+      "address": "humcapture/control/v1/sources/{sourceId}/acknowledgements",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceCommandAcknowledgement": { "$ref": "#/components/messages/sourceCommandAcknowledgement" } }
+    },
+    "sourceStateEvents": {
+      "address": "humcapture/control/v1/sources/{sourceId}/events",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceStateEvent": { "$ref": "#/components/messages/sourceStateEvent" } }
+    },
+    "sourceStateSnapshots": {
+      "address": "humcapture/control/v1/sources/{sourceId}/snapshots",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "sourceStateSnapshot": { "$ref": "#/components/messages/sourceStateSnapshot" } }
+    },
+    "startPlans": {
+      "address": "humcapture/control/v1/trials/{trialId}/start-plans",
+      "parameters": { "trialId": { "description": "Stable trial UUID." } },
+      "messages": { "startPlan": { "$ref": "#/components/messages/startPlan" } }
+    },
+    "readinessSnapshots": {
+      "address": "humcapture/control/v1/sources/{sourceId}/readiness",
+      "parameters": { "sourceId": { "description": "Stable logical source UUID." } },
+      "messages": { "readinessSnapshot": { "$ref": "#/components/messages/readinessSnapshot" } }
+    },
+    "packageCustodyRecords": {
+      "address": "humcapture/control/v1/packages/{packageId}/custody",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "packageCustodyRecord": { "$ref": "#/components/messages/packageCustodyRecord" } }
+    },
+    "packageCommitReceipts": {
+      "address": "humcapture/control/v1/packages/{packageId}/receipts",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "packageCommitReceipt": { "$ref": "#/components/messages/packageCommitReceipt" } }
+    },
+    "receiptAcknowledgements": {
+      "address": "humcapture/control/v1/packages/{packageId}/receipt-acknowledgements",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "receiptAcknowledgement": { "$ref": "#/components/messages/receiptAcknowledgement" } }
+    },
+    "receiptStatusQueries": {
+      "address": "humcapture/control/v1/packages/{packageId}/receipt-status-queries",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "receiptStatusQuery": { "$ref": "#/components/messages/receiptStatusQuery" } }
+    },
+    "receiptStatusResponses": {
+      "address": "humcapture/control/v1/packages/{packageId}/receipt-status-responses",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "receiptStatusResponse": { "$ref": "#/components/messages/receiptStatusResponse" } }
+    },
+    "cleanupRequests": {
+      "address": "humcapture/control/v1/devices/{deviceId}/cleanup-requests",
+      "parameters": { "deviceId": { "description": "Paired Android device UUID." } },
+      "messages": { "cleanupRequest": { "$ref": "#/components/messages/cleanupRequest" } }
+    },
+    "cleanupResults": {
+      "address": "humcapture/control/v1/devices/{deviceId}/cleanup-results",
+      "parameters": { "deviceId": { "description": "Paired Android device UUID." } },
+      "messages": { "cleanupResult": { "$ref": "#/components/messages/cleanupResult" } }
+    },
+    "qualityAssessments": {
+      "address": "humcapture/control/v1/packages/{packageId}/quality",
+      "parameters": { "packageId": { "description": "Stable finalized-package UUID." } },
+      "messages": { "qualityAssessment": { "$ref": "#/components/messages/qualityAssessment" } }
+    }
+  },
+  "operations": {
+    "sendSessionCommand": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/sessionCommands" },
+      "messages": [{ "$ref": "#/channels/sessionCommands/messages/sessionCommand" }]
+    },
+    "receiveCommandAcknowledgement": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/commandAcknowledgements" },
+      "messages": [{ "$ref": "#/channels/commandAcknowledgements/messages/commandAcknowledgement" }]
+    },
+    "receiveSessionStateEvent": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sessionStateEvents" },
+      "messages": [{ "$ref": "#/channels/sessionStateEvents/messages/sessionStateEvent" }]
+    },
+    "receiveSessionStateSnapshot": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sessionStateSnapshots" },
+      "messages": [{ "$ref": "#/channels/sessionStateSnapshots/messages/sessionStateSnapshot" }]
+    },
+    "sendSourceCommand": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/sourceCommands" },
+      "messages": [{ "$ref": "#/channels/sourceCommands/messages/sourceCommand" }]
+    },
+    "sendSourceConfiguration": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/sourceConfigurations" },
+      "messages": [{ "$ref": "#/channels/sourceConfigurations/messages/sourceConfiguration" }]
+    },
+    "receiveSourceCommandAcknowledgement": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sourceCommandAcknowledgements" },
+      "messages": [{ "$ref": "#/channels/sourceCommandAcknowledgements/messages/sourceCommandAcknowledgement" }]
+    },
+    "receiveSourceStateEvent": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sourceStateEvents" },
+      "messages": [{ "$ref": "#/channels/sourceStateEvents/messages/sourceStateEvent" }]
+    },
+    "receiveSourceStateSnapshot": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/sourceStateSnapshots" },
+      "messages": [{ "$ref": "#/channels/sourceStateSnapshots/messages/sourceStateSnapshot" }]
+    },
+    "sendStartPlan": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/startPlans" },
+      "messages": [{ "$ref": "#/channels/startPlans/messages/startPlan" }]
+    },
+    "receiveReadinessSnapshot": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/readinessSnapshots" },
+      "messages": [{ "$ref": "#/channels/readinessSnapshots/messages/readinessSnapshot" }]
+    },
+    "receivePackageCustodyRecord": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/packageCustodyRecords" },
+      "messages": [{ "$ref": "#/channels/packageCustodyRecords/messages/packageCustodyRecord" }]
+    },
+    "sendPackageCommitReceipt": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/packageCommitReceipts" },
+      "messages": [{ "$ref": "#/channels/packageCommitReceipts/messages/packageCommitReceipt" }]
+    },
+    "receiveReceiptAcknowledgement": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/receiptAcknowledgements" },
+      "messages": [{ "$ref": "#/channels/receiptAcknowledgements/messages/receiptAcknowledgement" }]
+    },
+    "sendReceiptStatusQuery": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/receiptStatusQueries" },
+      "messages": [{ "$ref": "#/channels/receiptStatusQueries/messages/receiptStatusQuery" }]
+    },
+    "receiveReceiptStatusResponse": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/receiptStatusResponses" },
+      "messages": [{ "$ref": "#/channels/receiptStatusResponses/messages/receiptStatusResponse" }]
+    },
+    "sendCleanupRequest": {
+      "action": "send",
+      "channel": { "$ref": "#/channels/cleanupRequests" },
+      "messages": [{ "$ref": "#/channels/cleanupRequests/messages/cleanupRequest" }]
+    },
+    "receiveCleanupResult": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/cleanupResults" },
+      "messages": [{ "$ref": "#/channels/cleanupResults/messages/cleanupResult" }]
+    },
+    "receiveQualityAssessment": {
+      "action": "receive",
+      "channel": { "$ref": "#/channels/qualityAssessments" },
+      "messages": [{ "$ref": "#/channels/qualityAssessments/messages/qualityAssessment" }]
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "HumCaptureMutualTLS": {
+        "type": "X509",
+        "description": "Mutual certificate authentication plus HC-IF-SEC-001 peer-role, identity, trust-revision, TLS-profile, and resource authorization."
+      }
+    },
+    "messages": {
+      "sessionCommand": {
+        "name": "SessionCommand",
+        "title": "Idempotent coordinator session command",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/command_id" },
+        "payload": {
+          "schemaFormat": "application/schema+json;version=draft-2020-12",
+          "schema": { "$ref": "../schemas/control/v1/session-command.schema.json" }
+        }
+      },
+      "commandAcknowledgement": {
+        "name": "CommandAcknowledgement",
+        "title": "Persisted command acceptance disposition",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/command_id" },
+        "payload": {
+          "schemaFormat": "application/schema+json;version=draft-2020-12",
+          "schema": { "$ref": "../schemas/control/v1/command-acknowledgement.schema.json" }
+        }
+      },
+      "sessionStateEvent": {
+        "name": "SessionStateEvent",
+        "title": "Authoritative persisted session transition",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/related_command_id" },
+        "payload": {
+          "schemaFormat": "application/schema+json;version=draft-2020-12",
+          "schema": { "$ref": "../schemas/control/v1/session-state-event.schema.json" }
+        }
+      },
+      "sessionStateSnapshot": {
+        "name": "SessionStateSnapshot",
+        "title": "Authoritative session reconciliation snapshot",
+        "contentType": "application/json",
+        "payload": {
+          "schemaFormat": "application/schema+json;version=draft-2020-12",
+          "schema": { "$ref": "../schemas/control/v1/session-state.schema.json" }
+        }
+      },
+      "sourceCommand": {
+        "name": "SourceCommand",
+        "title": "Idempotent coordinator command to one exact source attempt",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/command_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-command.schema.json" } }
+      },
+      "sourceConfiguration": {
+        "name": "SourceConfiguration",
+        "title": "Immutable configuration content bound by CONFIGURE and ARM",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-configuration.schema.json" } }
+      },
+      "sourceCommandAcknowledgement": {
+        "name": "SourceCommandAcknowledgement",
+        "title": "Persisted source command acceptance disposition",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/command_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-command-acknowledgement.schema.json" } }
+      },
+      "sourceStateEvent": {
+        "name": "SourceStateEvent",
+        "title": "Source-authoritative acquisition/finalization event",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/related_command_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-state-event.schema.json" } }
+      },
+      "sourceStateSnapshot": {
+        "name": "SourceStateSnapshot",
+        "title": "Source-authoritative restart/reconciliation snapshot",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/source-state.schema.json" } }
+      },
+      "startPlan": {
+        "name": "StartPlan",
+        "title": "Immutable coordinated future-start plan",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/start-plan.schema.json" } }
+      },
+      "readinessSnapshot": {
+        "name": "ReadinessSnapshot",
+        "title": "Versioned source readiness evidence and aggregate",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/readiness-snapshot.schema.json" } }
+      },
+      "packageCustodyRecord": {
+        "name": "PackageCustodyRecord",
+        "title": "Authority-scoped package custody state",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/package-custody-record.schema.json" } }
+      },
+      "packageCommitReceipt": {
+        "name": "PackageCommitReceipt",
+        "title": "Hash-bound receipt issued after durable commit",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/package-commit-receipt.schema.json" } }
+      },
+      "receiptAcknowledgement": {
+        "name": "ReceiptAcknowledgement",
+        "title": "Durably persisted exact-receipt disposition",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/receipt_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/receipt-acknowledgement.schema.json" } }
+      },
+      "receiptStatusQuery": {
+        "name": "ReceiptStatusQuery",
+        "title": "Exact-receipt recovery query",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/query_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/receipt-status-query.schema.json" } }
+      },
+      "receiptStatusResponse": {
+        "name": "ReceiptStatusResponse",
+        "title": "Durable Android receipt status",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/query_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/receipt-status-response.schema.json" } }
+      },
+      "cleanupRequest": {
+        "name": "CleanupRequest",
+        "title": "Operator-confirmed exact-package cleanup command",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/cleanup_request_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/cleanup-request.schema.json" } }
+      },
+      "cleanupResult": {
+        "name": "CleanupResult",
+        "title": "Truthful per-package cleanup outcome",
+        "contentType": "application/json",
+        "correlationId": { "location": "$message.payload#/cleanup_request_id" },
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/cleanup-result.schema.json" } }
+      },
+      "qualityAssessment": {
+        "name": "QualityAssessment",
+        "title": "Immutable quality interpretation over committed content",
+        "contentType": "application/json",
+        "payload": { "schemaFormat": "application/schema+json;version=draft-2020-12", "schema": { "$ref": "../schemas/control/v1/quality-assessment.schema.json" } }
+      }
+    }
+  },
+  "x-humcapture-evidence-scope": "Schema and conformance evidence only; no transport, runtime, HIL, field, clinical, regulatory, or release claim."
+}

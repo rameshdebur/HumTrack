@@ -1,0 +1,28 @@
+{
+  "dictionary_name": "frames",
+  "evidence_format_version": "1.0.0",
+  "columns": [
+    { "name": "run_id", "type": "uuid", "required": true, "unit": null, "description": "Owning probe run." },
+    { "name": "stream_id", "type": "string", "required": true, "unit": null, "description": "Stable stream identifier within the run." },
+    { "name": "sequence", "type": "uint64", "required": true, "unit": "count", "description": "Probe-assigned sample sequence." },
+    { "name": "source_timestamp", "type": "int64", "required": true, "unit": "declared", "description": "Unmodified source timestamp value." },
+    { "name": "source_timestamp_domain", "type": "enum:sensor_monotonic|device_monotonic|android_elapsed_realtime|media_presentation|host_qpc|host_sample|host_arrival|synthesized|unknown", "required": true, "unit": null, "description": "Source clock domain." },
+    { "name": "source_timestamp_unit", "type": "enum:ns|us|ms|s|ticks_100ns", "required": true, "unit": null, "description": "Unit of source_timestamp." },
+    { "name": "presentation_timestamp", "type": "int64", "required": false, "unit": "declared", "description": "Encoder or media presentation timestamp." },
+    { "name": "presentation_timestamp_unit", "type": "enum:ns|us|ms|s|ticks_100ns", "required": false, "unit": null, "description": "Unit of presentation_timestamp." },
+    { "name": "host_arrival_timestamp", "type": "int64", "required": false, "unit": "declared", "description": "Host observation timestamp, never substituted for source time." },
+    { "name": "host_arrival_timestamp_domain", "type": "enum:host_qpc|host_arrival|device_monotonic|unknown", "required": false, "unit": null, "description": "Clock domain of host arrival." },
+    { "name": "host_arrival_timestamp_unit", "type": "enum:ns|us|ms|s|ticks_100ns", "required": false, "unit": null, "description": "Unit of host_arrival_timestamp." },
+    { "name": "discontinuity", "type": "enum:none|gap|duplicate|regression|source_change|unknown", "required": true, "unit": null, "description": "Detected discontinuity at this sample." },
+    { "name": "dropped_before", "type": "uint64", "required": true, "unit": "frames", "description": "Detected missing frames immediately before this row." },
+    { "name": "width_px", "type": "uint32", "required": true, "minimum": 1, "unit": "px", "description": "Measured frame width." },
+    { "name": "height_px", "type": "uint32", "required": true, "minimum": 1, "unit": "px", "description": "Measured frame height." },
+    { "name": "encoded_size_bytes", "type": "uint64", "required": false, "unit": "bytes", "description": "Encoded access-unit size when observed." },
+    { "name": "queue_depth", "type": "uint32", "required": false, "unit": "items", "description": "Capture or encoder queue depth when observed." },
+    { "name": "notes", "type": "string", "required": false, "unit": null, "description": "Synthetic-test annotation." }
+  ],
+  "presence_groups": [
+    ["presentation_timestamp", "presentation_timestamp_unit"],
+    ["host_arrival_timestamp", "host_arrival_timestamp_domain", "host_arrival_timestamp_unit"]
+  ]
+}

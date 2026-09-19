@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "capture_attempt_id": "10000000-0000-4000-8000-000000000001",
+  "camera_stream_id": "10000000-0000-4000-8000-000000000002",
+  "camera_type": "ANDROID_CAMERA2",
+  "identity": {
+    "manufacturer": "Synthetic Android manufacturer",
+    "model": "Synthetic Camera2 fixture",
+    "humcapture_device_id": "50000000-0000-4000-8000-000000000003",
+    "humcapture_camera_id": "50000000-0000-4000-8000-000000000004",
+    "platform_camera_id": "0"
+  },
+  "selected_mode": {
+    "width": 1920,
+    "height": 1080,
+    "pixel_format": "YUV_420_888",
+    "codec": "avc1",
+    "advertised_fps_numerator": 30,
+    "advertised_fps_denominator": 1,
+    "rate_control_class": "FIXED"
+  },
+  "negotiated_mode": {
+    "width": 1920,
+    "height": 1080,
+    "pixel_format": "YUV_420_888",
+    "codec": "avc1",
+    "advertised_fps_numerator": 30,
+    "advertised_fps_denominator": 1,
+    "rate_control_class": "FIXED"
+  },
+  "observed_timing": {
+    "record_count": 3,
+    "accepted_frame_count": 3,
+    "observed_hz": 30.0000003,
+    "timestamp_regressions": 0,
+    "sequence_gaps": 0,
+    "duplicates": 0
+  },
+  "timestamp_provenance": "ANDROID_SENSOR_TIMESTAMP",
+  "timestamp_source_detail": "ANDROID_REALTIME",
+  "orientation": {
+    "sensor_orientation_degrees": 90,
+    "display_rotation_degrees": 90,
+    "lens_facing": "BACK",
+    "preview_mirrored": false,
+    "recorded_video_rotation_degrees": 90,
+    "device_to_camera_rotation_row_major": [0, -1, 0, 1, 0, 0, 0, 0, 1],
+    "recorded_video_transform_row_major": [0, -1, 0, 1, 0, 0, 0, 0, 1]
+  },
+  "lens": {
+    "focal_length_mm": 4.5,
+    "physical_sensor_width_mm": 5.6,
+    "physical_sensor_height_mm": 4.2,
+    "zoom_ratio": 1,
+    "intrinsic_matrix_row_major": [1200, 0, 960, 0, 1200, 540, 0, 0, 1],
+    "distortion_coefficients": [0.01, -0.02, 0, 0, 0],
+    "calibration_provenance": "PLATFORM_FACTORY"
+  },
+  "unavailable_fields": []
+}

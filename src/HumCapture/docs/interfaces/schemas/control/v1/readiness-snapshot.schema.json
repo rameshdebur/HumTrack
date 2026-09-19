@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/readiness-snapshot.schema.json",
+  "title": "HumCapture source readiness snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "readiness_snapshot_id", "readiness_request_id",
+    "session_id", "trial_id", "source_id", "capture_attempt_id", "source_boot_id",
+    "configuration_id", "configuration_content_sha256", "aggregate_disposition",
+    "checks", "invalidation_triggers", "measured_source_time", "recorded_utc"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "readiness_snapshot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "readiness_request_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "trial_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "capture_attempt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_boot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "configuration_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "configuration_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "aggregate_disposition": { "$ref": "common.schema.json#/$defs/readinessAggregateDisposition" },
+    "checks": {
+      "type": "array", "minItems": 1, "maxItems": 256,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["check_id", "group", "rule_version", "disposition", "observed", "evidence_refs", "override_policy"],
+        "properties": {
+          "check_id": { "type": "string", "pattern": "^[A-Z][A-Z0-9_.-]{2,127}$" },
+          "group": { "enum": ["WORKFLOW_IDENTITY", "SOURCE_IDENTITY_VERSION", "CONFIGURATION", "RECORDER", "STORAGE", "TIMING", "POSITIONING_PREVIEW", "CALIBRATION_METADATA", "ANDROID_HEALTH", "UVC_CONFIGURATION", "NETWORK_RECOVERY", "COORDINATOR", "REPOSITORY"] },
+          "rule_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+          "disposition": { "$ref": "common.schema.json#/$defs/readinessCheckDisposition" },
+          "requested": { "anyOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "null" }] },
+          "observed": { "anyOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "null" }] },
+          "threshold": { "anyOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "null" }] },
+          "evidence_refs": { "type": "array", "uniqueItems": true, "items": { "$ref": "common.schema.json#/$defs/uuid" } },
+          "override_policy": { "enum": ["NOT_ALLOWED", "PROTOCOL_ALLOWED", "NOT_APPLICABLE"] },
+          "override": {
+            "type": "object", "additionalProperties": false,
+            "required": ["override_id", "reason", "operator_windows_account", "authorized_utc", "expires_utc"],
+            "properties": {
+              "override_id": { "$ref": "common.schema.json#/$defs/uuid" },
+              "reason": { "$ref": "common.schema.json#/$defs/reason" },
+              "operator_windows_account": { "$ref": "common.schema.json#/$defs/windowsAccount" },
+              "authorized_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" },
+              "expires_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+            }
+          }
+        }
+      }
+    },
+    "invalidation_triggers": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "enum": ["PROTOCOL_ASSIGNMENT", "SOURCE_ASSIGNMENT", "SOURCE_BOOT", "SOURCE_RECONNECT", "DRIVER_USB", "PROFILE_CONTROL", "ORIENTATION", "CLOCK_MODEL", "STORAGE", "THERMAL", "BATTERY_POWER", "RECORDER", "REPOSITORY", "COORDINATOR_RESTART", "CAMERA_OWNERSHIP", "CALIBRATION", "OVERRIDE_VALIDITY"] }
+    },
+    "valid_until_source_time": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+    "measured_source_time": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+    "recorded_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humcapture.local/schemas/phase-0/1.0.0/capability-report.schema.json",
+  "title": "HumCapture Phase 0 capability report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format_name", "evidence_format_version", "run_id", "device", "capabilities", "capture_profiles", "warnings"],
+  "properties": {
+    "format_name": { "const": "humcapture-phase0-capability-report" },
+    "evidence_format_version": { "const": "1.0.0" },
+    "run_id": { "type": "string", "format": "uuid" },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "manufacturer", "model", "stable_test_device_id", "os_name", "os_version", "camera_stack", "device_interface_id", "pnp_instance_id", "vendor_id", "product_id", "driver_provider", "driver_version"],
+      "properties": {
+        "platform": { "type": "string", "enum": ["android", "windows_uvc", "windows_host", "network", "synthetic"] },
+        "manufacturer": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "stable_test_device_id": { "type": "string", "minLength": 1 },
+        "os_name": { "type": "string", "minLength": 1 },
+        "os_version": { "type": "string", "minLength": 1 },
+        "camera_stack": { "type": "string", "enum": ["android_camera2", "windows_media_capture", "windows_media_foundation", "network_only", "synthetic"] },
+        "device_interface_id": { "type": ["string", "null"] },
+        "pnp_instance_id": { "type": ["string", "null"] },
+        "vendor_id": { "type": ["string", "null"] },
+        "product_id": { "type": ["string", "null"] },
+        "driver_provider": { "type": ["string", "null"] },
+        "driver_version": { "type": ["string", "null"] }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["capability_id", "source_id", "category", "status", "provenance", "value", "unit", "range", "default"],
+        "properties": {
+          "capability_id": { "type": "string", "minLength": 1 },
+          "source_id": { "type": ["string", "null"] },
+          "category": { "type": "string", "enum": ["camera", "encoder", "sensor", "control", "thermal", "battery", "storage", "usb", "network", "os"] },
+          "status": { "type": "string", "enum": ["reported", "measured", "qualified", "unsupported", "unknown"] },
+          "provenance": { "type": "string", "minLength": 1 },
+          "value": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" },
+              { "type": "null" },
+              {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    { "type": "string" },
+                    { "type": "number" },
+                    { "type": "boolean" }
+                  ]
+                }
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["width_px", "height_px", "frame_rate_numerator", "frame_rate_denominator", "media_format", "pixel_format"],
+                  "properties": {
+                    "width_px": { "type": "integer", "minimum": 1 },
+                    "height_px": { "type": "integer", "minimum": 1 },
+                    "frame_rate_numerator": { "type": "integer", "minimum": 1 },
+                    "frame_rate_denominator": { "type": "integer", "minimum": 1 },
+                    "media_format": { "type": "string", "minLength": 1 },
+                    "pixel_format": { "type": ["string", "null"] }
+                  }
+                }
+              }
+            ]
+          },
+          "unit": { "type": ["string", "null"] },
+          "default": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" },
+              { "type": "null" }
+            ]
+          },
+          "range": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["minimum", "maximum", "step"],
+                "properties": {
+                  "minimum": { "type": "number" },
+                  "maximum": { "type": "number" },
+                  "step": { "type": "number", "exclusiveMinimum": 0 }
+                }
+              },
+              { "type": "null" }
+            ]
+          }
+        }
+      }
+    },
+    "capture_profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["profile_id", "source_id", "stream_id", "requested", "reported_supported", "negotiated", "measured", "status", "limitations"],
+        "properties": {
+          "profile_id": { "type": "string", "minLength": 1 },
+          "source_id": { "type": "string", "minLength": 1 },
+          "stream_id": { "type": "string", "minLength": 1 },
+          "requested": { "$ref": "common.schema.json#/$defs/captureProfile" },
+          "reported_supported": { "type": ["boolean", "null"] },
+          "negotiated": { "anyOf": [{ "$ref": "common.schema.json#/$defs/captureProfile" }, { "type": "null" }] },
+          "measured": { "anyOf": [{ "$ref": "common.schema.json#/$defs/captureProfile" }, { "type": "null" }] },
+          "status": { "type": "string", "enum": ["reported", "measured", "qualified", "conditional", "unsupported", "inconclusive"] },
+          "limitations": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  }
+}

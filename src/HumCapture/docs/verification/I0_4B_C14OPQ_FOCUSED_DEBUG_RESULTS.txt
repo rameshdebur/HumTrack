@@ -1,0 +1,9 @@
+PASS HC-REP-RUNTIME-173 finalized files to bound evidence
+PASS HC-REP-RUNTIME-174 manifest schema identity profile and canonical guards
+PASS HC-REP-RUNTIME-175 package inventory and content failure paths
+PASS HC-REP-RUNTIME-176 live package lease mutation and writer exclusion
+PASS HC-REP-RUNTIME-177 cancellation and callback failure release leases
+PASS HC-REP-RUNTIME-178 incomplete survivors and streaming limits
+PASS HC-REP-RUNTIME-179 hard-linked input is rejected
+PASS HC-REP-RUNTIME-180 reparse path refusal and optional survivors
+SUMMARY total=8 passed=8 failed=0

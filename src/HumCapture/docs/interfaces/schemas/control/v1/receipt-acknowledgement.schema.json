@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/receipt-acknowledgement.schema.json",
+  "title": "HumCapture durable receipt acknowledgement",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "acknowledgement_id", "receipt_id", "receipt_revision",
+    "device_id", "source_id", "package_id", "package_content_sha256",
+    "receipt_durably_stored", "result", "received_utc"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "acknowledgement_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "receipt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "receipt_revision": { "const": 1 },
+    "device_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "package_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "package_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "receipt_durably_stored": { "type": "boolean" },
+    "result": { "enum": ["ACCEPTED", "ALREADY_ACKNOWLEDGED", "REJECTED_MISMATCH"] },
+    "reason_code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
+    "received_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  },
+  "allOf": [{
+    "if": { "properties": { "result": { "const": "REJECTED_MISMATCH" } } },
+    "then": { "required": ["reason_code"], "properties": { "reason_code": {}, "receipt_durably_stored": { "const": false } } },
+    "else": { "not": { "required": ["reason_code"] }, "properties": { "receipt_durably_stored": { "const": true } } }
+  }]
+}

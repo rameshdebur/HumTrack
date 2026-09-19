@@ -1,0 +1,571 @@
+
+> @humcapture/evidence-control@0.1.0 test:contracts
+> node --experimental-sqlite --test
+
+TAP version 13
+# Subtest: HC-ART-TEST-001 schemas compile; acyclic complete UVC event/summary bindings pass
+ok 1 - HC-ART-TEST-001 schemas compile; acyclic complete UVC event/summary bindings pass
+  ---
+  duration_ms: 16.1669
+  ...
+# Subtest: HC-ART-TEST-002 incomplete survivors and declared partial event archive remain incomplete
+ok 2 - HC-ART-TEST-002 incomplete survivors and declared partial event archive remain incomplete
+  ---
+  duration_ms: 8.974
+  ...
+# Subtest: HC-ART-TEST-003 foreign capture/source identity is refused
+ok 3 - HC-ART-TEST-003 foreign capture/source identity is refused
+  ---
+  duration_ms: 2.6583
+  ...
+# Subtest: HC-ART-TEST-004 required event gaps and duplicate IDs fail
+ok 4 - HC-ART-TEST-004 required event gaps and duplicate IDs fail
+  ---
+  duration_ms: 3.0678
+  ...
+# Subtest: HC-ART-TEST-005 source clock regressions frequency changes and uint64 overflow fail
+ok 5 - HC-ART-TEST-005 source clock regressions frequency changes and uint64 overflow fail
+  ---
+  duration_ms: 3.8823
+  ...
+# Subtest: HC-ART-TEST-006 finalization requires the exact last terminal event
+ok 6 - HC-ART-TEST-006 finalization requires the exact last terminal event
+  ---
+  duration_ms: 6.3005
+  ...
+# Subtest: HC-ART-TEST-007 summary/archive hash or artifact binding cannot be substituted
+ok 7 - HC-ART-TEST-007 summary/archive hash or artifact binding cannot be substituted
+  ---
+  duration_ms: 1.9388
+  ...
+# Subtest: HC-ART-TEST-008 reject recursive package hash unknown fields and unsupported artifact schema
+ok 8 - HC-ART-TEST-008 reject recursive package hash unknown fields and unsupported artifact schema
+  ---
+  duration_ms: 2.6571
+  ...
+# Subtest: HC-ART-TEST-009 canonical JSON rejects duplicate keys and invalid UTF-8
+ok 9 - HC-ART-TEST-009 canonical JSON rejects duplicate keys and invalid UTF-8
+  ---
+  duration_ms: 2.4321
+  ...
+# Subtest: HC-ART-TEST-010 historical packages are not silently upgraded
+ok 10 - HC-ART-TEST-010 historical packages are not silently upgraded
+  ---
+  duration_ms: 1.5243
+  ...
+# Subtest: HC-ART-PARITY-001 shared finalization vectors agree and stay current
+ok 11 - HC-ART-PARITY-001 shared finalization vectors agree and stay current
+  ---
+  duration_ms: 174.7034
+  ...
+# Subtest: HC-ART-PARITY-002 invalid Unicode is not canonical capture evidence
+ok 12 - HC-ART-PARITY-002 invalid Unicode is not canonical capture evidence
+  ---
+  duration_ms: 0.8271
+  ...
+# Subtest: HC-CLK-001 exact quantization shared boundary vectors
+ok 13 - HC-CLK-001 exact quantization shared boundary vectors
+  ---
+  duration_ms: 7.2964
+  ...
+# Subtest: HC-CLK-002 explicit v1.1 schema and manifest dispatch preserve legacy
+ok 14 - HC-CLK-002 explicit v1.1 schema and manifest dispatch preserve legacy
+  ---
+  duration_ms: 152.662
+  ...
+# Subtest: HC-CTRL-TEST-001 all control schemas compile as JSON Schema 2020-12
+ok 15 - HC-CTRL-TEST-001 all control schemas compile as JSON Schema 2020-12
+  ---
+  duration_ms: 202.727
+  ...
+# Subtest: HC-CTRL-TEST-002 AsyncAPI 3.1 document references every session message schema
+ok 16 - HC-CTRL-TEST-002 AsyncAPI 3.1 document references every session message schema
+  ---
+  duration_ms: 24.6042
+  ...
+# Subtest: HC-CTRL-TEST-003 lifecycle, plan revision, reopen, completion, and handoff validate
+ok 17 - HC-CTRL-TEST-003 lifecycle, plan revision, reopen, completion, and handoff validate
+  ---
+  duration_ms: 162.5802
+  ...
+# Subtest: HC-CTRL-TEST-004 every transition outside the accepted matrix fails closed
+ok 18 - HC-CTRL-TEST-004 every transition outside the accepted matrix fails closed
+  ---
+  duration_ms: 11.8877
+  ...
+# Subtest: HC-CTRL-TEST-005 invalid fixtures fail with their named rule or schema disposition
+ok 19 - HC-CTRL-TEST-005 invalid fixtures fail with their named rule or schema disposition
+  ---
+  duration_ms: 78.9347
+  ...
+# Subtest: HC-CTRL-TEST-006 flexible source counts accept only the approved inclusive range
+ok 20 - HC-CTRL-TEST-006 flexible source counts accept only the approved inclusive range
+  ---
+  duration_ms: 1.7495
+  ...
+# Subtest: HC-DEC-GUARD-001 rejects absent or mismatched binary/archive hashes
+ok 21 - HC-DEC-GUARD-001 rejects absent or mismatched binary/archive hashes
+  ---
+  duration_ms: 2.4653
+  ...
+# Subtest: HC-DEC-GUARD-002 subprocess success requires clean exit and no diagnostics
+ok 22 - HC-DEC-GUARD-002 subprocess success requires clean exit and no diagnostics
+  ---
+  duration_ms: 0.4125
+  ...
+# Subtest: HC-DEC-GUARD-003 probe subprocess timeout and output overflow cannot pass
+ok 23 - HC-DEC-GUARD-003 probe subprocess timeout and output overflow cannot pass
+  ---
+  duration_ms: 301.1931
+  ...
+# Subtest: HC-DEC-GUARD-004 software decode uses passthrough and no nominal cadence override
+ok 24 - HC-DEC-GUARD-004 software decode uses passthrough and no nominal cadence override
+  ---
+  duration_ms: 0.2777
+  ...
+# Subtest: imports and verifies a complete immutable evidence set
+ok 25 - imports and verifies a complete immutable evidence set
+  ---
+  duration_ms: 435.667
+  ...
+# Subtest: exact duplicate import is idempotent
+ok 26 - exact duplicate import is idempotent
+  ---
+  duration_ms: 161.795
+  ...
+# Subtest: same source run id with different content is rejected
+ok 27 - same source run id with different content is rejected
+  ---
+  duration_ms: 147.7181
+  ...
+# Subtest: tampering is detected
+ok 28 - tampering is detected
+  ---
+  duration_ms: 142.4496
+  ...
+# Subtest: release-record tampering is detected
+ok 29 - release-record tampering is detected
+  ---
+  duration_ms: 117.8012
+  ...
+# Subtest: malformed receipt is not silently skipped
+ok 30 - malformed receipt is not silently skipped
+  ---
+  duration_ms: 112.5658
+  ...
+# Subtest: unexpected controlled-run files are rejected
+ok 31 - unexpected controlled-run files are rejected
+  ---
+  duration_ms: 139.2923
+  ...
+# Subtest: retained release SBOM tampering is detected
+ok 32 - retained release SBOM tampering is detected
+  ---
+  duration_ms: 146.1538
+  ...
+# Subtest: source inside vault is rejected
+ok 33 - source inside vault is rejected
+  ---
+  duration_ms: 391.6096
+  ...
+# Subtest: controlled release is rejected for a dirty source tree
+ok 34 - controlled release is rejected for a dirty source tree
+  ---
+  duration_ms: 1956.7195
+  ...
+# Subtest: engineering snapshot retains and hashes its CycloneDX SBOM
+ok 35 - engineering snapshot retains and hashes its CycloneDX SBOM
+  ---
+  duration_ms: 3306.7573
+  ...
+# Subtest: controlled release rejects an SBOM without official validation
+ok 36 - controlled release rejects an SBOM without official validation
+  ---
+  duration_ms: 2688.1204
+  ...
+# Subtest: HC-META-001 shared metadata vectors match controlled sources and Ajv
+ok 37 - HC-META-001 shared metadata vectors match controlled sources and Ajv
+  ---
+  duration_ms: 237.7313
+  ...
+# Subtest: HC-PKG-INPUT-001 shared file fixtures satisfy manifest timing and finalization contracts
+ok 38 - HC-PKG-INPUT-001 shared file fixtures satisfy manifest timing and finalization contracts
+  ---
+  duration_ms: 180.0278
+  ...
+# Subtest: HC-RCP-TEST-001 receipt, acknowledgement, recovery and cleanup schemas compile and validate
+ok 39 - HC-RCP-TEST-001 receipt, acknowledgement, recovery and cleanup schemas compile and validate
+  ---
+  duration_ms: 275.9944
+  ...
+# Subtest: HC-RCP-TEST-002 receipt binds exact durable commit and cannot be revised or superseded
+ok 40 - HC-RCP-TEST-002 receipt binds exact durable commit and cannot be revised or superseded
+  ---
+  duration_ms: 1.5563
+  ...
+# Subtest: HC-RCP-TEST-003 receipt replay is idempotent and conflicting identity enters recovery
+ok 41 - HC-RCP-TEST-003 receipt replay is idempotent and conflicting identity enters recovery
+  ---
+  duration_ms: 0.4568
+  ...
+# Subtest: HC-RCP-TEST-004 accepted acknowledgement proves durable exact storage; mismatch retains files
+ok 42 - HC-RCP-TEST-004 accepted acknowledgement proves durable exact storage; mismatch retains files
+  ---
+  duration_ms: 0.5016
+  ...
+# Subtest: HC-RCP-TEST-005 lost acknowledgement reconciles before replaying the same receipt
+ok 43 - HC-RCP-TEST-005 lost acknowledgement reconciles before replaying the same receipt
+  ---
+  duration_ms: 0.4081
+  ...
+# Subtest: HC-RCP-TEST-006 cleanup requires explicit confirmation, durable acknowledgement, exact binding and idle package
+ok 44 - HC-RCP-TEST-006 cleanup requires explicit confirmation, durable acknowledgement, exact binding and idle package
+  ---
+  duration_ms: 0.7525
+  ...
+# Subtest: HC-RCP-TEST-007 USB/MTP offline completion cannot authorize automatic deletion
+ok 45 - HC-RCP-TEST-007 USB/MTP offline completion cannot authorize automatic deletion
+  ---
+  duration_ms: 0.3834
+  ...
+# Subtest: HC-RCP-TEST-008 cleanup result reports every package and never hides remaining files
+ok 46 - HC-RCP-TEST-008 cleanup result reports every package and never hides remaining files
+  ---
+  duration_ms: 0.5701
+  ...
+# Subtest: HC-RCP-TEST-009 partial retry targets only reconciled remaining artifacts
+ok 47 - HC-RCP-TEST-009 partial retry targets only reconciled remaining artifacts
+  ---
+  duration_ms: 0.7309
+  ...
+# Subtest: HC-RCP-TEST-010 commit remains session completion authority; cleanup records contain no subject PII or secret/signature fields
+ok 48 - HC-RCP-TEST-010 commit remains session completion authority; cleanup records contain no subject PII or secret/signature fields
+  ---
+  duration_ms: 1.1438
+  ...
+# (node:32872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: HC-REP-TEST-001 repository schemas compile and accept the complete valid lifecycle
+ok 49 - HC-REP-TEST-001 repository schemas compile and accept the complete valid lifecycle
+  ---
+  duration_ms: 253.195
+  ...
+# Subtest: HC-REP-TEST-002 descriptor compatibility fails closed for unsupported required capability
+ok 50 - HC-REP-TEST-002 descriptor compatibility fails closed for unsupported required capability
+  ---
+  duration_ms: 1.9386
+  ...
+# Subtest: HC-REP-TEST-003 SQLite DDL executes and creates the controlled table and trigger inventory
+ok 51 - HC-REP-TEST-003 SQLite DDL executes and creates the controlled table and trigger inventory
+  ---
+  duration_ms: 21.959
+  ...
+# Subtest: HC-REP-TEST-004 SQLite constraints retain immutable current identity and append-only history
+ok 52 - HC-REP-TEST-004 SQLite constraints retain immutable current identity and append-only history
+  ---
+  duration_ms: 7.3558
+  ...
+# Subtest: HC-REP-TEST-005 canonical namespace binds transaction and immutable-record identities
+ok 53 - HC-REP-TEST-005 canonical namespace binds transaction and immutable-record identities
+  ---
+  duration_ms: 2.7637
+  ...
+# Subtest: HC-REP-TEST-006 lifecycle is contiguous, no-skip, and terminal
+ok 54 - HC-REP-TEST-006 lifecycle is contiguous, no-skip, and terminal
+  ---
+  duration_ms: 3.5631
+  ...
+# Subtest: HC-REP-TEST-007 exhaustive state pairs admit only normal boundaries and controlled recovery
+ok 55 - HC-REP-TEST-007 exhaustive state pairs admit only normal boundaries and controlled recovery
+  ---
+  duration_ms: 0.992
+  ...
+# Subtest: HC-REP-TEST-008 identity bindings are immutable and operation replay must be exact
+ok 56 - HC-REP-TEST-008 identity bindings are immutable and operation replay must be exact
+  ---
+  duration_ms: 2.6711
+  ...
+# Subtest: HC-REP-TEST-009 reconciliation requires six unique, transaction-bound observations
+ok 57 - HC-REP-TEST-009 reconciliation requires six unique, transaction-bound observations
+  ---
+  duration_ms: 4.3124
+  ...
+# Subtest: HC-REP-TEST-010 crash fixtures allow only their bounded automatic or operator result
+ok 58 - HC-REP-TEST-010 crash fixtures allow only their bounded automatic or operator result
+  ---
+  duration_ms: 3.63
+  ...
+# Subtest: HC-REP-TEST-011 automatic conflict and operator force-commit are rejected
+ok 59 - HC-REP-TEST-011 automatic conflict and operator force-commit are rejected
+  ---
+  duration_ms: 1.7592
+  ...
+# Subtest: HC-REP-TEST-012 receipt requires a post-operation exact COMMITTED reconciliation
+ok 60 - HC-REP-TEST-012 receipt requires a post-operation exact COMMITTED reconciliation
+  ---
+  duration_ms: 2.0943
+  ...
+# Subtest: HC-REP-TEST-013 invalid fixtures exercise schema, path, and semantic rejection
+ok 61 - HC-REP-TEST-013 invalid fixtures exercise schema, path, and semantic rejection
+  ---
+  duration_ms: 92.5057
+  ...
+# Subtest: HC-REP-TEST-014 repository records minimize PII, secret, raw-media, and absolute-path surfaces
+ok 62 - HC-REP-TEST-014 repository records minimize PII, secret, raw-media, and absolute-path surfaces
+  ---
+  duration_ms: 64.6068
+  ...
+# Subtest: HC-REP-TEST-015 catalog, commit record, and immutable index agree exactly
+ok 63 - HC-REP-TEST-015 catalog, commit record, and immutable index agree exactly
+  ---
+  duration_ms: 1.7413
+  ...
+# Subtest: HC-SEC-TEST-001 security schemas compile and accept redacted valid records
+ok 64 - HC-SEC-TEST-001 security schemas compile and accept redacted valid records
+  ---
+  duration_ms: 148.9624
+  ...
+# Subtest: HC-SEC-TEST-002 transfer OpenAPI requires global mutual TLS and security failure responses
+ok 65 - HC-SEC-TEST-002 transfer OpenAPI requires global mutual TLS and security failure responses
+  ---
+  duration_ms: 4.0492
+  ...
+# Subtest: HC-SEC-TEST-003 control AsyncAPI binds every operation to mutually authenticated WSS
+ok 66 - HC-SEC-TEST-003 control AsyncAPI binds every operation to mutually authenticated WSS
+  ---
+  duration_ms: 5.4714
+  ...
+# Subtest: HC-SEC-TEST-004 bootstrap requires exact fingerprinted HTTPS, 128-bit entropy, and ten-minute lifetime
+ok 67 - HC-SEC-TEST-004 bootstrap requires exact fingerprinted HTTPS, 128-bit entropy, and ten-minute lifetime
+  ---
+  duration_ms: 2.7838
+  ...
+# Subtest: HC-SEC-TEST-005 bootstrap proof is single-use, session-bound, delayed, and locked after five failures
+ok 68 - HC-SEC-TEST-005 bootstrap proof is single-use, session-bound, delayed, and locked after five failures
+  ---
+  duration_ms: 0.7799
+  ...
+# Subtest: HC-SEC-TEST-006 enrollment binds both peer keys, nonce, contract, and finite certificate lifetime
+ok 69 - HC-SEC-TEST-006 enrollment binds both peer keys, nonce, contract, and finite certificate lifetime
+  ---
+  duration_ms: 1.3197
+  ...
+# Subtest: HC-SEC-TEST-007 trust lifecycle rejects identity mutation, invalid revision, forbidden resurrection, and active-capture removal
+ok 70 - HC-SEC-TEST-007 trust lifecycle rejects identity mutation, invalid revision, forbidden resurrection, and active-capture removal
+  ---
+  duration_ms: 1.2051
+  ...
+# Subtest: HC-SEC-TEST-008 authorization binds active trust, role, exact certificate identity, and resource ownership
+ok 71 - HC-SEC-TEST-008 authorization binds active trust, role, exact certificate identity, and resource ownership
+  ---
+  duration_ms: 0.5381
+  ...
+# Subtest: HC-SEC-TEST-009 TLS 1.3 is default; early data, weak TLS 1.2, and silent downgrade reject
+ok 72 - HC-SEC-TEST-009 TLS 1.3 is default; early data, weak TLS 1.2, and silent downgrade reject
+  ---
+  duration_ms: 0.7619
+  ...
+# Subtest: HC-SEC-TEST-010 revoked, lost, and expired credentials cannot authorize recovery traffic
+ok 73 - HC-SEC-TEST-010 revoked, lost, and expired credentials cannot authorize recovery traffic
+  ---
+  duration_ms: 0.8233
+  ...
+# Subtest: HC-SEC-TEST-011 audit permits public fingerprints but rejects secret, proof, subject, and video fields
+ok 74 - HC-SEC-TEST-011 audit permits public fingerprints but rejects secret, proof, subject, and video fields
+  ---
+  duration_ms: 0.7996
+  ...
+# Subtest: HC-SEC-TEST-012 discovery metadata and ordinary trust records contain no subject or reusable credential material
+ok 75 - HC-SEC-TEST-012 discovery metadata and ordinary trust records contain no subject or reusable credential material
+  ---
+  duration_ms: 0.3748
+  ...
+# Subtest: HC-CTRL-TEST-007 source bundle schemas and cross-record predicates pass
+ok 76 - HC-CTRL-TEST-007 source bundle schemas and cross-record predicates pass
+  ---
+  duration_ms: 349.2132
+  ...
+# Subtest: HC-CTRL-TEST-008 decimal-string monotonic values preserve exact uint64 and reject overflow
+ok 77 - HC-CTRL-TEST-008 decimal-string monotonic values preserve exact uint64 and reject overflow
+  ---
+  duration_ms: 4.0157
+  ...
+# Subtest: HC-CTRL-TEST-009 command replay is idempotent only for identical semantic content
+ok 78 - HC-CTRL-TEST-009 command replay is idempotent only for identical semantic content
+  ---
+  duration_ms: 4.2114
+  ...
+# Subtest: HC-CTRL-TEST-010 first master sample, event order, and source authority gate RECORDING
+ok 79 - HC-CTRL-TEST-010 first master sample, event order, and source authority gate RECORDING
+  ---
+  duration_ms: 3.3515
+  ...
+# Subtest: HC-CTRL-TEST-011 restart reconciliation forbids an attempt spanning boot or clock epochs
+ok 80 - HC-CTRL-TEST-011 restart reconciliation forbids an attempt spanning boot or clock epochs
+  ---
+  duration_ms: 1.8159
+  ...
+# Subtest: HC-CTRL-TEST-012 readiness cannot hide blocking checks or unauthorized overrides
+ok 81 - HC-CTRL-TEST-012 readiness cannot hide blocking checks or unauthorized overrides
+  ---
+  duration_ms: 2.0651
+  ...
+# Subtest: HC-CTRL-TEST-013 custody matrix fails closed and receipt requires exact durable commit
+ok 82 - HC-CTRL-TEST-013 custody matrix fails closed and receipt requires exact durable commit
+  ---
+  duration_ms: 8.8405
+  ...
+# Subtest: HC-CTRL-TEST-014 quality cannot report pass over unresolved dimensions
+ok 83 - HC-CTRL-TEST-014 quality cannot report pass over unresolved dimensions
+  ---
+  duration_ms: 1.3779
+  ...
+# Subtest: HC-CTRL-TEST-015 named negative source fixtures reject with their expected code
+ok 84 - HC-CTRL-TEST-015 named negative source fixtures reject with their expected code
+  ---
+  duration_ms: 2.9796
+  ...
+# Subtest: HC-CTRL-TEST-016 AsyncAPI exposes every approved I0.2A source record
+ok 85 - HC-CTRL-TEST-016 AsyncAPI exposes every approved I0.2A source record
+  ---
+  duration_ms: 10.4031
+  ...
+# Subtest: HC-CTRL-TEST-017 every unlisted source command transition fails closed
+ok 86 - HC-CTRL-TEST-017 every unlisted source command transition fails closed
+  ---
+  duration_ms: 111.7956
+  ...
+# Subtest: HC-CTRL-TEST-018 every unlisted autonomous source event transition fails closed
+ok 87 - HC-CTRL-TEST-018 every unlisted autonomous source event transition fails closed
+  ---
+  duration_ms: 12.1511
+  ...
+# Subtest: HC-CTRL-TEST-019 content hashes use RFC 8785 canonical JSON and detect tampering
+ok 88 - HC-CTRL-TEST-019 content hashes use RFC 8785 canonical JSON and detect tampering
+  ---
+  duration_ms: 2.1934
+  ...
+# Subtest: HC-TIM-TEST-001 timing, IMU and camera metadata schemas compile and accept canonical fixtures
+ok 89 - HC-TIM-TEST-001 timing, IMU and camera metadata schemas compile and accept canonical fixtures
+  ---
+  duration_ms: 190.4124
+  ...
+# Subtest: HC-TIM-TEST-002 golden streams match immutable byte length, record count and SHA-256
+ok 90 - HC-TIM-TEST-002 golden streams match immutable byte length, record count and SHA-256
+  ---
+  duration_ms: 51.258
+  ...
+# Subtest: HC-TIM-TEST-003 frame golden vector decodes and re-encodes byte exactly
+ok 91 - HC-TIM-TEST-003 frame golden vector decodes and re-encodes byte exactly
+  ---
+  duration_ms: 4.7105
+  ...
+# Subtest: HC-TIM-TEST-004 IMU golden vector preserves independent sensors, units payload and optional-field presence
+ok 92 - HC-TIM-TEST-004 IMU golden vector preserves independent sensors, units payload and optional-field presence
+  ---
+  duration_ms: 2.3164
+  ...
+# Subtest: HC-TIM-TEST-005 header and record corruption fail at the localized CRC boundary
+ok 93 - HC-TIM-TEST-005 header and record corruption fail at the localized CRC boundary
+  ---
+  duration_ms: 1.4084
+  ...
+# Subtest: HC-TIM-TEST-006 only a non-finalized stream may recover complete records and discard a partial tail
+ok 94 - HC-TIM-TEST-006 only a non-finalized stream may recover complete records and discard a partial tail
+  ---
+  duration_ms: 0.9653
+  ...
+# Subtest: HC-TIM-TEST-007 unsupported versions and record layouts fail closed
+ok 95 - HC-TIM-TEST-007 unsupported versions and record layouts fail closed
+  ---
+  duration_ms: 1.6852
+  ...
+# Subtest: HC-TIM-TEST-008 measured cadence exposes variable cadence, sequence gaps, duplicates and timestamp regressions
+ok 96 - HC-TIM-TEST-008 measured cadence exposes variable cadence, sequence gaps, duplicates and timestamp regressions
+  ---
+  duration_ms: 3.451
+  ...
+# Subtest: HC-TIM-TEST-009 clock models bind known clocks, bounded uint64 ranges and explicit uncertainty
+ok 97 - HC-TIM-TEST-009 clock models bind known clocks, bounded uint64 ranges and explicit uncertainty
+  ---
+  duration_ms: 2.0344
+  ...
+# Subtest: HC-TIM-TEST-010 fixed-rate capability and unavailable lens data are schema-valid rather than universal failures
+ok 98 - HC-TIM-TEST-010 fixed-rate capability and unavailable lens data are schema-valid rather than universal failures
+  ---
+  duration_ms: 77.9943
+  ...
+# Subtest: HC-TIM-TEST-011 protocol-required failures block/reject while preferred limitations degrade
+ok 99 - HC-TIM-TEST-011 protocol-required failures block/reject while preferred limitations degrade
+  ---
+  duration_ms: 0.6589
+  ...
+# Subtest: HC-TIM-TEST-012 accepted source frames require unique complete video associations
+ok 100 - HC-TIM-TEST-012 accepted source frames require unique complete video associations
+  ---
+  duration_ms: 3.9647
+  ...
+# Subtest: HC-XFR-TEST-001 transfer schemas compile and accept the complete valid bundle
+ok 101 - HC-XFR-TEST-001 transfer schemas compile and accept the complete valid bundle
+  ---
+  duration_ms: 185.5123
+  ...
+# Subtest: HC-XFR-TEST-002 OpenAPI is HTTPS pull, versioned 3.1.2, range-aware, and bound to mutual TLS
+ok 102 - HC-XFR-TEST-002 OpenAPI is HTTPS pull, versioned 3.1.2, range-aware, and bound to mutual TLS
+  ---
+  duration_ms: 7.0051
+  ...
+# Subtest: HC-XFR-TEST-003 manifest binds canonical content, artifact inventory, exact identity, timing, and package length
+ok 103 - HC-XFR-TEST-003 manifest binds canonical content, artifact inventory, exact identity, timing, and package length
+  ---
+  duration_ms: 5.6447
+  ...
+# Subtest: HC-XFR-TEST-004 package paths fail closed for traversal, Windows aliases, normalization, collisions, and manifest recursion
+ok 104 - HC-XFR-TEST-004 package paths fail closed for traversal, Windows aliases, normalization, collisions, and manifest recursion
+  ---
+  duration_ms: 1.9961
+  ...
+# Subtest: HC-XFR-TEST-005 checkpoints require the exact artifact set, bounded non-overlapping ranges, and truthful completion
+ok 105 - HC-XFR-TEST-005 checkpoints require the exact artifact set, bounded non-overlapping ranges, and truthful completion
+  ---
+  duration_ms: 4.2964
+  ...
+# Subtest: HC-XFR-TEST-006 HTTPS resume combines only the same strong representation and handles RFC 9110 full/unsatisfied responses safely
+ok 106 - HC-XFR-TEST-006 HTTPS resume combines only the same strong representation and handles RFC 9110 full/unsatisfied responses safely
+  ---
+  duration_ms: 0.5166
+  ...
+# Subtest: HC-XFR-TEST-007 USB/MTP and local recovery reuse the package and verifier but restart incomplete artifacts
+ok 107 - HC-XFR-TEST-007 USB/MTP and local recovery reuse the package and verifier but restart incomplete artifacts
+  ---
+  duration_ms: 1.6437
+  ...
+# Subtest: HC-XFR-TEST-008 verification rejects missing, unassessed, false-pass, and incomplete required evidence
+ok 108 - HC-XFR-TEST-008 verification rejects missing, unassessed, false-pass, and incomplete required evidence
+  ---
+  duration_ms: 3.7741
+  ...
+# Subtest: HC-XFR-TEST-009 package identity is idempotent only for the same content hash
+ok 109 - HC-XFR-TEST-009 package identity is idempotent only for the same content hash
+  ---
+  duration_ms: 1.02
+  ...
+# Subtest: HC-XFR-TEST-010 commit receipt requires exact full verification and committed identity
+ok 110 - HC-XFR-TEST-010 commit receipt requires exact full verification and committed identity
+  ---
+  duration_ms: 2.1475
+  ...
+# Subtest: HC-XFR-TEST-011 digest and validator encodings are deterministic and strong
+ok 111 - HC-XFR-TEST-011 digest and validator encodings are deterministic and strong
+  ---
+  duration_ms: 0.5176
+  ...
+1..111
+# tests 111
+# suites 0
+# pass 111
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10723.6405

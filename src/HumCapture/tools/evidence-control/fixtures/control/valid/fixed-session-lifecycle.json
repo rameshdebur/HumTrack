@@ -1,0 +1,287 @@
+{
+  "protocol_snapshot": {
+    "schema_version": "1.0.0",
+    "protocol_id": "10000000-0000-4000-8000-000000000001",
+    "protocol_version": "1.0.0",
+    "protocol_content_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+    "snapshot_revision": 1,
+    "snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "approved_utc": "2026-09-05T10:00:00.000Z",
+    "approved_by_windows_account": "TEST\\operator",
+    "source_count_policy": { "mode": "FIXED", "count": 1 },
+    "selected_source_count": 1,
+    "source_roles": [
+      {
+        "role_id": "30000000-0000-4000-8000-000000000001",
+        "name": "Sagittal view",
+        "completion_role": "REQUIRED",
+        "allowed_source_kinds": ["ANDROID_CAMERA2", "WINDOWS_UVC"]
+      }
+    ],
+    "trial_slots": [
+      {
+        "slot_id": "40000000-0000-4000-8000-000000000001",
+        "trial_type": "Walking",
+        "required": true,
+        "sequence": 1
+      }
+    ],
+    "allow_additional_trials": false,
+    "allow_retakes": true,
+    "maximum_session_duration_seconds": 3600,
+    "completion_policy": {
+      "require_committed_packages": true,
+      "require_quality_review": true,
+      "require_operator_finalization": true
+    }
+  },
+  "transitions": [
+    {
+      "current": {
+        "schema_version": "1.0.0",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "subject_id": "60000000-0000-4000-8000-000000000001",
+        "operator_windows_account": "TEST\\operator",
+        "state": "DRAFT",
+        "revision": 1,
+        "has_acquired_master_sample": false,
+        "slot_progress": [],
+        "active_trial_ids": [],
+        "unresolved_required_work": false,
+        "updated_utc": "2026-09-05T10:01:00.000Z"
+      },
+      "command": {
+        "contract_version": "1.0.0",
+        "message_id": "70000000-0000-4000-8000-000000000001",
+        "command_id": "80000000-0000-4000-8000-000000000001",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "expected_session_revision": 1,
+        "command_type": "PLAN_SESSION",
+        "issued_utc": "2026-09-05T10:01:01.000Z",
+        "operator_windows_account": "TEST\\operator",
+        "payload": {
+          "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+          "protocol_snapshot_revision": 1,
+          "protocol_snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      },
+      "next": {
+        "schema_version": "1.0.0",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "subject_id": "60000000-0000-4000-8000-000000000001",
+        "operator_windows_account": "TEST\\operator",
+        "state": "PLANNED",
+        "revision": 2,
+        "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+        "protocol_snapshot_revision": 1,
+        "protocol_snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "has_acquired_master_sample": false,
+        "slot_progress": [
+          {
+            "slot_id": "40000000-0000-4000-8000-000000000001",
+            "required": true,
+            "state": "UNFILLED",
+            "candidate_trial_ids": []
+          }
+        ],
+        "active_trial_ids": [],
+        "unresolved_required_work": true,
+        "updated_utc": "2026-09-05T10:01:02.000Z"
+      }
+    },
+    {
+      "current_ref": 0,
+      "command": {
+        "contract_version": "1.0.0",
+        "message_id": "70000000-0000-4000-8000-000000000002",
+        "command_id": "80000000-0000-4000-8000-000000000002",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "expected_session_revision": 2,
+        "command_type": "BEGIN_SESSION",
+        "issued_utc": "2026-09-05T10:02:00.000Z",
+        "operator_windows_account": "TEST\\operator",
+        "payload": {}
+      },
+      "next": {
+        "schema_version": "1.0.0",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "subject_id": "60000000-0000-4000-8000-000000000001",
+        "operator_windows_account": "TEST\\operator",
+        "state": "IN_PROGRESS",
+        "revision": 3,
+        "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+        "protocol_snapshot_revision": 1,
+        "protocol_snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "has_acquired_master_sample": false,
+        "slot_progress": [
+          {
+            "slot_id": "40000000-0000-4000-8000-000000000001",
+            "required": true,
+            "state": "IN_PROGRESS",
+            "candidate_trial_ids": ["90000000-0000-4000-8000-000000000001"]
+          }
+        ],
+        "active_trial_ids": ["90000000-0000-4000-8000-000000000001"],
+        "unresolved_required_work": true,
+        "updated_utc": "2026-09-05T10:02:01.000Z"
+      }
+    },
+    {
+      "current_ref": 1,
+      "command": {
+        "contract_version": "1.0.0",
+        "message_id": "70000000-0000-4000-8000-000000000003",
+        "command_id": "80000000-0000-4000-8000-000000000003",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "expected_session_revision": 3,
+        "command_type": "RECONCILE_SESSION",
+        "issued_utc": "2026-09-05T10:03:00.000Z",
+        "operator_windows_account": "TEST\\operator",
+        "payload": {}
+      },
+      "next": {
+        "schema_version": "1.0.0",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "subject_id": "60000000-0000-4000-8000-000000000001",
+        "operator_windows_account": "TEST\\operator",
+        "state": "IN_PROGRESS",
+        "revision": 4,
+        "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+        "protocol_snapshot_revision": 1,
+        "protocol_snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "has_acquired_master_sample": true,
+        "slot_progress": [
+          {
+            "slot_id": "40000000-0000-4000-8000-000000000001",
+            "required": true,
+            "state": "IN_PROGRESS",
+            "candidate_trial_ids": ["90000000-0000-4000-8000-000000000001"]
+          }
+        ],
+        "active_trial_ids": ["90000000-0000-4000-8000-000000000001"],
+        "unresolved_required_work": true,
+        "updated_utc": "2026-09-05T10:03:01.000Z"
+      }
+    },
+    {
+      "current_ref": 2,
+      "command": {
+        "contract_version": "1.0.0",
+        "message_id": "70000000-0000-4000-8000-000000000004",
+        "command_id": "80000000-0000-4000-8000-000000000004",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "expected_session_revision": 4,
+        "command_type": "ENTER_COMPLETION_REVIEW",
+        "issued_utc": "2026-09-05T10:04:00.000Z",
+        "operator_windows_account": "TEST\\operator",
+        "payload": {}
+      },
+      "next": {
+        "schema_version": "1.0.0",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "subject_id": "60000000-0000-4000-8000-000000000001",
+        "operator_windows_account": "TEST\\operator",
+        "state": "COMPLETION_REVIEW",
+        "revision": 5,
+        "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+        "protocol_snapshot_revision": 1,
+        "protocol_snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "has_acquired_master_sample": true,
+        "slot_progress": [
+          {
+            "slot_id": "40000000-0000-4000-8000-000000000001",
+            "required": true,
+            "state": "SATISFIED",
+            "candidate_trial_ids": ["90000000-0000-4000-8000-000000000001"],
+            "accepted_trial_id": "90000000-0000-4000-8000-000000000001"
+          }
+        ],
+        "active_trial_ids": [],
+        "unresolved_required_work": false,
+        "updated_utc": "2026-09-05T10:04:01.000Z"
+      }
+    },
+    {
+      "current_ref": 3,
+      "command": {
+        "contract_version": "1.0.0",
+        "message_id": "70000000-0000-4000-8000-000000000005",
+        "command_id": "80000000-0000-4000-8000-000000000005",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "expected_session_revision": 5,
+        "command_type": "COMPLETE_SESSION",
+        "issued_utc": "2026-09-05T10:05:00.000Z",
+        "operator_windows_account": "TEST\\operator",
+        "payload": {}
+      },
+      "next": {
+        "schema_version": "1.0.0",
+        "session_id": "50000000-0000-4000-8000-000000000001",
+        "subject_id": "60000000-0000-4000-8000-000000000001",
+        "operator_windows_account": "TEST\\operator",
+        "state": "COMPLETE",
+        "revision": 6,
+        "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+        "protocol_snapshot_revision": 1,
+        "protocol_snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "has_acquired_master_sample": true,
+        "slot_progress": [
+          {
+            "slot_id": "40000000-0000-4000-8000-000000000001",
+            "required": true,
+            "state": "SATISFIED",
+            "candidate_trial_ids": ["90000000-0000-4000-8000-000000000001"],
+            "accepted_trial_id": "90000000-0000-4000-8000-000000000001"
+          }
+        ],
+        "active_trial_ids": [],
+        "unresolved_required_work": false,
+        "completion_record_id": "a0000000-0000-4000-8000-000000000001",
+        "completion_record_revision": 1,
+        "handoff_manifest_id": "b0000000-0000-4000-8000-000000000001",
+        "handoff_manifest_revision": 1,
+        "updated_utc": "2026-09-05T10:05:01.000Z"
+      }
+    }
+  ],
+  "completion_record": {
+    "schema_version": "1.0.0",
+    "completion_record_id": "a0000000-0000-4000-8000-000000000001",
+    "completion_record_revision": 1,
+    "session_id": "50000000-0000-4000-8000-000000000001",
+    "subject_id": "60000000-0000-4000-8000-000000000001",
+    "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+    "protocol_snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "satisfied_required_slots": ["40000000-0000-4000-8000-000000000001"],
+    "accepted_trial_ids": ["90000000-0000-4000-8000-000000000001"],
+    "committed_package_ids": ["c0000000-0000-4000-8000-000000000001"],
+    "quality_review_complete": true,
+    "unresolved_required_work": false,
+    "finalized_by_windows_account": "TEST\\operator",
+    "finalized_utc": "2026-09-05T10:05:01.000Z",
+    "handoff_manifest_id": "b0000000-0000-4000-8000-000000000001",
+    "handoff_manifest_revision": 1
+  },
+  "handoff_manifest": {
+    "schema_version": "1.0.0",
+    "handoff_manifest_id": "b0000000-0000-4000-8000-000000000001",
+    "handoff_manifest_revision": 1,
+    "session_id": "50000000-0000-4000-8000-000000000001",
+    "subject_id": "60000000-0000-4000-8000-000000000001",
+    "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+    "protocol_snapshot_content_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "completion_record_id": "a0000000-0000-4000-8000-000000000001",
+    "completion_record_revision": 1,
+    "repository_relative_session_path": "subjects/60000000-0000-4000-8000-000000000001/sessions/50000000-0000-4000-8000-000000000001",
+    "artifacts": [
+      {
+        "relative_path": "trials/90000000-0000-4000-8000-000000000001/master.mp4",
+        "byte_length": 1024,
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "artifact_role": "MASTER"
+      }
+    ],
+    "created_utc": "2026-09-05T10:05:01.000Z"
+  }
+}

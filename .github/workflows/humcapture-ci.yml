@@ -1,0 +1,106 @@
+name: HumCapture CI
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "src/HumCapture/**"
+      - ".github/workflows/humcapture-ci.yml"
+  push:
+    branches:
+      - master
+      - "codex/humcapture-*"
+    paths:
+      - "src/HumCapture/**"
+      - ".github/workflows/humcapture-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: humcapture-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: HumCapture validation
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: src/HumCapture
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Configure Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.12.0
+          cache: npm
+          cache-dependency-path: |
+            src/HumCapture/tools/capability-probes/shared/package-lock.json
+            src/HumCapture/tools/evidence-control/package-lock.json
+
+      - name: Configure .NET SDK
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+        with:
+          dotnet-version: 10.0.303
+
+      - name: Install pinned Windows SDK
+        run: |
+          choco install windows-sdk-10-version-2004-all --version 10.0.19041.685 --yes --no-progress --limit-output
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Install locked Node.js dependencies
+        run: |
+          npm.cmd ci --ignore-scripts --no-audit --no-fund --prefix tools/capability-probes/shared
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm.cmd ci --ignore-scripts --no-audit --no-fund --prefix tools/evidence-control
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Verify evidence contracts and controls
+        run: |
+          npm.cmd test --prefix tools/capability-probes/shared
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm.cmd test --prefix tools/evidence-control
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Verify SBOM policy and retained hash
+        run: |
+          npm.cmd test --prefix tools/sbom
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node tools/sbom/src/cli.js validate --input sbom/humcapture.cdx.json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $expected = (Get-Content sbom/humcapture.cdx.json.sha256 -Raw).Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)[0].ToLowerInvariant()
+          $actual = (Get-FileHash sbom/humcapture.cdx.json -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "SBOM SHA-256 mismatch: expected $expected, actual $actual" }
+
+      - name: Audit current Node.js runtime dependencies
+        run: |
+          npm.cmd audit --omit=dev --audit-level=high --prefix tools/capability-probes/shared
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm.cmd audit --omit=dev --audit-level=high --prefix tools/evidence-control
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Build and self-test managed camera probe
+        run: |
+          dotnet build tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj --configuration Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj --configuration Release --no-build -- --self-test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Build and self-test native Media Foundation probes
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $msbuild = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe | Select-Object -First 1
+          if (-not $msbuild) { throw "MSBuild was not found on the pinned runner image." }
+          & $msbuild tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj /m /p:Configuration=Release /p:Platform=x64
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $msbuild tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj /m /p:Configuration=Release /p:Platform=x64
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & tools/capability-probes/windows/native-mf/x64/Release/HumCapture.MfCapture.exe --self-test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

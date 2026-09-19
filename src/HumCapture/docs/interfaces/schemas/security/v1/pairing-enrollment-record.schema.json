@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/security/v1/pairing-enrollment-record.schema.json",
+  "title": "HumCapture pairing enrollment record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "enrollment_id", "pairing_session_id", "device_id", "coordinator_id", "device_spki_sha256", "coordinator_spki_sha256", "coordinator_ca_sha256", "pairing_nonce_sha256", "transcript_sha256", "tls_profile", "issued_utc", "certificate_not_after_utc", "operator_windows_account"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "enrollment_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "pairing_session_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "device_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "coordinator_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "device_spki_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "coordinator_spki_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "coordinator_ca_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "pairing_nonce_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "transcript_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "tls_profile": { "enum": ["HC-TLS-13-001", "HC-TLS-12-W10-001"] },
+    "compatibility_reason": { "type": "string", "minLength": 10, "maxLength": 500 },
+    "issued_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "certificate_not_after_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "operator_windows_account": { "$ref": "../../control/v1/common.schema.json#/$defs/windowsAccount" }
+  },
+  "allOf": [{ "if": { "properties": { "tls_profile": { "const": "HC-TLS-12-W10-001" } } }, "then": { "properties": { "compatibility_reason": true }, "required": ["compatibility_reason"] }, "else": { "not": { "required": ["compatibility_reason"] } } }]
+}

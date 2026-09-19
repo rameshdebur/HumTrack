@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humcapture.local/schemas/phase-0/1.0.0/run-manifest.schema.json",
+  "title": "HumCapture Phase 0 run manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format_name",
+    "evidence_format_version",
+    "run_id",
+    "campaign_id",
+    "created_utc",
+    "timing",
+    "probe",
+    "environment",
+    "procedure",
+    "configuration",
+    "timestamp_provenance",
+    "finalization",
+    "artifacts",
+    "disposition",
+    "operator_windows_account",
+    "reviewer",
+    "limitations",
+    "deviations"
+  ],
+  "properties": {
+    "format_name": { "const": "humcapture-phase0-run-manifest" },
+    "evidence_format_version": { "const": "1.0.0" },
+    "run_id": { "type": "string", "format": "uuid" },
+    "campaign_id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$" },
+    "created_utc": { "type": "string", "format": "date-time" },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_monotonic_ns", "end_monotonic_ns", "duration_ns"],
+      "properties": {
+        "start_monotonic_ns": { "type": "string", "pattern": "^[0-9]+$" },
+        "end_monotonic_ns": { "type": "string", "pattern": "^[0-9]+$" },
+        "duration_ns": { "type": "string", "pattern": "^[0-9]+$" }
+      }
+    },
+    "probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "source_revision", "platform"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "$ref": "common.schema.json#/$defs/semver" },
+        "source_revision": { "type": "string", "minLength": 1 },
+        "platform": { "type": "string", "enum": ["android", "windows", "network", "synthetic"] }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hardware_id", "manufacturer", "model", "os_name", "os_version", "driver_versions", "connection", "power_mode", "network_profile"],
+      "properties": {
+        "hardware_id": { "type": "string", "minLength": 1 },
+        "manufacturer": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "os_name": { "type": "string", "minLength": 1 },
+        "os_version": { "type": "string", "minLength": 1 },
+        "driver_versions": { "type": "object", "additionalProperties": { "type": "string" } },
+        "connection": { "type": "string", "minLength": 1 },
+        "power_mode": { "type": "string", "minLength": 1 },
+        "network_profile": { "type": ["string", "null"] }
+      }
+    },
+    "procedure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["procedure_id", "registry_version", "mode", "required_duration_ns", "actual_duration_ns"],
+      "properties": {
+        "procedure_id": { "type": "string", "pattern": "^HC-P0-[A-Z]+-[0-9]{3}$" },
+        "registry_version": { "const": "1.0.0" },
+        "mode": { "type": "string", "enum": ["diagnostic", "qualification"] },
+        "required_duration_ns": { "type": "string", "pattern": "^[0-9]+$" },
+        "actual_duration_ns": { "type": "string", "pattern": "^[0-9]+$" }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "streams"],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1 },
+        "streams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stream_id", "purpose", "requested", "reported", "negotiated", "measured"],
+            "properties": {
+              "stream_id": { "type": "string", "minLength": 1 },
+              "purpose": { "type": "string", "enum": ["master", "preview", "depth", "infrared", "other"] },
+              "requested": { "$ref": "common.schema.json#/$defs/captureProfile" },
+              "reported": { "anyOf": [{ "$ref": "common.schema.json#/$defs/captureProfile" }, { "type": "null" }] },
+              "negotiated": { "anyOf": [{ "$ref": "common.schema.json#/$defs/captureProfile" }, { "type": "null" }] },
+              "measured": { "anyOf": [{ "$ref": "common.schema.json#/$defs/captureProfile" }, { "type": "null" }] }
+            }
+          }
+        }
+      }
+    },
+    "timestamp_provenance": {
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "common.schema.json#/$defs/timestampProvenance" }
+    },
+    "finalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completed", "artifact_readable", "notes"],
+      "properties": {
+        "completed": { "type": "boolean" },
+        "artifact_readable": { "type": "boolean" },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "common.schema.json#/$defs/artifact" }
+    },
+    "disposition": { "type": "string", "enum": ["PASS", "CONDITIONAL", "FAIL", "INCONCLUSIVE"] },
+    "operator_windows_account": { "type": "string", "minLength": 1 },
+    "reviewer": { "type": ["string", "null"] },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "deviations": { "type": "array", "items": { "type": "string" } }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "procedure": { "type": "object", "properties": { "mode": { "const": "diagnostic" } } } },
+        "required": ["procedure"]
+      },
+      "then": {
+        "properties": { "disposition": { "enum": ["FAIL", "INCONCLUSIVE"] } }
+      }
+    },
+    {
+      "if": { "properties": { "disposition": { "const": "PASS" } }, "required": ["disposition"] },
+      "then": {
+        "properties": {
+          "reviewer": { "type": "string", "minLength": 1 },
+          "limitations": { "type": "array", "maxItems": 0 },
+          "deviations": { "type": "array", "maxItems": 0 },
+          "finalization": {
+            "type": "object",
+            "properties": {
+              "completed": { "const": true },
+              "artifact_readable": { "const": true }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "disposition": { "const": "CONDITIONAL" } }, "required": ["disposition"] },
+      "then": {
+        "properties": {
+          "reviewer": { "type": "string", "minLength": 1 },
+          "limitations": { "type": "array", "minItems": 1 },
+          "finalization": {
+            "type": "object",
+            "properties": {
+              "completed": { "const": true },
+              "artifact_readable": { "const": true }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

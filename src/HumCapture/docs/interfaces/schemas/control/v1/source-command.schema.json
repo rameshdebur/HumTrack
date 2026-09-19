@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/source-command.schema.json",
+  "title": "HumCapture idempotent source command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version", "message_id", "command_id", "coordinator_id",
+    "session_id", "trial_id", "source_id", "capture_attempt_id",
+    "expected_source_state", "command_type", "issued_utc",
+    "operator_windows_account", "payload"
+  ],
+  "properties": {
+    "contract_version": { "$ref": "common.schema.json#/$defs/contractVersion" },
+    "message_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "command_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "coordinator_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "trial_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "capture_attempt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "expected_source_state": { "$ref": "common.schema.json#/$defs/sourceState" },
+    "command_type": { "$ref": "common.schema.json#/$defs/sourceCommandType" },
+    "issued_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" },
+    "operator_windows_account": { "$ref": "common.schema.json#/$defs/windowsAccount" },
+    "payload": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "configuration_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "configuration_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+        "readiness_request_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "readiness_snapshot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "start_plan_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "start_plan_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+        "stop_plan_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "scheduled_source_stop": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+        "scheduled_session_stop": { "$ref": "common.schema.json#/$defs/mappedSessionInstant" },
+        "stop_reason": { "$ref": "common.schema.json#/$defs/stopReason" },
+        "reason": { "$ref": "common.schema.json#/$defs/reason" }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "command_type": { "const": "CONFIGURE" },
+        "payload": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "configuration_id": { "$ref": "common.schema.json#/$defs/uuid" },
+            "configuration_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" }
+          },
+          "required": ["configuration_id", "configuration_content_sha256"]
+        }
+      }
+    },
+    {
+      "properties": {
+        "command_type": { "const": "CHECK_READINESS" },
+        "payload": {
+          "type": "object", "additionalProperties": false,
+          "properties": { "readiness_request_id": { "$ref": "common.schema.json#/$defs/uuid" } },
+          "required": ["readiness_request_id"]
+        }
+      }
+    },
+    {
+      "properties": {
+        "command_type": { "const": "ARM" },
+        "payload": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "readiness_snapshot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+            "configuration_id": { "$ref": "common.schema.json#/$defs/uuid" },
+            "configuration_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" }
+          },
+          "required": ["readiness_snapshot_id", "configuration_id", "configuration_content_sha256"]
+        }
+      }
+    },
+    {
+      "properties": {
+        "command_type": { "enum": ["PREPARE_START", "COMMIT_START"] },
+        "payload": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "start_plan_id": { "$ref": "common.schema.json#/$defs/uuid" },
+            "start_plan_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" }
+          },
+          "required": ["start_plan_id", "start_plan_content_sha256"]
+        }
+      }
+    },
+    {
+      "properties": {
+        "command_type": { "const": "CANCEL_START_PLAN" },
+        "payload": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "start_plan_id": { "$ref": "common.schema.json#/$defs/uuid" },
+            "reason": { "$ref": "common.schema.json#/$defs/reason" }
+          },
+          "required": ["start_plan_id", "reason"]
+        }
+      }
+    },
+    {
+      "properties": {
+        "command_type": { "const": "STOP_AT" },
+        "payload": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "stop_plan_id": { "$ref": "common.schema.json#/$defs/uuid" },
+            "scheduled_source_stop": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+            "scheduled_session_stop": { "$ref": "common.schema.json#/$defs/mappedSessionInstant" },
+            "stop_reason": { "$ref": "common.schema.json#/$defs/stopReason" }
+          },
+          "required": ["stop_plan_id", "scheduled_source_stop", "scheduled_session_stop", "stop_reason"]
+        }
+      }
+    },
+    {
+      "properties": {
+        "command_type": { "const": "EMERGENCY_STOP" },
+        "payload": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "stop_reason": { "$ref": "common.schema.json#/$defs/stopReason" },
+            "reason": { "$ref": "common.schema.json#/$defs/reason" }
+          },
+          "required": ["stop_reason", "reason"]
+        }
+      }
+    },
+    {
+      "properties": {
+        "command_type": { "enum": ["DISARM", "RECONCILE_STATE", "GET_STATE"] },
+        "payload": { "type": "object", "additionalProperties": false, "maxProperties": 0 }
+      }
+    }
+  ]
+}

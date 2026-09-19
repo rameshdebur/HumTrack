@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "name": "FFmpeg Windows essentials archive (ffmpeg and ffprobe)",
+  "version": "9.0.1",
+  "publisher": "Gyan Doshi",
+  "platform": "windows-x64",
+  "archive_url": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0.1-essentials_build.zip",
+  "archive_sha256": "fec81ae03971d9dd4be3ebe02e263bd2ec1d789483f931bdba5f5715e65da2e9",
+  "checksum_source": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0.1-essentials_build.zip.sha256",
+  "publisher_license_declaration": "GPLv3",
+  "license_review": "PENDING",
+  "binary_verification": "ARCHIVE_AND_EXECUTABLE_HASHES_VERIFIED",
+  "executable_sha256": {
+    "ffmpeg.exe": "72a489eccd008c2ec2c0a5856c5c75bc3d8bbfa90166c4566865c246445e6aa3",
+    "ffprobe.exe": "19202b23c0043f15ad1b7bce2344f406fd52bd6efd8f995ce02e7392a1cec52f",
+    "ffplay.exe": "39a9ba4f207fe9eecfb094e632998c29e1da88a5d5d23d0b8b71a357a7c47eb5"
+  },
+  "runtime_enabled": false,
+  "redistribution_approved": false,
+  "reviewed_date": "2026-09-15"
+}

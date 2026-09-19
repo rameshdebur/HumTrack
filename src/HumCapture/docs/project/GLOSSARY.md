@@ -1,0 +1,23 @@
+# HumCapture Glossary
+
+- **Subject:** Person being recorded. Identified by immutable subject UUID plus subject code and coordinator-local identity/demographics.
+- **Session:** One supervised visit or acquisition episode governed by a protocol version.
+- **Trial:** One continuous arm/start/stop acquisition attempt within a session.
+- **Source recording:** One camera's master and metadata for a trial.
+- **Protocol:** Versioned reusable capture template defining source count, profiles, trials, thresholds, and completion rules.
+- **Required source:** Source whose valid committed package is required for trial completion.
+- **Supplementary source:** Additional source whose failure creates a warning but does not block required-source completion.
+- **Master:** Authoritative locally recorded scientific video.
+- **Preview:** Disposable low-latency monitoring stream with no scientific authority.
+- **Finalized:** Recorder and sidecars closed, manifest and hashes produced, package immutable to capture workflow.
+- **Verified:** Package schema, identity, required files, lengths, hashes, and structural checks passed.
+- **Committed:** Verified package transactionally placed in its subject/session/trial repository location.
+- **Workflow complete:** All protocol-required trial/source packages are committed and the session is finalized.
+- **T_sensor:** Camera sensor timestamp.
+- **T_device:** Source monotonic clock.
+- **T_global:** Coordinator-aligned session time estimated from a clock model.
+- **Timestamp provenance:** Origin and quality of a timestamp, such as sensor, device, host sample, or host arrival.
+- **Acquisition conformance:** Whether capture satisfied its protocol; not a clinical-validity claim.
+- **ARD:** Architecture Requirements/Description document for system structure and constraints.
+- **PRD:** Product Requirements Document describing users, needs, workflows, scope, and success.
+- **ADR:** Immutable record of a durable architecture decision and its consequences.
