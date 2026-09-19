@@ -195,11 +195,21 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-169 shared finalization vectors", CaptureEvidenceTests.SharedFinalizationVectors),
     ("HC-REP-RUNTIME-170 capture canonical byte and hash guards", CaptureEvidenceTests.CanonicalAndBindingGuards),
     ("HC-REP-RUNTIME-171 combined synthetic UVC Android and incomplete evidence", CaptureEvidenceTests.CombinedSyntheticEvidence),
-    ("HC-REP-RUNTIME-172 combined evidence failure paths", CaptureEvidenceTests.CombinedFailurePaths)
+    ("HC-REP-RUNTIME-172 combined evidence failure paths", CaptureEvidenceTests.CombinedFailurePaths),
+    ("HC-REP-RUNTIME-173 finalized files to bound evidence", PackageInputTests.FileToEvidence),
+    ("HC-REP-RUNTIME-174 manifest schema identity profile and canonical guards", PackageInputTests.ManifestRejections),
+    ("HC-REP-RUNTIME-175 package inventory and content failure paths", PackageInputTests.InventoryAndContentFailures),
+    ("HC-REP-RUNTIME-176 live package lease mutation and writer exclusion", PackageInputTests.LiveLeaseMutations),
+    ("HC-REP-RUNTIME-177 cancellation and callback failure release leases", PackageInputTests.CancellationAndFailureRelease),
+    ("HC-REP-RUNTIME-178 incomplete survivors and streaming limits", PackageInputTests.SurvivorsAndStreaming),
+    ("HC-REP-RUNTIME-179 hard-linked input is rejected", PackageInputTests.HardLinks),
+    ("HC-REP-RUNTIME-180 reparse path refusal and optional survivors", PackageInputTests.ReparsePathsAndSurvivorSidecars)
 };
 
+var selectedTests = args.SequenceEqual(["--package-input"])
+    ? tests.Where(test => test.Body.Method.DeclaringType == typeof(PackageInputTests)).ToArray() : tests;
 var failures = 0;
-foreach (var (name, body) in tests)
+foreach (var (name, body) in selectedTests)
 {
     try
     {
@@ -213,7 +223,7 @@ foreach (var (name, body) in tests)
     }
 }
 
-await Console.Out.WriteLineAsync($"SUMMARY total={tests.Length} passed={tests.Length - failures} failed={failures}");
+await Console.Out.WriteLineAsync($"SUMMARY total={selectedTests.Length} passed={selectedTests.Length - failures} failed={failures}");
 return failures == 0 ? 0 : 1;
 
 static void WithLocalCollection(Action<string, RepositoryService, string, Guid> body)

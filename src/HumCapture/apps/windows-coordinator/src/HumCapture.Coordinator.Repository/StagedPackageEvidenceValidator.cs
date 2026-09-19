@@ -442,7 +442,7 @@ internal static partial class StagedPackageEvidenceValidator
         }
     }
 
-    private static void ValidateArtifactPath(string path)
+    internal static void ValidateArtifactPath(string path)
     {
         if (path.Length is < 1 or > 1024 || path != path.Normalize(NormalizationForm.FormC)
             || path.StartsWith('/') || path.Contains('\\') || UnsafePathCharacters().IsMatch(path))

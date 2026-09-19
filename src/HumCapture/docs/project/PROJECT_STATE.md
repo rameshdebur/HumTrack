@@ -1,8 +1,8 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C14L-C14N | IMU + FINALIZATION | INTERNAL EVIDENCE COMPOSITION
-**Last meaningful update:** 2026-09-17
+**Tags:** C14O-C14Q | PACKAGE INPUT | MANIFEST + READ LEASES
+**Last meaningful update:** 2026-09-19
 
 ## Objective
 
@@ -13,6 +13,19 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C14O-Q is user-approved and design/governance baselined under ADR-0034 and
+  HC-CHG-20260919-001, with existing ARD/PRD/SRS, roles, India baseline, risks and
+  XFR/TIM/ART contracts. Internal local-folder input admission implemented with
+  canonical manifest/profile checks, streamed hashes, read leases and evidence
+  dispatch. Final local Release build is clean; eight focused runtime groups,
+  111 contract and 13 SBOM/register tests pass. Full corrected-source regression
+  is a hosted gate; do not claim the superseded local partial run as acceptance.
+  See HC-VR-I0-4B-C14OPQ-001. No journal mutation, VERIFIED, host activation or
+  cleanup. Decoder provenance, protocol/scientific acceptance and record production
+  remain subsequent batches. SBOM/register refreshed to c14q; no new dependency.
+  Prior afbed422acaaebb4ae2c5ba29253b82e809b5272 passed hosted push 35227124741
+  and PR 35227130907 as recorded at completion of C14L-N.
 
 - C14L-N is implemented under user-approved ADR-0033 / HC-CHG-20260917-004 and
   the existing requirements, roles, India baseline, interfaces and risks.

@@ -1,5 +1,14 @@
 # HumCapture Preliminary Risk Register
 
+C14O-Q (2026-09-19), HC-RISK-022/030/031: internal manifest/profile admission,
+exact leased-file size/hash binding, long-path support and final inventory checks
+are exercised by HC-REP-RUNTIME-173-180 and HC-PKG-INPUT-001. Existing writers,
+replacement, reparse/hard links, changed inventory and unsupported profiles cannot
+silently pass. Incomplete/optional evidence remains explicit. Leases end at
+evaluation disposal; no permanent immutability or completed scientific verification
+is claimed. Decoder provenance, protocol/quality, record production, independent
+review and release remain open. Evidence: HC-VR-I0-4B-C14OPQ-001.
+
 C14L-N update (2026-09-17), HC-RISK-022/030/031: shared frame/IMU clock bindings,
 sensor identity/kind/units, declared rotation checks, exact 1.1 IMU arithmetic,
 canonical event/summary bytes, event continuity and bound terminal outcome now

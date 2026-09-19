@@ -8,22 +8,22 @@ namespace HumCapture.Coordinator.Repository;
 // Not a general JSON-number canonicalizer or manifest admission mechanism.
 internal static class CaptureCanonicalJson
 {
-    internal static byte[] Encode(JsonElement value, CancellationToken token = default)
+    internal static byte[] Encode(JsonElement value, CancellationToken token = default, string? excludedRootProperty = null)
     {
         var output = new StringBuilder();
-        try { Write(value, output, token); }
+        try { Write(value, output, token, excludedRootProperty); }
         catch (InvalidOperationException error) { throw new InvalidDataException("Invalid capture JSON value/Unicode.", error); }
         return new UTF8Encoding(false, true).GetBytes(output.ToString());
     }
 
-    private static void Write(JsonElement value, StringBuilder output, CancellationToken token)
+    private static void Write(JsonElement value, StringBuilder output, CancellationToken token, string? excludedProperty = null)
     {
         token.ThrowIfCancellationRequested();
         switch (value.ValueKind)
         {
             case JsonValueKind.Object:
                 output.Append('{'); var first = true;
-                foreach (var property in value.EnumerateObject().OrderBy(p => p.Name, StringComparer.Ordinal))
+                foreach (var property in value.EnumerateObject().Where(p => p.Name != excludedProperty).OrderBy(p => p.Name, StringComparer.Ordinal))
                 {
                     if (!first) { output.Append(','); }
                     first = false; WriteString(property.Name, output); output.Append(':'); Write(property.Value, output, token);

@@ -1,5 +1,15 @@
 # HumCapture Windows Coordinator
 
+## C14O-Q package-file adapter (internal, not activated)
+
+`PackageInputEvidence.Evaluate` reads a finalized local Windows package directory,
+admits the declared manifest/profiles and binds all files under read leases before
+calling the existing evidence validators. Master hashing is streamed; sidecars
+are bounded. The optional internal decoded-observation callback does not confer
+decoder provenance. No callback means decoding remains unassessed. No host
+command, verification record, journal write, commit, receipt or cleanup is added.
+See `../../docs/verification/I0_4B_C14OPQ_PACKAGE_INPUT_REPORT.md` and ADR-0034.
+
 ## C14L-N internal evidence checks (not activated)
 
 Repository-internal `InternalCaptureEvidence` combines frame/IMU metadata and

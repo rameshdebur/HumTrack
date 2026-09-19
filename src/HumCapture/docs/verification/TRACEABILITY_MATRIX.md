@@ -1,5 +1,12 @@
 # HumCapture Traceability Matrix
 
+C14O-Q: HC-DATA-REQ-001/002/008/009, XFR-001@1.2, ART-001@1.0 and TIM-001@1.0/1.1,
+ADR-0034, HC-RISK-022/030/031 map to HC-REP-RUNTIME-173-180 and HC-PKG-INPUT-001.
+Controls: schema/canonical/profile/role admission; streamed integrity and stable
+local leases; file-to-evidence dispatch; invalid input/mutation/cancellation;
+incomplete and optional survivors; bounded memory. See HC-VR-I0-4B-C14OPQ-001
+for exact local/hosted evidence levels and retained initial discrepancies.
+
 C14L-N: HC-DATA-REQ-001/002/009, HC-IF-TIM-001 (1.0 plus explicit 1.1),
 HC-IF-ART-001, ADR-0033 and HC-RISK-022/030/031 map to:
 

@@ -1,0 +1,9 @@
+  HumCapture.Coordinator.Repository -> C:\Users\rams2\AppData\Local\Temp\hcwt-i03a-20260905\src\HumCapture\apps\windows-coordinator\src\HumCapture.Coordinator.Repository\bin\Release\net10.0-windows10.0.19041.0\HumCapture.Coordinator.Repository.dll
+  HumCapture.Coordinator.Host -> C:\Users\rams2\AppData\Local\Temp\hcwt-i03a-20260905\src\HumCapture\apps\windows-coordinator\src\HumCapture.Coordinator.Host\bin\Release\net10.0-windows10.0.19041.0\HumCapture.Coordinator.Host.dll
+  HumCapture.Coordinator.Repository.SelfTest -> C:\Users\rams2\AppData\Local\Temp\hcwt-i03a-20260905\src\HumCapture\apps\windows-coordinator\tests\HumCapture.Coordinator.Repository.SelfTest\bin\Release\net10.0-windows10.0.19041.0\HumCapture.Coordinator.Repository.SelfTest.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.67
