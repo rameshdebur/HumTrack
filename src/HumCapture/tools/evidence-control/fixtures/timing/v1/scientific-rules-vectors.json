@@ -1,0 +1,163 @@
+{
+  "evidence": "Synthetic protocol and rule cases; thresholds are fixtures, not product defaults",
+  "protocol": {
+    "schema_version": "1.1.0",
+    "protocol_id": "10000000-0000-4000-8000-000000000001",
+    "protocol_version": "1.0.0",
+    "protocol_content_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "protocol_snapshot_id": "20000000-0000-4000-8000-000000000001",
+    "snapshot_revision": 1,
+    "approved_utc": "2026-09-05T10:00:00.000Z",
+    "approved_by_windows_account": "TEST\\operator",
+    "source_count_policy": {
+      "mode": "FIXED",
+      "count": 1
+    },
+    "selected_source_count": 1,
+    "source_roles": [
+      {
+        "role_id": "30000000-0000-4000-8000-000000000001",
+        "name": "Sagittal view",
+        "completion_role": "REQUIRED",
+        "allowed_source_kinds": [
+          "ANDROID_CAMERA2",
+          "WINDOWS_UVC"
+        ]
+      }
+    ],
+    "trial_slots": [
+      {
+        "slot_id": "40000000-0000-4000-8000-000000000001",
+        "trial_type": "Walking",
+        "required": true,
+        "sequence": 1
+      }
+    ],
+    "allow_additional_trials": false,
+    "allow_retakes": true,
+    "maximum_session_duration_seconds": 3600,
+    "completion_policy": {
+      "require_committed_packages": true,
+      "require_quality_review": true,
+      "require_operator_finalization": true
+    },
+    "scientific_rules": [
+      {
+        "rule_id": "CADENCE.MIN",
+        "role_id": "30000000-0000-4000-8000-000000000001",
+        "level": "REQUIRED",
+        "metric": "OBSERVED_MILLIHZ",
+        "operator": "GE",
+        "threshold": 29000
+      },
+      {
+        "rule_id": "IMAGE.WIDTH",
+        "role_id": "30000000-0000-4000-8000-000000000001",
+        "level": "REQUIRED",
+        "metric": "DECODED_WIDTH",
+        "operator": "EQ",
+        "threshold": 1920
+      }
+    ],
+    "snapshot_content_sha256": "2afa03c93643afd2a740eafc4a533392269089231d9f03aa2f1ba0dd5c52fd09"
+  },
+  "cases": [
+    {
+      "conditions": [],
+      "expected": "REVIEW_REQUIRED"
+    },
+    {
+      "conditions": [
+        {
+          "level": "REQUIRED",
+          "outcome": "PASS"
+        }
+      ],
+      "expected": "CONFORMANT"
+    },
+    {
+      "conditions": [
+        {
+          "level": "REQUIRED",
+          "outcome": "FAIL"
+        }
+      ],
+      "expected": "REJECTED"
+    },
+    {
+      "conditions": [
+        {
+          "level": "REQUIRED",
+          "outcome": "NOT_ASSESSED"
+        }
+      ],
+      "expected": "REVIEW_REQUIRED"
+    },
+    {
+      "conditions": [
+        {
+          "level": "PREFERRED",
+          "outcome": "FAIL"
+        }
+      ],
+      "expected": "DEGRADED_ACCEPTABLE"
+    },
+    {
+      "conditions": [
+        {
+          "level": "PREFERRED",
+          "outcome": "NOT_ASSESSED"
+        }
+      ],
+      "expected": "DEGRADED_ACCEPTABLE"
+    },
+    {
+      "conditions": [
+        {
+          "level": "INFORMATIONAL",
+          "outcome": "PASS"
+        }
+      ],
+      "expected": "REVIEW_REQUIRED"
+    },
+    {
+      "conditions": [
+        {
+          "level": "REQUIRED",
+          "outcome": "PASS"
+        },
+        {
+          "level": "INFORMATIONAL",
+          "outcome": "FAIL"
+        }
+      ],
+      "expected": "CONFORMANT"
+    },
+    {
+      "conditions": [
+        {
+          "level": "REQUIRED",
+          "outcome": "NOT_ASSESSED"
+        },
+        {
+          "level": "REQUIRED",
+          "outcome": "FAIL"
+        }
+      ],
+      "expected": "REJECTED"
+    },
+    {
+      "conditions": [
+        {
+          "level": "REQUIRED",
+          "outcome": "NOT_ASSESSED"
+        },
+        {
+          "level": "PREFERRED",
+          "outcome": "FAIL"
+        }
+      ],
+      "expected": "REVIEW_REQUIRED"
+    }
+  ]
+}

@@ -273,6 +273,11 @@ This document establishes requirement families and mandatory system constraints.
   outputs SHALL identify source streams, clocks, transforms, algorithm,
   validity and uncertainty and SHALL NOT imply absolute heading, translation or
   hardware synchronization without corresponding evidence.
+- **HC-TIME-REQ-015:** Opt-in protocol snapshot 1.1 SHALL bind per-role scientific
+  rules and thresholds into its immutable content hash. Measured required-rule
+  failure SHALL be distinguished from unavailable required evidence. Missing,
+  legacy or empty rule sets SHALL NOT imply scientific acceptance. See
+  PROTOCOL_SCIENTIFIC_RULES_V1_1.md; existing 1.0 behavior is not rewritten.
 
 - **HC-SEC-REQ-001:** Discovery SHALL NOT grant control; pairing/authentication SHALL establish trust.
 - **HC-SEC-REQ-002:** Subject name/date of birth SHALL NOT appear in mDNS or Android source packages.

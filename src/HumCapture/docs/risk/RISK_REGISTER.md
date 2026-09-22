@@ -1,5 +1,15 @@
 # HumCapture Preliminary Risk Register
 
+C14S-T (2026-09-22): HC-RISK-022/030/031 and timing-quality controls are extended
+by ADR-0036. Snapshot hash/source/role binding prevents rule substitution;
+native exact comparisons avoid nominal-rate and rounding substitutions. Missing
+required evidence is review-required, not pass or fabricated measured failure.
+Model reuse across declared restart/regression barriers is refused, independently
+per IMU sensor lane. Reported camera/clock consistency is checked without claiming
+physical accuracy. Legacy rules remain unchanged; no implicit adaptive/FPS rule.
+Unreported physical epoch changes, full session admission, independent review,
+deployment and regulatory/clinical qualification remain open. HC-VR-I0-4B-C14ST-001.
+
 C14R (2026-09-19), HC-RISK-022/030/031: existing pinned inspection runs within
 the admitted package lease. Decoder failure yields no package result; missing
 master stays explicitly unassessed. Only actual pinned decoding discharges

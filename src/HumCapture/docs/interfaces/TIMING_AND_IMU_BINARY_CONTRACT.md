@@ -180,6 +180,11 @@ Yaw may drift; IMU-only translation or world position is not claimed.
 
 ## Quality and protocol gates
 
+Opt-in protocol snapshot 1.1 now defines executable per-role rules and the
+distinction between measured failure and missing evidence in
+`PROTOCOL_SCIENTIFIC_RULES_V1_1.md` (ADR-0036). The original 1.0 helper remains
+unchanged for historical interpretation; no old snapshot is silently upgraded.
+
 Protocol conditions are `REQUIRED`, `PREFERRED` or `INFORMATIONAL`. Pre-capture
 camera states are `READY`, `READY_WITH_LIMITATIONS`, `BLOCKED` and `NOT_TESTED`.
 Post-capture states are `CONFORMANT`, `DEGRADED_ACCEPTABLE`, `REVIEW_REQUIRED`

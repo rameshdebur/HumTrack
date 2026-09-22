@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:9ffab1e1-2a35-5b1e-9b95-0ef1a2658d33",
+  "serialNumber": "urn:uuid:7820b572-208e-5fff-969c-66b15e16e25a",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-19T09:45:33.000Z",
+    "timestamp": "2026-09-22T13:32:44.000Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-i0.4b-c14r",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14r",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14r",
+      "version": "0.1.0-i0.4b-c14t",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14t",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14t",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -162,9 +162,9 @@
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-i0.4b-c14r",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14r",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14r",
+      "version": "0.1.0-i0.4b-c14t",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14t",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14t",
       "scope": "excluded",
       "hashes": [
         {
@@ -277,7 +277,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "5b06b03f477dcf6bffb0aa18d2b5f77107a166d6c0510bdb42d69c42781b84ea"
+          "content": "3b0cb63236ff0f9d9c8bc54df7ae297fe10679a377c92e395d1ce130e21faa92"
         }
       ],
       "properties": [
@@ -1301,7 +1301,7 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14r",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14t",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
@@ -1359,11 +1359,11 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14r",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c14t",
       "dependsOn": [
         "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14r",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c14t",
         "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",

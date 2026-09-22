@@ -33,6 +33,10 @@ export function packageInputVectors() {
     };
     if (complete) {
       const timing = json("valid-timing-metadata.json");
+      if (!android) {
+        timing.clocks[1].provenance = "MF_DEVICE_TIMESTAMP";
+        timing.clocks[1].authority = "DEVICE";
+      }
       timing.clocks.push({ ...timing.clocks[0], clock_id: "20000000-0000-4000-8000-000000000009", ticks_per_second: 90000, provenance: "ENCODER_PTS", authority: "PRESENTATION" });
       timing.streams[0].presentation_clock_id = timing.clocks.at(-1).clock_id;
       timing.streams[1].native_clock_id = timing.streams[0].native_clock_id;
@@ -47,7 +51,13 @@ export function packageInputVectors() {
       add("SCIENTIFIC_MASTER_VIDEO", "media/master.mp4", "video/mp4", "1.0.0", Buffer.from("SYNTHETIC TEST OBSERVATIONS; NOT DECODABLE VIDEO"), true);
       add("FRAME_TIMESTAMPS", "timing/frame-timestamps.bin", "application/vnd.humcapture.frame-timestamps", "1.0", frames, true);
       add("TIMING_METADATA", "metadata/timing-metadata.json", "application/json", exact ? "1.1.0" : "1.0.0", encode(timing));
-      add("CAMERA_METADATA", "metadata/camera-metadata.json", "application/json", "1.0.0", encode(json("valid-camera-metadata.json")));
+      const camera = json("valid-camera-metadata.json");
+      if (android) {
+        camera.camera_type = "ANDROID_CAMERA2";
+        camera.timestamp_provenance = "ANDROID_SENSOR_TIMESTAMP";
+        camera.timestamp_source_detail = "ANDROID_REALTIME";
+      }
+      add("CAMERA_METADATA", "metadata/camera-metadata.json", "application/json", "1.0.0", encode(camera));
       if (android) {
         add("IMU_SAMPLES", "imu/imu-samples.bin", "application/vnd.humcapture.imu-samples", "1.0", imu, true);
         add("IMU_METADATA", "imu/imu-metadata.json", "application/json", "1.0.0", encode(json("valid-imu-metadata.json")));

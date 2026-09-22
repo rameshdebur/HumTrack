@@ -1,5 +1,18 @@
 # HumCapture Windows Coordinator
 
+## C14S-T scientific conditions (internal, not activated)
+
+Optional `ProtocolEvidenceContext` on package evaluation binds a canonical
+protocol snapshot and source/role projection to the manifest. Opt-in snapshot
+1.1 evaluates fixed per-role rules using native cadence and reported/decoded
+camera evidence. Missing required evidence requires review; measured required
+failure rejects the rule subset. No threshold, adaptive-camera or source-count
+default is introduced. Legacy/absent snapshots stay unassessed. Model continuity
+checks run even without decoded media and keep independent IMU lanes separate.
+See ADR-0036 and `../../docs/interfaces/PROTOCOL_SCIENTIFIC_RULES_V1_1.md`.
+Full protocol admission, quality records, host activation and take completion
+remain separate. A rule-subset CONFORMANT result does not authorize cleanup.
+
 ## C14R leased pinned decode (internal, not activated)
 
 `PackageInputEvidence.EvaluateAsync` awaits the pinned decoder while retaining

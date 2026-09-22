@@ -1,5 +1,12 @@
 # HumCapture Traceability Matrix
 
+C14S-T: HC-TIME-REQ-005/008/009/011/012/013/015, HC-DATA-REQ-001/002/007/009,
+ADR-0036 and HC-RISK-022/030/031 map to HC-REP-RUNTIME-185-193, HC-SCI-001/002
+and the extended HC-PACKAGE-DECODE-REAL cases. Controls: versioned rule/schema
+and canonical binding, exact native metrics, missing/legacy distinction,
+camera/provenance consistency, segment/regression model barriers and independent
+IMU lanes. Existing 173-184 package/decoder guards remain. See HC-VR-I0-4B-C14ST-001.
+
 C14R: HC-DATA-REQ-001/002/009, ADR-0035, HC-RISK-022/030/031 map to
 HC-REP-RUNTIME-181-184 plus HC-PACKAGE-DECODE-REAL (four local synthetic cases).
 Pinned decoder connection retains input leases, distinguishes absent from failed

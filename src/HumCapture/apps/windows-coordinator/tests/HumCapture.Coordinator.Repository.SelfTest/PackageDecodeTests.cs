@@ -92,13 +92,14 @@ internal static class PackageDecodeTests
                     File.WriteAllBytes(path, JsonSerializer.SerializeToUtf8Bytes(camera));
                 }
                 PackageInputTests.Rebind(root);
+                var protocol = ScientificEvidenceTests.Context(root);
                 var before = Directory.GetFiles(root, "*", SearchOption.AllDirectories)
                     .ToDictionary(path => path, path => PackageInputManifest.Hash(File.ReadAllBytes(path)));
                 if (name == "different-pts.mp4" || geometryMismatch)
                 {
                     try
                     {
-                        PackageInputEvidence.EvaluateAsync(root, bin, TimeSpan.FromSeconds(30)).GetAwaiter().GetResult();
+                        PackageInputEvidence.EvaluateAsync(root, bin, TimeSpan.FromSeconds(30), protocol: protocol).GetAwaiter().GetResult();
                         throw new InvalidOperationException("Decoded metadata mismatch was accepted.");
                     }
                     catch (InvalidDataException exception)
@@ -110,7 +111,7 @@ internal static class PackageDecodeTests
                 }
                 else
                 {
-                    var result = PackageInputEvidence.EvaluateAsync(root, bin, TimeSpan.FromSeconds(30)).GetAwaiter().GetResult();
+                    var result = PackageInputEvidence.EvaluateAsync(root, bin, TimeSpan.FromSeconds(30), protocol: protocol).GetAwaiter().GetResult();
                     if (name == "corrupt.mp4")
                     { Require(result.Input is null && result.Inspection?.Outcome == DecoderExit.Failed, "Corrupt master returned package evidence."); }
                     else
@@ -119,7 +120,8 @@ internal static class PackageDecodeTests
                             "Actual decoded package did not bind frame evidence.");
                         Require(!result.Input!.Evidence.NotAssessed.Contains("DECODER_PROVENANCE")
                             && !result.Input.Evidence.NotAssessed.Contains("MASTER_FULL_DECODE")
-                            && result.Input.Evidence.NotAssessed.Contains("CADENCE_ACCEPTANCE")
+                            && !result.Input.Evidence.NotAssessed.Contains("CADENCE_ACCEPTANCE")
+                            && result.Input.Scientific?.Protocol.Outcome == "CONFORMANT"
                             && result.Input.Evidence.NotAssessed.Contains("PROTOCOL_ADMISSION"), "Decode was promoted to scientific acceptance.");
                     }
                 }

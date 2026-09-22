@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace HumCapture.Coordinator.Repository;
 
 internal sealed record PackageInputResult(string PackageId, string PackageContentSha256, int BoundArtifactCount,
-    InternalCaptureEvidenceResult Evidence);
+    InternalCaptureEvidenceResult Evidence, ScientificPackageEvidence? Scientific = null);
 
 internal sealed record PackageDecodeResult(PackageInputResult? Input, MediaInspectionResult? Inspection);
 
@@ -11,29 +11,33 @@ internal sealed record PackageDecodeResult(PackageInputResult? Input, MediaInspe
 internal static class PackageInputEvidence
 {
     internal static async Task<PackageDecodeResult> EvaluateAsync(string directory, string binaryDirectory,
-        TimeSpan decoderTimeout, CancellationToken token = default)
+        TimeSpan decoderTimeout, CancellationToken token = default, ProtocolEvidenceContext? protocol = null)
     {
         if (decoderTimeout <= TimeSpan.Zero || decoderTimeout > TimeSpan.FromHours(24))
         { throw new ArgumentOutOfRangeException(nameof(decoderTimeout)); }
+        protocol = protocol?.Freeze();
         using var lease = PackageInputLease.Open(directory, token);
         var master = lease.Manifest.Find("SCIENTIFIC_MASTER_VIDEO");
-        if (master is null) { return new(EvaluateLease(lease, null, false, token), null); }
+        if (master is null) { return new(EvaluateLease(lease, null, false, token, protocol), null); }
         var inspection = await PinnedDecoderWorker.InspectAsync(binaryDirectory, lease.MasterPath(master), decoderTimeout, token)
             .ConfigureAwait(false);
         if (inspection.Outcome != DecoderExit.Decoded || inspection.Evidence is null)
         { return new(null, inspection); }
-        return new(EvaluateLease(lease, (_, _) => inspection.Evidence, true, token), inspection);
+        return new(EvaluateLease(lease, (_, _) => inspection.Evidence, true, token, protocol), inspection);
     }
 
     internal static PackageInputResult Evaluate(string directory,
-        Func<string, CancellationToken, DecodedMediaEvidence?>? observe = null, CancellationToken token = default)
+        Func<string, CancellationToken, DecodedMediaEvidence?>? observe = null, CancellationToken token = default,
+        ProtocolEvidenceContext? protocol = null)
     {
         using var lease = PackageInputLease.Open(directory, token);
-        return EvaluateLease(lease, observe, false, token);
+        protocol = protocol?.Freeze();
+        return EvaluateLease(lease, observe, false, token, protocol);
     }
 
     private static PackageInputResult EvaluateLease(PackageInputLease lease,
-        Func<string, CancellationToken, DecodedMediaEvidence?>? observe, bool pinnedDecoder, CancellationToken token)
+        Func<string, CancellationToken, DecodedMediaEvidence?>? observe, bool pinnedDecoder, CancellationToken token,
+        ProtocolEvidenceContext? protocol)
     {
         var manifest = lease.Manifest; var expected = manifest.Finalization;
         ReadOnlyMemory<byte> Read(string role) => lease.ReadArtifact(manifest.Find(role)!, token);
@@ -78,8 +82,14 @@ internal static class PackageInputEvidence
         if (imu is not null && imu.MappedSamplesCompared == 0) { missing.Add("IMU_MAPPED_VALUE_COMPARISON"); }
         foreach (var auxiliary in manifest.Artifacts.Where(a => a.Role is "CALIBRATION" or "AUXILIARY_EVIDENCE"))
         { missing.Add("ARTIFACT_SEMANTICS:" + auxiliary.Digest.ArtifactId); }
+        var scientific = ScientificPackageEvidence.Compare(manifest, timing, camera, frameStream, imuStream, decoded?.Video, protocol, token);
+        if (scientific.ClockContinuity is { MappedRecordsChecked: > 0 }) { missing.Remove("CLOCK_MODEL_SEGMENT_CONTINUITY"); }
+        if (scientific.Protocol.Conditions.Any(c => c.Metric is "OBSERVED_MILLIHZ" or "MAX_INTERVAL_US"
+            && c.Level is "REQUIRED" or "PREFERRED" && c.Outcome is "PASS" or "FAIL"))
+        { missing.Remove("CADENCE_ACCEPTANCE"); }
+        missing.Add("PHYSICAL_EPOCH_CHANGE_DETECTION");
         lease.CheckUnchanged(token);
         return new PackageInputResult(expected.Identity.PackageId, manifest.Json.GetProperty("package_content_sha256").GetString()!,
-            manifest.Artifacts.Count, new InternalCaptureEvidenceResult(finalization, frames, imu, missing.AsReadOnly()));
+            manifest.Artifacts.Count, new InternalCaptureEvidenceResult(finalization, frames, imu, missing.AsReadOnly()), scientific);
     }
 }

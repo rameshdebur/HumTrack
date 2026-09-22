@@ -1,8 +1,8 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C14R | PACKAGE INPUT | PINNED DECODER INTEGRATION
-**Last meaningful update:** 2026-09-19
+**Tags:** C14S-C14T | PROTOCOL SCIENTIFIC RULES | CLOCK CONTINUITY
+**Last meaningful update:** 2026-09-22
 
 ## Objective
 
@@ -14,10 +14,26 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
 
 ## Current stage
 
+- C14S-T and its protocol extension are user-approved and design/governance
+  baselined before implementation under ADR-0036 / HC-CHG-20260922-001, using
+  existing ARD/PRD/stories/SRS, roles, India baseline, risk and interface plans.
+  Required failure differs from missing evidence; old snapshots remain unchanged.
+  Implemented internally: opt-in snapshot 1.1 rules; exact native cadence;
+  camera/source/clock binding; declared model restart/regression barriers and
+  independent IMU lanes. Release build is clean; 21 focused runtime groups,
+  113 contract, 13 SBOM/register and four actual pinned synthetic-media cases
+  pass. Full hosted regression is a separate gate; the stopped local storage
+  run is not acceptance. See HC-VR-I0-4B-C14ST-001. SBOM refreshed to c14t;
+  no dependency added. Full session/protocol admission, physical epoch detection,
+  quality records, host activation and take completion remain later work.
+  C14R source c07e19099f608a032fb3a8b8a42f1fca8aa5d95e passed hosted push
+  35435610147 and PR 35435613239, checked 2026-09-21.
+
 - C14R is user-authorized and design/governance baselined before implementation
   under ADR-0035 / HC-CHG-20260919-002, with existing requirements, roles, India,
   interface and risk baselines. Internal leased decoder integration only;
-  C14S/T scientific acceptance and production activation remain separate.
+  C14S/T scientific rule checks were subsequently added internally; production
+  activation and overall protocol/take acceptance remain separate.
   Implemented: clean Release build, 12 focused runtime groups, four real pinned
   synthetic-media cases, 111 contract and 13 SBOM/register tests pass locally.
   See HC-VR-I0-4B-C14R-001. Full source regression is a hosted gate. SBOM/register

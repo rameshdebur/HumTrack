@@ -1,0 +1,22 @@
+PASS HC-REP-RUNTIME-173 finalized files to bound evidence
+PASS HC-REP-RUNTIME-174 manifest schema identity profile and canonical guards
+PASS HC-REP-RUNTIME-175 package inventory and content failure paths
+PASS HC-REP-RUNTIME-176 live package lease mutation and writer exclusion
+PASS HC-REP-RUNTIME-177 cancellation and callback failure release leases
+PASS HC-REP-RUNTIME-178 incomplete survivors and streaming limits
+PASS HC-REP-RUNTIME-179 hard-linked input is rejected
+PASS HC-REP-RUNTIME-180 reparse path refusal and optional survivors
+PASS HC-REP-RUNTIME-181 missing decoder cannot return package evidence
+PASS HC-REP-RUNTIME-182 package decoder pin refusal releases input
+PASS HC-REP-RUNTIME-183 absent master remains partial
+PASS HC-REP-RUNTIME-184 package decode cancellation and deadline guards
+PASS HC-REP-RUNTIME-185 versioned scientific condition parity
+PASS HC-REP-RUNTIME-186 exact native cadence and discontinuities
+PASS HC-REP-RUNTIME-187 bound protocol rules and legacy missing evidence
+PASS HC-REP-RUNTIME-188 protocol identity hash role and rule guards
+PASS HC-REP-RUNTIME-189 clock models cannot cross barriers
+PASS HC-REP-RUNTIME-190 independent IMU lanes and cross-stream segments
+PASS HC-REP-RUNTIME-191 camera classes empty rules and incomplete survivors
+PASS HC-REP-RUNTIME-192 package camera and clock continuity binding
+PASS HC-REP-RUNTIME-193 categorical rules and explicit lens unavailability
+SUMMARY total=21 passed=21 failed=0

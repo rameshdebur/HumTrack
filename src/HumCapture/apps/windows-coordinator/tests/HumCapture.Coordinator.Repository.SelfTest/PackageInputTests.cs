@@ -28,10 +28,10 @@ internal static class PackageInputTests
     }
     private static string Hash(string path)
     { using var file = File.OpenRead(path); return Convert.ToHexStringLower(SHA256.HashData(file)); }
-    private static JsonNode Manifest(string root) => JsonNode.Parse(File.ReadAllBytes(Path.Combine(root, "package-manifest.json")))!;
+    internal static JsonNode Manifest(string root) => JsonNode.Parse(File.ReadAllBytes(Path.Combine(root, "package-manifest.json")))!;
     private static byte[] Encode(JsonNode node)
     { using var document = JsonDocument.Parse(node.ToJsonString()); return CaptureCanonicalJson.Encode(document.RootElement); }
-    private static void WriteManifest(string root, JsonNode manifest)
+    internal static void WriteManifest(string root, JsonNode manifest)
     {
         manifest.AsObject().Remove("package_content_sha256");
         manifest["package_content_sha256"] = PackageInputManifest.Hash(Encode(manifest));

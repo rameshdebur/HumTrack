@@ -212,12 +212,22 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-181 missing decoder cannot return package evidence", PackageDecodeTests.MissingDecoder),
     ("HC-REP-RUNTIME-182 package decoder pin refusal releases input", PackageDecodeTests.PinRefusal),
     ("HC-REP-RUNTIME-183 absent master remains partial", PackageDecodeTests.MissingMaster),
-    ("HC-REP-RUNTIME-184 package decode cancellation and deadline guards", PackageDecodeTests.CancellationAndDeadline)
+    ("HC-REP-RUNTIME-184 package decode cancellation and deadline guards", PackageDecodeTests.CancellationAndDeadline),
+    ("HC-REP-RUNTIME-185 versioned scientific condition parity", ScientificEvidenceTests.SharedConditions),
+    ("HC-REP-RUNTIME-186 exact native cadence and discontinuities", ScientificEvidenceTests.ExactCadence),
+    ("HC-REP-RUNTIME-187 bound protocol rules and legacy missing evidence", ScientificEvidenceTests.ProtocolAndLegacy),
+    ("HC-REP-RUNTIME-188 protocol identity hash role and rule guards", ScientificEvidenceTests.ProtocolGuards),
+    ("HC-REP-RUNTIME-189 clock models cannot cross barriers", ScientificEvidenceTests.ModelBarriers),
+    ("HC-REP-RUNTIME-190 independent IMU lanes and cross-stream segments", ScientificEvidenceTests.IndependentImuLanes),
+    ("HC-REP-RUNTIME-191 camera classes empty rules and incomplete survivors", ScientificEvidenceTests.CameraClassesAndMissingRules),
+    ("HC-REP-RUNTIME-192 package camera and clock continuity binding", ScientificEvidenceTests.AdapterConsistencyGuards),
+    ("HC-REP-RUNTIME-193 categorical rules and explicit lens unavailability", ScientificEvidenceTests.CategoricalAndLensRules)
 };
 
 var selectedTests = args.SequenceEqual(["--package-input"])
     ? tests.Where(test => test.Body.Method.DeclaringType == typeof(PackageInputTests)
-        || test.Body.Method.DeclaringType == typeof(PackageDecodeTests)).ToArray() : tests;
+        || test.Body.Method.DeclaringType == typeof(PackageDecodeTests)
+        || test.Body.Method.DeclaringType == typeof(ScientificEvidenceTests)).ToArray() : tests;
 var failures = 0;
 foreach (var (name, body) in selectedTests)
 {

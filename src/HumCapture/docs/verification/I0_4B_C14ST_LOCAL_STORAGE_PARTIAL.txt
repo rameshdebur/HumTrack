@@ -1,0 +1,17 @@
+PASS HC-REP-RUNTIME-001 initialize creates exact repository surface
+PASS HC-REP-RUNTIME-002 supported repository reopens for mutation
+PASS HC-REP-RUNTIME-003 descriptor and catalog metadata agree
+PASS HC-REP-RUNTIME-004 initialization never overwrites
+PASS HC-REP-RUNTIME-005 nonempty root is refused
+PASS HC-REP-RUNTIME-006 relative root is refused
+PASS HC-REP-RUNTIME-007 unsupported major is read-only without writes
+PASS HC-REP-RUNTIME-008 older version requires explicit migration
+PASS HC-REP-RUNTIME-009 unknown required feature is read-only
+PASS HC-REP-RUNTIME-010 unknown field on supported descriptor is invalid
+PASS HC-REP-RUNTIME-011 missing catalog is refused
+PASS HC-REP-RUNTIME-012 corrupt catalog is refused
+PASS HC-REP-RUNTIME-013 metadata mismatch is refused
+PASS HC-REP-RUNTIME-014 descriptor publication leaves no temporary file
+PASS HC-REP-RUNTIME-015 empty repository UUID is refused
+PASS HC-REP-RUNTIME-016 hard-linked catalog is refused
+PASS HC-REP-RUNTIME-017 retained initialization lock is not removed
