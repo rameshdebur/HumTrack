@@ -5,6 +5,10 @@
 **Status:** Accepted engineering baseline  
 **Date:** 2026-09-05
 
+Opt-in successor: TIMING_COVERAGE_V1_1.md defines XFR profile 1.3.0 and manifest
+1.1.0 native per-lane/run coverage. This 1.2/v1 baseline remains unchanged for
+historical packages; new verification production does not silently upgrade it.
+
 ## 1. Boundary and authority
 
 This contract defines immutable finalized packages, coordinator collection,

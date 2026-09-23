@@ -79,7 +79,11 @@ internal static partial class StagedPackageEvidenceValidator
             "finalization_outcome", "finalized_utc", "artifact_count", "package_byte_length", "artifacts"
         ], "Package manifest");
 
-        Equal("1.0.0", String(manifest, "schema_version"), "Manifest schema version");
+        if (String(manifest, "schema_version") == "1.1.0")
+        {
+            _ = PackageInputManifest.Parse(File.ReadAllBytes(manifestPath));
+        }
+        else { Equal("1.0.0", String(manifest, "schema_version"), "Manifest schema version"); }
         Bind(expectation.PackageId, String(manifest, "package_id"), "package_id");
         Bind(expectation.SubjectId, String(manifest, "subject_id"), "subject_id");
         Bind(expectation.SessionId, String(manifest, "session_id"), "session_id");

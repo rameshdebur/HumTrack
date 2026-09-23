@@ -20,8 +20,10 @@ internal sealed record PackageInputManifest(JsonElement Json, CaptureFinalizatio
         { CheckId(Text(value, key)); }
         var profiles = value.TryGetProperty("interface_profiles", out var declarations)
             ? declarations.EnumerateArray().Select(p => p.GetString()!).ToArray() : [];
-        string[] supported = ["HC-IF-ART-001@1.0.0", "HC-IF-TIM-001@1.0.0", "HC-IF-TIM-001@1.1.0", "HC-IF-XFR-001@1.2.0"];
+        string[] supported = ["HC-IF-ART-001@1.0.0", "HC-IF-TIM-001@1.0.0", "HC-IF-TIM-001@1.1.0", "HC-IF-XFR-001@1.2.0", "HC-IF-XFR-001@1.3.0"];
         Need(profiles.Contains("HC-IF-ART-001@1.0.0") && Array.TrueForAll(profiles, supported.Contains), "Unsupported or missing capture package profile.");
+        Need((Text(value, "schema_version") == "1.1.0") == profiles.Contains("HC-IF-XFR-001@1.3.0")
+            && profiles.Count(p => p.StartsWith("HC-IF-XFR-001@", StringComparison.Ordinal)) <= 1, "Conflicting coverage/profile version.");
         var timingProfiles = profiles.Where(p => p.StartsWith("HC-IF-TIM-001@", StringComparison.Ordinal)).ToArray();
         Need(timingProfiles.Length <= 1, "Conflicting timing profiles.");
         TimingMetadataVersion? version = null;
@@ -41,9 +43,11 @@ internal sealed record PackageInputManifest(JsonElement Json, CaptureFinalizatio
             var length = U64(item, "byte_length");
             Need(length <= long.MaxValue && total <= ulong.MaxValue - length, "Artifact/package length exceeds supported range."); total += length;
             var role = Text(item, "role");
+            if (Text(value, "schema_version") == "1.1.0" && item.TryGetProperty("timing_coverage", out _))
+            { Need(role is "SCIENTIFIC_MASTER_VIDEO" or "FRAME_TIMESTAMPS" or "IMU_SAMPLES", "Coverage is not defined for this artifact role."); }
             if (role is "SCIENTIFIC_MASTER_VIDEO" or "FRAME_TIMESTAMPS" or "IMU_SAMPLES")
             { Need(item.TryGetProperty("timing_coverage", out _), "Timed artifact lacks coverage declaration."); }
-            if (item.TryGetProperty("timing_coverage", out var coverage))
+            if (Text(value, "schema_version") == "1.0.0" && item.TryGetProperty("timing_coverage", out var coverage))
             {
                 Need(U64(coverage, "first_ticks") <= U64(coverage, "last_ticks"), "Reversed timing coverage.");
                 _ = U64(coverage, "record_count"); _ = U64(coverage, "discontinuity_count");

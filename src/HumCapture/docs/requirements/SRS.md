@@ -279,6 +279,19 @@ This document establishes requirement families and mandatory system constraints.
   legacy or empty rule sets SHALL NOT imply scientific acceptance. See
   PROTOCOL_SCIENTIFIC_RULES_V1_1.md; existing 1.0 behavior is not rewritten.
 
+- **HC-TIME-REQ-016:** Opt-in manifest 1.1 SHALL bind native timing coverage to
+  exact samples per logical sensor lane and continuity run, with master coverage
+  derived only from accepted source frames. Legacy unassessed coverage SHALL NOT
+  become passing verification. Empty streams SHALL NOT invent endpoints.
+  See TIMING_COVERAGE_V1_1.md and ADR-0037.
+- **HC-DATA-REQ-039:** Internally produced verification records SHALL bind exact
+  leased package bytes, actual pinned decoding where applicable, explicit missing
+  checks, scientific-condition dispositions and the signed-in Windows account.
+  Only technically VERIFIED results may enter existing staged admission;
+  this SHALL NOT itself move a package, issue a receipt, declare take completion
+  or authorize source cleanup. Incomplete-survivor custody and scientific-quality
+  outcomes SHALL remain distinct from complete acquisition.
+
 - **HC-SEC-REQ-001:** Discovery SHALL NOT grant control; pairing/authentication SHALL establish trust.
 - **HC-SEC-REQ-002:** Subject name/date of birth SHALL NOT appear in mDNS or Android source packages.
 - **HC-SEC-REQ-003:** Control and transfer SHALL be authenticated; transfer SHALL be encrypted.

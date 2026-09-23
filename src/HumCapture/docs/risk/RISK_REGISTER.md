@@ -1,5 +1,15 @@
 # HumCapture Preliminary Risk Register
 
+C14U-W (2026-09-23), HC-RISK-022/030/031: ADR-0037 closes the unchecked
+manifest-coverage promotion path using opt-in manifest 1.1 native lane/run
+reconstruction. Legacy timing remains NOT_ASSESSED. Real pinned decoding,
+retained file leases through staged admission, stable retry identities, and
+explicit quality/missing-evidence references prevent scientific acceptance,
+custody integrity and take completion being conflated. Missing/invalid evidence
+does not authorize cleanup. No new security infrastructure or clinical claim.
+See HC-VR-I0-4B-C14UVW-001 for actual test levels; deployment, field acceptance,
+independent review and regulatory qualification remain separate.
+
 C14S-T (2026-09-22): HC-RISK-022/030/031 and timing-quality controls are extended
 by ADR-0036. Snapshot hash/source/role binding prevents rule substitution;
 native exact comparisons avoid nominal-rate and rounding substitutions. Missing

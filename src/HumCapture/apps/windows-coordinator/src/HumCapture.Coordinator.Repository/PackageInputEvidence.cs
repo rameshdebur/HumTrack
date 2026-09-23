@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace HumCapture.Coordinator.Repository;
 
 internal sealed record PackageInputResult(string PackageId, string PackageContentSha256, int BoundArtifactCount,
-    InternalCaptureEvidenceResult Evidence, ScientificPackageEvidence? Scientific = null);
+    InternalCaptureEvidenceResult Evidence, ScientificPackageEvidence? Scientific = null, TimingCoverageResult? Coverage = null);
 
 internal sealed record PackageDecodeResult(PackageInputResult? Input, MediaInspectionResult? Inspection);
 
@@ -17,6 +17,14 @@ internal static class PackageInputEvidence
         { throw new ArgumentOutOfRangeException(nameof(decoderTimeout)); }
         protocol = protocol?.Freeze();
         using var lease = PackageInputLease.Open(directory, token);
+        return await EvaluateLeasedAsync(lease, binaryDirectory, decoderTimeout, token, protocol).ConfigureAwait(false);
+    }
+
+    internal static async Task<PackageDecodeResult> EvaluateLeasedAsync(PackageInputLease lease, string binaryDirectory,
+        TimeSpan decoderTimeout, CancellationToken token, ProtocolEvidenceContext? protocol)
+    {
+        if (decoderTimeout <= TimeSpan.Zero || decoderTimeout > TimeSpan.FromHours(24))
+        { throw new ArgumentOutOfRangeException(nameof(decoderTimeout)); }
         var master = lease.Manifest.Find("SCIENTIFIC_MASTER_VIDEO");
         if (master is null) { return new(EvaluateLease(lease, null, false, token, protocol), null); }
         var inspection = await PinnedDecoderWorker.InspectAsync(binaryDirectory, lease.MasterPath(master), decoderTimeout, token)
@@ -80,6 +88,10 @@ internal static class PackageInputEvidence
         if (decoded is null) { missing.Add("MASTER_FULL_DECODE"); }
         if (frames is not null && !frames.MappedTimesRecomputed) { missing.Add("FRAME_MAPPED_VALUE_COMPARISON"); }
         if (imu is not null && imu.MappedSamplesCompared == 0) { missing.Add("IMU_MAPPED_VALUE_COMPARISON"); }
+        if (manifest.TimingVersion == TimingMetadataVersion.LegacyV1
+            && (frameStream?.Records.Any(f => f.MappedSessionTicks.HasValue) == true
+                || imuStream?.Records.Any(s => s.MappedSessionTicks.HasValue) == true))
+        { missing.Add("LEGACY_MAPPED_VALUES"); }
         foreach (var auxiliary in manifest.Artifacts.Where(a => a.Role is "CALIBRATION" or "AUXILIARY_EVIDENCE"))
         { missing.Add("ARTIFACT_SEMANTICS:" + auxiliary.Digest.ArtifactId); }
         var scientific = ScientificPackageEvidence.Compare(manifest, timing, camera, frameStream, imuStream, decoded?.Video, protocol, token);
@@ -88,8 +100,10 @@ internal static class PackageInputEvidence
             && c.Level is "REQUIRED" or "PREFERRED" && c.Outcome is "PASS" or "FAIL"))
         { missing.Remove("CADENCE_ACCEPTANCE"); }
         missing.Add("PHYSICAL_EPOCH_CHANGE_DETECTION");
+        var coverage = TimingCoverageEvidence.Compare(manifest, timing, frameStream, imuStream, token);
+        if (coverage.Disposition == "NOT_ASSESSED") { missing.Add("TIMING_COVERAGE"); }
         lease.CheckUnchanged(token);
         return new PackageInputResult(expected.Identity.PackageId, manifest.Json.GetProperty("package_content_sha256").GetString()!,
-            manifest.Artifacts.Count, new InternalCaptureEvidenceResult(finalization, frames, imu, missing.AsReadOnly()), scientific);
+            manifest.Artifacts.Count, new InternalCaptureEvidenceResult(finalization, frames, imu, missing.AsReadOnly()), scientific, coverage);
     }
 }

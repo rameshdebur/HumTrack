@@ -4,7 +4,7 @@ using Json.Schema;
 
 namespace HumCapture.Coordinator.Repository;
 
-internal enum MetadataKind { Timing, Camera, Imu, CaptureEvents, Finalization, TimingExact, PackageManifest, Protocol, ProtocolScientific }
+internal enum MetadataKind { Timing, Camera, Imu, CaptureEvents, Finalization, TimingExact, PackageManifest, Protocol, ProtocolScientific, PackageCoverage, Verification }
 
 // Structural gate only. Does not establish canonical bytes, identities or scientific validity.
 internal sealed class MetadataSchemaValidator
@@ -37,6 +37,8 @@ internal sealed class MetadataSchemaValidator
         schemas.Add(MetadataKind.CaptureEvents, Load("capture-event-archive"));
         schemas.Add(MetadataKind.Finalization, Load("finalization-summary"));
         schemas.Add(MetadataKind.PackageManifest, Load("package-manifest"));
+        schemas.Add(MetadataKind.PackageCoverage, Load("package-manifest-v1.1"));
+        schemas.Add(MetadataKind.Verification, Load("package-verification-record"));
         schemas.Add(MetadataKind.Protocol, Load("protocol-snapshot"));
         schemas.Add(MetadataKind.ProtocolScientific, Load("protocol-snapshot-v1.1"));
     }
@@ -51,6 +53,9 @@ internal sealed class MetadataSchemaValidator
             _ = new UTF8Encoding(false, true).GetCharCount(utf8.Span);
             using var document = JsonDocument.Parse(utf8, new JsonDocumentOptions { MaxDepth = 64 });
             CheckKeys(document.RootElement, cancellationToken);
+            if (kind == MetadataKind.PackageManifest
+                && document.RootElement.TryGetProperty("schema_version", out var version) && version.GetString() == "1.1.0")
+            { schema = schemas[MetadataKind.PackageCoverage]; }
             // Serialize calls because third-party evaluation can lazily resolve references.
             lock (evaluationGate)
             {

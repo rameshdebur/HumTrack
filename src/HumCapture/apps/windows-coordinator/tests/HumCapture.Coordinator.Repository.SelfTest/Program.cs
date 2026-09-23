@@ -27,6 +27,11 @@ if (args.Length == 3 && args[0] == "--package-decode-real")
     return PackageDecodeTests.Real(args[1], args[2]);
 }
 
+if (args.Length == 3 && args[0] == "--verification-real")
+{
+    return CoverageVerificationTests.Real(args[1], args[2]);
+}
+
 var tests = new (string Name, Action Body)[]
 {
     ("HC-REP-RUNTIME-001 initialize creates exact repository surface", InitializeCreatesSurface),
@@ -221,13 +226,22 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-190 independent IMU lanes and cross-stream segments", ScientificEvidenceTests.IndependentImuLanes),
     ("HC-REP-RUNTIME-191 camera classes empty rules and incomplete survivors", ScientificEvidenceTests.CameraClassesAndMissingRules),
     ("HC-REP-RUNTIME-192 package camera and clock continuity binding", ScientificEvidenceTests.AdapterConsistencyGuards),
-    ("HC-REP-RUNTIME-193 categorical rules and explicit lens unavailability", ScientificEvidenceTests.CategoricalAndLensRules)
+    ("HC-REP-RUNTIME-193 categorical rules and explicit lens unavailability", ScientificEvidenceTests.CategoricalAndLensRules),
+    ("HC-REP-RUNTIME-194 independently generated native coverage", CoverageVerificationTests.SharedCoverage),
+    ("HC-REP-RUNTIME-195 timing coverage mutation rejection", CoverageVerificationTests.CoverageMutations),
+    ("HC-REP-RUNTIME-196 legacy coverage empty streams and lane boundaries", CoverageVerificationTests.LegacyAndEmpty),
+    ("HC-REP-RUNTIME-197 verification record missing decoder", CoverageVerificationTests.RecordFailure),
+    ("HC-REP-RUNTIME-198 survivor admission retry and conflict", CoverageVerificationTests.SurvivorAdmission),
+    ("HC-REP-RUNTIME-199 failed admission and cancellation", CoverageVerificationTests.FailedAdmissionAndCancellation),
+    ("HC-REP-RUNTIME-200 coverage versions bounds and run order", CoverageVerificationTests.VersionAndBounds),
+    ("HC-REP-RUNTIME-201 master coverage uses accepted source frames only", CoverageVerificationTests.AcceptedMasterOnly)
 };
 
 var selectedTests = args.SequenceEqual(["--package-input"])
     ? tests.Where(test => test.Body.Method.DeclaringType == typeof(PackageInputTests)
         || test.Body.Method.DeclaringType == typeof(PackageDecodeTests)
-        || test.Body.Method.DeclaringType == typeof(ScientificEvidenceTests)).ToArray() : tests;
+        || test.Body.Method.DeclaringType == typeof(ScientificEvidenceTests)
+        || test.Body.Method.DeclaringType == typeof(CoverageVerificationTests)).ToArray() : tests;
 var failures = 0;
 foreach (var (name, body) in selectedTests)
 {

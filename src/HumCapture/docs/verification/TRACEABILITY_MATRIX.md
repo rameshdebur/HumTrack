@@ -1,5 +1,17 @@
 # HumCapture Traceability Matrix
 
+C14U-W: HC-TIME-REQ-016 / HC-DATA-REQ-039, existing HC-DATA-REQ-001/002/009,
+ADR-0037 and HC-RISK-022/030/031 map to HC-REP-RUNTIME-194-201,
+HC-COV-001/002 and five HC-C14UVW-REAL cases. Coverage reconstruction is checked
+against independently generated JS vectors; versions, clocks, counts, endpoints,
+lanes/runs, bounds, accepted-only master selection and legacy gaps are exercised.
+Record/admission tests cover missing decoder, exact retry, immutable conflict,
+failed/cancelled no-admission, incomplete-survivor versus complete capture,
+protocol rejection independent of custody, corrupt media and PTS mismatch.
+Source leases and no-move checks remain explicit. HC-VR-I0-4B-C14UVW-001 records
+full 201 runtime, 115 contract, 13 SBOM checks and actual-decoder synthetic tests;
+none establishes HIL, clinical/regulatory acceptance or production activation.
+
 C14S-T: HC-TIME-REQ-005/008/009/011/012/013/015, HC-DATA-REQ-001/002/007/009,
 ADR-0036 and HC-RISK-022/030/031 map to HC-REP-RUNTIME-185-193, HC-SCI-001/002
 and the extended HC-PACKAGE-DECODE-REAL cases. Controls: versioned rule/schema

@@ -1,8 +1,8 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C14S-C14T | PROTOCOL SCIENTIFIC RULES | CLOCK CONTINUITY
-**Last meaningful update:** 2026-09-22
+**Tags:** C14U-C14W | COVERAGE + VERIFICATION RECORDS | INTERNAL STAGED ADMISSION
+**Last meaningful update:** 2026-09-23
 
 ## Objective
 
@@ -13,6 +13,26 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C14U-W verification-record/repository-admission batch is user-authorized.
+  Preflight found timing coverage is structurally checked but not sample-bound;
+  the synthetic Android fixture demonstrates a mismatched IMU end time.
+  User accepted ADR-0037 and the versioned clarification on 2026-09-23.
+  Existing ARD/PRD/stories/SRS, roles, governance, preliminary India baseline,
+  and interface/risk plans are baselined for this internal batch. The new
+  TIMING_COVERAGE_V1_1.md contract is baselined before feature implementation.
+  Implemented internally: manifest 1.1 / XFR 1.3 per-lane/run native coverage,
+  real-decoder-only verification-record production, and leased staged admission.
+  Legacy coverage remains unassessed; scientific rejection is separate from
+  technical custody. No new host activation, move, receipt or cleanup.
+  Clean Release build, full 201 runtime, 115 contract, 13 SBOM/register and five
+  actual-decoder synthetic-media cases pass. See HC-VR-I0-4B-C14UVW-001 and
+  HC-CHG-20260923-001. SBOM is c14w, no new dependency. Hosted checks remain
+  separately source-SHA-bound in GitHub. No HIL/field/regulatory acceptance.
+  Controlled activation, full session/protocol admission, retained failed-record
+  workflow and legacy migration remain future gates.
+  Prior C14S-T source b9f74ea9dc6bd3a82a65fa3540657d37a1484555 passed hosted
+  push 35734879482 and PR 35734887143, rechecked 2026-09-23.
 
 - C14S-T and its protocol extension are user-approved and design/governance
   baselined before implementation under ADR-0036 / HC-CHG-20260922-001, using

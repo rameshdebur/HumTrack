@@ -15,7 +15,8 @@ internal static class PackageInputTests
         var root = Path.Combine(parent, "package"); Directory.CreateDirectory(root);
         try
         {
-            using var fixture = JsonDocument.Parse(ImuEvidenceTests.Fixture("package-input-vectors.json"));
+            using var fixture = JsonDocument.Parse(ImuEvidenceTests.Fixture(name.EndsWith("-covered", StringComparison.Ordinal)
+                ? "coverage-package-vectors.json" : "package-input-vectors.json"));
             var vector = fixture.RootElement.GetProperty("vectors").EnumerateArray().Single(v => v.GetProperty("name").GetString() == name);
             foreach (var item in vector.GetProperty("files").EnumerateObject())
             {

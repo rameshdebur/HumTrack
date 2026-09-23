@@ -69,6 +69,11 @@ export function validatePackagePath(relativePath) {
 }
 
 export function validatePackageManifest(manifest) {
+  if (!["1.0.0", "1.1.0"].includes(manifest.schema_version)) reject("MANIFEST_VERSION_UNSUPPORTED", "Unsupported manifest version.");
+  const coverageProfile = (manifest.interface_profiles ?? []).includes("HC-IF-XFR-001@1.3.0");
+  if ((manifest.schema_version === "1.1.0") !== coverageProfile
+      || (manifest.interface_profiles ?? []).filter(p => p.startsWith("HC-IF-XFR-001@")).length > 1)
+    reject("COVERAGE_PROFILE_MISMATCH", "Manifest version and coverage profile disagree.");
   unique(manifest.artifacts.map((item) => item.artifact_id), "DUPLICATE_ARTIFACT_ID", "Artifact IDs");
   unique(manifest.artifacts.map((item) => item.relative_path.toLowerCase()), "DUPLICATE_ARTIFACT_PATH", "Windows-normalized artifact paths");
   if (manifest.artifact_count !== manifest.artifacts.length) reject("ARTIFACT_COUNT_MISMATCH", "Artifact count does not match inventory.");
@@ -80,12 +85,16 @@ export function validatePackageManifest(manifest) {
     total += length;
     if (total > UINT64_MAX) reject("PACKAGE_LENGTH_OVERFLOW", "Package byte length exceeds unsigned 64-bit range.");
     if (TIMED_ROLES.has(artifact.role) && !artifact.timing_coverage) reject("TIMING_COVERAGE_MISSING", `${artifact.role} requires timing coverage.`);
-    if (artifact.timing_coverage) {
+    if (artifact.timing_coverage && manifest.schema_version !== "1.1.0") {
       const first = u64(artifact.timing_coverage.first_ticks, "First ticks");
       const last = u64(artifact.timing_coverage.last_ticks, "Last ticks");
       u64(artifact.timing_coverage.record_count, "Record count");
       u64(artifact.timing_coverage.discontinuity_count, "Discontinuity count");
       if (last < first) reject("TIMING_COVERAGE_REVERSED", "Timing coverage cannot regress.");
+    }
+    if (artifact.timing_coverage && manifest.schema_version === "1.1.0") {
+      if (!TIMED_ROLES.has(artifact.role)) reject("COVERAGE_ROLE_UNSUPPORTED", "Coverage is not defined for this artifact role.");
+      validateCoverageSummary(artifact.timing_coverage);
     }
   }
   const requiredRoles = manifest.finalization_outcome === "FINALIZED_COMPLETE"
@@ -98,6 +107,26 @@ export function validatePackageManifest(manifest) {
   if (computeArtifactSetSha256(manifest.artifacts) !== manifest.artifact_set_sha256) reject("ARTIFACT_SET_HASH_MISMATCH", "Artifact-set hash does not match inventory.");
   if (computePackageContentSha256(manifest) !== manifest.package_content_sha256) reject("PACKAGE_CONTENT_HASH_MISMATCH", "Package content hash does not match canonical manifest content.");
   return true;
+}
+
+// Structural consistency only: production additionally reconstructs from leased samples.
+function validateCoverageSummary(coverage) {
+  let total = 0n, lane = -1, run = -1;
+  if (!Array.isArray(coverage.spans) || coverage.spans.length > 16384)
+    reject("COVERAGE_SPANS_MISSING", "Versioned coverage needs bounded spans.");
+  for (const span of coverage.spans) {
+    if (!Number.isInteger(span.lane_id) || span.lane_id < lane || span.lane_id < 0 || span.lane_id > 65535)
+      reject("COVERAGE_LANE_ORDER", "Coverage lanes must be ordered.");
+    if (span.lane_id !== lane) { lane = span.lane_id; run = -1; }
+    if (span.run_index !== ++run) reject("COVERAGE_RUN_ORDER", "Coverage runs must be contiguous within each lane.");
+    const count = u64(span.record_count, "Span record count"); total += count;
+    if (count === 0n || u64(span.first_ticks, "First ticks") > u64(span.last_ticks, "Last ticks")
+        || u64(span.first_sequence, "First sequence") > u64(span.last_sequence, "Last sequence")
+        || u64(span.sequence_gap_count, "Sequence gaps") >= count)
+      reject("COVERAGE_SPAN_INVALID", "Coverage span counts or endpoints disagree.");
+  }
+  if (total !== u64(coverage.record_count, "Coverage record count"))
+    reject("COVERAGE_COUNT_MISMATCH", "Coverage count differs from span sum.");
 }
 
 export function validateCollectionCheckpoint(manifest, checkpoint) {

@@ -19,7 +19,7 @@ internal static class ScientificEvidenceTests
     }
     private static byte[] Encode(JsonNode node)
     { using var document = JsonDocument.Parse(node.ToJsonString()); return CaptureCanonicalJson.Encode(document.RootElement); }
-    private static ProtocolEvidenceContext Bind(string root, JsonNode snapshot)
+    internal static ProtocolEvidenceContext Bind(string root, JsonNode snapshot)
     {
         snapshot.AsObject().Remove("snapshot_content_sha256");
         snapshot["snapshot_content_sha256"] = PackageInputManifest.Hash(Encode(snapshot));

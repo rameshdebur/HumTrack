@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <PackageReference Include="JsonSchema.Net" Version="9.4.0" />
+    <EmbeddedResource Include="../../../../docs/interfaces/schemas/transfer/v1.1/package-manifest.schema.json" LogicalName="HumCapture.Metadata.package-manifest-v1.1.schema.json" />
+    <EmbeddedResource Include="../../../../docs/interfaces/schemas/transfer/v1/package-verification-record.schema.json" LogicalName="HumCapture.Metadata.package-verification-record.schema.json" />
     <EmbeddedResource Include="../../../../docs/interfaces/schemas/control/v1/protocol-snapshot.schema.json" LogicalName="HumCapture.Metadata.protocol-snapshot.schema.json" />
     <EmbeddedResource Include="../../../../docs/interfaces/schemas/control/v1.1/protocol-snapshot.schema.json" LogicalName="HumCapture.Metadata.protocol-snapshot-v1.1.schema.json" />
     <EmbeddedResource Include="../../../../docs/interfaces/schemas/transfer/v1/package-manifest.schema.json" LogicalName="HumCapture.Metadata.package-manifest.schema.json" />
