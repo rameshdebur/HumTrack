@@ -1,7 +1,7 @@
 # HumCapture Software Requirements Baseline
 
 **Document ID:** HC-SRS-001  
-**Version:** 0.5  
+**Version:** 0.6  
 **Status:** Preliminary; control, source-wire, transfer/package, and pairing/transport-security requirements are baselined; remaining interfaces are open
 
 This document establishes requirement families and mandatory system constraints. Detailed atomic requirements and verification IDs are completed before each implementation phase.
@@ -344,6 +344,29 @@ This document establishes requirement families and mandatory system constraints.
 - **HC-REG-REQ-004:** Applicable risk controls SHALL link to implementation and verification evidence.
 
 ## Verification status
+
+C14X-Z refinement (2026-09-27), ADR-0038 / HC-IF-VWF-001:
+
+- **HC-COORD-REQ-017:** Bound verification SHALL compare package identity to
+  independently recorded, immutable coordinator subject/session/trial/slot/
+  source/role/attempt/boot/configuration and exact protocol intent. Snapshot
+  count and role policy SHALL be checked without a universal two-source rule.
+- **HC-DATA-REQ-040:** Verification attempts SHALL retain attributed, ordered,
+  immutable failure, cancellation, interruption and available verification
+  evidence with an actionable recovery disposition. A retry SHALL not replace
+  an earlier result. Unknown ledger versions and repository mismatch SHALL
+  refuse mutation; initialization SHALL be explicit.
+- **HC-DATA-REQ-041:** A retained verified result SHALL precede staged admission.
+  Restart recovery SHALL revalidate exact retained and staged evidence, replay
+  existing admission idempotently, and never infer success from STARTED alone.
+  These operations SHALL NOT imply source cleanup, take completion or quality
+  acceptance. Coordinated backup of the workflow and custody ledgers SHALL be
+  qualified before production activation.
+
+These are the internal verification slice of HC-COORD-REQ-003/005/007/012/013,
+not completion of the session lifecycle, editable planning or operator UI.
+Plan revision before acquisition (HC-COORD-REQ-006) remains a separate adapter:
+this internal ledger accepts already-fixed capture assignments only.
 
 HC-COORD-REQ-005–015, HC-DATA-REQ-006–008, HC-TIME-REQ-006/007, and
 HC-SEC-REQ-007–014 have

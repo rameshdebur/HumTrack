@@ -1,5 +1,12 @@
 # HumCapture SBOM Validation Report
 
+Historical C14A report: the results below apply to its dated/hash-bound artifact,
+not the current SBOM. Current C14Z inventory and project-check results are in
+I0_4B_C14XYZ_VERIFICATION_REPORT.md. Later decoder hashes are recorded in
+decoder-lock.json; production activation and redistribution remain unapproved.
+Do not read the historical no-download or vulnerability-query statements as
+current status. The current batch did not refresh legal/advisory conclusions.
+
 **Report ID:** HC-SBOM-VR-001  
 **Revision:** 1.15
 **Date:** 2026-09-15

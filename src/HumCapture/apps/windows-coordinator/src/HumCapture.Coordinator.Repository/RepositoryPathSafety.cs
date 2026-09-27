@@ -45,6 +45,11 @@ internal static class RepositoryPathSafety
         }
 
         using SafeFileHandle handle = File.OpenHandle(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+        RequireSingleLinkFile(handle, path);
+    }
+
+    internal static void RequireSingleLinkFile(SafeFileHandle handle, string path)
+    {
         if (!GetFileInformationByHandle(handle, out var information))
         {
             throw new RepositoryException(RepositoryErrorCode.UnsafePath, $"Could not inspect repository file links: {path}", new System.ComponentModel.Win32Exception());

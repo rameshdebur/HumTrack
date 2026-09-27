@@ -1,8 +1,8 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C14U-C14W | COVERAGE + VERIFICATION RECORDS | INTERNAL STAGED ADMISSION
-**Last meaningful update:** 2026-09-23
+**Tags:** C14X-C14Z | ASSIGNMENT + FAILURE HISTORY | INTERNAL RECOVERY
+**Last meaningful update:** 2026-09-27
 
 ## Objective
 
@@ -13,6 +13,22 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C14X-Z is user-approved on 2026-09-27. ADR-0038 and HC-IF-VWF-001 baseline
+  coordinator assignment binding, explicit versioned workflow-ledger
+  initialization, append-only failure evidence and collection/recovery tests.
+  Existing ARD/PRD/stories/SRS, roles, governance, preliminary India baseline,
+  risks and interfaces apply before implementation. No production activation
+  or automatic cleanup. Internal implementation complete: immutable assignments,
+  explicit version-1 SQLite workflow ledger, retained failure/verification
+  records and idempotent two-store recovery. Release build has zero warnings/
+  errors; 210 runtime, 115 contract and 13 SBOM/register tests pass locally.
+  Real pinned decoding passes one synthetic-media collection-to-admission case.
+  See HC-VR-I0-4B-C14XYZ-001 / HC-CHG-20260927-001. SBOM c14z adds no dependency.
+  Architecture review selected explicit opt-in persistence; coordinated backup/
+  restore qualification is a production activation gate. Full session planning,
+  UI/host activation, actual power-loss, HIL, field, independent human and
+  regulatory review remain open. Hosted checks bind separately to source SHA.
 
 - C14U-W verification-record/repository-admission batch is user-authorized.
   Preflight found timing coverage is structurally checked but not sample-bound;
@@ -29,8 +45,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   actual-decoder synthetic-media cases pass. See HC-VR-I0-4B-C14UVW-001 and
   HC-CHG-20260923-001. SBOM is c14w, no new dependency. Hosted checks remain
   separately source-SHA-bound in GitHub. No HIL/field/regulatory acceptance.
-  Controlled activation, full session/protocol admission, retained failed-record
-  workflow and legacy migration remain future gates.
+  C14X-Z now adds internal assignment binding and retained failed-record history;
+  controlled activation, full session lifecycle and legacy migration remain gates.
+  C14U-W source 2b53da1b2e16650be7ee1627736f1d7ce98b94d2 passed hosted push
+  35837020444 and PR 35837026260 (prior batch evidence).
   Prior C14S-T source b9f74ea9dc6bd3a82a65fa3540657d37a1484555 passed hosted
   push 35734879482 and PR 35734887143, rechecked 2026-09-23.
 

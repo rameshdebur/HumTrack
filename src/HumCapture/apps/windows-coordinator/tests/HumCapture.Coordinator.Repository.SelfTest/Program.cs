@@ -32,6 +32,11 @@ if (args.Length == 3 && args[0] == "--verification-real")
     return CoverageVerificationTests.Real(args[1], args[2]);
 }
 
+if (args.Length == 3 && args[0] == "--bound-verification-real")
+{
+    return BoundWorkflowTests.Real(args[1], args[2]);
+}
+
 var tests = new (string Name, Action Body)[]
 {
     ("HC-REP-RUNTIME-001 initialize creates exact repository surface", InitializeCreatesSurface),
@@ -234,14 +239,24 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-198 survivor admission retry and conflict", CoverageVerificationTests.SurvivorAdmission),
     ("HC-REP-RUNTIME-199 failed admission and cancellation", CoverageVerificationTests.FailedAdmissionAndCancellation),
     ("HC-REP-RUNTIME-200 coverage versions bounds and run order", CoverageVerificationTests.VersionAndBounds),
-    ("HC-REP-RUNTIME-201 master coverage uses accepted source frames only", CoverageVerificationTests.AcceptedMasterOnly)
+    ("HC-REP-RUNTIME-201 master coverage uses accepted source frames only", CoverageVerificationTests.AcceptedMasterOnly),
+    ("HC-REP-RUNTIME-202 immutable coordinator assignments", BoundWorkflowTests.ImmutableAssignments),
+    ("HC-REP-RUNTIME-203 assignment binding refusal matrix", BoundWorkflowTests.BindingRefusals),
+    ("HC-REP-RUNTIME-204 retained failures and immutable retries", BoundWorkflowTests.FailedHistory),
+    ("HC-REP-RUNTIME-205 interruption cancellation and new retry", BoundWorkflowTests.InterruptedAndCancelled),
+    ("HC-REP-RUNTIME-206 restart recovery at both admission boundaries", BoundWorkflowTests.RecoveryBoundaries),
+    ("HC-REP-RUNTIME-207 ledger version repository and hash refusal", BoundWorkflowTests.LedgerRefusals),
+    ("HC-REP-RUNTIME-208 busy workflow and explicit initialization", BoundWorkflowTests.BusyAndExplicitInit),
+    ("HC-REP-RUNTIME-209 protocol binding and single-source count policy", BoundWorkflowTests.ProtocolGuards),
+    ("HC-REP-RUNTIME-210 changed recovery and ready cancellation", BoundWorkflowTests.ChangedRecoveryAndReadyCancellation)
 };
 
 var selectedTests = args.SequenceEqual(["--package-input"])
     ? tests.Where(test => test.Body.Method.DeclaringType == typeof(PackageInputTests)
         || test.Body.Method.DeclaringType == typeof(PackageDecodeTests)
         || test.Body.Method.DeclaringType == typeof(ScientificEvidenceTests)
-        || test.Body.Method.DeclaringType == typeof(CoverageVerificationTests)).ToArray() : tests;
+        || test.Body.Method.DeclaringType == typeof(CoverageVerificationTests)
+        || test.Body.Method.DeclaringType == typeof(BoundWorkflowTests)).ToArray() : tests;
 var failures = 0;
 foreach (var (name, body) in selectedTests)
 {

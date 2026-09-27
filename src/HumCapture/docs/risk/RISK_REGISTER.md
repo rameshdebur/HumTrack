@@ -1,5 +1,19 @@
 # HumCapture Preliminary Risk Register
 
+C14X-Z (2026-09-27), HC-RISK-001/010/022/030/031: immutable coordinator
+assignment prevents trusting an internally consistent package for the wrong
+subject/session/trial/source/configuration. Append-only attempt events retain
+failure and NOT_ASSESSED evidence. READY precedes catalog admission; exact
+replay reconciles the two-store gap without a second admission or false
+completion. Changed staging is refused. Explicit version/repository checks and
+cooperative Windows exclusion prevent unsupported migration or overlapping
+workflow execution. Existing Windows account attribution is reused.
+ADR-0038 introduces a coordinated-backup dependency: both databases must be
+retained together; backup/restore qualification blocks production activation.
+Fault injection proves software recovery boundaries, not OS/power-loss durability.
+Legacy entry points are unchanged and do not acquire universal session binding.
+See HC-VR-I0-4B-C14XYZ-001; independent/regulatory/field review remains open.
+
 C14U-W (2026-09-23), HC-RISK-022/030/031: ADR-0037 closes the unchecked
 manifest-coverage promotion path using opt-in manifest 1.1 native lane/run
 reconstruction. Legacy timing remains NOT_ASSESSED. Real pinned decoding,

@@ -1,5 +1,17 @@
 # HumCapture Traceability Matrix
 
+C14X-Z: HC-COORD-REQ-017 / HC-DATA-REQ-040/041, existing
+HC-COORD-REQ-001/003/005/007/012/013 and HC-US-SES-001–009 /
+HC-US-XFR-001–014/021–034 map to HC-RISK-001/010/022/030/031 and
+HC-REP-RUNTIME-202–210 / HC-C14XYZ-REAL. Assignment conflict and identity
+matrix, fixed/flexible one-source protocols, retained failures, immutable
+retries, cancellation, two admission recovery boundaries, changed staging,
+explicit initialization, version/repository/hash refusal and busy exclusion
+are exercised. HC-VR-I0-4B-C14XYZ-001 retains results. Internal software
+integration only; planning revisions, host activation/UI, coordinated backup,
+actual process/power loss, HIL, field, independent and regulatory review remain
+open. Prior complete session-story claims are not inferred from this slice.
+
 C14U-W: HC-TIME-REQ-016 / HC-DATA-REQ-039, existing HC-DATA-REQ-001/002/009,
 ADR-0037 and HC-RISK-022/030/031 map to HC-REP-RUNTIME-194-201,
 HC-COV-001/002 and five HC-C14UVW-REAL cases. Coverage reconstruction is checked
