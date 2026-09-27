@@ -1,5 +1,16 @@
 # HumCapture Preliminary Risk Register
 
+C15A-C (2026-09-27), HC-RISK-001/007/010/022/030/031: engineering host opt-in
+does not activate production decoder distribution. Quiescent full-repository
+leases, inventory/hash validation, paired database identity/integrity checks,
+unique temporary destinations and non-overwriting publication control split
+backup, damaged restore and false completion. Interrupted copies are preserved
+as incomplete; no automatic deletion. Real child-process termination is tested;
+power-loss and active-capture backup are explicitly unsupported. Restored clones
+retain identity and must remain isolated. HC-AUD-C15-HIL-001 prevents virtual
+NDI discovery or diagnostic probe formats being presented as end-to-end camera
+acceptance. Independent/clinical/regulatory review remains open.
+
 C14X-Z (2026-09-27), HC-RISK-001/010/022/030/031: immutable coordinator
 assignment prevents trusting an internally consistent package for the wrong
 subject/session/trial/source/configuration. Append-only attempt events retain

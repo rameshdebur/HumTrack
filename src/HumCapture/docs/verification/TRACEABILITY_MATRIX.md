@@ -1,5 +1,14 @@
 # HumCapture Traceability Matrix
 
+C15A-C: HC-COORD-REQ-018 / HC-DATA-REQ-041/042 and existing
+HC-US-XFR-021–034 / HC-COORD-REQ-003 map to HC-RISK-001/007/010/022/030/031
+and HC-REP-RUNTIME-211–215 / HC-C15-REAL. Actual host workflow, paired-ledger
+backup/restore, existing-destination/overlap/writer/journal/damage refusal,
+actual killed-process recovery and malformed/cancelled input are exercised.
+HC-VR-I0-4B-C15ABC-001 retains results. HC-AUD-C15-HIL-001 separately records
+current physical/virtual enumeration and the missing UVC package/UI bridge;
+no synthetic test upgrades that status to physical/field/clinical acceptance.
+
 C14X-Z: HC-COORD-REQ-017 / HC-DATA-REQ-040/041, existing
 HC-COORD-REQ-001/003/005/007/012/013 and HC-US-SES-001–009 /
 HC-US-XFR-001–014/021–034 map to HC-RISK-001/010/022/030/031 and

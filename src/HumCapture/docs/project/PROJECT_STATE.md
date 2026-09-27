@@ -1,7 +1,7 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C14X-C14Z | ASSIGNMENT + FAILURE HISTORY | INTERNAL RECOVERY
+**Tags:** C15A-C15C | ENGINEERING HOST + OFFLINE BACKUP | HIL READINESS
 **Last meaningful update:** 2026-09-27
 
 ## Objective
@@ -13,6 +13,27 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C15A-C approved 2026-09-27, plus post-batch HIL/human-testing readiness audit.
+  ADR-0039 / HC-IF-EHB-001 baseline engineering host commands, quiescent paired-
+  ledger backup/restore and actual process-termination tests before code work.
+  Existing ARD/PRD/stories/SRS, roles, governance, preliminary India baseline,
+  risk/interface plans apply. HC-CHG-20260927-002 tracks implementation/evidence.
+  No production activation, clinical testing or automatic cleanup authorized.
+  Implemented engineering host workflow and full offline backup/isolated restore.
+  Actual killed-child-process tests cover STARTED/READY/post-admission and copy
+  boundaries. Clean Release build; 215 runtime, 115 contract, 13 SBOM/register
+  tests and real pinned synthetic-media host/commit/backup/restore pass locally.
+  See HC-VR-I0-4B-C15ABC-001; hosted checks are separately source-SHA-bound.
+  SBOM c15c adds no dependency. Offline engineering backup gate is exercised;
+  active-capture/large-scale/OS-power-loss and release qualification remain open.
+  HC-AUD-C15-HIL-001: one physical C920 plus built-in HP currently enumerated;
+  four virtual NDI endpoints are not camera-readiness evidence. Probe HIL is
+  conditional; full operator HIL awaits the UVC capture-to-package bridge and
+  detailed UI. No Android application tree exists. Next implementation should
+  prioritize a single-UVC vertical slice, not further generic repository work.
+  Prior C14X-Z source 9c346e7af249a5e62e78c9f3549e47a4660e7163 passed hosted
+  push 36319301815 and PR 36319303827.
 
 - C14X-Z is user-approved on 2026-09-27. ADR-0038 and HC-IF-VWF-001 baseline
   coordinator assignment binding, explicit versioned workflow-ledger

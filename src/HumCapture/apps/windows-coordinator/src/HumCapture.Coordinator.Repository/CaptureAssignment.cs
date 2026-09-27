@@ -8,14 +8,18 @@ internal sealed record CaptureAssignment(Guid AssignmentId, Guid SubjectId, Guid
     string SourceKind, Guid ConfigurationId, string ConfigurationSha256, byte[] ProtocolUtf8,
     string SchemaVersion = "1.0.0")
 {
-    internal CaptureAssignment Freeze() => this with { ProtocolUtf8 = ProtocolUtf8.ToArray() };
+    internal CaptureAssignment Freeze()
+    {
+        ArgumentNullException.ThrowIfNull(ProtocolUtf8);
+        return this with { ProtocolUtf8 = ProtocolUtf8.ToArray() };
+    }
     internal ProtocolEvidenceContext Context => new(ProtocolUtf8, SourceId, RoleId);
 
     internal void Validate()
     {
         Guid[] ids = [AssignmentId, SubjectId, SessionId, TrialId, SlotId, SourceId, RoleId, CaptureAttemptId, SourceBootId, ConfigurationId];
         PackageInputManifest.Need(SchemaVersion == "1.0.0" && Array.TrueForAll(ids, id => id != Guid.Empty)
-            && SourceKind is "UVC" or "ANDROID" && ConfigurationSha256.Length == 64
+            && SourceKind is "UVC" or "ANDROID" && ConfigurationSha256 is not null && ConfigurationSha256.Length == 64
             && ConfigurationSha256.All(c => c is >= '0' and <= '9' or >= 'a' and <= 'f'), "Invalid capture assignment.");
         PackageInputManifest.Need(ProtocolUtf8.Length is > 0 and <= 16777216, "Protocol snapshot exceeds envelope.");
         using var document = JsonDocument.Parse(ProtocolUtf8);
@@ -64,5 +68,15 @@ internal static class WorkflowJson
         var value = JsonSerializer.Deserialize<T>(bytes, Options) ?? throw new InvalidDataException("Missing workflow payload.");
         PackageInputManifest.Need(bytes.AsSpan().SequenceEqual(Encode(value)), "Workflow payload is not canonical.");
         return value;
+    }
+    internal static T ReadFile<T>(string path)
+    {
+        PackageInputManifest.Need(Path.IsPathFullyQualified(path), "Absolute request path required.");
+        RepositoryPathSafety.RejectReparsePointsInExistingPath(path);
+        using var handle = PackageInputLease.OpenHandle(path, 0x80000000, 1, 0x00200000);
+        PackageInputLease.CheckHandle(handle, false);
+        using var input = new FileStream(handle, FileAccess.Read);
+        PackageInputManifest.Need(input.Length is > 0 and <= MaximumBytes, "Request envelope exceeded.");
+        var bytes = new byte[(int)input.Length]; input.ReadExactly(bytes); return Read<T>(bytes);
     }
 }

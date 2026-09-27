@@ -156,7 +156,7 @@ internal sealed class PackageInputLease : IDisposable
         buffers.Clear();
     }
 
-    private static SafeFileHandle OpenHandle(string path, uint access, uint share, uint flags)
+    internal static SafeFileHandle OpenHandle(string path, uint access, uint share, uint flags)
     {
         // Inputs were normalized to ordinary local drive paths above. Native Win32
         // calls need extended-length syntax even when .NET file APIs already work.
@@ -165,7 +165,7 @@ internal sealed class PackageInputLease : IDisposable
         var error = Marshal.GetLastWin32Error(); handle.Dispose();
         throw new IOException("Cannot acquire read lease: " + path, new System.ComponentModel.Win32Exception(error));
     }
-    private static void CheckHandle(SafeFileHandle handle, bool directory)
+    internal static void CheckHandle(SafeFileHandle handle, bool directory)
     {
         if (!GetFileInformationByHandle(handle, out var info)) { throw new IOException("Cannot inspect leased file identity."); }
         PackageInputManifest.Need((info.Attributes & 0x400) == 0 && ((info.Attributes & 0x10) != 0) == directory

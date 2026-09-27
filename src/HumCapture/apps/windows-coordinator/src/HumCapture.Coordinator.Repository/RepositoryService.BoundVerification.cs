@@ -182,6 +182,7 @@ public sealed partial class RepositoryService
         $"coordinator-assignment:{assignment.AssignmentId:D}:sha256:{PackageInputManifest.Hash(WorkflowJson.Encode(assignment))}";
     private static void ValidateWorkflowRequest(BoundVerificationRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request.Admission);
         var a = request.Admission;
         Guid[] ids = [request.AssignmentId, a.CollectionAttemptId, a.PackageId, a.TransactionId, a.TransitionId, a.OperationId, a.RecordIndexEntryId, a.VerificationRecordId];
         PackageInputManifest.Need(request.SchemaVersion == "1.0.0" && Array.TrueForAll(ids, id => id != Guid.Empty)

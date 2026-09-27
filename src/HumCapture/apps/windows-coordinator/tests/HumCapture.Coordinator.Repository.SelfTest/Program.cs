@@ -37,6 +37,9 @@ if (args.Length == 3 && args[0] == "--bound-verification-real")
     return BoundWorkflowTests.Real(args[1], args[2]);
 }
 
+if (args.Length == 6 && args[0] == "--maintenance-child") { return MaintenanceTests.Child(args); }
+if (args.Length == 3 && args[0] == "--maintenance-real") { return MaintenanceTests.Real(args[1], args[2]); }
+
 var tests = new (string Name, Action Body)[]
 {
     ("HC-REP-RUNTIME-001 initialize creates exact repository surface", InitializeCreatesSurface),
@@ -248,7 +251,12 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-207 ledger version repository and hash refusal", BoundWorkflowTests.LedgerRefusals),
     ("HC-REP-RUNTIME-208 busy workflow and explicit initialization", BoundWorkflowTests.BusyAndExplicitInit),
     ("HC-REP-RUNTIME-209 protocol binding and single-source count policy", BoundWorkflowTests.ProtocolGuards),
-    ("HC-REP-RUNTIME-210 changed recovery and ready cancellation", BoundWorkflowTests.ChangedRecoveryAndReadyCancellation)
+    ("HC-REP-RUNTIME-210 changed recovery and ready cancellation", BoundWorkflowTests.ChangedRecoveryAndReadyCancellation),
+    ("HC-REP-RUNTIME-211 engineering host workflow backup restore", MaintenanceTests.HostRoundTrip),
+    ("HC-REP-RUNTIME-212 backup damage overlap writer and journal refusal", MaintenanceTests.BackupRefusals),
+    ("HC-REP-RUNTIME-213 actual killed-process workflow recovery", MaintenanceTests.KilledWorkflow),
+    ("HC-REP-RUNTIME-214 actual killed backup and restore recovery", MaintenanceTests.KilledBackupRestore),
+    ("HC-REP-RUNTIME-215 malformed host input and cancelled backup", MaintenanceTests.MalformedAndCancelled)
 };
 
 var selectedTests = args.SequenceEqual(["--package-input"])
@@ -256,7 +264,10 @@ var selectedTests = args.SequenceEqual(["--package-input"])
         || test.Body.Method.DeclaringType == typeof(PackageDecodeTests)
         || test.Body.Method.DeclaringType == typeof(ScientificEvidenceTests)
         || test.Body.Method.DeclaringType == typeof(CoverageVerificationTests)
-        || test.Body.Method.DeclaringType == typeof(BoundWorkflowTests)).ToArray() : tests;
+        || test.Body.Method.DeclaringType == typeof(BoundWorkflowTests)
+        || test.Body.Method.DeclaringType == typeof(MaintenanceTests)).ToArray() : tests;
+if (args.SequenceEqual(["--maintenance"]))
+{ selectedTests = tests.Where(test => test.Body.Method.DeclaringType == typeof(MaintenanceTests)).ToArray(); }
 var failures = 0;
 foreach (var (name, body) in selectedTests)
 {

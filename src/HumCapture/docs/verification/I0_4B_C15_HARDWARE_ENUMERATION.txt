@@ -1,0 +1,595 @@
+[
+  {
+    "name": "NDI Webcam Video 1",
+    "interface_id": "\\\\?\\root#media#0001#{e5323777-f976-4f5b-9b55-b94699c46e44}\\vidsource0",
+    "inspection_status": "ok",
+    "inspection_hresult": "0x00000000",
+    "native_type_count": 1,
+    "modes_720_1080": [
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 30000,
+        "fps_denominator": 1001,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      }
+    ]
+  },
+  {
+    "name": "NDI Webcam Video 2",
+    "interface_id": "\\\\?\\root#media#0001#{e5323777-f976-4f5b-9b55-b94699c46e44}\\vidsource1",
+    "inspection_status": "ok",
+    "inspection_hresult": "0x00000000",
+    "native_type_count": 1,
+    "modes_720_1080": [
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 30000,
+        "fps_denominator": 1001,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      }
+    ]
+  },
+  {
+    "name": "NDI Webcam Video 3",
+    "interface_id": "\\\\?\\root#media#0001#{e5323777-f976-4f5b-9b55-b94699c46e44}\\vidsource2",
+    "inspection_status": "ok",
+    "inspection_hresult": "0x00000000",
+    "native_type_count": 1,
+    "modes_720_1080": [
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 30000,
+        "fps_denominator": 1001,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      }
+    ]
+  },
+  {
+    "name": "NDI Webcam Video 4",
+    "interface_id": "\\\\?\\root#media#0001#{e5323777-f976-4f5b-9b55-b94699c46e44}\\vidsource3",
+    "inspection_status": "ok",
+    "inspection_hresult": "0x00000000",
+    "native_type_count": 1,
+    "modes_720_1080": [
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 30000,
+        "fps_denominator": 1001,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      }
+    ]
+  },
+  {
+    "name": "HD Pro Webcam C920",
+    "interface_id": "\\\\?\\usb#vid_046d&pid_082d&mi_00#6&dba5b52&2&0000#{e5323777-f976-4f5b-9b55-b94699c46e44}\\global",
+    "inspection_status": "ok",
+    "inspection_hresult": "0x00000000",
+    "native_type_count": 574,
+    "modes_720_1080": [
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{32595559-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 960,
+        "height_px": 720,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 24,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 20,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 15,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 10,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 10000000,
+        "fps_denominator": 1333333,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1920,
+        "height_px": 1080,
+        "fps_numerator": 5,
+        "fps_denominator": 1,
+        "subtype_guid": "{34363248-0000-0010-8000-00AA00389B71}"
+      }
+    ]
+  },
+  {
+    "name": "HP Wide Vision HD Camera",
+    "interface_id": "\\\\?\\usb#vid_30c9&pid_000e&mi_00#6&16b94eaf&0&0000#{e5323777-f976-4f5b-9b55-b94699c46e44}\\global",
+    "inspection_status": "ok",
+    "inspection_hresult": "0x00000000",
+    "native_type_count": 17,
+    "modes_720_1080": [
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{3231564E-0000-0010-8000-00AA00389B71}"
+      },
+      {
+        "width_px": 1280,
+        "height_px": 720,
+        "fps_numerator": 30,
+        "fps_denominator": 1,
+        "subtype_guid": "{47504A4D-0000-0010-8000-00AA00389B71}"
+      }
+    ]
+  }
+]

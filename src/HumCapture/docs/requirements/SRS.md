@@ -1,7 +1,7 @@
 # HumCapture Software Requirements Baseline
 
 **Document ID:** HC-SRS-001  
-**Version:** 0.6  
+**Version:** 0.7  
 **Status:** Preliminary; control, source-wire, transfer/package, and pairing/transport-security requirements are baselined; remaining interfaces are open
 
 This document establishes requirement families and mandatory system constraints. Detailed atomic requirements and verification IDs are completed before each implementation phase.
@@ -344,6 +344,22 @@ This document establishes requirement families and mandatory system constraints.
 - **HC-REG-REQ-004:** Applicable risk controls SHALL link to implementation and verification evidence.
 
 ## Verification status
+
+C15A-C refinement (2026-09-27), ADR-0039 / HC-IF-EHB-001:
+
+- **HC-COORD-REQ-018:** Engineering workflow commands SHALL explicitly opt in,
+  use bounded versioned requests and the existing host exclusion/account, and
+  report retained failures separately from staged admission and completion.
+- **HC-DATA-REQ-042:** Offline engineering backup SHALL preserve both ledgers,
+  referenced files and directory inventory together with exact hashes and actor
+  attribution; active writers/journals and unsafe/overlapping paths SHALL refuse.
+  Restore SHALL verify the copy into an absent isolated destination without
+  overwriting or deleting original capture data. Interrupted copies SHALL not
+  be published as completed backups/restores.
+
+Real process-termination testing is required for this slice; it does not replace
+OS/power-loss, hardware or field qualification. HIL readiness is recorded in
+HC-AUD-C15-HIL-001 and is not inferred from synthetic package verification.
 
 C14X-Z refinement (2026-09-27), ADR-0038 / HC-IF-VWF-001:
 

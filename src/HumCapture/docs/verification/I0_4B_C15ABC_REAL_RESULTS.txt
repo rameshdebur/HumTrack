@@ -1,0 +1,1 @@
+PASS HC-C15-REAL actual host: assignment, collection, pinned decoder, admission, existing commit, full backup, isolated restore and committed reconciliation

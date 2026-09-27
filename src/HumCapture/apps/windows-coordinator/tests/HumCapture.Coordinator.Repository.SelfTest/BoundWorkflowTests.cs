@@ -30,14 +30,15 @@ internal static class BoundWorkflowTests
             Id("source_boot_id"), m["source_kind"]!.GetValue<string>(), Id("configuration_id"),
             m["configuration_content_sha256"]!.GetValue<string>(), context.SnapshotBytes.ToArray());
     }
-    private static void With(string fixture, Action<string, string, RepositoryService, CaptureAssignment, BoundVerificationRequest> test)
+    internal static void With(string fixture, Action<string, string, RepositoryService, CaptureAssignment, BoundVerificationRequest> test)
     {
         PackageInputTests.WithFixture(source =>
         {
             var project = new DirectoryInfo(AppContext.BaseDirectory);
             while (project.Name != "HumCapture" || !File.Exists(Path.Combine(project.FullName, "AGENTS.md")))
             { project = project.Parent ?? throw new InvalidOperationException("Test scope absent."); }
-            var root = Path.Combine(project.FullName, "evidence-vault", "workflow-tests", Guid.NewGuid().ToString("N"));
+            var container = Path.Combine(project.FullName, "evidence-vault", "workflow-tests", Guid.NewGuid().ToString("N"));
+            var root = Path.Combine(container, "repository");
             Directory.CreateDirectory(root);
             try
             {
@@ -46,7 +47,7 @@ internal static class BoundWorkflowTests
                 var assignment = Assignment(source);
                 test(root, source, service, assignment, Request(assignment, Guid.Parse(PackageInputTests.Manifest(source)["package_id"]!.GetValue<string>())));
             }
-            finally { Directory.Delete(root, true); }
+            finally { Directory.Delete(container, true); }
         }, fixture);
     }
     private static VerificationWorkflowEvent Run(string root, string? source, RepositoryService service,

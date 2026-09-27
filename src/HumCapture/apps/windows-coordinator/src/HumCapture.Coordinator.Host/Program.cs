@@ -8,11 +8,12 @@ using Microsoft.Data.Sqlite;
 namespace HumCapture.Coordinator.Host;
 
 /// <summary>Bounded command-line Coordinator recovery and staged-processing host.</summary>
-public static class Program
+public static partial class Program
 {
     /// <summary>Runs a single explicitly requested repository pass.</summary>
     public static int Main(string[] args)
     {
+        if (IsEngineeringCommand(args.FirstOrDefault())) { return RunEngineering(args); }
         if (args.FirstOrDefault() == "collect-local") { return RunLocalCollection(args); }
         if (!TryParse(args, out var root, out var limit, out var after, out var requestPath))
         {
