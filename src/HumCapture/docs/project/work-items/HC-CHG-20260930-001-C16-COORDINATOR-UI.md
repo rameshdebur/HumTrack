@@ -1,5 +1,13 @@
 # C16A-C coordinator simulation workspace
 
+Hosted-check amendment (2026-09-30): cbdfabb push run36657167077 passed
+contracts/runtime and SBOM, then failed existing Node dependency audit on
+fast-uri3.1.6 (GHSA-qw65-cvwx-89v3 / GHSA-58mr-gqgx-xq4g). Pin the publisher's
+patched 3.1.7 line in both HumCapture Node tools, retain Ajv8.20.0, rerun both
+affected suites/audits and refresh SBOM/register. Narrow compatible dependency
+remediation, no audit suppression, parent edit, runtime UI change or new fee.
+Source: https://github.com/fastify/fast-uri/releases/tag/v3.1.7
+
 User approved scope, guided workspace, each screen and shared acceptance gates,
 then authorized baselining and implementation without more screen approvals.
 HIL explicitly deferred. No physical camera activation or real subject data.

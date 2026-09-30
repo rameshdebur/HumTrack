@@ -37,7 +37,7 @@ evidence-vault/c16-ci-ca3686db4b0f43a9a28979bc4a6b7197; paths and SHA-256 hashes
 are retained in C16_APPHOST_AND_RENDER_RESULTS.txt. No WORM/backup/certification
 claim. The service test creates synthetic repositories only. No decoder needed.
 
-SBOM 0.1.0-i0.4b-c16c contains 56 components plus product, 57 dependency nodes:
+Initial SBOM 0.1.0-i0.4b-c16c contains 56 components plus product, 57 dependency nodes:
 SHA-256 9df89789cc12faee95a1808c89befe4e62fa5ba8c44f1f17e12d17f5ad60ded3.
 Eighteen new NuGet identities and the first-party desktop are inventoried.
 Per-package C16 review dates are recorded; older register profiles were not
@@ -71,3 +71,7 @@ older rows are retained. HIL remains explicitly deferred by the user.
 All edits remain under src/HumCapture. Desktop build/tests enter the existing
 self-test graph; no parent CI file or HumTrack implementation was modified.
 Hosted checks must be evaluated separately against the pushed source SHA.
+
+Hosted cbdfabb run36657167077 passed contract/runtime and SBOM checks but failed
+the existing Node dependency audit on fast-uri3.1.6. C16_DEPENDENCY_PATCH_REPORT.md
+records the narrow 3.1.7 remediation, rerun evidence and superseding SBOM c16c.1.

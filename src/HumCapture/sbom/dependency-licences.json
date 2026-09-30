@@ -144,7 +144,7 @@
   },
   "entries": [
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c.1",
       "profile": "First-party",
       "use": "First-party acquisition subsystem",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
@@ -176,7 +176,7 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c.1",
       "profile": "First-party",
       "use": "Development/test/CI",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
@@ -387,7 +387,7 @@
       ]
     },
     {
-      "ref": "pkg:npm/fast-uri@3.1.6",
+      "ref": "pkg:npm/fast-uri@3.1.7",
       "profile": "BSD-3-Clause",
       "use": "Node development/contract-test dependency (not Coordinator runtime)",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",

@@ -29,7 +29,10 @@ HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions b
   Runtime216 includes 21 assertions; runtime217 drives actual headless controls,
   keyboard/form/close/navigation checks and two-size renders. Windows apphost
   service tests also pass. HC-VR-C16-001 retains evidence and limitations.
-  SBOM c16c: 56 components plus product; new licence/cost entries maintained.
+  SBOM c16c.1: 56 components plus product; new licence/cost entries maintained.
+  Initial cbdfabb hosted audit found existing fast-uri3.1.6 advisories; both
+  scoped Node tools pin patched3.1.7, with affected tests/audits rerun and evidence
+  in C16_DEPENDENCY_PATCH_REPORT.md. No audit suppression or UI/runtime change.
   Native human UI/accessibility, production capture integration and HIL remain
   open. See apps/windows-coordinator/DESKTOP_SIMULATION.md to open the UI.
   Hosted checks remain a separate source-SHA-bound gate.

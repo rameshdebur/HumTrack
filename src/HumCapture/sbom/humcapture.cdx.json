@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:cbcee012-6f28-5247-bf5d-38876727fc47",
+  "serialNumber": "urn:uuid:ef0bc92a-e503-5fb7-8fab-80f9e12a13cb",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-30T01:49:38.000Z",
+    "timestamp": "2026-09-30T02:00:20.000Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-i0.4b-c16c",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c",
+      "version": "0.1.0-i0.4b-c16c.1",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c.1",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c.1",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -162,9 +162,9 @@
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-i0.4b-c16c",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
+      "version": "0.1.0-i0.4b-c16c.1",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c.1",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c.1",
       "scope": "excluded",
       "hashes": [
         {
@@ -702,7 +702,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "4e04ac40ccfd50fe513b93bc157b57d6b67cad221abeefc966d47a8b8c54af46"
+          "content": "e35cfdad049e2b823e1079f8ab8893da787be930cdadfaa61d42438912e5024a"
         }
       ],
       "properties": [
@@ -734,7 +734,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "2ec8f98b938e2cc878bb0f522b3d3eea16b97c36c3d9f190efbaefcacfc76ae2"
+          "content": "07271f47c2bc15fc8976921ad50c4d44f9bb0e686528b82173b1ae7704cf11ce"
         }
       ],
       "properties": [
@@ -852,14 +852,14 @@
     {
       "type": "library",
       "name": "fast-uri",
-      "version": "3.1.6",
-      "bom-ref": "pkg:npm/fast-uri@3.1.6",
-      "purl": "pkg:npm/fast-uri@3.1.6",
+      "version": "3.1.7",
+      "bom-ref": "pkg:npm/fast-uri@3.1.7",
+      "purl": "pkg:npm/fast-uri@3.1.7",
       "scope": "required",
       "hashes": [
         {
           "alg": "SHA-512",
-          "content": "ec871a975bc510caf4a276d5cc40c8ade336d88e24856f9fcf240fc2f005581a758b076c852651b0be238d1bcf1bd24fd6e8aa30746da3e614e91dbf0b30f3e5"
+          "content": "74ebd95738dd65dcfba6177dbfa8c26f0c6b056ddf2ba9fc45cd02b5d98ce1bba6ccc9f1cb005886ea61e89f35f51470fe4bbeacb6de9707ccba792dbb35551e"
         }
       ],
       "licenses": [
@@ -1913,7 +1913,7 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c.1",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
@@ -1986,11 +1986,11 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c.1",
       "dependsOn": [
         "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c.1",
         "pkg:generic/humcapture/HumCapture.Coordinator.Desktop@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
@@ -2058,7 +2058,7 @@
       "ref": "pkg:npm/ajv@8.20.0",
       "dependsOn": [
         "pkg:npm/fast-deep-equal@3.1.3",
-        "pkg:npm/fast-uri@3.1.6",
+        "pkg:npm/fast-uri@3.1.7",
         "pkg:npm/json-schema-traverse@1.0.0",
         "pkg:npm/require-from-string@2.0.2"
       ]
@@ -2068,7 +2068,7 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:npm/fast-uri@3.1.6",
+      "ref": "pkg:npm/fast-uri@3.1.7",
       "dependsOn": []
     },
     {
