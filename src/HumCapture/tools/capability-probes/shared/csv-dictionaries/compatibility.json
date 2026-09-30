@@ -1,0 +1,16 @@
+{
+  "dictionary_name": "compatibility",
+  "evidence_format_version": "1.0.0",
+  "columns": [
+    { "name": "run_id", "type": "uuid", "required": true, "unit": null, "description": "Owning probe run." },
+    { "name": "host_id", "type": "string", "required": true, "unit": null, "description": "Stable host identifier within the campaign." },
+    { "name": "os_name", "type": "string", "required": true, "unit": null, "description": "Operating-system product name." },
+    { "name": "os_build", "type": "string", "required": true, "unit": null, "description": "Exact operating-system build." },
+    { "name": "architecture", "type": "enum:x64|arm64|x86|other", "required": true, "unit": null, "description": "Host process architecture." },
+    { "name": "probe_family", "type": "enum:uvc|network", "required": true, "unit": null, "description": "Required compatibility probe family." },
+    { "name": "probe_name", "type": "string", "required": true, "unit": null, "description": "Probe executable or component checked." },
+    { "name": "probe_version", "type": "string", "required": true, "unit": null, "description": "Probe version checked." },
+    { "name": "status", "type": "enum:ok|conditional|failed|unknown", "required": true, "unit": null, "description": "Observed compatibility result." },
+    { "name": "notes", "type": "string", "required": false, "unit": null, "description": "Synthetic-test annotation or limitation." }
+  ]
+}

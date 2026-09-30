@@ -1,0 +1,6 @@
+{
+  "fixture_kind": "repository-reconciliation",
+  "mutation": "automatic-dual-path",
+  "staging_disposition": "MATCH",
+  "destination_disposition": "MATCH"
+}

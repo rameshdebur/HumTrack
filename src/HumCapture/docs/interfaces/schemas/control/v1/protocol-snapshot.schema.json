@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/protocol-snapshot.schema.json",
+  "title": "HumCapture session protocol snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "protocol_id",
+    "protocol_version",
+    "protocol_content_sha256",
+    "protocol_snapshot_id",
+    "snapshot_revision",
+    "snapshot_content_sha256",
+    "approved_utc",
+    "approved_by_windows_account",
+    "source_count_policy",
+    "selected_source_count",
+    "source_roles",
+    "trial_slots",
+    "allow_additional_trials",
+    "allow_retakes",
+    "maximum_session_duration_seconds",
+    "completion_policy"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "protocol_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "protocol_version": { "type": "string", "pattern": "^[1-9][0-9]*\\.[0-9]+\\.[0-9]+$" },
+    "protocol_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "protocol_snapshot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "snapshot_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "supersedes_protocol_snapshot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "snapshot_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "approved_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" },
+    "approved_by_windows_account": { "$ref": "common.schema.json#/$defs/windowsAccount" },
+    "source_count_policy": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "count"],
+          "properties": {
+            "mode": { "const": "FIXED" },
+            "count": { "type": "integer", "minimum": 1, "maximum": 16 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "minimum", "maximum"],
+          "properties": {
+            "mode": { "const": "FLEXIBLE" },
+            "minimum": { "type": "integer", "minimum": 1, "maximum": 16 },
+            "maximum": { "type": "integer", "minimum": 1, "maximum": 16 }
+          }
+        }
+      ]
+    },
+    "selected_source_count": { "type": "integer", "minimum": 1, "maximum": 16 },
+    "source_roles": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role_id", "name", "completion_role", "allowed_source_kinds"],
+        "properties": {
+          "role_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "completion_role": { "enum": ["REQUIRED", "SUPPLEMENTARY"] },
+          "allowed_source_kinds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "enum": ["ANDROID_CAMERA2", "WINDOWS_UVC"] }
+          }
+        }
+      }
+    },
+    "trial_slots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot_id", "trial_type", "required"],
+        "properties": {
+          "slot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "trial_type": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "required": { "type": "boolean" },
+          "sequence": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "allow_additional_trials": { "type": "boolean" },
+    "allow_retakes": { "type": "boolean" },
+    "maximum_session_duration_seconds": { "type": "integer", "minimum": 1, "maximum": 86400 },
+    "completion_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["require_committed_packages", "require_quality_review", "require_operator_finalization"],
+      "properties": {
+        "require_committed_packages": { "const": true },
+        "require_quality_review": { "const": true },
+        "require_operator_finalization": { "const": true }
+      }
+    }
+  }
+}

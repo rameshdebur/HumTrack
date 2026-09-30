@@ -1,0 +1,13 @@
+{
+  "format_name": "humcapture-phase0-run-manifest",
+  "evidence_format_version": "1.0.0",
+  "artifacts": [
+    {
+      "relative_path": "../outside.txt",
+      "media_type": "text/plain",
+      "role": "other",
+      "byte_length": 1,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/timing/v1/camera-metadata.schema.json",
+  "title": "HumCapture camera metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "capture_attempt_id", "camera_stream_id", "camera_type", "identity", "selected_mode", "negotiated_mode", "observed_timing", "orientation", "timestamp_provenance", "timestamp_source_detail", "unavailable_fields"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "capture_attempt_id": { "type": "string", "format": "uuid" },
+    "camera_stream_id": { "type": "string", "format": "uuid" },
+    "camera_type": { "enum": ["ANDROID_CAMERA2", "WINDOWS_UVC", "ADAPTER"] },
+    "identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["manufacturer", "model", "humcapture_device_id", "humcapture_camera_id"],
+      "properties": {
+        "manufacturer": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "humcapture_device_id": { "type": "string", "format": "uuid" },
+        "humcapture_camera_id": { "type": "string", "format": "uuid" },
+        "platform_camera_id": { "type": "string" },
+        "usb_vendor_id": { "type": "string", "pattern": "^[0-9A-Fa-f]{4}$" },
+        "usb_product_id": { "type": "string", "pattern": "^[0-9A-Fa-f]{4}$" },
+        "serial_number": { "type": "string" },
+        "driver_name": { "type": "string" },
+        "driver_version": { "type": "string" }
+      }
+    },
+    "selected_mode": { "$ref": "#/$defs/mode" },
+    "negotiated_mode": { "$ref": "#/$defs/mode" },
+    "observed_timing": {
+      "type": "object", "additionalProperties": false,
+      "required": ["record_count", "accepted_frame_count", "observed_hz", "timestamp_regressions", "sequence_gaps", "duplicates"],
+      "properties": {
+        "record_count": { "type": "integer", "minimum": 0 }, "accepted_frame_count": { "type": "integer", "minimum": 0 },
+        "observed_hz": { "type": "number", "minimum": 0 }, "timestamp_regressions": { "type": "integer", "minimum": 0 },
+        "sequence_gaps": { "type": "integer", "minimum": 0 }, "duplicates": { "type": "integer", "minimum": 0 },
+        "p95_interval_ms": { "type": "number", "minimum": 0 }, "max_interval_ms": { "type": "number", "minimum": 0 }
+      }
+    },
+    "timestamp_provenance": { "enum": ["ANDROID_SENSOR_TIMESTAMP", "MF_DEVICE_TIMESTAMP", "MF_SAMPLE_TIME", "HOST_SAMPLE", "HOST_ARRIVAL"] },
+    "timestamp_source_detail": { "enum": ["ANDROID_REALTIME", "ANDROID_UNKNOWN", "UVC_DEVICE", "MF_SAMPLE", "HOST_ONLY"] },
+    "orientation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sensor_orientation_degrees", "display_rotation_degrees", "lens_facing", "preview_mirrored", "recorded_video_rotation_degrees"],
+      "properties": {
+        "sensor_orientation_degrees": { "enum": [0, 90, 180, 270] }, "display_rotation_degrees": { "enum": [0, 90, 180, 270] },
+        "lens_facing": { "enum": ["FRONT", "BACK", "EXTERNAL", "UNKNOWN"] }, "preview_mirrored": { "type": "boolean" },
+        "recorded_video_rotation_degrees": { "enum": [0, 90, 180, 270] },
+        "device_to_camera_rotation_row_major": { "$ref": "#/$defs/rotation" },
+        "recorded_video_transform_row_major": { "$ref": "#/$defs/rotation" }
+      }
+    },
+    "lens": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "focal_length_mm": { "type": "number", "exclusiveMinimum": 0 },
+        "physical_sensor_width_mm": { "type": "number", "exclusiveMinimum": 0 }, "physical_sensor_height_mm": { "type": "number", "exclusiveMinimum": 0 },
+        "focus_distance_diopters": { "type": "number", "minimum": 0 }, "zoom_ratio": { "type": "number", "minimum": 1 },
+        "intrinsic_matrix_row_major": { "type": "array", "minItems": 9, "maxItems": 9, "items": { "type": "number" } },
+        "distortion_coefficients": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "type": "number" } },
+        "calibration_provenance": { "enum": ["PLATFORM_FACTORY", "OPERATOR_CALIBRATION", "REPORTED", "UNAVAILABLE"] }
+      }
+    },
+    "geometry_change_events": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["first_affected_frame_sequence", "field", "provenance"],
+        "properties": {
+          "first_affected_frame_sequence": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+          "field": { "enum": ["FOCAL_LENGTH", "ZOOM_CROP", "STABILIZATION", "ORIENTATION", "FOCUS_DISTANCE"] },
+          "value": {}, "provenance": { "enum": ["REPORTED", "CONFIGURED", "OBSERVED", "CALIBRATED", "INFERRED"] }
+        }
+      }
+    },
+    "video_transform_events": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["video_frame_index", "kind", "source_frame_sequence", "reason"],
+        "properties": {
+          "video_frame_index": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+          "kind": { "enum": ["GENERATED_DUPLICATE"] },
+          "source_frame_sequence": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+          "reason": { "type": "string", "minLength": 1, "maxLength": 500 }
+        }
+      }
+    },
+    "unavailable_fields": {
+      "type": "array", "uniqueItems": true,
+      "items": { "type": "object", "additionalProperties": false, "required": ["field", "reason"], "properties": { "field": { "type": "string", "minLength": 1 }, "reason": { "enum": ["NOT_SUPPORTED", "NOT_EXPOSED", "PERMISSION_DENIED", "NOT_MEASURED", "NOT_APPLICABLE"] } } }
+    }
+  },
+  "$defs": {
+    "mode": {
+      "type": "object", "additionalProperties": false,
+      "required": ["width", "height", "pixel_format", "codec", "advertised_fps_numerator", "advertised_fps_denominator", "rate_control_class"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 }, "height": { "type": "integer", "minimum": 1 },
+        "pixel_format": { "type": "string", "minLength": 1 }, "codec": { "type": "string", "minLength": 1 },
+        "advertised_fps_numerator": { "type": "integer", "minimum": 1 }, "advertised_fps_denominator": { "type": "integer", "minimum": 1 },
+        "rate_control_class": { "enum": ["FIXED", "VARIABLE", "ADAPTIVE", "UNKNOWN"] }
+      }
+    },
+    "rotation": { "type": "array", "minItems": 9, "maxItems": 9, "items": { "type": "number", "minimum": -1.000001, "maximum": 1.000001 } }
+  }
+}

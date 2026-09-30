@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/session-state-event.schema.json",
+  "title": "HumCapture session state event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "message_id",
+    "event_id",
+    "event_sequence",
+    "session_id",
+    "prior_state",
+    "resulting_state",
+    "resulting_session_revision",
+    "related_command_id",
+    "recorded_utc",
+    "authoritative_state"
+  ],
+  "properties": {
+    "contract_version": { "$ref": "common.schema.json#/$defs/contractVersion" },
+    "message_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "event_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "event_sequence": { "type": "integer", "minimum": 1 },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "prior_state": { "$ref": "common.schema.json#/$defs/sessionState" },
+    "resulting_state": { "$ref": "common.schema.json#/$defs/sessionState" },
+    "resulting_session_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "related_command_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "recorded_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" },
+    "reason": { "$ref": "common.schema.json#/$defs/reason" },
+    "authoritative_state": { "$ref": "session-state.schema.json" }
+  }
+}

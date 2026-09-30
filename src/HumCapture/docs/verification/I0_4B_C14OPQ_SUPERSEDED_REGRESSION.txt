@@ -1,0 +1,75 @@
+PASS HC-REP-RUNTIME-001 initialize creates exact repository surface
+PASS HC-REP-RUNTIME-002 supported repository reopens for mutation
+PASS HC-REP-RUNTIME-003 descriptor and catalog metadata agree
+PASS HC-REP-RUNTIME-004 initialization never overwrites
+PASS HC-REP-RUNTIME-005 nonempty root is refused
+PASS HC-REP-RUNTIME-006 relative root is refused
+PASS HC-REP-RUNTIME-007 unsupported major is read-only without writes
+PASS HC-REP-RUNTIME-008 older version requires explicit migration
+PASS HC-REP-RUNTIME-009 unknown required feature is read-only
+PASS HC-REP-RUNTIME-010 unknown field on supported descriptor is invalid
+PASS HC-REP-RUNTIME-011 missing catalog is refused
+PASS HC-REP-RUNTIME-012 corrupt catalog is refused
+PASS HC-REP-RUNTIME-013 metadata mismatch is refused
+PASS HC-REP-RUNTIME-014 descriptor publication leaves no temporary file
+PASS HC-REP-RUNTIME-015 empty repository UUID is refused
+PASS HC-REP-RUNTIME-016 hard-linked catalog is refused
+PASS HC-REP-RUNTIME-017 retained initialization lock is not removed
+PASS HC-REP-RUNTIME-018 verified stage creates atomic journal and index
+PASS HC-REP-RUNTIME-019 exact stage admission replay is idempotent
+PASS HC-REP-RUNTIME-020 missing staged package is refused
+PASS HC-REP-RUNTIME-021 existing final destination is refused
+PASS HC-REP-RUNTIME-022 changed staged bytes are refused
+PASS HC-REP-RUNTIME-023 false verified aggregate is refused
+PASS HC-REP-RUNTIME-024 artifact verification mismatch is refused
+PASS HC-REP-RUNTIME-025 verification record hash mismatch is refused
+PASS HC-REP-RUNTIME-026 unknown verification field is refused
+PASS HC-REP-RUNTIME-027 journal identity conflict is refused
+PASS HC-REP-RUNTIME-028 immutable verification collision is refused
+PASS HC-REP-RUNTIME-029 read-only repository refuses journal mutation
+PASS HC-REP-RUNTIME-030 hard-linked staged artifact is refused
+PASS HC-REP-RUNTIME-031 failed index insert rolls back journal rows
+PASS HC-REP-RUNTIME-032 durable intent precedes exact atomic package move
+PASS HC-REP-RUNTIME-033 C3 transitions are contiguous and content-bound
+PASS HC-REP-RUNTIME-034 exact completed move replay is idempotent
+PASS HC-REP-RUNTIME-035 changed staged bytes block intent
+PASS HC-REP-RUNTIME-036 destination material blocks intent without overwrite
+PASS HC-REP-RUNTIME-037 failed COMMITTING insert rolls back current state
+PASS HC-REP-RUNTIME-038 failed MOVED insert retains moved package and durable intent
+PASS HC-REP-RUNTIME-039 interrupted pre-move intent requires reconciliation
+PASS HC-REP-RUNTIME-040 moved location with COMMITTING state requires reconciliation
+PASS HC-REP-RUNTIME-041 moved package tampering blocks idempotent replay
+PASS HC-REP-RUNTIME-042 conflicting move operation replay is refused
+PASS HC-REP-RUNTIME-043 absent transaction cannot begin commit
+PASS HC-REP-RUNTIME-044 read-only repository refuses package movement
+PASS HC-REP-RUNTIME-045 current state must agree with contiguous history
+PASS HC-REP-RUNTIME-046 startup records six-authority staged no-action
+PASS HC-REP-RUNTIME-047 startup returns interrupted pre-move intent to staged
+PASS HC-REP-RUNTIME-048 startup proves interrupted post-move intent as moved
+PASS HC-REP-RUNTIME-049 startup records six-authority moved no-action
+PASS HC-REP-RUNTIME-050 exact startup reconciliation replay is idempotent
+PASS HC-REP-RUNTIME-051 conflicting reconciliation identity is refused
+PASS HC-REP-RUNTIME-052 dual-path material requires operator handling
+PASS HC-REP-RUNTIME-053 changed package requires operator handling
+PASS HC-REP-RUNTIME-054 unexpected catalog linkage blocks automatic action
+PASS HC-REP-RUNTIME-055 reconciliation rollback is atomic
+PASS HC-REP-RUNTIME-056 reconciled staged package can retry the C3 move
+PASS HC-REP-RUNTIME-057 catalog publication retains exact linkage and replays
+PASS HC-REP-RUNTIME-058 catalog transition failure rolls back all publication
+PASS HC-REP-RUNTIME-059 catalog publication rejects staged packages
+PASS HC-REP-RUNTIME-060 catalog publication rejects destination tampering
+PASS HC-REP-RUNTIME-061 catalog publication refuses existing catalog conflict
+PASS HC-REP-RUNTIME-062 catalog publication rejects changed replay identity
+PASS HC-REP-RUNTIME-063 catalog publication respects read-only compatibility
+PASS HC-REP-RUNTIME-064 final commit binds record index and six observations
+PASS HC-REP-RUNTIME-065 final commit replay revalidates without mutation
+PASS HC-REP-RUNTIME-066 final transaction rollback retains record for retry
+PASS HC-REP-RUNTIME-067 missing committed record is never recreated
+PASS HC-REP-RUNTIME-068 changed committed record is rejected
+PASS HC-REP-RUNTIME-069 changed package blocks final commit
+PASS HC-REP-RUNTIME-070 final commit cannot skip catalog boundary
+PASS HC-REP-RUNTIME-071 conflicting final identities are rejected
+PASS HC-REP-RUNTIME-072 read-only repository blocks final commit
+PASS HC-REP-RUNTIME-073 changed verification blocks final commit
+PASS HC-REP-RUNTIME-074 conflicting existing record is preserved
+PASS HC-REP-RUNTIME-075 damaged commit index blocks replay

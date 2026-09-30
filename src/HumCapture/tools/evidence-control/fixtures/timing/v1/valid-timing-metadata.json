@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "capture_attempt_id": "10000000-0000-4000-8000-000000000001",
+  "session_clock_id": "20000000-0000-4000-8000-000000000001",
+  "clocks": [
+    {
+      "clock_id": "20000000-0000-4000-8000-000000000001",
+      "epoch_id": "30000000-0000-4000-8000-000000000001",
+      "ticks_per_second": 1000000000,
+      "provenance": "SESSION_MONOTONIC",
+      "authority": "HOST_SAMPLE"
+    },
+    {
+      "clock_id": "20000000-0000-4000-8000-000000000002",
+      "epoch_id": "30000000-0000-4000-8000-000000000002",
+      "ticks_per_second": 1000000000,
+      "provenance": "ANDROID_SENSOR_TIMESTAMP",
+      "authority": "SENSOR"
+    },
+    {
+      "clock_id": "20000000-0000-4000-8000-000000000003",
+      "epoch_id": "30000000-0000-4000-8000-000000000002",
+      "ticks_per_second": 1000000000,
+      "provenance": "ANDROID_SENSOR_EVENT",
+      "authority": "SENSOR"
+    }
+  ],
+  "clock_models": [
+    {
+      "model_id": 1,
+      "source_clock_id": "20000000-0000-4000-8000-000000000002",
+      "target_clock_id": "20000000-0000-4000-8000-000000000001",
+      "kind": "AFFINE",
+      "quality": "VALID",
+      "valid_from_ticks": "1000000000",
+      "valid_through_ticks": "2000000000",
+      "scale": 1.000000002,
+      "offset_ticks": "4000000000",
+      "uncertainty_ns": 250000,
+      "method": "TWO_WAY_MONOTONIC_FIT",
+      "anchor_count": 20,
+      "residual_rms_ns": 80000
+    }
+  ],
+  "streams": [
+    {
+      "stream_id": "10000000-0000-4000-8000-000000000002",
+      "kind": "FRAME_TIMESTAMPS",
+      "native_clock_id": "20000000-0000-4000-8000-000000000002",
+      "host_arrival_clock_id": "20000000-0000-4000-8000-000000000001",
+      "presentation_clock_id": "20000000-0000-4000-8000-000000000001",
+      "relative_path": "timing/frame-timestamps.bin",
+      "binary_format_version": "1.0"
+    },
+    {
+      "stream_id": "10000000-0000-4000-8000-000000000003",
+      "kind": "IMU_SAMPLES",
+      "native_clock_id": "20000000-0000-4000-8000-000000000003",
+      "host_arrival_clock_id": "20000000-0000-4000-8000-000000000001",
+      "relative_path": "imu/imu-samples.bin",
+      "binary_format_version": "1.0"
+    }
+  ]
+}

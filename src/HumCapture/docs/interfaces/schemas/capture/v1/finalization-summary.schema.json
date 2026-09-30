@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/capture/v1/finalization-summary.schema.json",
+  "title": "HumCapture finalization summary before manifest publication",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "package_id", "session_id", "trial_id", "source_id", "source_boot_id", "capture_attempt_id", "source_kind", "outcome", "reason", "terminal_event_id", "event_archive_artifact_id", "event_archive_sha256", "finalized_utc"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "trial_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "source_boot_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "capture_attempt_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "source_kind": { "$ref": "../../control/v1/common.schema.json#/$defs/sourceKind" },
+    "outcome": { "enum": ["FINALIZED_COMPLETE", "FINALIZED_INCOMPLETE"] },
+    "reason": { "$ref": "../../control/v1/common.schema.json#/$defs/reason" },
+    "terminal_event_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "event_archive_artifact_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "event_archive_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "finalized_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" }
+  }
+}

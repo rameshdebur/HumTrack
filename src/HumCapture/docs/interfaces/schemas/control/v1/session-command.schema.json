@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/session-command.schema.json",
+  "title": "HumCapture session command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "message_id",
+    "command_id",
+    "session_id",
+    "expected_session_revision",
+    "command_type",
+    "issued_utc",
+    "operator_windows_account",
+    "payload"
+  ],
+  "properties": {
+    "contract_version": { "$ref": "common.schema.json#/$defs/contractVersion" },
+    "message_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "command_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "expected_session_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "command_type": { "$ref": "common.schema.json#/$defs/sessionCommandType" },
+    "issued_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" },
+    "operator_windows_account": { "$ref": "common.schema.json#/$defs/windowsAccount" },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_snapshot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "protocol_snapshot_revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+        "protocol_snapshot_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+        "reason": { "$ref": "common.schema.json#/$defs/reason" },
+        "prior_completion_record_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "prior_handoff_manifest_id": { "$ref": "common.schema.json#/$defs/uuid" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "command_type": { "enum": ["PLAN_SESSION", "REVISE_SESSION_PLAN"] } } },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "protocol_snapshot_id": {},
+              "protocol_snapshot_revision": {},
+              "protocol_snapshot_content_sha256": {}
+            },
+            "required": ["protocol_snapshot_id", "protocol_snapshot_revision", "protocol_snapshot_content_sha256"]
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "command_type": { "enum": ["CLOSE_SESSION_INCOMPLETE", "CANCEL_SESSION"] } } },
+      "then": { "properties": { "payload": { "type": "object", "properties": { "reason": {} }, "required": ["reason"] } } }
+    },
+    {
+      "if": { "properties": { "command_type": { "const": "REOPEN_SESSION_FOR_REVIEW" } } },
+      "then": {
+        "properties": {
+          "payload": {
+            "type": "object",
+            "properties": {
+              "reason": {},
+              "prior_completion_record_id": {},
+              "prior_handoff_manifest_id": {}
+            },
+            "required": ["reason", "prior_completion_record_id", "prior_handoff_manifest_id"]
+          }
+        }
+      }
+    }
+  ]
+}

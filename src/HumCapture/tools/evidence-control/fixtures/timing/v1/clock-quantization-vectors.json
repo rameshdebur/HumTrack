@@ -1,0 +1,216 @@
+{
+  "profile": "HC-IF-TIM-001@1.1.0",
+  "policy": "EXACT_DECIMAL_NEAREST_TIES_EVEN",
+  "cases": [
+    {
+      "name": "half-even-down",
+      "source": "1",
+      "scale": "0.5",
+      "offset": "0",
+      "expected": "0"
+    },
+    {
+      "name": "half-even-up",
+      "source": "3",
+      "scale": "0.5",
+      "offset": "0",
+      "expected": "2"
+    },
+    {
+      "name": "half-even-down2",
+      "source": "5",
+      "scale": "0.5",
+      "offset": "0",
+      "expected": "2"
+    },
+    {
+      "name": "half-even-up2",
+      "source": "7",
+      "scale": "0.5",
+      "offset": "0",
+      "expected": "4"
+    },
+    {
+      "name": "below-half",
+      "source": "1",
+      "scale": "0.499999999999999999999999999999",
+      "offset": "0",
+      "expected": "0"
+    },
+    {
+      "name": "above-half",
+      "source": "1",
+      "scale": "0.500000000000000000000000000001",
+      "offset": "0",
+      "expected": "1"
+    },
+    {
+      "name": "exponent",
+      "source": "3",
+      "scale": "5e-1",
+      "offset": "0",
+      "expected": "2"
+    },
+    {
+      "name": "offset-before-round",
+      "source": "1",
+      "scale": "0.5",
+      "offset": "1",
+      "expected": "2"
+    },
+    {
+      "name": "negative-offset",
+      "source": "7",
+      "scale": "0.5",
+      "offset": "-1",
+      "expected": "2"
+    },
+    {
+      "name": "beyond-double-integer",
+      "source": "9007199254740993",
+      "scale": "1",
+      "offset": "0",
+      "expected": "9007199254740993"
+    },
+    {
+      "name": "decimal-precision",
+      "source": "10000000000000000",
+      "scale": "1.0000000000000001",
+      "offset": "0",
+      "expected": "10000000000000001"
+    },
+    {
+      "name": "max",
+      "source": "18446744073709551615",
+      "scale": "1",
+      "offset": "0",
+      "expected": "18446744073709551615"
+    },
+    {
+      "name": "large-half",
+      "source": "18446744073709551615",
+      "scale": "0.1",
+      "offset": "0",
+      "expected": "1844674407370955162"
+    },
+    {
+      "name": "overflow",
+      "source": "18446744073709551615",
+      "scale": "1",
+      "offset": "1",
+      "expected": null
+    },
+    {
+      "name": "fractional-overflow",
+      "source": "18446744073709551615",
+      "scale": "1.0000000000000000000000000000000000001",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "negative-fraction",
+      "source": "1",
+      "scale": "-0.1",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "signed-offset",
+      "source": "9223372036854775808",
+      "scale": "1",
+      "offset": "-9223372036854775808",
+      "expected": "0"
+    },
+    {
+      "name": "negative-scale-positive-result",
+      "source": "5",
+      "scale": "-1",
+      "offset": "10",
+      "expected": "5"
+    },
+    {
+      "name": "zero",
+      "source": "0",
+      "scale": "-0.0",
+      "offset": "0",
+      "expected": "0"
+    },
+    {
+      "name": "tiny",
+      "source": "1",
+      "scale": "1e-128",
+      "offset": "0",
+      "expected": "0"
+    },
+    {
+      "name": "large-zero",
+      "source": "0",
+      "scale": "1e128",
+      "offset": "0",
+      "expected": "0"
+    },
+    {
+      "name": "exponent-limit",
+      "source": "0",
+      "scale": "1e129",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "exponent-underlimit",
+      "source": "0",
+      "scale": "1e-129",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "nan",
+      "source": "0",
+      "scale": "NaN",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "leading-plus",
+      "source": "0",
+      "scale": "+1",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "leading-zero",
+      "source": "0",
+      "scale": "01",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "empty-fraction",
+      "source": "0",
+      "scale": "1.",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "empty-exponent",
+      "source": "0",
+      "scale": "1e",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "whitespace",
+      "source": "0",
+      "scale": " 1",
+      "offset": "0",
+      "expected": null
+    },
+    {
+      "name": "too-long",
+      "source": "0",
+      "scale": "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "offset": "0",
+      "expected": null
+    }
+  ]
+}

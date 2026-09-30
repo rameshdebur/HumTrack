@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humcapture.local/schemas/phase-0/1.0.0/procedure-registry.schema.json",
+  "title": "HumCapture Phase 0 procedure registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["registry_name", "registry_version", "evidence_format_version", "procedures"],
+  "properties": {
+    "registry_name": { "const": "humcapture-phase0-procedures" },
+    "registry_version": { "const": "1.0.0" },
+    "evidence_format_version": { "const": "1.0.0" },
+    "procedures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["procedure_id", "kind", "hardware_qualification", "allowed_probe_platforms", "allowed_device_platforms", "allowed_camera_stacks", "minimum_qualification_duration_ns", "profile_policy", "required_streams", "required_measurements", "required_sensor_types"],
+        "properties": {
+          "procedure_id": { "type": "string", "pattern": "^HC-P0-[A-Z]+-[0-9]{3}$" },
+          "kind": { "type": "string", "enum": ["capture", "network", "compatibility"] },
+          "hardware_qualification": { "type": "boolean" },
+          "allowed_probe_platforms": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "enum": ["android", "windows", "network", "synthetic"] } },
+          "allowed_device_platforms": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "enum": ["android", "windows_uvc", "windows_host", "network", "synthetic"] } },
+          "allowed_camera_stacks": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "enum": ["android_camera2", "windows_media_capture", "windows_media_foundation", "network_only", "synthetic"] } },
+          "minimum_qualification_duration_ns": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+          "profile_policy": { "type": "string", "enum": ["exact", "synthetic_any", "none"] },
+          "required_streams": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["purpose", "width_px", "height_px", "fps", "codec"],
+              "properties": {
+                "purpose": { "type": "string", "enum": ["master", "preview", "depth", "infrared", "other"] },
+                "width_px": { "type": ["integer", "null"], "minimum": 1 },
+                "height_px": { "type": ["integer", "null"], "minimum": 1 },
+                "fps": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+                "codec": { "type": ["string", "null"], "minLength": 1 }
+              }
+            }
+          },
+          "required_measurements": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "enum": ["frames", "sensors", "thermal-power-storage", "network", "compatibility", "capture-events"] }
+          },
+          "required_sensor_types": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "enum": ["rotation_vector", "gravity", "gyroscope", "accelerometer", "linear_acceleration", "magnetometer", "other"] }
+          }
+        }
+      }
+    }
+  }
+}

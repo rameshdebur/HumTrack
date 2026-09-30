@@ -1,0 +1,4 @@
+PASS HC-DEC-WORKER-REAL synthetic.mp4 outcome=Decoded exit=0 unchanged=true
+PASS HC-DEC-WORKER-REAL synthetic-variable.mp4 outcome=Decoded exit=0 unchanged=true
+PASS HC-DEC-WORKER-REAL truncated.mp4 outcome=Failed exit=-1094995529 unchanged=true
+PASS HC-DEC-WORKER-REAL corrupt.mp4 outcome=Failed exit=-1094995529 unchanged=true

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/security/v1/trust-record.schema.json",
+  "title": "HumCapture peer trust lifecycle record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "trust_record_id", "revision", "device_id", "coordinator_id", "coordinator_ca_sha256", "device_certificate_sha256", "coordinator_certificate_sha256", "state", "tls_profile", "paired_utc", "updated_utc", "certificate_not_after_utc", "operator_windows_account"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "trust_record_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "revision": { "$ref": "../../control/v1/common.schema.json#/$defs/positiveRevision" },
+    "device_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "coordinator_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "coordinator_ca_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "device_certificate_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "coordinator_certificate_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "state": { "enum": ["PAIRED", "ROTATION_DUE", "REVOKED", "LOST", "UNPAIRED"] },
+    "tls_profile": { "enum": ["HC-TLS-13-001", "HC-TLS-12-W10-001"] },
+    "compatibility_reason": { "type": "string", "minLength": 10, "maxLength": 500 },
+    "paired_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "updated_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "certificate_not_after_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "operator_windows_account": { "$ref": "../../control/v1/common.schema.json#/$defs/windowsAccount" },
+    "reason": { "$ref": "../../control/v1/common.schema.json#/$defs/reason" },
+    "prior_revision_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" }
+  },
+  "allOf": [
+    { "if": { "properties": { "revision": { "type": "integer", "minimum": 2 } } }, "then": { "properties": { "prior_revision_sha256": true }, "required": ["prior_revision_sha256"] } },
+    { "if": { "properties": { "tls_profile": { "const": "HC-TLS-12-W10-001" } } }, "then": { "properties": { "compatibility_reason": true }, "required": ["compatibility_reason"] } },
+    { "if": { "properties": { "state": { "enum": ["REVOKED", "LOST", "UNPAIRED"] } } }, "then": { "properties": { "reason": true }, "required": ["reason"] } }
+  ]
+}

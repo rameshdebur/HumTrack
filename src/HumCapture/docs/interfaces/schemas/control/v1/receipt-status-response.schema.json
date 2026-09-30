@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/receipt-status-response.schema.json",
+  "title": "HumCapture receipt status reconciliation response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "query_id", "receipt_id", "receipt_revision", "device_id", "source_id", "package_id", "package_content_sha256", "status", "reported_utc"],
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "query_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "receipt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "receipt_revision": { "const": 1 },
+    "device_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "package_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "package_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "status": { "enum": ["NOT_STORED", "STORED_ACK_PENDING", "ACKNOWLEDGED"] },
+    "acknowledgement_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "reported_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  },
+  "allOf": [{
+    "if": { "properties": { "status": { "const": "ACKNOWLEDGED" } } },
+    "then": { "required": ["acknowledgement_id"], "properties": { "acknowledgement_id": {} } },
+    "else": { "not": { "required": ["acknowledgement_id"] } }
+  }]
+}

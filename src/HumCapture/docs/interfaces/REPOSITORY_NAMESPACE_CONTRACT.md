@@ -1,0 +1,157 @@
+# HumCapture Repository Namespace Contract
+
+**Contract ID:** HC-IF-REP-001  
+**Version:** 1.3.0  
+**Status:** Accepted executable repository source contract  
+**Date:** 2026-09-10
+
+## 1. Scope
+
+This contract fixes the repository-relative namespace and record authorities
+used by collection, verification, commit, reconciliation, receipt, export, and
+backup work. Its executable source representation comprises JSON Schema
+2020-12 records under `schemas/repository/v1/`, strict SQLite DDL at
+`sqlite/repository-v1.sql`, and HC-REP-TEST-001–015. It does not authorize
+application implementation.
+
+## 2. Canonical paths
+
+| Purpose | Repository-relative path |
+|---|---|
+| Repository descriptor | `repository.json` |
+| SQLite catalog | `catalog/humcapture.sqlite3` |
+| Collected package | `staging/{collection_attempt_id}/{package_id}/` |
+| Quarantined package | `quarantine/{quarantine_record_id}/{package_id}/` |
+| Committed package | `subjects/{subject_id}/sessions/{session_id}/packages/{package_id}/` |
+| Immutable milestone record | `subjects/{subject_id}/sessions/{session_id}/records/{record_kind}/{record_id}.json` |
+
+Every identity placeholder is its canonical lowercase hyphenated UUID string.
+All paths are resolved relative to one configured data root. Staging,
+quarantine, catalog, and committed packages remain under that root and on its
+filesystem volume.
+
+## 3. Package envelope
+
+The package-ID directory contains the exact HC-IF-XFR-001 package that passed
+the common verifier. Its `package-manifest.json`, artifact set, relative paths,
+lengths, and bytes are unchanged. The repository shall not insert its own
+metadata or markers into this envelope. Lower-level trial, source,
+capture-attempt, device, and boot identities are read from and cross-checked
+against the package manifest and catalog.
+
+## 4. Subject identity and privacy
+
+`subject_id` is the folder authority. Required subject name and demographics
+remain Coordinator-local catalog data. Names, codes, demographics, protocol or
+camera labels, dates, and operator account names shall not occur in canonical
+repository paths or `repository.json`.
+
+## 5. Path safety and conflict behavior
+
+The repository rejects paths that are absolute, drive-relative, escaping,
+non-canonical, case-colliding, alternate-data-stream addressed, or associated
+with Windows device aliases, hard links, symbolic links, junctions, or other
+reparse points. The existing destination is never overwritten. An identical
+package identity/content is handled idempotently; conflicting content is
+quarantined under a new quarantine-record UUID.
+
+The implementation shall validate the complete resolved path against the
+active Windows/filesystem capability before collection and again before
+commit. Unexpected entries are surfaced for reconciliation and are not
+automatically deleted.
+
+## 6. Versioning
+
+Version 1.1.0 adds the record-authority, descriptor and compatibility semantics
+below without changing version 1.0.0 package paths. Version 1.2.0 additively
+defines the internal repository transaction states without changing package
+custody states or paths. Version 1.3.0 additively defines journal history and
+bounded reconciliation actions.
+
+SQLite is authoritative for mutable operational/current state, subject PII,
+transfer checkpoints, transaction journal and audit events. Mutable current
+state is not mirrored into replaceable JSON. Scientific package bytes and the
+following immutable milestone kinds are filesystem evidence:
+
+`protocol-snapshots`, `verifications`, `commits`, `receipts`,
+`quality-assessments`, `completions`, and `handoffs`.
+
+Each milestone filename uses its canonical record UUID and the file is
+schema-versioned, content-hashed and immutable. SQLite indexes its type, UUID,
+revision, hash, subject/session binding and repository-relative path. A
+conflict or mismatch enters recovery and blocks affected receipt/completion.
+
+`repository.json` declares the descriptor schema version, repository UUID,
+HC-IF-REP-001 version, namespace version, catalog schema version, creation UTC,
+creating Windows account, catalog-relative path, and required features. It has
+no subject PII, secret, absolute path, mutable capture state, or persistent
+volume binding. Publication uses validated write/flush/atomic replacement.
+
+Unsupported major versions refuse mutation and may expose only explicitly safe
+read-only inspection/export. A newer minor version with an unknown required
+feature refuses mutation; known compatible versions open normally. Opening an
+older supported repository does not migrate it silently. Historical packages
+and milestone files are not moved, renamed, or rewritten by a later reader.
+
+## 7. Repository transaction states
+
+The internal repository transaction advances normally through:
+
+```text
+STAGED_VERIFIED -> COMMITTING -> MOVED -> CATALOGED -> COMMITTED
+```
+
+`RECOVERY_REQUIRED` and `QUARANTINED` are exceptional states. Only reconciled
+`COMMITTED` permits receipt creation. `COMMITTED` and `QUARANTINED` are terminal
+for one transaction identity. The detailed semantics, custody-state mapping,
+restart classification, and no-skip/no-overwrite rules are defined by ADR-0019.
+
+These internal states do not add operator workflow steps. Normal intermediates
+may display as **Saving**; recovery remains an actionable **Needs attention**
+condition.
+
+## 8. Journal and reconciliation records
+
+SQLite retains one current row per repository transaction plus append-only
+transition and reconciliation rows. The current-state update and corresponding
+transition insertion are one SQLite transaction. ADR-0020 defines the exact
+logical field set, observations, controlled triggers/actions, immutable
+identity fields, sequence authority, and prohibited data.
+
+Only `NO_ACTION`, `RETRY_FROM_STAGED`, `RESUME_AFTER_MOVE`,
+`COMPLETE_CATALOGING`, `FINALIZE_COMMIT`, and
+`CONFIRM_IDEMPOTENT_COMMIT` may run automatically, and only when all required
+identity, hash, path, version, absence, and uniqueness predicates agree. Every
+automatic result is retained and visible.
+
+Hash/identity conflict, material at both paths, missing/corrupt immutable
+evidence, unsafe/unexpected entries, unsupported versions, catalog conflict, or
+uncertain durability requires operator action. Permitted actions are
+`RETRY_RECONCILIATION`, `QUARANTINE_CONFLICT`,
+`RETAIN_FOR_INVESTIGATION`, and `EXPORT_DIAGNOSTICS`. No action may force
+commit, overwrite evidence, delete the only verified copy, or manufacture an
+immutable milestone.
+
+## 9. Executable representation and deferred implementation
+
+Implementation clarification (C5, 2026-09-12): the accepted B3C
+`before-commit-record` crash fixture explicitly represents `CATALOGED` with
+matching catalog/verification and an absent commit record. C5 follows that
+executable ordering: package catalog insertion and its journal transition are
+atomic; commit-record publication/indexing and final reconciliation follow.
+This qualifies ADR-0019's earlier wording about commit/milestone linkages at
+`CATALOGED`; the accepted historical ADR is retained. Custody remains
+`COMMITTING` through this boundary. No schema or state transition is changed.
+
+ADR-0021 and I0.4B-B3C define executable descriptor, milestone-index, catalog,
+journal, transition, reconciliation and commit-record schemas; SQLite DDL; a
+complete valid lifecycle; named invalid fixtures; and crash-boundary
+reconciliation cases. JSON Schema controls individual records, while the
+conformance suite controls relational identity, ordering, idempotency,
+automatic/operator actions and receipt eligibility.
+
+The SQLite DDL is executed in memory by the pinned verification runtime. It is
+a logical persistence contract, not the production Coordinator repository.
+Runtime provider/configuration, real filesystem/link handling, atomic
+move/flush behavior, backup/restore, retention, power-loss, HIL, field,
+independent and regulatory evidence remain open.

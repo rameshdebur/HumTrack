@@ -1,0 +1,5 @@
+PASS HC-C14UVW-REAL covered master verified and staged; exact retry; source unchanged; no move
+PASS HC-C14UVW-REAL legacy successful decode retains NOT_ASSESSED coverage
+PASS HC-C14UVW-REAL verified custody retains protocol REJECTED independently
+PASS HC-C14UVW-REAL refusal corrupt.mp4
+PASS HC-C14UVW-REAL refusal different-pts.mp4

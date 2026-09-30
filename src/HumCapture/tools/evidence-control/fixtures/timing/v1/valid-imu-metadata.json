@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "capture_attempt_id": "10000000-0000-4000-8000-000000000001",
+  "imu_file_stream_id": "10000000-0000-4000-8000-000000000003",
+  "device_coordinate_frame": "ANDROID_NATURAL_DEVICE_X_RIGHT_Y_TOP_Z_OUT_OF_SCREEN",
+  "display_rotation_degrees": 90,
+  "sensor_streams": [
+    {
+      "sensor_stream_id": 1,
+      "sensor_uuid": "40000000-0000-4000-8000-000000000001",
+      "sensor_kind": "ACCELEROMETER",
+      "vendor": "Synthetic test vendor",
+      "version": 1,
+      "units": "M_PER_S2",
+      "requested_period_us": 10000,
+      "requested_max_report_latency_us": 0,
+      "availability": "AVAILABLE",
+      "used_by_platform_fusion": false,
+      "actual_observed_hz": 100
+    },
+    {
+      "sensor_stream_id": 2,
+      "sensor_uuid": "40000000-0000-4000-8000-000000000002",
+      "sensor_kind": "GYROSCOPE",
+      "vendor": "Synthetic test vendor",
+      "version": 1,
+      "units": "RAD_PER_S",
+      "requested_period_us": 10000,
+      "requested_max_report_latency_us": 0,
+      "availability": "AVAILABLE",
+      "used_by_platform_fusion": false,
+      "actual_observed_hz": 100
+    }
+  ],
+  "camera_associations": [
+    {
+      "camera_stream_id": "10000000-0000-4000-8000-000000000002",
+      "association_quality": "DEGRADED",
+      "calibration_provenance": "DOCUMENTED_MOUNT",
+      "valid_from_segment": 0,
+      "imu_to_camera_rotation_row_major": [1, 0, 0, 0, 1, 0, 0, 0, 1],
+      "uncertainty_degrees": 2
+    }
+  ]
+}

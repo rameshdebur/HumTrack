@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/source-state.schema.json",
+  "title": "HumCapture authoritative source state snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "session_id", "trial_id", "source_id", "capture_attempt_id",
+    "source_kind", "source_boot_id", "source_clock", "state", "revision",
+    "last_event_sequence", "has_acquired_master_sample", "recorder_status",
+    "finalization_status", "finalized_package_inventory", "warnings",
+    "maximum_duration_ns", "clock_continuity", "updated_source_time", "updated_utc"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "trial_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "capture_attempt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_kind": { "$ref": "common.schema.json#/$defs/sourceKind" },
+    "source_boot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "source_clock": {
+      "type": "object", "additionalProperties": false,
+      "required": ["clock_id", "ticks_per_second"],
+      "properties": {
+        "clock_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "ticks_per_second": { "type": "integer", "minimum": 1, "maximum": 1000000000000 }
+      }
+    },
+    "state": { "$ref": "common.schema.json#/$defs/sourceState" },
+    "revision": { "$ref": "common.schema.json#/$defs/positiveRevision" },
+    "last_event_sequence": { "$ref": "common.schema.json#/$defs/nonNegativeInteger" },
+    "configuration_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "configuration_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "actual_profile_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "readiness_snapshot_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "start_plan_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "start_plan_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "has_acquired_master_sample": { "type": "boolean" },
+    "first_master_sample": {
+      "type": "object", "additionalProperties": false,
+      "required": ["start_plan_id", "first_sequence", "native_timestamp", "source_time", "mapped_session_time", "provenance", "late", "discontinuity_detected"],
+      "properties": {
+        "start_plan_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "first_sequence": { "$ref": "common.schema.json#/$defs/unsignedDecimal64" },
+        "native_timestamp": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "source_time": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+        "mapped_session_time": { "$ref": "common.schema.json#/$defs/mappedSessionInstant" },
+        "provenance": { "enum": ["SENSOR", "DEVICE", "HOST_SAMPLE", "HOST_ARRIVAL"] },
+        "late": { "type": "boolean" },
+        "discontinuity_detected": { "type": "boolean" }
+      }
+    },
+    "recorder_status": { "enum": ["NOT_OPEN", "OPENING", "READY", "WRITING", "CLOSING", "CLOSED", "ERROR", "UNKNOWN"] },
+    "finalization_status": { "enum": ["NOT_STARTED", "IN_PROGRESS", "STRUCTURALLY_VALID", "PARTIAL_VALID", "FAILED", "UNKNOWN"] },
+    "stop_reason": { "$ref": "common.schema.json#/$defs/stopReason" },
+    "finalized_package_inventory": {
+      "type": "array", "maxItems": 64,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["package_id", "package_content_sha256", "local_status"],
+        "properties": {
+          "package_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "package_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+          "local_status": { "enum": ["FINALIZED_COMPLETE", "FINALIZED_INCOMPLETE"] }
+        }
+      }
+    },
+    "warnings": { "type": "array", "maxItems": 128, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 128 } },
+    "maximum_duration_ns": { "$ref": "common.schema.json#/$defs/durationNanoseconds" },
+    "clock_continuity": { "enum": ["CONTINUOUS", "NEW_BOOT_EPOCH", "DISCONTINUITY_DETECTED", "UNKNOWN"] },
+    "updated_source_time": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+    "updated_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "state": { "enum": ["CONFIGURED", "CHECKING_READINESS", "READY", "ARMING", "ARMED", "START_SCHEDULED", "STARTING", "RECORDING", "STOPPING", "FINALIZING", "FINALIZED_COMPLETE", "FINALIZED_INCOMPLETE", "FINALIZATION_FAILED"] } } },
+      "then": { "properties": { "configuration_id": {}, "configuration_content_sha256": {}, "actual_profile_id": {} }, "required": ["configuration_id", "configuration_content_sha256", "actual_profile_id"] }
+    },
+    {
+      "if": { "properties": { "state": { "enum": ["READY", "ARMING", "ARMED", "START_SCHEDULED", "STARTING", "RECORDING", "STOPPING", "FINALIZING", "FINALIZED_COMPLETE", "FINALIZED_INCOMPLETE"] } } },
+      "then": { "properties": { "readiness_snapshot_id": {} }, "required": ["readiness_snapshot_id"] }
+    },
+    {
+      "if": { "properties": { "state": { "enum": ["START_SCHEDULED", "STARTING", "RECORDING", "STOPPING", "FINALIZING", "FINALIZED_COMPLETE", "FINALIZED_INCOMPLETE"] } } },
+      "then": { "properties": { "start_plan_id": {}, "start_plan_content_sha256": {} }, "required": ["start_plan_id", "start_plan_content_sha256"] }
+    },
+    {
+      "if": { "properties": { "has_acquired_master_sample": { "const": true } } },
+      "then": { "properties": { "first_master_sample": {} }, "required": ["first_master_sample"] }
+    },
+    {
+      "if": { "properties": { "state": { "enum": ["FINALIZED_COMPLETE", "FINALIZED_INCOMPLETE"] } } },
+      "then": { "properties": { "stop_reason": {}, "finalized_package_inventory": { "type": "array", "minItems": 1 } }, "required": ["stop_reason"] }
+    },
+    {
+      "if": { "properties": { "state": { "const": "FINALIZED_COMPLETE" } } },
+      "then": { "properties": { "has_acquired_master_sample": { "const": true } } }
+    },
+    {
+      "if": { "properties": { "state": { "const": "CANCELLED_BEFORE_CAPTURE" } } },
+      "then": { "properties": { "has_acquired_master_sample": { "const": false } } }
+    }
+  ]
+}

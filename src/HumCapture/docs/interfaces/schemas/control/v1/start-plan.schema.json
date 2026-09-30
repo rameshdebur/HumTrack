@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/start-plan.schema.json",
+  "title": "HumCapture immutable coordinated start plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "start_plan_id", "start_plan_content_sha256", "session_id",
+    "trial_id", "session_start", "decision_deadline", "maximum_duration_ns",
+    "required_source_attempts", "created_utc"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "common.schema.json#/$defs/schemaVersion" },
+    "start_plan_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "start_plan_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+    "session_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "trial_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "session_start": { "$ref": "common.schema.json#/$defs/mappedSessionInstant" },
+    "decision_deadline": { "$ref": "common.schema.json#/$defs/mappedSessionInstant" },
+    "planned_duration_ns": { "$ref": "common.schema.json#/$defs/durationNanoseconds" },
+    "maximum_duration_ns": { "$ref": "common.schema.json#/$defs/durationNanoseconds" },
+    "required_source_attempts": {
+      "type": "array", "minItems": 1, "maxItems": 16,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": [
+          "source_id", "capture_attempt_id", "configuration_id",
+          "configuration_content_sha256", "clock_model_id", "source_start",
+          "mapped_uncertainty_ns"
+        ],
+        "properties": {
+          "source_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "capture_attempt_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "configuration_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "configuration_content_sha256": { "$ref": "common.schema.json#/$defs/sha256" },
+          "clock_model_id": { "$ref": "common.schema.json#/$defs/uuid" },
+          "source_start": { "$ref": "common.schema.json#/$defs/monotonicInstant" },
+          "mapped_uncertainty_ns": { "$ref": "common.schema.json#/$defs/durationNanoseconds" }
+        }
+      }
+    },
+    "created_utc": { "$ref": "common.schema.json#/$defs/utcTimestamp" }
+  }
+}

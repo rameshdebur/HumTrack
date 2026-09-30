@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/control/v1/common.schema.json",
+  "title": "HumCapture control common types",
+  "$defs": {
+    "contractVersion": { "const": "1.0.0" },
+    "schemaVersion": { "const": "1.0.0" },
+    "uuid": { "type": "string", "format": "uuid" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "utcTimestamp": { "type": "string", "format": "date-time" },
+    "windowsAccount": { "type": "string", "minLength": 3, "maxLength": 256 },
+    "reason": { "type": "string", "minLength": 3, "maxLength": 2000 },
+    "positiveRevision": { "type": "integer", "minimum": 1 },
+    "nonNegativeInteger": { "type": "integer", "minimum": 0 },
+    "unsignedDecimal64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$"
+    },
+    "durationNanoseconds": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$"
+    },
+    "monotonicInstant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clock_id", "ticks", "ticks_per_second"],
+      "properties": {
+        "clock_id": { "$ref": "#/$defs/uuid" },
+        "ticks": { "$ref": "#/$defs/unsignedDecimal64" },
+        "ticks_per_second": { "type": "integer", "minimum": 1, "maximum": 1000000000000 }
+      }
+    },
+    "mappedSessionInstant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session_clock_id", "ticks", "ticks_per_second", "clock_model_id", "uncertainty_ns"],
+      "properties": {
+        "session_clock_id": { "$ref": "#/$defs/uuid" },
+        "ticks": { "$ref": "#/$defs/unsignedDecimal64" },
+        "ticks_per_second": { "type": "integer", "minimum": 1, "maximum": 1000000000000 },
+        "clock_model_id": { "$ref": "#/$defs/uuid" },
+        "uncertainty_ns": { "$ref": "#/$defs/durationNanoseconds" }
+      }
+    },
+    "sourceKind": { "enum": ["ANDROID", "UVC"] },
+    "sourceState": {
+      "enum": [
+        "CREATED", "CONFIGURING", "CONFIGURED", "CHECKING_READINESS", "READY",
+        "ARMING", "ARMED", "START_SCHEDULED", "STARTING", "RECORDING", "STOPPING",
+        "FINALIZING", "FINALIZED_COMPLETE", "CANCELLED_BEFORE_CAPTURE",
+        "FINALIZED_INCOMPLETE", "FINALIZATION_FAILED"
+      ]
+    },
+    "sourceCommandType": {
+      "enum": [
+        "CONFIGURE", "CHECK_READINESS", "ARM", "DISARM", "PREPARE_START",
+        "COMMIT_START", "CANCEL_START_PLAN", "STOP_AT", "EMERGENCY_STOP",
+        "RECONCILE_STATE", "GET_STATE"
+      ]
+    },
+    "acknowledgementDisposition": { "enum": ["ACCEPTED", "REJECTED", "ALREADY_APPLIED"] },
+    "retryClass": { "enum": ["DO_NOT_RETRY", "RETRY_SAME_COMMAND", "RECONCILE_FIRST", "OPERATOR_ACTION_REQUIRED"] },
+    "readinessCheckDisposition": { "enum": ["PASS", "WARNING", "OVERRIDE_REQUIRED", "BLOCKING_FAILURE", "NOT_ASSESSED"] },
+    "readinessAggregateDisposition": { "enum": ["BLOCKED", "READY_WITH_OVERRIDES_REQUIRED", "READY_WITH_WARNINGS", "READY", "READY_WITH_AUTHORIZED_DEVIATIONS"] },
+    "custodyState": {
+      "enum": [
+        "BUILDING", "FINALIZED_LOCAL", "COLLECTION_PENDING", "COLLECTING", "STAGED",
+        "VERIFYING", "VERIFIED", "COMMITTING", "COMMITTED", "RECEIPT_PENDING",
+        "RECEIPT_ACKNOWLEDGED", "SAFE_TO_DELETE", "DELETED_FROM_SOURCE",
+        "COLLECTION_INTERRUPTED", "VERIFICATION_FAILED", "QUARANTINED",
+        "COMMIT_RECOVERY_REQUIRED", "RECEIPT_STATUS_UNKNOWN"
+      ]
+    },
+    "qualityOutcome": {
+      "enum": ["NOT_ASSESSED", "ASSESSING", "PASS", "PASS_WITH_WARNINGS", "DEVIATION_REVIEW_REQUIRED", "FAIL_RETAKE_REQUIRED", "NOT_APPLICABLE"]
+    },
+    "stopReason": {
+      "enum": ["NORMAL_OPERATOR_STOP", "PROTOCOL_DURATION", "MAXIMUM_DURATION", "COORDINATOR_EMERGENCY_STOP", "LOCAL_EMERGENCY_STOP", "DEVICE_LOSS", "RECORDER_ERROR", "STORAGE_EXHAUSTION", "POWER_THERMAL_SHUTDOWN", "PROCESS_RECOVERY", "UNKNOWN"]
+    },
+    "sessionState": {
+      "enum": [
+        "DRAFT",
+        "PLANNED",
+        "IN_PROGRESS",
+        "COMPLETION_REVIEW",
+        "RECOVERY_REQUIRED",
+        "COMPLETE",
+        "CLOSED_INCOMPLETE",
+        "CANCELLED"
+      ]
+    },
+    "slotState": {
+      "enum": ["UNFILLED", "IN_PROGRESS", "SATISFIED", "UNSATISFIED"]
+    },
+    "sessionCommandType": {
+      "enum": [
+        "PLAN_SESSION",
+        "REVISE_SESSION_PLAN",
+        "BEGIN_SESSION",
+        "ENTER_COMPLETION_REVIEW",
+        "COMPLETE_SESSION",
+        "CLOSE_SESSION_INCOMPLETE",
+        "CANCEL_SESSION",
+        "REOPEN_SESSION_FOR_REVIEW",
+        "RECONCILE_SESSION"
+      ]
+    }
+  }
+}

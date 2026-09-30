@@ -1,0 +1,58 @@
+{
+  "format_name": "humcapture-phase0-capability-report",
+  "evidence_format_version": "1.0.0",
+  "run_id": "018f6f5e-6b1a-7c23-8d45-0123456789ab",
+  "device": {
+    "platform": "synthetic",
+    "manufacturer": "HumCapture",
+    "model": "Synthetic Phone",
+    "stable_test_device_id": "SYNTHETIC-ANDROID-001",
+    "os_name": "Synthetic Android",
+    "os_version": "1",
+    "camera_stack": "synthetic",
+    "device_interface_id": null,
+    "pnp_instance_id": null,
+    "vendor_id": null,
+    "product_id": null,
+    "driver_provider": null,
+    "driver_version": null
+  },
+  "capabilities": [
+    {
+      "capability_id": "camera.lens_facing",
+      "source_id": "camera.back.wide",
+      "category": "camera",
+      "status": "reported",
+      "provenance": "synthetic fixture",
+      "value": "back",
+      "unit": null,
+      "range": null,
+      "default": null
+    },
+    {
+      "capability_id": "camera.physical_camera_ids",
+      "source_id": "camera.back.wide",
+      "category": "camera",
+      "status": "reported",
+      "provenance": "synthetic fixture",
+      "value": ["0"],
+      "unit": null,
+      "range": null,
+      "default": null
+    }
+  ],
+  "capture_profiles": [
+    {
+      "profile_id": "master-1080p60-h264",
+      "source_id": "camera.back.wide",
+      "stream_id": "master",
+      "requested": { "width_px": 1920, "height_px": 1080, "fps": 60, "codec": "video/avc", "pixel_format": null, "bitrate_bps": 12000000 },
+      "reported_supported": true,
+      "negotiated": { "width_px": 1920, "height_px": 1080, "fps": 60, "codec": "video/avc", "pixel_format": "YUV_420_888", "bitrate_bps": 12000000 },
+      "measured": { "width_px": 1920, "height_px": 1080, "fps": 60, "codec": "video/avc", "pixel_format": "YUV_420_888", "bitrate_bps": 11950000 },
+      "status": "measured",
+      "limitations": ["Synthetic measurement; not qualified hardware."]
+    }
+  ],
+  "warnings": ["Synthetic fixture only."]
+}

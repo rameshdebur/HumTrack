@@ -1,0 +1,51 @@
+PASS C16-01 single fixed-rate source ready
+PASS C16-04 duplicate start idempotent
+PASS C16-05 preview independent
+PASS C16-04 duplicate stop idempotent
+PASS C16-09 no synthetic commit
+PASS C16-08 finalized attempt cannot restart
+PASS C16-03 unsupported profile refused
+PASS C16-06 finalization failure retained
+PASS C16-07 separate process restart reconciliation
+PASS C16-08 prior attempts preserved
+PASS C16-02 duplicate role source refused
+PASS C16-06 survivor continues after first source loss
+PASS C16-06 source loss cannot finalize complete
+PASS C16-06 simulated verification-failure retained
+PASS C16-08 same-attempt processing retry retains failure verification-failure
+PASS C16-06 simulated storage-failure retained
+PASS C16-08 same-attempt processing retry retains failure storage-failure
+PASS C16-10 version refused
+PASS C16-01 identity immutable
+PASS C16-10 repository isolation
+PASS C16-11 actual repository historical inspection
+C16 software assertions: 21 passed. No HIL/native accessibility acceptance.
+
+
+0
+[
+  {
+    "Path": "C:\\Users\\rams2\\AppData\\Local\\Temp\\hcwt-i03a-20260905\\src\\HumCapture\\evidence-vault\\c16-ci-ca3686db4b0f43a9a28979bc4a6b7197\\01-session.png",
+    "Hash": "5D69F0ADD7C625D5D4E0521727920CB864028D98FFBE790FCCBE5CE74169C2DF"
+  },
+  {
+    "Path": "C:\\Users\\rams2\\AppData\\Local\\Temp\\hcwt-i03a-20260905\\src\\HumCapture\\evidence-vault\\c16-ci-ca3686db4b0f43a9a28979bc4a6b7197\\02-cameras.png",
+    "Hash": "71798A5A1321E09C7441A5C9F04C177276C6521D4D704DE351393A21120042A2"
+  },
+  {
+    "Path": "C:\\Users\\rams2\\AppData\\Local\\Temp\\hcwt-i03a-20260905\\src\\HumCapture\\evidence-vault\\c16-ci-ca3686db4b0f43a9a28979bc4a6b7197\\03-ready.png",
+    "Hash": "938D328D1E918EF621FFB3828FB70F692FE6627893933E17A7E197914C3F8C9B"
+  },
+  {
+    "Path": "C:\\Users\\rams2\\AppData\\Local\\Temp\\hcwt-i03a-20260905\\src\\HumCapture\\evidence-vault\\c16-ci-ca3686db4b0f43a9a28979bc4a6b7197\\04-recording.png",
+    "Hash": "FEED30BB6A90F0676A0DBA4B0A00397C254CDEC4EE3A484693DFBF8AC2749AB0"
+  },
+  {
+    "Path": "C:\\Users\\rams2\\AppData\\Local\\Temp\\hcwt-i03a-20260905\\src\\HumCapture\\evidence-vault\\c16-ci-ca3686db4b0f43a9a28979bc4a6b7197\\05-results.png",
+    "Hash": "2D8E835A3E9671ADE3E6C56299C7BA8E439B5335DC245AB31D6D9F51FDA94851"
+  },
+  {
+    "Path": "C:\\Users\\rams2\\AppData\\Local\\Temp\\hcwt-i03a-20260905\\src\\HumCapture\\evidence-vault\\c16-ci-ca3686db4b0f43a9a28979bc4a6b7197\\06-small-window.png",
+    "Hash": "3132F53041C0197268D9676C9AE7220B2F2C46F1523615C4B265D150F34A5EC1"
+  }
+]

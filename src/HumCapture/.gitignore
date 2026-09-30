@@ -1,0 +1,23 @@
+# HumCapture-local generated dependencies and build output
+node_modules/
+**/bin/
+**/obj/
+**/[Dd]ebug/
+**/[Rr]elease/
+tools/capability-probes/windows/**/x64/
+tools/capability-probes/windows/runtime-output/
+
+# Raw capture and diagnostic output never belongs in source control
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.log
+
+# This small synthetic log is part of the versioned evidence-contract fixture.
+!tools/capability-probes/shared/fixtures/valid/android-run/logs/
+!tools/capability-probes/shared/fixtures/**/logs/*.log
+
+# Local evidence-vault or staging directories, if accidentally created here
+evidence-vault/
+.evidence-staging/

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humtrack.invalid/humcapture/security/v1/security-audit-event.schema.json",
+  "title": "HumCapture redacted security audit event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "event_type", "occurred_utc", "outcome", "operator_windows_account", "details"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "event_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "event_type": { "enum": ["PAIRING_OPENED", "PAIRING_CLOSED", "PAIRING_PROOF_FAILED", "PAIRING_LOCKED_OUT", "ENROLLED", "AUTHENTICATION_REJECTED", "AUTHORIZATION_REJECTED", "TLS_COMPATIBILITY_USED", "ROTATED", "REVOKED", "UNPAIRED", "KEY_MATERIAL_LOST", "RECOVERY_STARTED"] },
+    "occurred_utc": { "$ref": "../../control/v1/common.schema.json#/$defs/utcTimestamp" },
+    "outcome": { "enum": ["SUCCESS", "REJECTED", "FAILED", "RECOVERY_REQUIRED"] },
+    "operator_windows_account": { "$ref": "../../control/v1/common.schema.json#/$defs/windowsAccount" },
+    "device_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "coordinator_id": { "$ref": "../../control/v1/common.schema.json#/$defs/uuid" },
+    "peer_certificate_sha256": { "$ref": "../../control/v1/common.schema.json#/$defs/sha256" },
+    "reason_code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
+    "details": { "type": "object", "additionalProperties": { "anyOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "null" }] }, "propertyNames": { "pattern": "^(?!.*(?:secret|token|password|private|proof|subject|video|dob|name))[a-z][a-z0-9_]{0,63}$" } }
+  }
+}
