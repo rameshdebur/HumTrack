@@ -1,8 +1,8 @@
 # HumCapture Project State
 
 **Status:** Prior accepted slices and I0.4B-C1–C13 are implemented at their recorded evidence levels
-**Tags:** C15A-C15C | ENGINEERING HOST + OFFLINE BACKUP | HIL READINESS
-**Last meaningful update:** 2026-09-27
+**Tags:** C16A-C16C | COORDINATOR UI | SOFTWARE-ONLY SIMULATION
+**Last meaningful update:** 2026-09-30
 
 ## Objective
 
@@ -13,6 +13,26 @@ Build a local-first, trained-operator acquisition subsystem for HumTrack that ca
 HumCapture is bounded to `src/HumCapture`. It may inspect HumTrack conventions but may not modify or depend on existing HumTrack internals without explicit user permission. Direct HumTrack importer work is not authorized.
 
 ## Current stage
+
+- C16A-C approved 2026-09-30: guided Session/Cameras/Capture/Results workspace
+  and shared accessibility/recovery acceptance agreed screen by screen.
+  ADR-0040 / HC-IF-UIW-001 baseline this software-only implementation before code.
+  Existing ARD/PRD/stories/SRS, roles/governance, preliminary India/CDSCO baseline
+  and risk controls apply; detailed UI acceptance is in HC-IF-UIW-001.
+  Primary Coordinator engineer; affected Architect/UX/Repository/QA/SBOM owners.
+  HIL is explicitly deferred. No physical camera activation, real subject data,
+  production decoder activation, source cleanup or regulatory claim.
+  Engineering implementation complete: independent Avalonia/Fluent four-screen
+  UI, separate synthetic state service, SQLite restart/history, failure/retry and
+  read-only existing repository inspection. No simulated package/commit claims.
+  Clean Release build, 217 runtime, 115 contract and 13 SBOM/register tests pass.
+  Runtime216 includes 21 assertions; runtime217 drives actual headless controls,
+  keyboard/form/close/navigation checks and two-size renders. Windows apphost
+  service tests also pass. HC-VR-C16-001 retains evidence and limitations.
+  SBOM c16c: 56 components plus product; new licence/cost entries maintained.
+  Native human UI/accessibility, production capture integration and HIL remain
+  open. See apps/windows-coordinator/DESKTOP_SIMULATION.md to open the UI.
+  Hosted checks remain a separate source-SHA-bound gate.
 
 - C15A-C approved 2026-09-27, plus post-batch HIL/human-testing readiness audit.
   ADR-0039 / HC-IF-EHB-001 baseline engineering host commands, quiescent paired-

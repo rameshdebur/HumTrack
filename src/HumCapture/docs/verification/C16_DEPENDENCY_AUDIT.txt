@@ -1,0 +1,10 @@
+2026-09-30 | Desktop including transitive packages | current configured sources only
+Determining projects to restore...
+  Restored C:\Users\rams2\AppData\Local\Temp\hcwt-i03a-20260905\src\HumCapture\apps\windows-coordinator\src\HumCapture.Coordinator.Repository\HumCapture.Coordinator.Repository.csproj (in 252 ms).
+  Restored C:\Users\rams2\AppData\Local\Temp\hcwt-i03a-20260905\src\HumCapture\apps\windows-coordinator\src\HumCapture.Coordinator.Desktop\HumCapture.Coordinator.Desktop.csproj (in 252 ms).
+
+The following sources were used:
+   https://api.nuget.org/v3/index.json
+   C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\
+
+The given project `HumCapture.Coordinator.Desktop` has no vulnerable packages given the current sources.

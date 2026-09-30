@@ -27,6 +27,11 @@ test("generates a valid CycloneDX 1.7 inventory with all declared surfaces", asy
   assert.equal(decoder.version, "9.0.1");
   assert.equal(decoder.hashes[0].content, "fec81ae03971d9dd4be3ebe02e263bd2ec1d789483f931bdba5f5715e65da2e9");
   const host = bom.components.find((item) => item.name === "HumCapture.Coordinator.Host");
+  const desktop = bom.components.find((item) => item.name === "HumCapture.Coordinator.Desktop");
+  assert.ok(desktop);
+  assert.ok(bom.components.some((item) => item.name === "Avalonia.Win32"));
+  assert.ok(!bom.components.some((item) => item.name === "Tmds.DBus.Protocol"));
+  assert.ok(bom.dependencies.find((item) => item.ref === desktop["bom-ref"]).dependsOn.length > 0);
   assert.ok(host);
   const repository = bom.components.find((item) => item.name === "HumCapture.Coordinator.Repository");
   assert.ok(bom.dependencies.find((item) => item.ref === host["bom-ref"]).dependsOn.includes(repository["bom-ref"]));

@@ -33,7 +33,7 @@ async function nugetSurface(repoRoot, relativeLockPath, scope = "required") {
     if (item.type === "Project") continue;
     if (!item.resolved || !item.contentHash) throw new SbomError(`NuGet package lacks resolved version/hash: ${relativeLockPath}:${name}`);
     const ref = nugetPurl(name, item.resolved);
-    const packageScope = /Analyzer/i.test(name) ? "excluded" : scope;
+    const packageScope = /Analyzer/i.test(name) || name === "Avalonia.BuildServices" ? "excluded" : scope;
     packages.push({
       type: "library",
       name,
@@ -318,6 +318,8 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     "tools/evidence-control/package-lock.json"
   ];
   const coordinatorProjectPath = "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj";
+  const desktopProjectPath = "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/HumCapture.Coordinator.Desktop.csproj";
+  const desktopLockPath = "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json";
   const hostProjectPath = "apps/windows-coordinator/src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj";
   const hostLockPath = "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json";
   const coordinatorLockPath = "apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json";
@@ -326,6 +328,8 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   const handledDependencyManifests = [
     "apps/windows-coordinator/decoder/decoder-lock.json",
     ...npmLocks,
+    desktopProjectPath,
+    desktopLockPath,
     hostProjectPath,
     hostLockPath,
     coordinatorProjectPath,
@@ -343,6 +347,11 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
   const npmSurfaces = [];
   for (const lock of npmLocks) npmSurfaces.push(await npmSurface(absoluteRoot, lock));
   const coordinatorNuget = await nugetSurface(absoluteRoot, coordinatorLockPath);
+  const desktopNuget = await nugetSurface(absoluteRoot, desktopLockPath);
+  const desktop = await projectComponent(absoluteRoot, desktopProjectPath, "HumCapture.Coordinator.Desktop", "application", "0.1.0", [
+    { name: "humcapture:target-framework", value: "net10.0-windows10.0.19041.0" },
+    { name: "humcapture:distribution-status", value: "simulation-engineering-only-not-released" }
+  ]);
   const hostNuget = await nugetSurface(absoluteRoot, hostLockPath);
   const coordinatorSelfTestNuget = await nugetSurface(absoluteRoot, coordinatorSelfTestLockPath, "excluded");
   const decoderLockText = await readFile(path.join(absoluteRoot, "apps/windows-coordinator/decoder/decoder-lock.json"), "utf8");
@@ -454,9 +463,9 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     }
   ];
 
-  const firstParty = [...npmSurfaces.map((surface) => surface.firstParty), managed.component, nativeCapture.component, nativeEnumerator.component, coordinator.component, host.component, coordinatorSelfTest.component, sbomTool.component, workflowComponent];
+  const firstParty = [...npmSurfaces.map((surface) => surface.firstParty), managed.component, nativeCapture.component, nativeEnumerator.component, coordinator.component, host.component, desktop.component, coordinatorSelfTest.component, sbomTool.component, workflowComponent];
   const thirdPartyByRef = new Map();
-  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...coordinatorSelfTestNuget.packages, ...coordinatorNuget.packages, ...hostNuget.packages, ...platformComponents, ...githubActions, ...chocolateyPackages, decoderComponent]) thirdPartyByRef.set(component["bom-ref"], component);
+  for (const component of [...npmSurfaces.flatMap((surface) => surface.packages), ...coordinatorSelfTestNuget.packages, ...coordinatorNuget.packages, ...hostNuget.packages, ...desktopNuget.packages, ...platformComponents, ...githubActions, ...chocolateyPackages, decoderComponent]) thirdPartyByRef.set(component["bom-ref"], component);
   const rootRef = `pkg:generic/humcapture/HumCapture@${encodeURIComponent(productVersion)}`;
   const rootComponent = {
     type: "application",
@@ -478,18 +487,20 @@ export async function generateSbom({ repoRoot, outputPath, productVersion, times
     ...npmSurfaces.flatMap((surface) => surface.dependencies),
     ...coordinatorNuget.dependencies,
     ...hostNuget.dependencies,
+    ...desktopNuget.dependencies,
     ...coordinatorSelfTestNuget.dependencies,
     { ref: managed.component["bom-ref"], dependsOn: [netRuntimeRef] },
     { ref: nativeCapture.component["bom-ref"], dependsOn: [windowsRuntimeRef, windowsSdkRef] },
     { ref: nativeEnumerator.component["bom-ref"], dependsOn: [windowsRuntimeRef, windowsSdkRef] },
     { ref: coordinator.component["bom-ref"], dependsOn: [...coordinatorNuget.direct, net10RuntimeRef] },
     { ref: host.component["bom-ref"], dependsOn: [coordinator.component["bom-ref"], ...hostNuget.direct, net10RuntimeRef] },
-    { ref: coordinatorSelfTest.component["bom-ref"], dependsOn: [host.component["bom-ref"], coordinator.component["bom-ref"], ...coordinatorSelfTestNuget.direct, net10RuntimeRef] },
+    { ref: desktop.component["bom-ref"], dependsOn: [coordinator.component["bom-ref"], ...desktopNuget.direct, net10RuntimeRef] },
+    { ref: coordinatorSelfTest.component["bom-ref"], dependsOn: [desktop.component["bom-ref"], host.component["bom-ref"], coordinator.component["bom-ref"], ...coordinatorSelfTestNuget.direct, net10RuntimeRef] },
     { ref: sbomTool.component["bom-ref"], dependsOn: [] },
     { ref: workflowRef, dependsOn: [...githubActions, ...chocolateyPackages].map((component) => component["bom-ref"]).sort() }
   ];
   for (const component of thirdPartyByRef.values()) if (!dependencies.some((item) => item.ref === component["bom-ref"])) dependencies.push({ ref: component["bom-ref"], dependsOn: [] });
-  const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), host.manifestHash, hostNuget.manifestHash, coordinatorNuget.manifestHash, coordinatorSelfTestNuget.manifestHash, managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, coordinator.manifestHash, coordinatorSelfTest.manifestHash, sbomTool.manifestHash, sha256(workflowText), sha256(decoderLockText), productVersion, generatedAt.toISOString() ].join("\n"));
+  const manifestDigest = sha256([ ...npmSurfaces.map((item) => item.manifestHash), desktop.manifestHash, desktopNuget.manifestHash, host.manifestHash, hostNuget.manifestHash, coordinatorNuget.manifestHash, coordinatorSelfTestNuget.manifestHash, managed.manifestHash, nativeCapture.manifestHash, nativeEnumerator.manifestHash, coordinator.manifestHash, coordinatorSelfTest.manifestHash, sbomTool.manifestHash, sha256(workflowText), sha256(decoderLockText), productVersion, generatedAt.toISOString() ].join("\n"));
   const bom = {
     "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
     bomFormat: "CycloneDX",

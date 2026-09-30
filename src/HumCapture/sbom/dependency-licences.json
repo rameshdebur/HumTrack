@@ -144,7 +144,7 @@
   },
   "entries": [
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c15c",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c",
       "profile": "First-party",
       "use": "First-party acquisition subsystem",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
@@ -176,7 +176,7 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c15c",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
       "profile": "First-party",
       "use": "Development/test/CI",
       "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
@@ -540,6 +540,214 @@
       "next_action": "Retain MIT notices at redistribution.",
       "evidence": [
         "https://api.nuget.org/v3-flatcontainer/humanizer.core/3.0.10/humanizer.core.nuspec"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Desktop@0.1.0",
+      "profile": "First-party",
+      "use": "Windows simulation workspace and engineering headless test/service entry points",
+      "review_status": "DECLARATION_RECORDED_NOT_LEGAL_APPROVAL",
+      "next_action": "Engineering only; native human accessibility and production acquisition integration remain open.",
+      "evidence": [
+        "docs/adr/ADR-0040-coordinator-simulation-workspace.md"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia@11.3.12",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/Avalonia/11.3.12",
+        "https://www.nuget.org/packages/Avalonia/11.3.12/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Headless@11.3.12",
+      "profile": "MIT",
+      "use": "Headless UI verification in engineering executable, not production approval",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/Avalonia.Headless/11.3.12",
+        "https://www.nuget.org/packages/Avalonia.Headless/11.3.12/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Skia@11.3.12",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/Avalonia.Skia/11.3.12",
+        "https://www.nuget.org/packages/Avalonia.Skia/11.3.12/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Themes.Fluent@11.3.12",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/Avalonia.Themes.Fluent/11.3.12",
+        "https://www.nuget.org/packages/Avalonia.Themes.Fluent/11.3.12/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Win32@11.3.12",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/Avalonia.Win32/11.3.12",
+        "https://www.nuget.org/packages/Avalonia.Win32/11.3.12/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Remote.Protocol@11.3.12",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/Avalonia.Remote.Protocol/11.3.12",
+        "https://www.nuget.org/packages/Avalonia.Remote.Protocol/11.3.12/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.BuildServices@11.3.2",
+      "profile": "MIT",
+      "use": "Build-time service dependency; no paid developer tooling selected",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/Avalonia.BuildServices/11.3.2",
+        "https://www.nuget.org/packages/Avalonia.BuildServices/11.3.2/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Angle.Windows.Natives@2.1.25547.20250602",
+      "profile": "BSD-3-Clause",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/Avalonia.Angle.Windows.Natives/2.1.25547.20250602",
+        "https://www.nuget.org/packages/Avalonia.Angle.Windows.Natives/2.1.25547.20250602/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/HarfBuzzSharp@8.3.1.1",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/HarfBuzzSharp/8.3.1.1",
+        "https://www.nuget.org/packages/HarfBuzzSharp/8.3.1.1/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.Linux@8.3.1.1",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/HarfBuzzSharp.NativeAssets.Linux/8.3.1.1",
+        "https://www.nuget.org/packages/HarfBuzzSharp.NativeAssets.Linux/8.3.1.1/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.WebAssembly@8.3.1.1",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/HarfBuzzSharp.NativeAssets.WebAssembly/8.3.1.1",
+        "https://www.nuget.org/packages/HarfBuzzSharp.NativeAssets.WebAssembly/8.3.1.1/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.Win32@8.3.1.1",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/HarfBuzzSharp.NativeAssets.Win32/8.3.1.1",
+        "https://www.nuget.org/packages/HarfBuzzSharp.NativeAssets.Win32/8.3.1.1/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/MicroCom.Runtime@0.11.0",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/MicroCom.Runtime/0.11.0",
+        "https://www.nuget.org/packages/MicroCom.Runtime/0.11.0/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp@2.88.9",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/SkiaSharp/2.88.9",
+        "https://www.nuget.org/packages/SkiaSharp/2.88.9/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp.NativeAssets.Linux@2.88.9",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/SkiaSharp.NativeAssets.Linux/2.88.9",
+        "https://www.nuget.org/packages/SkiaSharp.NativeAssets.Linux/2.88.9/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp.NativeAssets.macOS@2.88.9",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/SkiaSharp.NativeAssets.macOS/2.88.9",
+        "https://www.nuget.org/packages/SkiaSharp.NativeAssets.macOS/2.88.9/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp.NativeAssets.WebAssembly@2.88.9",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/SkiaSharp.NativeAssets.WebAssembly/2.88.9",
+        "https://www.nuget.org/packages/SkiaSharp.NativeAssets.WebAssembly/2.88.9/License"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp.NativeAssets.Win32@2.88.9",
+      "profile": "MIT",
+      "use": "Windows UI/rendering dependency graph; lockfile may include non-Windows native assets",
+      "review_status": "PACKAGE_METADATA_REVIEWED_2026_09_30_NOT_LEGAL_APPROVAL",
+      "next_action": "Package metadata/licence inspected locally. Retain notices; review bundled native components and actual published assets before distribution. No mandatory copyright licence fee identified; optional support/tool charges separate.",
+      "evidence": [
+        "https://www.nuget.org/packages/SkiaSharp.NativeAssets.Win32/2.88.9",
+        "https://www.nuget.org/packages/SkiaSharp.NativeAssets.Win32/2.88.9/License"
       ]
     }
   ],

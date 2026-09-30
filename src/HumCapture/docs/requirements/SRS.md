@@ -1,12 +1,27 @@
 # HumCapture Software Requirements Baseline
 
 **Document ID:** HC-SRS-001  
-**Version:** 0.7  
+**Version:** 0.8
 **Status:** Preliminary; control, source-wire, transfer/package, and pairing/transport-security requirements are baselined; remaining interfaces are open
 
 This document establishes requirement families and mandatory system constraints. Detailed atomic requirements and verification IDs are completed before each implementation phase.
 
 ## Requirement families
+
+C16A-C detailed UI baseline: HC-IF-UIW-001 / ADR-0040, a synthetic-only subset.
+- **HC-USE-REQ-005:** The workspace SHALL distinguish simulation, recording,
+  finalization, verification, custody and protocol acceptance.
+- **HC-USE-REQ-006:** State SHALL be service-owned and persisted; duplicate
+  start/stop SHALL be idempotent. Failed refresh SHALL disable capture actions;
+  restart SHALL NOT imply resumed acquisition or success.
+- **HC-USE-REQ-007:** Labelled keyboard-accessible controls, text status, bounded
+  history and scrollable layouts SHALL support the approved four-screen flow.
+  Headless tests SHALL NOT be represented as native accessibility acceptance.
+- **HC-USE-REQ-008:** Simulation SHALL use separate storage, never activate cameras
+  or emit production verification/commit/completion records. Processing retry
+  SHALL preserve attempt identity and failure history; retakes create new IDs.
+- **HC-COORD-REQ-019:** UI repository inspection SHALL use bounded supported
+  read-only queries, label history and never silently recover/commit/delete.
 
 | Prefix | Domain |
 |---|---|

@@ -256,7 +256,9 @@ var tests = new (string Name, Action Body)[]
     ("HC-REP-RUNTIME-212 backup damage overlap writer and journal refusal", MaintenanceTests.BackupRefusals),
     ("HC-REP-RUNTIME-213 actual killed-process workflow recovery", MaintenanceTests.KilledWorkflow),
     ("HC-REP-RUNTIME-214 actual killed backup and restore recovery", MaintenanceTests.KilledBackupRestore),
-    ("HC-REP-RUNTIME-215 malformed host input and cancelled backup", MaintenanceTests.MalformedAndCancelled)
+    ("HC-REP-RUNTIME-215 malformed host input and cancelled backup", MaintenanceTests.MalformedAndCancelled),
+    ("HC-REP-RUNTIME-216 simulation workspace service assertions", DesktopTests.Service),
+    ("HC-REP-RUNTIME-217 headless coordinator screen workflow", DesktopTests.Screens)
 };
 
 var selectedTests = args.SequenceEqual(["--package-input"])

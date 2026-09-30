@@ -1,5 +1,12 @@
 # HumCapture Traceability Matrix
 
+C16A-C: HC-USE-REQ-005–008 / HC-COORD-REQ-019 and HC-US-UI-001–006 map to
+HC-RISK-001/006/020/030/031, HC-IF-UIW-001 and C16-01–12. Runtime216 tests
+synthetic state/failure/retry/restart and actual historical repository queries;
+runtime217 drives the actual four screens and separate service process,
+including keyboard input and navigation gating. Native human UI/accessibility,
+physical acquisition, production completion and HIL remain unverified.
+
 C15A-C: HC-COORD-REQ-018 / HC-DATA-REQ-041/042 and existing
 HC-US-XFR-021–034 / HC-COORD-REQ-003 map to HC-RISK-001/007/010/022/030/031
 and HC-REP-RUNTIME-211–215 / HC-C15-REAL. Actual host workflow, paired-ledger

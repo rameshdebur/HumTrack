@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.7",
-  "serialNumber": "urn:uuid:a07e2447-a585-535f-a08b-88fdabd00104",
+  "serialNumber": "urn:uuid:cbcee012-6f28-5247-bf5d-38876727fc47",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-27T18:18:49.000Z",
+    "timestamp": "2026-09-30T01:49:38.000Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -30,9 +30,9 @@
       "type": "application",
       "group": "HumTrack",
       "name": "HumCapture",
-      "version": "0.1.0-i0.4b-c15c",
-      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c15c",
-      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c15c",
+      "version": "0.1.0-i0.4b-c16c",
+      "bom-ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c",
+      "purl": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c",
       "supplier": {
         "name": "HumCapture project; legal producer identity pending governance baseline"
       },
@@ -162,9 +162,9 @@
       "type": "application",
       "group": "HumCapture",
       "name": "HumCapture CI",
-      "version": "0.1.0-i0.4b-c15c",
-      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c15c",
-      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c15c",
+      "version": "0.1.0-i0.4b-c16c",
+      "bom-ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
+      "purl": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
       "scope": "excluded",
       "hashes": [
         {
@@ -188,6 +188,42 @@
         {
           "name": "humcapture:not-distributed",
           "value": "true"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "group": "HumCapture",
+      "name": "HumCapture.Coordinator.Desktop",
+      "version": "0.1.0",
+      "bom-ref": "pkg:generic/humcapture/HumCapture.Coordinator.Desktop@0.1.0",
+      "purl": "pkg:generic/humcapture/HumCapture.Coordinator.Desktop@0.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "57299176970f059dfbb46f5293ddef5eabf90797799d5f7973dc0c636def0fda"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:source-manifest",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/HumCapture.Coordinator.Desktop.csproj"
+        },
+        {
+          "name": "humcapture:component-origin",
+          "value": "first-party"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "first-party-licence-not-yet-baselined"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041.0"
+        },
+        {
+          "name": "humcapture:distribution-status",
+          "value": "simulation-engineering-only-not-released"
         }
       ]
     },
@@ -237,7 +273,7 @@
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "e551acd60fa60b7d8f34835c6a01f46a7be6014a0c79b81ff75194f727f1a2ff"
+          "content": "8e8fdb423147dceddf743f23beb0d46186bbedccb3e33826a9c8292e1d2b71d0"
         }
       ],
       "properties": [
@@ -908,6 +944,390 @@
     },
     {
       "type": "library",
+      "name": "Avalonia.Angle.Windows.Natives",
+      "version": "2.1.25547.20250602",
+      "bom-ref": "pkg:nuget/Avalonia.Angle.Windows.Natives@2.1.25547.20250602",
+      "purl": "pkg:nuget/Avalonia.Angle.Windows.Natives@2.1.25547.20250602",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "64bd152dce2cf6bbcd345b75f4fc66e5434092628dca5ba003024f5fdba55d9e895acfe5e9766284f5964f27b36a834e57210f53c61b511b56ed7300b6a5c7e4"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Avalonia.BuildServices",
+      "version": "11.3.2",
+      "bom-ref": "pkg:nuget/Avalonia.BuildServices@11.3.2",
+      "purl": "pkg:nuget/Avalonia.BuildServices@11.3.2",
+      "scope": "excluded",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "a870d3a31b68d5ede1722e58a9b1bd9f44f2f26969df3054379c13ebac0aa9a0d5cd7c90d1da371274482dde0a7bd8e9bec92d68fa60134623124ee1a2b9ebc9"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Avalonia.Headless",
+      "version": "11.3.12",
+      "bom-ref": "pkg:nuget/Avalonia.Headless@11.3.12",
+      "purl": "pkg:nuget/Avalonia.Headless@11.3.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "4df780a42eb1d74c5a8a187fbf5d153d96f0208271fdb3f04bec97222997a372259b275a2634a4a252a521852f7df7957cf0b3359a1b64b4f78989dbf26a62e9"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Avalonia.Remote.Protocol",
+      "version": "11.3.12",
+      "bom-ref": "pkg:nuget/Avalonia.Remote.Protocol@11.3.12",
+      "purl": "pkg:nuget/Avalonia.Remote.Protocol@11.3.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "cda5933da04ac467c7c6a41f3e1d563febd6cb78950306165bfec51a5cfadffc13d5bfb76fb5a7dfb1fa73d0b613f337720965ad6e7f722af27b9d7a4140d988"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Avalonia.Skia",
+      "version": "11.3.12",
+      "bom-ref": "pkg:nuget/Avalonia.Skia@11.3.12",
+      "purl": "pkg:nuget/Avalonia.Skia@11.3.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "ae554c976a1b739872e021df2f0038f8bcaeeca53e9798929a3f257ae8285a87e38060f250f6b6f35542a391521f8f92914d7e1085d5259b9bc76a34da0a7d9f"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Avalonia.Themes.Fluent",
+      "version": "11.3.12",
+      "bom-ref": "pkg:nuget/Avalonia.Themes.Fluent@11.3.12",
+      "purl": "pkg:nuget/Avalonia.Themes.Fluent@11.3.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "ba67250555636ca75b87a8be740b5b0e55483d2f00f374b6db67f1802d70d33a96bc9ae4f4dc1f16c9c8415047c4dff584b3d531c51fa791b1bb614e3d68c369"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Avalonia.Win32",
+      "version": "11.3.12",
+      "bom-ref": "pkg:nuget/Avalonia.Win32@11.3.12",
+      "purl": "pkg:nuget/Avalonia.Win32@11.3.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "dd9f204a958c5343564747c8fe6f1df5be9df5f9acd4c27a79927b214e02754ff30ab3e21538ed3df7365516910ffd07e2db11dd580ffa24cc1999f99c15a58e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "Avalonia",
+      "version": "11.3.12",
+      "bom-ref": "pkg:nuget/Avalonia@11.3.12",
+      "purl": "pkg:nuget/Avalonia@11.3.12",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "0870748173126daf204d7a93acef654b5b5ef5e8c7e769e01cf9bed22fd17d7173a875c73d0df272215cfc67c69d75018ea8f01fce49d6b858365e3f12e8cfd3"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "HarfBuzzSharp.NativeAssets.Linux",
+      "version": "8.3.1.1",
+      "bom-ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.Linux@8.3.1.1",
+      "purl": "pkg:nuget/HarfBuzzSharp.NativeAssets.Linux@8.3.1.1",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "dc46759a922229644b2f9854600f36647b5e78321568403f674ac0ff053ab63c7a72b7009099c13f00d766e80149fa3cf89dc4ce7bd125fe3db8cb2a61f2ab1e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "HarfBuzzSharp.NativeAssets.WebAssembly",
+      "version": "8.3.1.1",
+      "bom-ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.WebAssembly@8.3.1.1",
+      "purl": "pkg:nuget/HarfBuzzSharp.NativeAssets.WebAssembly@8.3.1.1",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "96827078adaefe61ffdc2db305ad208099484c8b333a42bae072c0641ec5513ebbd1d4e0f7ae7084b1581c3428ebd3660b8f9df5437489c2c2f551e275769508"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "HarfBuzzSharp.NativeAssets.Win32",
+      "version": "8.3.1.1",
+      "bom-ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.Win32@8.3.1.1",
+      "purl": "pkg:nuget/HarfBuzzSharp.NativeAssets.Win32@8.3.1.1",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "52c26d42c7c026814366b5dce210947d13cca9c71f299d22ba627fba97148f3fdc9ac4e054518d10be726895a692ab2e15874c59b8ff127e7f912e0f165f6104"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "HarfBuzzSharp",
+      "version": "8.3.1.1",
+      "bom-ref": "pkg:nuget/HarfBuzzSharp@8.3.1.1",
+      "purl": "pkg:nuget/HarfBuzzSharp@8.3.1.1",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "b4b64debaa1efee8913d365fac25388bc49c546c2a1cd879307ad78f4c957f897b333d058531a743bd511b249139399da209c0b3426d96e1e42f8d6921a6d6b9"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
       "name": "Humanizer.Core",
       "version": "3.0.10",
       "bom-ref": "pkg:nuget/Humanizer.Core@3.0.10",
@@ -926,7 +1346,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -958,7 +1378,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -990,7 +1410,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1022,7 +1442,39 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "MicroCom.Runtime",
+      "version": "0.11.0",
+      "bom-ref": "pkg:nuget/MicroCom.Runtime@0.11.0",
+      "purl": "pkg:nuget/MicroCom.Runtime@0.11.0",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "3049eb677508887e34863ccc0ecc6b4f28bc76da81e738afde205e794e1b5ec2ffecd2d26a5f45d6564aa4afad7c14675280d276d716dcab9f138ca101338c08"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1054,7 +1506,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1086,7 +1538,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1118,7 +1570,167 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SkiaSharp.NativeAssets.Linux",
+      "version": "2.88.9",
+      "bom-ref": "pkg:nuget/SkiaSharp.NativeAssets.Linux@2.88.9",
+      "purl": "pkg:nuget/SkiaSharp.NativeAssets.Linux@2.88.9",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "71649a24a54f580693fd6227f5cf13e6e4ff978113c07c4d2539043ad34a8e984da3c016e9317d3b7d9a464c6ac3797c194754a3ae81bbb122aad161fd71b466"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SkiaSharp.NativeAssets.macOS",
+      "version": "2.88.9",
+      "bom-ref": "pkg:nuget/SkiaSharp.NativeAssets.macOS@2.88.9",
+      "purl": "pkg:nuget/SkiaSharp.NativeAssets.macOS@2.88.9",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "36fe6ca6629ce39d39129ee8528279be9dcac1e16978dab1a721835b27843d35f6b91e92eacc97226de08fbe5d334609cfb34fbdc8b1e3c991e656aab3c74fb8"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SkiaSharp.NativeAssets.WebAssembly",
+      "version": "2.88.9",
+      "bom-ref": "pkg:nuget/SkiaSharp.NativeAssets.WebAssembly@2.88.9",
+      "purl": "pkg:nuget/SkiaSharp.NativeAssets.WebAssembly@2.88.9",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "92dd3a45c7011d29c0b36c0361d0527ec8c80db637129b0e56a9e50e029d82fcae440f1914368745d58dc755478c6818ce69c50868932419d7165e41a86c069c"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SkiaSharp.NativeAssets.Win32",
+      "version": "2.88.9",
+      "bom-ref": "pkg:nuget/SkiaSharp.NativeAssets.Win32@2.88.9",
+      "purl": "pkg:nuget/SkiaSharp.NativeAssets.Win32@2.88.9",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "c1bda462053b8b2f389d02d867031e2578b1bcafbe1a822e1028d4e0409a50a36e7e5c919492b289184dd4c007b30be5bf3baf92b8d15a52b465aebe91840aef"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
+        },
+        {
+          "name": "humcapture:target-framework",
+          "value": "net10.0-windows10.0.19041"
+        },
+        {
+          "name": "humcapture:license-status",
+          "value": "NuGet-package-licence-review-required"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "SkiaSharp",
+      "version": "2.88.9",
+      "bom-ref": "pkg:nuget/SkiaSharp@2.88.9",
+      "purl": "pkg:nuget/SkiaSharp@2.88.9",
+      "scope": "required",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "dcc0f95478d75e27921c295e44bb9a4d798bda90f4981ec270e075c76900d48e1b869b5fe1edd1dbb88cf77dbae1962e02aea6914c97e576dcc6766f30961cd5"
+        }
+      ],
+      "properties": [
+        {
+          "name": "humcapture:component-origin",
+          "value": "third-party"
+        },
+        {
+          "name": "humcapture:resolution-source",
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1150,7 +1762,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1182,7 +1794,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1214,7 +1826,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1246,7 +1858,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1278,7 +1890,7 @@
         },
         {
           "name": "humcapture:resolution-source",
-          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json"
+          "value": "apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json"
         },
         {
           "name": "humcapture:target-framework",
@@ -1301,12 +1913,26 @@
       "dependsOn": []
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c15c",
+      "ref": "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
       "dependsOn": [
         "pkg:chocolatey/windows-sdk-10-version-2004-all@10.0.19041.685",
         "pkg:github/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd",
         "pkg:github/actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7",
         "pkg:github/actions/setup-node@820762786026740c76f36085b0efc47a31fe5020"
+      ]
+    },
+    {
+      "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Desktop@0.1.0",
+      "dependsOn": [
+        "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
+        "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
+        "pkg:nuget/Avalonia.BuildServices@11.3.2",
+        "pkg:nuget/Avalonia.Headless@11.3.12",
+        "pkg:nuget/Avalonia.Skia@11.3.12",
+        "pkg:nuget/Avalonia.Themes.Fluent@11.3.12",
+        "pkg:nuget/Avalonia.Win32@11.3.12",
+        "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
+        "pkg:nuget/SonarAnalyzer.CSharp@9.32.0.97167"
       ]
     },
     {
@@ -1321,6 +1947,7 @@
     {
       "ref": "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
       "dependsOn": [
+        "pkg:generic/humcapture/HumCapture.Coordinator.Desktop@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
         "pkg:generic/microsoft/Microsoft.NETCore.App@10.0.0",
@@ -1359,11 +1986,12 @@
       ]
     },
     {
-      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c15c",
+      "ref": "pkg:generic/humcapture/HumCapture@0.1.0-i0.4b-c16c",
       "dependsOn": [
         "pkg:generic/gyan/ffmpeg-essentials-archive@9.0.1?arch=x86_64&os=windows",
         "pkg:generic/humcapture/HumCapture%20SBOM%20Tool@0.1.0",
-        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c15c",
+        "pkg:generic/humcapture/HumCapture-CI@0.1.0-i0.4b-c16c",
+        "pkg:generic/humcapture/HumCapture.Coordinator.Desktop@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Host@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository.SelfTest@0.1.0",
         "pkg:generic/humcapture/HumCapture.Coordinator.Repository@0.1.0",
@@ -1452,6 +2080,75 @@
       "dependsOn": []
     },
     {
+      "ref": "pkg:nuget/Avalonia.Angle.Windows.Natives@2.1.25547.20250602",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.BuildServices@11.3.2",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Headless@11.3.12",
+      "dependsOn": [
+        "pkg:nuget/Avalonia@11.3.12"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Remote.Protocol@11.3.12",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Skia@11.3.12",
+      "dependsOn": [
+        "pkg:nuget/Avalonia@11.3.12",
+        "pkg:nuget/HarfBuzzSharp.NativeAssets.Linux@8.3.1.1",
+        "pkg:nuget/HarfBuzzSharp.NativeAssets.WebAssembly@8.3.1.1",
+        "pkg:nuget/HarfBuzzSharp@8.3.1.1",
+        "pkg:nuget/SkiaSharp.NativeAssets.Linux@2.88.9",
+        "pkg:nuget/SkiaSharp.NativeAssets.WebAssembly@2.88.9",
+        "pkg:nuget/SkiaSharp@2.88.9"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Themes.Fluent@11.3.12",
+      "dependsOn": [
+        "pkg:nuget/Avalonia@11.3.12"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia.Win32@11.3.12",
+      "dependsOn": [
+        "pkg:nuget/Avalonia.Angle.Windows.Natives@2.1.25547.20250602",
+        "pkg:nuget/Avalonia@11.3.12"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/Avalonia@11.3.12",
+      "dependsOn": [
+        "pkg:nuget/Avalonia.BuildServices@11.3.2",
+        "pkg:nuget/Avalonia.Remote.Protocol@11.3.12",
+        "pkg:nuget/MicroCom.Runtime@0.11.0"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.Linux@8.3.1.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.WebAssembly@8.3.1.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/HarfBuzzSharp.NativeAssets.Win32@8.3.1.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/HarfBuzzSharp@8.3.1.1",
+      "dependsOn": [
+        "pkg:nuget/HarfBuzzSharp.NativeAssets.Win32@8.3.1.1"
+      ]
+    },
+    {
       "ref": "pkg:nuget/Humanizer.Core@3.0.10",
       "dependsOn": []
     },
@@ -1473,6 +2170,10 @@
       ]
     },
     {
+      "ref": "pkg:nuget/MicroCom.Runtime@0.11.0",
+      "dependsOn": []
+    },
+    {
       "ref": "pkg:nuget/Microsoft.CodeAnalysis.NetAnalyzers@8.0.0",
       "dependsOn": []
     },
@@ -1488,6 +2189,31 @@
         "pkg:nuget/Microsoft.Data.Sqlite.Core@10.0.12",
         "pkg:nuget/SQLitePCLRaw.bundle_e_sqlite3@2.1.12",
         "pkg:nuget/SQLitePCLRaw.core@2.1.12"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp.NativeAssets.Linux@2.88.9",
+      "dependsOn": [
+        "pkg:nuget/SkiaSharp@2.88.9"
+      ]
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp.NativeAssets.macOS@2.88.9",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp.NativeAssets.WebAssembly@2.88.9",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp.NativeAssets.Win32@2.88.9",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:nuget/SkiaSharp@2.88.9",
+      "dependsOn": [
+        "pkg:nuget/SkiaSharp.NativeAssets.Win32@2.88.9",
+        "pkg:nuget/SkiaSharp.NativeAssets.macOS@2.88.9"
       ]
     },
     {
@@ -1523,7 +2249,7 @@
     },
     {
       "name": "humcapture:declared-manifests",
-      "value": "apps/windows-coordinator/decoder/decoder-lock.json;tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
+      "value": "apps/windows-coordinator/decoder/decoder-lock.json;tools/capability-probes/shared/package-lock.json;tools/evidence-control/package-lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/HumCapture.Coordinator.Desktop.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Desktop/packages.lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Host/HumCapture.Coordinator.Host.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Host/packages.lock.json;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/HumCapture.Coordinator.Repository.csproj;apps/windows-coordinator/src/HumCapture.Coordinator.Repository/packages.lock.json;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/HumCapture.Coordinator.Repository.SelfTest.csproj;apps/windows-coordinator/tests/HumCapture.Coordinator.Repository.SelfTest/packages.lock.json;tools/capability-probes/windows/managed/HumCapture.ManagedCameraProbe.csproj;tools/capability-probes/windows/native-mf/HumCapture.MfCapture.vcxproj;tools/capability-probes/windows/native-mf/HumCapture.MfEnumerator.vcxproj;tools/sbom/package.json;.github/workflows/humcapture-ci.yml"
     }
   ]
 }

@@ -53,6 +53,11 @@ The signed-in trained Windows operator may create, validate, and explicitly appr
 
 ## Normal operator workflow
 
+C16A-C baselines the first coordinator UI as a separately labelled synthetic
+guided workspace (HC-IF-UIW-001). Existing fixture protocols only; authoring,
+real capture/package production and production operation remain deferred.
+This refines the earlier detailed-UI deferral only for this slice.
+
 1. Select or create subject.
 2. Select approved protocol.
 3. Enter session metadata and review trial plan.

@@ -2,10 +2,27 @@
 
 **Document ID:** HC-US-BASELINE-001  
 **Version:** 0.1  
-**Status:** Accepted story baseline; detailed UI stories deferred  
+**Status:** Accepted baseline; C16 simulation UI detailed below, other UI deferred  
 **Primary actor:** Trained operator using the signed-in Windows account
 
 ## Subject
+
+C16 detailed stories, 2026-09-30, HC-IF-UIW-001:
+- **HC-US-UI-001:** Create/select synthetic subject with baseline demographics,
+  save immutable session under an existing fixture protocol and assign its roles.
+- **HC-US-UI-002:** Reject incompatible/duplicate assignments; accept compatible
+  fixed-rate sources without claiming measured cadence.
+- **HC-US-UI-003:** Start/stop idempotently, separate preview/master and preserve
+  surviving simulated activity after peer source loss.
+- **HC-US-UI-004:** Retain failures and retry simulated processing on the same
+  attempt; a new recording always has a new identity.
+- **HC-US-UI-005:** Resume recorded sessions after restart without automatically
+  resuming interrupted synthetic acquisition or inventing success.
+- **HC-US-UI-006:** Inspect existing repository history without mutation or
+  confusing historical custody with current byte verification.
+
+Acceptance: HC-IF-UIW-001. No real identity/camera activation; native human
+accessibility, Android and remaining production UI remain open.
 
 - **HC-US-SUB-001:** Find an existing subject by code/name and distinguish likely duplicates.
 - **HC-US-SUB-002:** Create a subject with code, name, date of birth, sex field, and height; generate immutable UUID; keep PII coordinator-local.

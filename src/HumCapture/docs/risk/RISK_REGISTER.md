@@ -1,5 +1,13 @@
 # HumCapture Preliminary Risk Register
 
+C16A-C: HC-IF-UIW-001 / ADR-0040 address HC-RISK-001/006/020/030/031 through
+immutable identity, separate service authority, synthetic-only SQLite storage,
+production-root refusal, retained failure history and explicit NOT ASSESSED /
+NOT COMMITTED / NOT COMPLETE labels. Repository inspection is read-only and
+historical. C16-01–12 / runtime216–217 exercise controls in software only.
+Native human/accessibility, production capture and regulatory review remain open.
+No residual risk acceptance or clinical claim follows from agent-authored tests.
+
 C15A-C (2026-09-27), HC-RISK-001/007/010/022/030/031: engineering host opt-in
 does not activate production decoder distribution. Quiescent full-repository
 leases, inventory/hash validation, paired database identity/integrity checks,
